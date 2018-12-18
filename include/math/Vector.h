@@ -1,0 +1,428 @@
+#pragma once
+
+#include "ZeroMath.h"
+
+namespace Zero {
+
+
+	template<int dims>
+	class VectorBase {
+	public:
+		VectorBase() = default;
+		explicit VectorBase(float value) {
+			for (int i = 0; i < dims; ++i) {
+				data[i] = value;
+			}
+		}
+		VectorBase(float x1, float y1) {
+			data[0] = x1;
+			data[1] = y1;
+		}
+		VectorBase(float x1, float y1, float z1) {
+			data[0] = x1;
+			data[1] = y1;
+			data[2] = z1;
+		}
+		VectorBase(float x1, float y1, float z1, float w1) {
+			data[0] = x1;
+			data[1] = y1;
+			data[2] = z1;
+			data[3] = w1;
+		}
+
+		inline float* Data()                  { return data; }
+		inline const float* Data() const      { return data; }
+
+	public:
+		float data[dims];
+
+	}; // template class VectorBase
+
+	template<>
+	class VectorBase<2> {
+	public:
+		VectorBase() = default;
+		VectorBase(float x1, float y1) : x(x1), y(y1) {}
+
+
+		inline float* Data()                  { return &x; }
+		inline const float* Data() const      { return &x; }
+
+	public:
+		float x, y;
+
+	}; // template specialization class VectorBase<2>
+
+
+	template<>
+	class VectorBase<3> {
+	public:
+		VectorBase() = default;
+		VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+
+
+		inline float* Data()                  { return &x; }
+		inline const float* Data() const      { return &x; }
+
+	public:
+		float x, y, z;
+
+	}; // template specialization class VectorBase<3>
+
+
+	template<>
+	class VectorBase<4> {
+	public:
+		VectorBase() = default;
+		VectorBase(float x1, float y1, float z1)           : x(x1), y(y1), z(z1), w(1.0f) {}
+		VectorBase(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+
+		inline float* Data()                  { return &x; }
+		inline const float* Data() const      { return &x; }
+
+	public:
+		float x, y, z, w;
+
+	}; // template specialization class VectorBase<4>
+
+
+
+	template<int dims>
+	class Vector  : public VectorBase<dims> {
+		using VectorBase<dims>::Data;
+	public:
+		Vector<dims>() = default;
+		Vector<dims>(const Vector<dims>& other) = default;
+		explicit Vector<dims>(float value) : VectorBase<dims>(value) {}
+		Vector<dims>(float x1, float y1) : VectorBase<dims>(x1, y1) {};
+		Vector<dims>(float x1, float y1, float z1) : VectorBase<dims>(x1, y1, z1) {}
+		Vector<dims>(float x1, float y1, float z1, float w1) : VectorBase<dims>(x1, y1, z1, w1) {}
+
+		~Vector<dims>() = default;
+		Vector<dims>& operator=(const Vector<dims>& other) = default;
+
+		float operator[](Zero::size_t index);
+		const float operator[](Zero::size_t index) const;
+
+		inline bool operator==(const Vector<dims>& o) const;
+		inline bool operator!=(const Vector<dims>& o) const;
+
+		/* ********** Scalar Operations ********** */
+		Vector<dims> operator+(float scalar) const;
+		Vector<dims> operator-(float scalar) const;
+		Vector<dims> operator*(float scalar) const;
+		Vector<dims> operator/(float scalar) const;
+
+		Vector<dims>& operator+=(float scalar);
+		Vector<dims>& operator-=(float scalar);
+		Vector<dims>& operator*=(float scalar);
+		Vector<dims>& operator/=(float scalar);
+
+		/* **** Component-Wise Vector Operations **** */
+		Vector<dims> operator+(const Vector<dims>& rhs) const;
+		Vector<dims> operator-(const Vector<dims>& rhs) const;
+		Vector<dims> operator*(const Vector<dims>& rhs) const;
+		Vector<dims> operator/(const Vector<dims>& rhs) const;
+
+		Vector<dims>& operator+=(const Vector<dims>& rhs);
+		Vector<dims>& operator-=(const Vector<dims>& rhs);
+		Vector<dims>& operator*=(const Vector<dims>& rhs);
+		Vector<dims>& operator/=(const Vector<dims>& rhs);
+
+		/* ********** Vector Operations ********** */
+		float Magnitude() const;
+
+		float SquareMagnitude() const;
+
+		void Normalize();
+
+		void Abs();
+
+		/* ********** Static Operations ********** */
+		static inline Vector<dims> NormalizeCopy(const Vector<dims>& v);
+
+		static inline Vector<dims> AbsCopy(const Vector<dims>& v);
+
+		static inline float Dot(const Vector<dims>& lhs, const Vector<dims>& rhs);
+
+		static inline Vector<dims> Reflect(const Vector<dims>& in, const Vector<dims>& normal);
+
+		static inline float Distance(const Vector<dims>& from, const Vector<dims>& to);
+
+		static inline float SquareDistance(const Vector<dims>& from, const Vector<dims>& to);
+
+		static inline Vector<dims> Lerp(const Vector<dims>& start, const Vector<dims>& end, float t);
+
+		static inline Radian Angle(const Vector<dims>& from, const Vector<dims>& to);
+
+
+	}; // template class Vector
+
+
+	/* ********** Vector Aliases ********** */
+
+	using Vector2 = Vector<2>;
+	using Vector3 = Vector<3>;
+	using Vector4 = Vector<4>;
+
+
+	/* ********** Vector Operations Implementation ********** */
+
+	template<int dims>
+	float Vector<dims>::Magnitude() const {
+		return Zero::sqrt(SquareMagnitude());
+	}
+
+	template<int dims>
+	float Vector<dims>::SquareMagnitude() const {
+		float square_mag = 0.0f;
+		for (int i = 0; i < dims; ++i) {
+			square_mag += (Data()[i] * Data()[i]);
+		}
+		return square_mag;
+	}
+
+	template<int dims>
+	void Vector<dims>::Normalize() {
+		operator/=(Magnitude());
+	}
+
+	template<int dims>
+	void Vector<dims>::Abs() {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] = Zero::abs(Data()[i]);
+		}
+	}
+
+	/* ********** Static Operations Implementation ********** */
+
+	template<int dims>
+	Vector<dims> Vector<dims>::NormalizeCopy(const Vector<dims>& v) {
+		return v / v.Magnitude();
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::AbsCopy(const Vector<dims>& v) {
+		Vector<dims> copy = v;
+		copy.Abs();
+		return copy;
+	}
+
+	template<int dims>
+	float Vector<dims>::Dot(const Vector<dims>& lhs, const Vector<dims>& rhs) {
+		float result = 0.0f;
+		for (int i = 0; i < dims; ++i) {
+			result += (lhs.Data()[i] * rhs.Data()[i]);
+		}
+		return result;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Reflect(const Vector<dims>& in, const Vector<dims>& normal) {
+		return in - (normal * 2 * Dot(in, normal));
+	}
+
+	template<int dims>
+	float Vector<dims>::Distance(const Vector<dims>& from, const Vector<dims>& to) {
+		return (from - to).Magnitude();
+	}
+
+	template<int dims>
+	float Vector<dims>::SquareDistance(const Vector<dims>& from, const Vector<dims>& to) {
+		return (from - to).SquareMagnitude();
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Lerp(const Vector<dims>& start, const Vector<dims>& end, float t) {
+		return (start * (1.0f - t)) + (end * t);
+	}
+
+	template<int dims>
+	Radian Vector<dims>::Angle(const Vector<dims>& from, const Vector<dims>& to) {
+		float dot = Dot(from, to);
+		float square_mag_from = from.SquareMagnitude();
+		float square_mag_to = to.SquareMagnitude();
+		float angle = Zero::acos( dot / sqrt(square_mag_from * square_mag_to) );
+		return Radian(angle);
+	}
+
+
+	/* ********** Operator Overload Implementation ********** */
+
+
+
+	template<int dims>
+	bool Vector<dims>::operator==(const Vector<dims>& o) const {
+		for (int i = 0; i < dims; ++i) {
+			if (!equal(Data()[i], o.Data()[i])) return false;
+		}
+
+		return true;
+	}
+
+	template<int dims>
+	float Vector<dims>::operator[](Zero::size_t index) {
+		return Data()[index];
+	}
+
+	template<int dims>
+	const float Vector<dims>::operator[](Zero::size_t index) const {
+		return Data()[index];
+	}
+
+	template<int dims>
+	bool Vector<dims>::operator!=(const Vector<dims>& o) const {
+		return !operator==(o);
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator+(float scalar) const {
+		Vector<dims> v = *this;
+		v += scalar;
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator-(float scalar) const {
+		Vector<dims> v = *this;
+		v -= scalar;
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator*(float scalar) const {
+		Vector<dims> v = *this;
+		v *= scalar;
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator/(float scalar) const {
+		Vector<dims> v = *this;
+		v /= scalar;
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator+=(float scalar) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] += scalar;
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator-=(float scalar) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] -= scalar;
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator*=(float scalar) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] *= scalar;
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator/=(float scalar) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] /= scalar;
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator+(const Vector<dims>& rhs) const {
+		Vector<dims> v = *this;
+		for (int i = 0; i < dims; ++i) {
+			v.Data()[i] += rhs.Data()[i];
+		}
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator-(const Vector<dims>& rhs) const {
+		Vector<dims> v = *this;
+		for (int i = 0; i < dims; ++i) {
+			v.Data()[i] -= rhs.Data()[i];
+		}
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator*(const Vector<dims>& rhs) const {
+		Vector<dims> v = *this;
+		for (int i = 0; i < dims; ++i) {
+			v.Data()[i] *= rhs.Data()[i];
+		}
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::operator/(const Vector<dims>& rhs) const {
+		Vector<dims> v = *this;
+		for (int i = 0; i < dims; ++i) {
+			v.Data()[i] /= rhs.Data()[i];
+		}
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator+=(const Vector<dims>& rhs) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] += rhs.Data()[i];
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator-=(const Vector<dims>& rhs) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] -= rhs.Data()[i];
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator*=(const Vector<dims>& rhs) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] *= rhs.Data()[i];
+		}
+		return *this;
+	}
+
+	template<int dims>
+	Vector<dims>& Vector<dims>::operator/=(const Vector<dims>& rhs) {
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] /= rhs.Data()[i];
+		}
+		return *this;
+	}
+
+
+	// Scalar/Vector Operations
+	template<int dims>
+	inline Vector<dims> operator+(float scalar, const Vector<dims>& v) {
+		return v + scalar;
+	}
+
+	template<int dims>
+	inline Vector<dims> operator-(float scalar, const Vector<dims>& v) {
+		return v - scalar;
+	}
+
+	template<int dims>
+	inline Vector<dims> operator*(float scalar, const Vector<dims>& v) {
+		return v * scalar;
+	}
+
+	template<int dims>
+	inline Vector<dims> operator/(float scalar, const Vector<dims>& v) {
+		return v / scalar;
+	}
+
+} // namespace Zero

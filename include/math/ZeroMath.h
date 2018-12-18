@@ -10,8 +10,9 @@ namespace Zero {
     class Radian;
 
     /* ********** Constants ********** */
-    static const float DEGREE_TO_RADIAN = static_cast<float>(M_PI / 180);
-    static const float RADIAN_TO_DEGREE = static_cast<float>(180 / M_PI);
+    static const float PI = 3.141593;
+    static const float DEGREE_TO_RADIAN = PI / 180;
+    static const float RADIAN_TO_DEGREE = 180 / PI;
     static const float EPSILON = FLT_EPSILON;
 
     /* ********** Types ********** */

@@ -1,4 +1,4 @@
-# Set to local Qt5 cmake config path 
+# Set to local Qt5 cmake config path
 set(Qt5_DIR /Users/sangi/Applications/5.12.0/clang_64/lib/cmake/Qt5)
 
 # Find includes in corresponding build directories
