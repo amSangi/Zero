@@ -15,15 +15,18 @@ namespace Zero {
 			}
 		}
 		VectorBase(float x1, float y1) {
+			static_assert(dims > 1, "Require at least 2 dimensions");
 			data[0] = x1;
 			data[1] = y1;
 		}
 		VectorBase(float x1, float y1, float z1) {
+			static_assert(dims > 2, "Require at least 3 dimensions");
 			data[0] = x1;
 			data[1] = y1;
 			data[2] = z1;
 		}
 		VectorBase(float x1, float y1, float z1, float w1) {
+			static_assert(dims > 3, "Require at least 4 dimensions");
 			data[0] = x1;
 			data[1] = y1;
 			data[2] = z1;
@@ -156,14 +159,71 @@ namespace Zero {
 		static inline Radian Angle(const Vector<dims>& from, const Vector<dims>& to);
 
 
+		/* ********** Useful Vectors ********** */
+		static Vector<dims> One();
+		static Vector<dims> Up();
+		static Vector<dims> Down();
+		static Vector<dims> Right();
+		static Vector<dims> Left();
+		static Vector<dims> Front();
+		static Vector<dims> Back();
+
+
 	}; // template class Vector
 
 
-	/* ********** Vector Aliases ********** */
+	/* ********** Aliases ********** */
 
 	using Vector2 = Vector<2>;
 	using Vector3 = Vector<3>;
 	using Vector4 = Vector<4>;
+
+	/* ********** Useful Vectors ********** */
+
+	template<int dims>
+	Vector<dims> Vector<dims>::One() {
+		Vector<dims> v;
+		for (int i = 0; i < dims; ++i) {
+			Data()[i] = 1.0f;
+		}
+		return v;
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Up() {
+		static_assert(dims > 1, "Require at least 2 dimensions");
+		return Vector<dims>(0.0f, 1.0f);
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Down() {
+		static_assert(dims > 1, "Require at least 2 dimensions");
+		return Vector<dims>(0.0f, -1.0f);
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Right() {
+		static_assert(dims > 1, "Require at least 2 dimensions");
+		return Vector<dims>(1.0f, 0.0f);
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Left() {
+		static_assert(dims > 1, "Require at least 2 dimensions");
+		return Vector<dims>(-1.0f, 0.0f);
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Front() {
+		static_assert(dims > 2, "Require at least 3 dimensions");
+		return Vector<dims>(0.0f, 0.0f, 1.0f);
+	}
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Back() {
+		static_assert(dims > 2, "Require at least 3 dimensions");
+		return Vector<dims>(0.0f, 0.0f, -1.0f);
+	}
 
 
 	/* ********** Vector Operations Implementation ********** */
