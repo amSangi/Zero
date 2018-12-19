@@ -14,6 +14,7 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 add_executable(${PROJECT_NAME}  main.cpp
                                 math/Matrix3.cpp
                                 math/Matrix4.cpp
+                                math/Quaternion.cpp
         )
 
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Core)

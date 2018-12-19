@@ -137,9 +137,9 @@ namespace Zero {
 
 		float SquareMagnitude() const;
 
-		void Normalize();
+		Vector<dims>& Normalize();
 
-		void Abs();
+		Vector<dims>& Abs();
 
 		/* ********** Static Operations ********** */
 		static inline Vector<dims> NormalizeCopy(const Vector<dims>& v);
@@ -243,15 +243,17 @@ namespace Zero {
 	}
 
 	template<int dims>
-	void Vector<dims>::Normalize() {
+	Vector<dims>& Vector<dims>::Normalize() {
 		operator/=(Magnitude());
+		return *this;
 	}
 
 	template<int dims>
-	void Vector<dims>::Abs() {
+	Vector<dims>& Vector<dims>::Abs() {
 		for (int i = 0; i < dims; ++i) {
 			Data()[i] = Zero::abs(Data()[i]);
 		}
+		return *this;
 	}
 
 	/* ********** Static Operations Implementation ********** */

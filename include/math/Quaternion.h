@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ZeroMath.h"
+
 namespace Zero {
 
 	class Quaternion {
@@ -21,6 +23,7 @@ namespace Zero {
 		Quaternion& operator+=(float scalar);
 		Quaternion& operator-=(float scalar);
 		Quaternion& operator*=(float scalar);
+		Quaternion& operator/=(float scalar);
 
 
 		/* ********** Quaternion/Quaternion Operations ********** */
@@ -34,16 +37,17 @@ namespace Zero {
 
 
 		/* ********** Quaternion Operations ********** */
-		void Norm();
-		void UnitNorm();
-		void Conjugate();
-		void Inverse();
+		float Norm();
+		Quaternion& Square();
+		Quaternion& UnitNorm();
+		Quaternion& Conjugate();
+		Quaternion& Inverse();
 
 
 		/* ********** Static Operations ********** */
-		static Quaternion NormCopy(const Quaternion& quat);
+		static Quaternion SquareCopy(const Quaternion& quat);
 		static Quaternion UnitNormCopy(const Quaternion& quat);
-
+		static Quaternion InverseCopy(const Quaternion& quat);
 
 	public:
 		float w;
