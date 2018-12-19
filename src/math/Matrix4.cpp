@@ -42,6 +42,14 @@ bool Matrix4::operator!=(const Matrix4& o) {
     return !(operator==(o));
 }
 
+const float Matrix4::operator()(size_t row, size_t col) const {
+    return matrix[row][col];
+}
+
+float Matrix4::operator()(size_t row, size_t col) {
+    return matrix[row][col];
+}
+
 const float* Matrix4::operator[](size_t index) const {
     return matrix[index];
 }

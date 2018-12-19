@@ -35,6 +35,14 @@ bool Matrix3::operator!=(const Matrix3& o) {
     return !(operator==(o));
 }
 
+const float Matrix3::operator()(size_t row, size_t col) const {
+    return matrix[row][col];
+}
+
+float Matrix3::operator()(size_t row, size_t col) {
+    return matrix[row][col];
+}
+
 const float* Matrix3::operator[](size_t index) const {
     return matrix[index];
 }

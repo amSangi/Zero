@@ -19,6 +19,9 @@ namespace Zero {
         bool operator==(const Matrix3& o);
         bool operator!=(const Matrix3& o);
 
+        const float operator()(size_t row, size_t col) const;
+        float operator()(size_t row, size_t col);
+
         const float* operator[](size_t index) const;
         float* operator[](size_t index);
 

@@ -101,8 +101,8 @@ namespace Zero {
 		~Vector<dims>() = default;
 		Vector<dims>& operator=(const Vector<dims>& other) = default;
 
-		float operator[](Zero::size_t index);
-		const float operator[](Zero::size_t index) const;
+		float operator[](size_t index);
+		const float operator[](size_t index) const;
 
 		inline bool operator==(const Vector<dims>& o) const;
 		inline bool operator!=(const Vector<dims>& o) const;
@@ -261,12 +261,12 @@ namespace Zero {
 	}
 
 	template<int dims>
-	float Vector<dims>::operator[](Zero::size_t index) {
+	float Vector<dims>::operator[](size_t index) {
 		return Data()[index];
 	}
 
 	template<int dims>
-	const float Vector<dims>::operator[](Zero::size_t index) const {
+	const float Vector<dims>::operator[](size_t index) const {
 		return Data()[index];
 	}
 
