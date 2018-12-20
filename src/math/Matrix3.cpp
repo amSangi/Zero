@@ -83,9 +83,10 @@ Matrix3 Matrix3::operator*(float scalar) const {
 
 Matrix3 Matrix3::operator/(float scalar) const {
     Matrix3 m{};
+    float inv_scalar = 1.0f / scalar;
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] / scalar;
+            m.matrix[i][j] = matrix[i][j] * inv_scalar;
         }
     }
     return m;
@@ -116,9 +117,10 @@ Matrix3& Matrix3::operator*=(float scalar) {
 }
 
 Matrix3& Matrix3::operator/=(float scalar) {
+    float inv_scalar = 1.0f / scalar;
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j)
-            matrix[i][j] /= scalar;
+            matrix[i][j] *= inv_scalar;
     }
     return *this;
 }

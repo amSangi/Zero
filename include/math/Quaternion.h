@@ -43,16 +43,17 @@ namespace Zero {
 		Quaternion Inverse() const;
 
 		Vector3 GetEulerAngles() const;
+		Vector3 xyz() const;
 
 		/* ********** Static Operations ********** */
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
-		static Quaternion FromAngleAxis(Radian angle, const Vector3& axis);
-		static Quaternion FromAngleAxis(Degree angle, const Vector3& axis);
+		static Quaternion FromAxisAngle(const Vector3& axis, Radian angle);
+		static Quaternion FromAxisAngle(const Vector3& axis, Degree angle);
 		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
 		static Quaternion FromEuler(float x, float y, float z);
 		static Quaternion FromMatrix3(const Matrix3& matrix);
-		static Quaternion FromLookRotation(const Vector3& forward, const Vector3& up);
+		static Quaternion LookRotation(const Vector3& forward, const Vector3& up);
 		static Quaternion FromToRotation(const Vector3& fromDirection, const Vector3& toDirection);
 		static Quaternion RotateTowards(Quaternion from, Quaternion to, Degree maxDegreesDelta);
 

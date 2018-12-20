@@ -253,8 +253,9 @@ namespace Zero {
 	Vector<dims> Vector<dims>::Normalize(const Vector<dims>& v) {
 		float magnitude = v.Magnitude();
 
+		float inv_magnitude = 1.0f / magnitude;
 		if (magnitude > 0.0f) {
-			return v / magnitude;
+			return v * inv_magnitude;
 		}
 
 		return Zero();
@@ -301,7 +302,8 @@ namespace Zero {
 		float dot = Dot(from, to);
 		float square_mag_from = from.SquareMagnitude();
 		float square_mag_to = to.SquareMagnitude();
-		float angle = Zero::acos( dot / sqrt(square_mag_from * square_mag_to) );
+		float inv_sqrt = 1.0f / sqrt(square_mag_from * square_mag_to);
+		float angle = Zero::acos( dot * inv_sqrt );
 		return Radian(angle);
 	}
 
@@ -386,8 +388,9 @@ namespace Zero {
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator/=(float scalar) {
+		float inv_scalar = 1.0f / scalar;
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] /= scalar;
+			Data()[i] *= inv_scalar;
 		}
 		return *this;
 	}
@@ -479,7 +482,7 @@ namespace Zero {
 
 	template<int dims>
 	inline Vector<dims> operator/(float scalar, const Vector<dims>& v) {
-		return v / scalar;
+		return v * (1.0f / scalar);
 	}
 
 } // namespace Zero

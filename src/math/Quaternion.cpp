@@ -111,7 +111,8 @@ float Quaternion::Norm() const {
 Quaternion Quaternion::UnitNorm() const {
 	float norm = Norm();
 	if (norm > 0.0f) {
-		return Quaternion(w / norm, x / norm, y / norm, z / norm);
+		float inv_norm = 1.0f / norm;
+		return Quaternion(w * inv_norm, x * inv_norm, y * inv_norm, z * inv_norm);
 	}
 
 	return Zero();
@@ -122,9 +123,13 @@ Quaternion Quaternion::Conjugate() const {
 }
 
 Quaternion Quaternion::Inverse() const {
-	float norm = Norm();
-	if (norm > 0.0f) {
-		return Quaternion(w / norm, -x / norm, -y / norm, -z / norm);
+	float norm_sq = (w * w) + (x * x) + (y * y) + (z * z);
+	if (norm_sq > 0.0f) {
+		float inv_norm_sq = 1.0f / norm_sq;
+		return Quaternion(w * inv_norm_sq,
+                          -x * inv_norm_sq,
+                          -y * inv_norm_sq,
+                          -z / inv_norm_sq);
 	}
 
 	return Zero();
@@ -139,35 +144,59 @@ Vector3 Quaternion::GetEulerAngles() const {
 	return Zero::Vector3(); // stub
 }
 
-Quaternion Quaternion::FromAngleAxis(Radian angle, const Vector3& axis) {
+Vector3 Quaternion::xyz() const {
+	return Vector3(x, y, z);
+}
+
+Quaternion Quaternion::FromAxisAngle(const Vector3& axis, Radian angle) {
+	// TODO: Finish Implementation
 	return Quaternion(); // stub
 }
 
-Quaternion Quaternion::FromAngleAxis(Degree angle, const Vector3& axis) {
-	return Quaternion(); // stub
+Quaternion Quaternion::FromAxisAngle(const Vector3& axis, Degree angle) {
+	return FromAxisAngle(axis, angle.ToRadian());
 }
 
 Quaternion Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) {
+	// TODO: Finish Implementation
 	return Quaternion(); // stub
 }
 
 Quaternion Quaternion::FromEuler(float x, float y, float z) {
-	return Quaternion(); // stub
+	float z_half = z * 0.5f;
+	float y_half = y * 0.5f;
+	float x_half = x * 0.5f;
+
+	float cz = cos(z_half);
+	float sz = sin(z_half);
+	float cy = cos(y_half);
+	float sy = sin(y_half);
+	float cx = cos(x_half);
+	float sx = sin(x_half);
+
+	return Quaternion((cz * cy * cx) + (sz * sy * sz),
+                      (cz * cy * sx) - (sz * sy * cx),
+                      (sz * cy * sx) + (cz * sy * cx),
+                      (sz * cy * cx) - (cz * sy * sx));
 }
 
 Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
+	// TODO: Finish Implementation
 	return Quaternion(); // stub
 }
 
-Quaternion Quaternion::FromLookRotation(const Vector3& forward, const Vector3& up = Vector3::Up()) {
+Quaternion Quaternion::LookRotation(const Vector3& forward, const Vector3& up = Vector3::Up()) {
+	// TODO: Finish Implementation
 	return Quaternion(); // stub
 }
 
 Quaternion Quaternion::FromToRotation(const Vector3& fromDirection, const Vector3& toDirection) {
+	// TODO: Finish Implementation
 	return Quaternion(); // stub
 }
 
 Quaternion Quaternion::RotateTowards(Quaternion from, Quaternion to, Degree maxDegreesDelta) {
+	// TODO: Finish Implementation
 	return Quaternion(); // stub
 }
 

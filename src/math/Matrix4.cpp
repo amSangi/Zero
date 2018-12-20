@@ -86,9 +86,10 @@ Matrix4 Matrix4::operator*(float scalar) const {
 
 Matrix4 Matrix4::operator/(float scalar) const {
     Matrix4 m{};
+    float inv_scalar = 1.0f / scalar;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] / scalar;
+            m.matrix[i][j] = matrix[i][j] * inv_scalar;
         }
     }
     return m;
@@ -122,9 +123,10 @@ Matrix4& Matrix4::operator*=(float scalar) {
 }
 
 Matrix4& Matrix4::operator/=(float scalar) {
+    float inv_scalar = 1.0f / scalar;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-            matrix[i][j] /= scalar;
+            matrix[i][j] *= inv_scalar;
         }
     }
     return *this;
