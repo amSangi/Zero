@@ -8,8 +8,8 @@ namespace Zero {
 	public:
 		Quaternion() : w(1.0f), x(0.0f), y(0.0f), z(0.0f) {}
 		Quaternion(float w1, float x1, float y1, float z1) : w(w1), x(x1), y(y1), z(z1) {}
-		~Quaternion() = default;
 		Quaternion(const Quaternion& other) = default;
+		~Quaternion() = default;
 
 		inline bool operator==(const Quaternion& other);
 		inline bool operator!=(const Quaternion& other);
@@ -42,10 +42,19 @@ namespace Zero {
 		Quaternion Conjugate() const;
 		Quaternion Inverse() const;
 
+		Vector3 GetEulerAngles() const;
 
 		/* ********** Static Operations ********** */
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
+		static Quaternion FromAngleAxis(Radian angle, const Vector3& axis);
+		static Quaternion FromAngleAxis(Degree angle, const Vector3& axis);
+		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
+		static Quaternion FromEuler(float x, float y, float z);
+		static Quaternion FromMatrix3(const Matrix3& matrix);
+		static Quaternion FromLookRotation(const Vector3& forward, const Vector3& up);
+		static Quaternion FromToRotation(const Vector3& fromDirection, const Vector3& toDirection);
+		static Quaternion RotateTowards(Quaternion from, Quaternion to, Degree maxDegreesDelta);
 
 		/* ********** Useful Quaternions ********** */
 		static Quaternion Identity();
