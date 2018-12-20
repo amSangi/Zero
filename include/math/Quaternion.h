@@ -44,6 +44,8 @@ namespace Zero {
 
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
+		static Quaternion Identity();
+		static Quaternion Zero();
 
 	public:
 		float w;

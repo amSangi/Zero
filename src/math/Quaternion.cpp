@@ -110,7 +110,7 @@ Quaternion Quaternion::UnitNorm() const {
 		return Quaternion(w / norm, x / norm, y / norm, z / norm);
 	}
 
-	return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+	return Zero();
 }
 
 Quaternion Quaternion::Conjugate() const {
@@ -123,9 +123,18 @@ Quaternion Quaternion::Inverse() const {
 		return Quaternion(w / norm, -x / norm, -y / norm, -z / norm);
 	}
 
-	return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+	return Zero();
 }
 
 float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 	return (lhs.w * rhs.w) + (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
+}
+
+
+Quaternion Quaternion::Identity() {
+	return Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
+}
+
+Quaternion Quaternion::Zero() {
+	return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 }

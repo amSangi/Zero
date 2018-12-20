@@ -137,12 +137,10 @@ namespace Zero {
 
 		float SquareMagnitude() const;
 
-		Vector<dims>& Normalize();
-
 		Vector<dims>& Abs();
 
 		/* ********** Static Operations ********** */
-		static inline Vector<dims> NormalizeCopy(const Vector<dims>& v);
+		static inline Vector<dims> Normalize(const Vector<dims>& v);
 
 		static inline Vector<dims> AbsCopy(const Vector<dims>& v);
 
@@ -160,6 +158,7 @@ namespace Zero {
 
 
 		/* ********** Useful Vectors ********** */
+		static Vector<dims> Zero();
 		static Vector<dims> One();
 		static Vector<dims> Up();
 		static Vector<dims> Down();
@@ -179,6 +178,11 @@ namespace Zero {
 	using Vector4 = Vector<4>;
 
 	/* ********** Useful Vectors ********** */
+
+	template<int dims>
+	Vector<dims> Vector<dims>::Zero() {
+		return Vector<dims>(0.0f);
+	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::One() {
@@ -243,12 +247,6 @@ namespace Zero {
 	}
 
 	template<int dims>
-	Vector<dims>& Vector<dims>::Normalize() {
-		operator/=(Magnitude());
-		return *this;
-	}
-
-	template<int dims>
 	Vector<dims>& Vector<dims>::Abs() {
 		for (int i = 0; i < dims; ++i) {
 			Data()[i] = Zero::abs(Data()[i]);
@@ -259,8 +257,14 @@ namespace Zero {
 	/* ********** Static Operations Implementation ********** */
 
 	template<int dims>
-	Vector<dims> Vector<dims>::NormalizeCopy(const Vector<dims>& v) {
-		return v / v.Magnitude();
+	Vector<dims> Vector<dims>::Normalize(const Vector<dims>& v) {
+		float magnitude = v.Magnitude();
+
+		if (magnitude > 0.0f) {
+			return v / magnitude;
+		}
+
+		return Zero();
 	}
 
 	template<int dims>
