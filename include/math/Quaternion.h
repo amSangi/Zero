@@ -42,8 +42,12 @@ namespace Zero {
 		Quaternion Conjugate() const;
 		Quaternion Inverse() const;
 
+
+		/* ********** Static Operations ********** */
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
+
+		/* ********** Useful Quaternions ********** */
 		static Quaternion Identity();
 		static Quaternion Zero();
 
