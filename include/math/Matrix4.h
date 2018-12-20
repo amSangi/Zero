@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector4.h"
+#include "ZeroMath.h"
 
 namespace Zero {
 

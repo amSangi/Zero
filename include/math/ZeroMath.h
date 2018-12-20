@@ -7,7 +7,14 @@ namespace Zero {
 
     /* ********** Forward Declarations ********** */
     class Degree;
-    class Radian;
+	class Matrix3;
+	class Matrix4;
+    class Quaternion;
+	class Radian;
+	template<int dims> class Vector;
+    using Vector2 = Vector<2>;
+    using Vector3 = Vector<3>;
+    using Vector4 = Vector<4>;
 
     /* ********** Constants ********** */
     static const float PI = 3.141593;

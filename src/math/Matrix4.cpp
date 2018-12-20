@@ -1,6 +1,5 @@
-#include <iostream>
 #include "Matrix4.h"
-#include "ZeroMath.h"
+#include "Vector4.h"
 
 using namespace Zero;
 
@@ -11,9 +10,6 @@ Matrix4::Matrix4(float m[4][4]) {
         }
     }
 }
-enum A {
-
-};
 
 Matrix4::Matrix4(float e00, float e01, float e02, float e03,
                  float e10, float e11, float e12, float e13,

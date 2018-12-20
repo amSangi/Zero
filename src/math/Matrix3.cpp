@@ -1,5 +1,5 @@
 #include "Matrix3.h"
-#include "ZeroMath.h"
+#include "Vector3.h"
 
 using namespace Zero;
 

@@ -170,13 +170,6 @@ namespace Zero {
 
 	}; // template class Vector
 
-
-	/* ********** Aliases ********** */
-
-	using Vector2 = Vector<2>;
-	using Vector3 = Vector<3>;
-	using Vector4 = Vector<4>;
-
 	/* ********** Useful Vectors ********** */
 
 	template<int dims>
@@ -314,8 +307,6 @@ namespace Zero {
 
 
 	/* ********** Operator Overload Implementation ********** */
-
-
 
 	template<int dims>
 	bool Vector<dims>::operator==(const Vector<dims>& o) const {
