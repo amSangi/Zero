@@ -37,17 +37,13 @@ namespace Zero {
 
 
 		/* ********** Quaternion Operations ********** */
-		float Norm();
-		Quaternion& Square();
-		Quaternion& UnitNorm();
-		Quaternion& Conjugate();
-		Quaternion& Inverse();
+		float Norm() const;
+		Quaternion UnitNorm() const;
+		Quaternion Conjugate() const;
+		Quaternion Inverse() const;
 
+		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
-		/* ********** Static Operations ********** */
-		static Quaternion SquareCopy(const Quaternion& quat);
-		static Quaternion UnitNormCopy(const Quaternion& quat);
-		static Quaternion InverseCopy(const Quaternion& quat);
 
 	public:
 		float w;
