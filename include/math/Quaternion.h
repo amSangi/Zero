@@ -11,6 +11,8 @@ namespace Zero {
 		Quaternion(const Quaternion& other) = default;
 		~Quaternion() = default;
 
+		Quaternion& operator=(const Quaternion& other) = default;
+
 		inline bool operator==(const Quaternion& other);
 		inline bool operator!=(const Quaternion& other);
 
@@ -38,15 +40,26 @@ namespace Zero {
 
 		/* ********** Quaternion Operations ********** */
 		float Norm() const;
-		Quaternion UnitNorm() const;
-		Quaternion Conjugate() const;
-		Quaternion Inverse() const;
+		Quaternion& UnitNorm();
+		Quaternion& Conjugate();
+		Quaternion& Inverse();
+		Quaternion& Negate();
+		Quaternion& RotateX(Radian angle);
+		Quaternion& RotateY(Radian angle);
+		Quaternion& RotateZ(Radian angle);
+
+		Quaternion UnitNormCopy() const;
+		Quaternion ConjugateCopy() const;
+		Quaternion InverseCopy() const;
 
 		Vector3 GetEulerAngles() const;
 		Vector3 xyz() const;
+		Matrix3 GetRotationMatrix3() const;
+
 
 		/* ********** Static Operations ********** */
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
+
 
 		static Quaternion FromAxisAngle(const Vector3& axis, Radian angle);
 		static Quaternion FromAxisAngle(const Vector3& axis, Degree angle);
