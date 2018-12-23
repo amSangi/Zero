@@ -4,9 +4,13 @@
 
 using namespace Zero;
 
+static const auto ZERO = Quaternion::Zero();
 
 bool Quaternion::operator==(const Quaternion& other) {
-	return equal(w, other.w) && equal(x, other.x) && equal(y, other.y) && equal(z, other.z);
+	return equal(w, other.w) &&
+           equal(x, other.x) &&
+           equal(y, other.y) &&
+           equal(z, other.z);
 }
 
 bool Quaternion::operator!=(const Quaternion& other) {
@@ -171,7 +175,7 @@ Quaternion& Quaternion::RotateY(Radian angle) {
 
 Quaternion& Quaternion::RotateZ(Radian angle) {
 	float half_hangle_rad = angle.rad * 0.5f;
-	w *= cos (half_hangle_rad);
+	w *= cos(half_hangle_rad);
 	z *= sin(half_hangle_rad);
 	return *this;
 }
@@ -192,17 +196,77 @@ Quaternion Quaternion::InverseCopy() const {
 }
 
 Vector3 Quaternion::GetEulerAngles() const {
-	// TODO: Finish Implementation
-	return Zero::Vector3(); // stub
+	return Vector3(GetRoll().rad,
+                   GetPitch().rad,
+                   GetYaw().rad);
+}
+
+Radian Quaternion::GetRoll() const {
+	float sinr_cosp = 2.0f * (w * x + y * z);
+	float cosr_cosp = 1.0f - (2.0f * (x * x + y * y));
+	float roll = atan2(sinr_cosp, cosr_cosp);
+
+	return Radian(roll);
+}
+
+Radian Quaternion::GetPitch() const {
+	float pitch;
+	float sinp = 2.0f * (w * y - z * x);
+	if (sinp >= 1) {
+		pitch = copysign(PI * 0.5f, sinp);
+	}
+	else {
+		pitch = asin(sinp);
+	}
+
+	return Radian(pitch);
+}
+
+Radian Quaternion::GetYaw() const {
+	float siny_cosp = 2.0f * (w * z + x * y);
+	float cosy_cosp = 1.0f - (2.0f * (y * y + z * z));
+	float yaw = atan2(siny_cosp, cosy_cosp);
+
+	return Radian(yaw);
 }
 
 Vector3 Quaternion::xyz() const {
 	return Vector3(x, y, z);
 }
 
-Matrix3 Quaternion::GetRotationMatrix3() const {
-	// TODO: Finish Implementation
-	return Matrix3();
+Matrix3 Quaternion::GetRotationMatrix() const {
+	Quaternion q = UnitNormCopy();
+	if (q == ZERO) {
+		return Matrix3::Identity();
+	}
+
+	float xx = q.x * q.x;
+	float yy = q.y * q.y;
+	float zz = q.z * q.z;
+
+	float xy = q.x * q.y;
+	float xz = q.x * q.z;
+	float yz = q.y * q.z;
+
+	float wx = q.w * q.x;
+	float wy = q.w * q.y;
+	float wz = q.w * q.z;
+
+	float e00 = 1.0f - (2.0f * (yy + zz));
+	float e01 = 2.0f * (xy - wz);
+	float e02 = 2.0f * (wy + xz);
+
+	float e10 = 2.0f * (xy + wz);
+	float e11 = 1.0f - (2.0f * (xx + zz));
+	float e12 = 2.0f * (yz - wx);
+
+	float e20 = 2.0f * (xz - wy);
+	float e21 = 2.0f * (wx + yz);
+	float e22 = 1.0f - (2.0f * (xx + yy));
+
+	return Matrix3(e00, e01, e02,
+                   e10, e11, e12,
+                   e20, e21, e22);
 }
 
 /* ********** Static Operations ********** */
@@ -252,9 +316,15 @@ Quaternion Quaternion::FromEuler(float x, float y, float z) {
 }
 
 Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
-	float trace = matrix(0, 0) + matrix(1, 1) + matrix(2, 2);
-	float w, x, y, z;
-	// TODO: Finish Implementation
+	float w = sqrt( max(0.0f, 1.0f + matrix(0, 0) + matrix(1, 1) + matrix(2, 2)) ) * 0.5f;
+	float x = sqrt( max(0.0f, 1.0f + matrix(0, 0) - matrix(1, 1) - matrix(2, 2)) ) * 0.5f;
+	float y = sqrt( max(0.0f, 1.0f - matrix(0, 0) + matrix(1, 1) - matrix(2, 2)) ) * 0.5f;
+	float z = sqrt( max(0.0f, 1.0f - matrix(0, 0) - matrix(1, 1) + matrix(2, 2)) ) * 0.5f;
+
+	x = copysign(x, matrix(2, 1) - matrix(1, 2));
+	y = copysign(y, matrix(0, 2) - matrix(2, 0));
+	z = copysign(z, matrix(2, 0) - matrix(0, 2));
+
 	return Quaternion(w, x, y, z);
 }
 

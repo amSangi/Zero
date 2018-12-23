@@ -27,17 +27,19 @@ namespace Zero {
 
     /* ********** Basic Math Functions ********** */
 
-    inline float sqrt(float value)                         { return sqrtf(value);   }
-    inline float abs(float value)                          { return fabsf(value);   }
-    inline float sin(float value)                          { return sinf(value);    }
-    inline float cos(float value)                          { return cosf(value);    }
-    inline float tan(float value)                          { return tanf(value);    }
-    inline float acos(float value)                         { return acosf(value);   }
-    inline float asin(float value)                         { return asinf(value);   }
-    inline float atan(float value)                         { return atanf(value);   }
-    inline float atan2(float v1, float v2)                 { return atan2f(v1, v2); }
-    inline bool equal(float a, float b)                    { return abs(a - b) < EPSILON; }
-
+    inline float sqrt(float value)                         { return std::sqrtf(value);   }
+    inline float abs(float value)                          { return std::fabsf(value);   }
+    inline float sin(float value)                          { return std::sinf(value);    }
+    inline float cos(float value)                          { return std::cosf(value);    }
+    inline float tan(float value)                          { return std::tanf(value);    }
+    inline float acos(float value)                         { return std::acosf(value);   }
+    inline float asin(float value)                         { return std::asinf(value);   }
+    inline float atan(float value)                         { return std::atanf(value);   }
+    inline float atan2(float a, float b)                   { return std::atan2f(a, b); }
+    inline float copysign(float a, float b)                { return std::copysignf(a, b); }
+    inline bool equal(float a, float b)                    { return std::abs(a - b) < EPSILON; }
+    inline float max(float a, float b)                     { return fmax(a, b); }
+    inline float min(float a, float b)                     { return fmin(a, b); }
 
     /* ********** Basic Classes ********** */
 

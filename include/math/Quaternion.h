@@ -53,8 +53,11 @@ namespace Zero {
 		Quaternion InverseCopy() const;
 
 		Vector3 GetEulerAngles() const;
+		Radian GetRoll() const;
+		Radian GetPitch() const;
+		Radian GetYaw() const;
 		Vector3 xyz() const;
-		Matrix3 GetRotationMatrix3() const;
+		Matrix3 GetRotationMatrix() const;
 
 
 		/* ********** Static Operations ********** */
