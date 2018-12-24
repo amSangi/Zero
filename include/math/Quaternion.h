@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ZeroMath.h"
+#include "Matrix3.h"
+#include "Vector3.h"
 
 namespace Zero {
 
@@ -37,6 +38,8 @@ namespace Zero {
 		Quaternion& operator-=(const Quaternion& rhs);
 		Quaternion& operator*=(const Quaternion& rhs);
 
+		/* ********** Quaternion/Vector3 Operations ********** */
+		Vector3 operator*(Vector3 v) const;
 
 		/* ********** Quaternion Operations ********** */
 		float Norm() const;
@@ -69,9 +72,8 @@ namespace Zero {
 		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
 		static Quaternion FromEuler(float x, float y, float z);
 		static Quaternion FromMatrix3(const Matrix3& matrix);
-		static Quaternion LookRotation(const Vector3& forward, const Vector3& up);
-		static Quaternion FromToRotation(const Vector3& fromDirection, const Vector3& toDirection);
-		static Quaternion RotateTowards(Quaternion from, Quaternion to, Degree maxDegreesDelta);
+		static Quaternion LookRotation(Vector3 direction, Vector3 up);
+		static Quaternion FromToRotation(Vector3 from, Vector3 to);
 
 		/* ********** Useful Quaternions ********** */
 		static Quaternion Identity();

@@ -46,9 +46,10 @@ namespace Zero {
 	public:
 		VectorBase() = default;
 		VectorBase(float x1, float y1) : x(x1), y(y1) {}
+		VectorBase(float value) : x(value), y(value) {}
 
 
-		inline float* Data()                  { return &x; }
+	inline float* Data()                  { return &x; }
 		inline const float* Data() const      { return &x; }
 
 	public:
@@ -61,7 +62,9 @@ namespace Zero {
 	class VectorBase<3> {
 	public:
 		VectorBase() = default;
+		VectorBase(float x1, float y1) : x(x1), y(y1), z(0.0f) {}
 		VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+		VectorBase(float value) : x(value), y(value), z(value) {}
 
 
 		inline float* Data()                  { return &x; }
@@ -79,8 +82,10 @@ namespace Zero {
 		VectorBase() = default;
 		VectorBase(float x1, float y1, float z1)           : x(x1), y(y1), z(z1), w(1.0f) {}
 		VectorBase(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+		VectorBase(float value) : x(value), y(value), z(value), w(value) {}
 
-		inline float* Data()                  { return &x; }
+
+	inline float* Data()                  { return &x; }
 		inline const float* Data() const      { return &x; }
 
 	public:
@@ -139,12 +144,16 @@ namespace Zero {
 
 		Vector<dims>& Abs();
 
+		bool Normalize();
+
 		/* ********** Static Operations ********** */
 		static inline Vector<dims> Normalize(const Vector<dims>& v);
 
 		static inline Vector<dims> AbsCopy(const Vector<dims>& v);
 
 		static inline float Dot(const Vector<dims>& lhs, const Vector<dims>& rhs);
+
+		static inline Vector<3> Cross(const Vector<3>& lhs, const Vector<3>& rhs);
 
 		static inline Vector<dims> Reflect(const Vector<dims>& in, const Vector<dims>& normal);
 
@@ -247,6 +256,19 @@ namespace Zero {
 		return *this;
 	}
 
+	template<int dims>
+	bool Vector<dims>::Normalize() {
+		float magnitude = Magnitude();
+
+		float inv_magnitude = 1.0f / magnitude;
+		if (magnitude > 0.0f) {
+			operator*=(inv_magnitude);
+			return true;
+		}
+
+		return false;
+	}
+
 	/* ********** Static Operations Implementation ********** */
 
 	template<int dims>
@@ -275,6 +297,14 @@ namespace Zero {
 			result += (lhs.Data()[i] * rhs.Data()[i]);
 		}
 		return result;
+	}
+
+	template<int dims>
+	Vector<3> Vector<dims>::Cross(const Vector<3>& lhs, const Vector<3>& rhs) {
+		return Vector<3>(
+			lhs.y * rhs.z - lhs.z * rhs.y,
+			lhs.z * rhs.x - lhs.x * rhs.z,
+			lhs.x * rhs.y - lhs.y * rhs.x);
 	}
 
 	template<int dims>
