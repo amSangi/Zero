@@ -109,7 +109,7 @@ Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
 	return *this;
 }
 
-Vector3 Quaternion::operator*(Vector3 v) const {
+Vector3 Quaternion::operator*(const Vector3& v) const {
 	Vector3 u = xyz();
 	return (2.0f * Vector3::Dot(u, v) * u)
            + (w * w - Vector3::Dot(u, u) * v)
@@ -335,7 +335,7 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
 	return Quaternion(w, x, y, z);
 }
 
-Quaternion Quaternion::LookRotation(Vector3 direction, Vector3 up) {
+Quaternion Quaternion::LookRotation(const Vector3& direction, const Vector3& up) {
 	// Source: https://github.com/opengl-tutorials/ogl/blob/master/common/quaternion_utils.cpp
 
 	if (direction.SquareMagnitude() < EPSILON) {
@@ -344,35 +344,35 @@ Quaternion Quaternion::LookRotation(Vector3 direction, Vector3 up) {
 
 	// Recompute desired up so that it is perpendicular to direction
 	Vector3 right = Vector3::Cross(direction, up);
-	up = Vector3::Cross(right, direction);
+	Vector3 recomputed_up = Vector3::Cross(right, direction);
 
 	Quaternion rot1 = FromToRotation(Vector3::Front(), direction);
 	Vector3 new_up = rot1 * Vector3::Up();
-	Quaternion rot2 = FromToRotation(new_up, up);
+	Quaternion rot2 = FromToRotation(new_up, recomputed_up);
 
 	return rot2 * rot1;
 }
 
-Quaternion Quaternion::FromToRotation(Vector3 from, Vector3 to) {
+Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
 	// Source: https://github.com/opengl-tutorials/ogl/blob/master/common/quaternion_utils.cpp
-	from.Normalize();
-	to.Normalize();
+	Vector3 from_N = Vector3::Normalize(from);
+	Vector3 to_N = Vector3::Normalize(to);
 
-	float theta = Vector3::Dot(from, to);
+	float theta = Vector3::Dot(from_N, to_N);
 	Vector3 rotation_axis;
 
 	if (theta < -1.0f + EPSILON) {
-		rotation_axis = Vector3::Cross(Vector3::Front(), from);
+		rotation_axis = Vector3::Cross(Vector3::Front(), from_N);
 
 		if (rotation_axis.SquareMagnitude() < EPSILON) {
-			rotation_axis = Vector3::Cross(Vector3::Right(), from);
+			rotation_axis = Vector3::Cross(Vector3::Right(), from_N);
 		}
 
 		rotation_axis.Normalize();
 		return FromAxisAngle(rotation_axis, Degree(180.0f));
 	}
 
-	rotation_axis = Vector3::Cross(from, to);
+	rotation_axis = Vector3::Cross(from_N, to_N);
 	float s = sqrt( (1.0f + theta) * 2.0f);
 	float inv_s = 1.0f / s;
 
