@@ -4,8 +4,6 @@
 
 using namespace Zero;
 
-static const auto ZERO = Quaternion::Zero();
-
 bool Quaternion::operator==(const Quaternion& other) {
 	return equal(w, other.w) &&
            equal(x, other.x) &&
@@ -243,7 +241,7 @@ Vector3 Quaternion::xyz() const {
 
 Matrix3 Quaternion::GetRotationMatrix() const {
 	Quaternion q = UnitNormCopy();
-	if (q == ZERO) {
+	if (q == Zero()) {
 		return Matrix3::Identity();
 	}
 

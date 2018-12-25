@@ -45,11 +45,11 @@ namespace Zero {
 	class VectorBase<2> {
 	public:
 		VectorBase() = default;
-		VectorBase(float x1, float y1) : x(x1), y(y1) {}
-		VectorBase(float value) : x(value), y(value) {}
+		VectorBase(float x1, float y1)   : x(x1), y(y1) {}
+		explicit VectorBase(float value) : x(value), y(value) {}
 
 
-	inline float* Data()                  { return &x; }
+		inline float* Data()                  { return &x; }
 		inline const float* Data() const      { return &x; }
 
 	public:
@@ -62,9 +62,9 @@ namespace Zero {
 	class VectorBase<3> {
 	public:
 		VectorBase() = default;
-		VectorBase(float x1, float y1) : x(x1), y(y1), z(0.0f) {}
-		VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
-		VectorBase(float value) : x(value), y(value), z(value) {}
+		VectorBase(float x1, float y1)            : x(x1), y(y1), z(0.0f) {}
+		VectorBase(float x1, float y1, float z1)  : x(x1), y(y1), z(z1) {}
+		explicit VectorBase(float value)          : x(value), y(value), z(value) {}
 
 
 		inline float* Data()                  { return &x; }
@@ -80,12 +80,12 @@ namespace Zero {
 	class VectorBase<4> {
 	public:
 		VectorBase() = default;
-		VectorBase(float x1, float y1, float z1)           : x(x1), y(y1), z(z1), w(1.0f) {}
+		VectorBase(float x1, float y1)                     : x(x1), y(y1), z(0.0f), w(0.0f) {}
+		VectorBase(float x1, float y1, float z1)           : x(x1), y(y1), z(z1), w(0.0f) {}
 		VectorBase(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
-		VectorBase(float value) : x(value), y(value), z(value), w(value) {}
+		explicit VectorBase(float value)                   : x(value), y(value), z(value), w(value) {}
 
-
-	inline float* Data()                  { return &x; }
+		inline float* Data()                  { return &x; }
 		inline const float* Data() const      { return &x; }
 
 	public:
@@ -153,7 +153,7 @@ namespace Zero {
 
 		static inline float Dot(const Vector<dims>& lhs, const Vector<dims>& rhs);
 
-		static inline Vector<3> Cross(const Vector<3>& lhs, const Vector<3>& rhs);
+		static inline Vector<dims> Cross(const Vector<dims>& lhs, const Vector<dims>& rhs);
 
 		static inline Vector<dims> Reflect(const Vector<dims>& in, const Vector<dims>& normal);
 
@@ -165,6 +165,7 @@ namespace Zero {
 
 		static inline Radian Angle(const Vector<dims>& from, const Vector<dims>& to);
 
+	public:
 
 		/* ********** Useful Vectors ********** */
 		static Vector<dims> Zero();
@@ -175,7 +176,6 @@ namespace Zero {
 		static Vector<dims> Left();
 		static Vector<dims> Front();
 		static Vector<dims> Back();
-
 
 	}; // template class Vector
 
@@ -188,11 +188,7 @@ namespace Zero {
 
 	template<int dims>
 	Vector<dims> Vector<dims>::One() {
-		Vector<dims> v;
-		for (int i = 0; i < dims; ++i) {
-			Data()[i] = 1.0f;
-		}
-		return v;
+		return Vector<dims>(1.0f);
 	}
 
 	template<int dims>
@@ -280,7 +276,7 @@ namespace Zero {
 			return v * inv_magnitude;
 		}
 
-		return Zero();
+		return Vector<dims>::Zero();
 	}
 
 	template<int dims>
@@ -300,11 +296,11 @@ namespace Zero {
 	}
 
 	template<int dims>
-	Vector<3> Vector<dims>::Cross(const Vector<3>& lhs, const Vector<3>& rhs) {
-		return Vector<3>(
-			lhs.y * rhs.z - lhs.z * rhs.y,
-			lhs.z * rhs.x - lhs.x * rhs.z,
-			lhs.x * rhs.y - lhs.y * rhs.x);
+	Vector<dims> Vector<dims>::Cross(const Vector<dims>& lhs, const Vector<dims>& rhs) {
+		static_assert(dims == 3, "Only 3D cross product supported");
+		return Vector<dims>(lhs.y * rhs.z - lhs.z * rhs.y,
+                            lhs.z * rhs.x - lhs.x * rhs.z,
+                            lhs.x * rhs.y - lhs.y * rhs.x);
 	}
 
 	template<int dims>
@@ -394,33 +390,37 @@ namespace Zero {
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator+=(float scalar) {
+		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] += scalar;
+			data[i] += scalar;
 		}
 		return *this;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator-=(float scalar) {
+		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] -= scalar;
+			data[i] -= scalar;
 		}
 		return *this;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator*=(float scalar) {
+		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] *= scalar;
+			data[i] *= scalar;
 		}
 		return *this;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator/=(float scalar) {
+		float* data = Data();
 		float inv_scalar = 1.0f / scalar;
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] *= inv_scalar;
+			data[i] *= inv_scalar;
 		}
 		return *this;
 	}
@@ -428,8 +428,10 @@ namespace Zero {
 	template<int dims>
 	Vector<dims> Vector<dims>::operator+(const Vector<dims>& rhs) const {
 		Vector<dims> v = *this;
+		float* data = v.Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			v.Data()[i] += rhs.Data()[i];
+			data[i] += rhs_data[i];
 		}
 		return v;
 	}
@@ -437,8 +439,10 @@ namespace Zero {
 	template<int dims>
 	Vector<dims> Vector<dims>::operator-(const Vector<dims>& rhs) const {
 		Vector<dims> v = *this;
+		float* data = v.Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			v.Data()[i] -= rhs.Data()[i];
+			data[i] -= rhs_data[i];
 		}
 		return v;
 	}
@@ -446,8 +450,10 @@ namespace Zero {
 	template<int dims>
 	Vector<dims> Vector<dims>::operator*(const Vector<dims>& rhs) const {
 		Vector<dims> v = *this;
+		float* data = v.Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			v.Data()[i] *= rhs.Data()[i];
+			data[i] *= rhs_data[i];
 		}
 		return v;
 	}
@@ -455,40 +461,50 @@ namespace Zero {
 	template<int dims>
 	Vector<dims> Vector<dims>::operator/(const Vector<dims>& rhs) const {
 		Vector<dims> v = *this;
+		float* data = v.Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			v.Data()[i] /= rhs.Data()[i];
+			data[i] /= rhs_data[i];
 		}
 		return v;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator+=(const Vector<dims>& rhs) {
+		float* data = Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] += rhs.Data()[i];
+			data[i] += rhs_data[i];
 		}
 		return *this;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator-=(const Vector<dims>& rhs) {
+		float* data = Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] -= rhs.Data()[i];
+			data[i] -= rhs_data[i];
 		}
 		return *this;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator*=(const Vector<dims>& rhs) {
+		float* data = Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] *= rhs.Data()[i];
+			data[i] *= rhs_data[i];
 		}
 		return *this;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::operator/=(const Vector<dims>& rhs) {
+		float* data = Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] /= rhs.Data()[i];
+			data[i] /= rhs_data[i];
 		}
 		return *this;
 	}
