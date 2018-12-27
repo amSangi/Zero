@@ -238,16 +238,18 @@ namespace Zero {
 	template<int dims>
 	float Vector<dims>::SquareMagnitude() const {
 		float square_mag = 0.0f;
+		const float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			square_mag += (Data()[i] * Data()[i]);
+			square_mag += (data[i] * data[i]);
 		}
 		return square_mag;
 	}
 
 	template<int dims>
 	Vector<dims>& Vector<dims>::Abs() {
+		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			Data()[i] = Zero::abs(Data()[i]);
+			data[i] = Zero::abs(data[i]);
 		}
 		return *this;
 	}
@@ -269,14 +271,8 @@ namespace Zero {
 
 	template<int dims>
 	Vector<dims> Vector<dims>::Normalize(const Vector<dims>& v) {
-		float magnitude = v.Magnitude();
-
-		float inv_magnitude = 1.0f / magnitude;
-		if (magnitude > 0.0f) {
-			return v * inv_magnitude;
-		}
-
-		return Vector<dims>::Zero();
+		Vector<dims> copy = v;
+		return copy.Normalize() ? copy : Zero();
 	}
 
 	template<int dims>
@@ -289,8 +285,10 @@ namespace Zero {
 	template<int dims>
 	float Vector<dims>::Dot(const Vector<dims>& lhs, const Vector<dims>& rhs) {
 		float result = 0.0f;
+		const float* lhs_data = lhs.Data();
+		const float* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
-			result += (lhs.Data()[i] * rhs.Data()[i]);
+			result += (lhs_data[i] * rhs_data[i]);
 		}
 		return result;
 	}
@@ -338,8 +336,10 @@ namespace Zero {
 
 	template<int dims>
 	bool Vector<dims>::operator==(const Vector<dims>& o) const {
+		const float* data = Data();
+		const float* rhs_data = o.Data();
 		for (int i = 0; i < dims; ++i) {
-			if (!equal(Data()[i], o.Data()[i])) return false;
+			if (!equal(data[i], rhs_data[i])) return false;
 		}
 
 		return true;
@@ -528,7 +528,7 @@ namespace Zero {
 
 	template<int dims>
 	inline Vector<dims> operator/(float scalar, const Vector<dims>& v) {
-		return v * (1.0f / scalar);
+		return v / scalar;
 	}
 
 } // namespace Zero

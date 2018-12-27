@@ -126,41 +126,162 @@ TEST(TestVector, Abs) {
 }
 
 TEST(TestVector, Normalize) {
-	// TODO: Finish Implementation
-	FAIL();
+	Vector3 expected(1.0f / Zero::sqrt(3.0f));
+
+	// Static Method
+	EXPECT_EQ(expected, Vector3::Normalize(Vector3::One()));
+
+	// Instance method
+	Vector3 actual = Vector3::One();
+	EXPECT_TRUE(actual.Normalize());
+	EXPECT_EQ(expected, actual);
+
+	EXPECT_TRUE(Zero::equal(expected.x, actual.x));
+	EXPECT_TRUE(Zero::equal(expected.y, actual.y));
+	EXPECT_TRUE(Zero::equal(expected.z, actual.z));
+}
+
+TEST(TestVector, NormalizeComplex) {
+	Vector4 expected(-0.135205f, -0.605484f, 0.764204f, 0.176355f);
+	Vector4 actual(-2.3f, -10.3f, 13.0f, 3.0f);
+
+	// Static method
+	EXPECT_EQ(expected, Vector4::Normalize(actual));
+
+	// Instance method
+	EXPECT_TRUE(actual.Normalize());
+	EXPECT_EQ(expected, actual);
+	EXPECT_TRUE(Zero::equal(expected.x, actual.x));
+	EXPECT_TRUE(Zero::equal(expected.y, actual.y));
+	EXPECT_TRUE(Zero::equal(expected.z, actual.z));
+	EXPECT_TRUE(Zero::equal(expected.w, actual.w));
 }
 
 TEST(TestVector, Dot) {
-	// TODO: Finish Implementation
-	FAIL();
+	EXPECT_EQ(0.0f, Vector4::Dot(Vector4::Zero(), Vector4::Zero()));
+	EXPECT_EQ(4.0f, Vector4::Dot(Vector4::One(), Vector4::One()));
+
+	float dot = Vector4::Dot(Vector4(-2.3f, 43.104f, -253.1345f, 23.0f),
+                             Vector4(1.0f, 323.4f, 234.3f, -34.0f));
+	EXPECT_TRUE(Zero::equal(-46153.9f, dot, 1e-01));
 }
 
 TEST(TestVector, Cross) {
-	// TODO: Finish Implementation
-	FAIL();
+	Vector3 front = Vector3::Front();
+	Vector3 back = Vector3::Back();
+	Vector3 right = Vector3::Right();
+	Vector3 left = Vector3::Left();
+	Vector3 up = Vector3::Up();
+	Vector3 down = Vector3::Down();
+
+	EXPECT_EQ(front, Vector3::Cross(right, up));
+	EXPECT_EQ(back, Vector3::Cross(up, right));
+	EXPECT_EQ(up, Vector3::Cross(front, right));
+	EXPECT_EQ(down, Vector3::Cross(right, front));
+	EXPECT_EQ(right, Vector3::Cross(up, front));
+	EXPECT_EQ(left, Vector3::Cross(front, up));
+}
+
+TEST(TestVector, CrossComplex) {
+	Vector3 v1(2.3f, 3.1f, 1.5f);
+	Vector3 v2(1.9f, 2.3f, 3.15f);
+
+	EXPECT_EQ(Vector3(6.315f, -4.395f, -0.6f), Vector3::Cross(v1, v2));
 }
 
 TEST(TestVector, Reflect) {
-	// TODO: Finish Implementation
-	FAIL();
+	Vector3 normal = Vector3::Up();
+	Vector3 incident, reflect;
+
+	incident = Vector3(1.0f, -1.0f);
+	reflect = Vector3::Reflect(incident, normal);
+	EXPECT_EQ(Vector3(1.0f, 1.0f), reflect);
+
+	incident = -1.0f * normal;
+	reflect = Vector3::Reflect(incident, normal);
+	EXPECT_EQ(normal, reflect);
+
+	incident = Vector3(-1.0f, -1.0f);
+	reflect = Vector3::Reflect(incident, normal);
+	EXPECT_EQ(Vector3(-1.0f, 1.0f), reflect);
+}
+
+TEST(TestVector, ReflectComplex) {
+	Vector3 normal = Vector3::Normalize(Vector3::One());
+	Vector3 incident, reflect;
+
+	incident = -1.0f * normal;
+	reflect = Vector3::Reflect(incident, normal);
+	EXPECT_EQ(normal, reflect);
 }
 
 TEST(TestVector, Distance) {
-	// TODO: Finish Implementation
-	FAIL();
+	EXPECT_EQ(1.0f, Vector3::Distance(Vector3::Up(), Vector3::Zero()));
+	EXPECT_EQ(Zero::sqrt(2.0f), Vector3::Distance(Vector3::Up(), Vector3::Right()));
+	EXPECT_EQ(2.0f, Vector3::Distance(Vector3::Up(), Vector3::Down()));
+
+	float expected = 46.8359f;
+	float actual = Vector3::Distance(Vector3(2.34f, 19.0f, 15.2f), Vector3(14.13f, -3.234f, -24.3f));
+	EXPECT_TRUE(Zero::equal(expected, actual, 1e-04));
 }
 
 TEST(TestVector, SquareDistance) {
-	// TODO: Finish Implementation
-	FAIL();
+	EXPECT_EQ(1.0f, Vector3::SquareDistance(Vector3::Up(), Vector3::Zero()));
+	EXPECT_EQ(2.0f, Vector3::SquareDistance(Vector3::Up(), Vector3::Right()));
+	EXPECT_EQ(4.0f, Vector3::SquareDistance(Vector3::Up(), Vector3::Down()));
+
+	float expected = 2193.6;
+	float actual = Vector3::SquareDistance(Vector3(2.34f, 19.0f, 15.2f), Vector3(14.13f, -3.234f, -24.3f));
+	EXPECT_TRUE(Zero::equal(expected, actual, 1e-01));
 }
 
 TEST(TestVector, Lerp) {
-	// TODO: Finish Implementation
-	FAIL();
+	Vector3 start(0.0f);
+	Vector3 end(0.0f, 10.0f);
+	EXPECT_EQ(start, Vector3::Lerp(start, end, 0.0f));
+	EXPECT_EQ(Vector3(0.0f, 5.0f), Vector3::Lerp(start, end, 0.5f));
+	EXPECT_EQ(end, Vector3::Lerp(start, end, 1.0f));
+}
+
+TEST(TestVector, LerpComplex) {
+	Vector3 start(2.3f, 5.0f, -13.3f);
+	Vector3 end(32.0f, -23.1f, 304.1f);
+
+	EXPECT_EQ(start, Vector3::Lerp(start, end, 0.0f));
+
+	Vector3 expected_mid(17.2f, -9.1f, 145.4f);
+	Vector3 actual_mid = Vector3::Lerp(start, end, 0.5f);
+	EXPECT_TRUE(Zero::equal(expected_mid.x, actual_mid.x, 1e-01));
+	EXPECT_TRUE(Zero::equal(expected_mid.y, actual_mid.y, 1e-01));
+	EXPECT_TRUE(Zero::equal(expected_mid.z, actual_mid.z, 1e-01));
+
+	EXPECT_EQ(end, Vector3::Lerp(start, end, 1.0f));
 }
 
 TEST(TestVector, Angle) {
-	// TODO: Finish Implementation
-	FAIL();
+	Radian expected, actual;
+
+	expected = Radian(PI / 2.0f);
+	actual = Vector3::Angle(Vector3::Right(), Vector3::Up());
+	EXPECT_EQ(expected, actual);
+
+	expected = Radian(PI);
+	actual = Vector3::Angle(Vector3::Right(), Vector3::Left());
+	EXPECT_EQ(expected, actual);
+
+	expected = Radian(PI / 2.0f);
+	actual = Vector3::Angle(Vector3::Right(), Vector3::Down());
+	EXPECT_EQ(expected, actual);
+
+	expected = Radian(PI / 2.0f);
+	actual = Vector3::Angle(Vector3(1.0f, 1.0f), Vector3(-1.0f, 1.0f));
+	EXPECT_EQ(expected, actual);
+
+	expected = Radian(Zero::acos(1.0f / 3.0f));
+	actual = Vector3::Angle(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, -1.0f));
+	EXPECT_EQ(expected, actual);
+
+	expected = Radian(0.0f);
+	actual = Vector3::Angle(Vector3(5.0f, 13.3f, -13.32f), Vector3(5.0f, 13.3f, -13.32f));
+	EXPECT_EQ(expected, actual);
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <cfloat>
 
 namespace Zero {
 
@@ -18,9 +17,9 @@ namespace Zero {
 
     /* ********** Constants ********** */
     static const float PI = 3.141593;
-    static const float DEGREE_TO_RADIAN = PI / 180;
-    static const float RADIAN_TO_DEGREE = 180 / PI;
-    static const float EPSILON = FLT_EPSILON;
+    static const float DEGREE_TO_RADIAN = PI / 180.0f;
+    static const float RADIAN_TO_DEGREE = 180.0f / PI;
+    static const float EPSILON = 1e-06;
 
     /* ********** Types ********** */
     using size_t = std::size_t;
@@ -37,9 +36,11 @@ namespace Zero {
     inline float atan(float value)                         { return std::atanf(value);   }
     inline float atan2(float a, float b)                   { return std::atan2f(a, b); }
     inline float copysign(float a, float b)                { return std::copysignf(a, b); }
-    inline bool equal(float a, float b)                    { return std::abs(a - b) < EPSILON; }
     inline float max(float a, float b)                     { return fmax(a, b); }
     inline float min(float a, float b)                     { return fmin(a, b); }
+    inline bool equal(float a,
+                      float b,
+                      float eps = EPSILON)                 { return std::abs(a - b) < eps; }
 
     /* ********** Basic Classes ********** */
 
