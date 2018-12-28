@@ -9,8 +9,8 @@ TEST(TestMatrix3, ScalarOperations) {
 	Matrix3 matrix = Matrix3::Identity();
 
 	EXPECT_EQ(Matrix3(2.0f, 1.0f, 1.0f,
-                      1.0f, 2.0f, 1.0f,
-                      1.0f, 1.0f, 2.0f), matrix + 1.0f);
+	                  1.0f, 2.0f, 1.0f,
+	                  1.0f, 1.0f, 2.0f), matrix + 1.0f);
 
 	EXPECT_EQ(Matrix3(0.0f, -1.0f, -1.0f,
 	                  -1.0f, 0.0f, -1.0f,
@@ -75,8 +75,8 @@ TEST(TestMatrix3, MatrixMatrixSubtraction) {
 
 TEST(TestMatrix3, Hadamard) {
 	Matrix3 m1(1.0f, 2.0f, 3.0f,
-               4.0f, 5.0f, 6.0f,
-               7.0f, 8.0f, 9.0f);
+	           4.0f, 5.0f, 6.0f,
+	           7.0f, 8.0f, 9.0f);
 	Matrix3 m2 = m1;
 
 	EXPECT_EQ(Matrix3(1.0f, 4.0f, 9.0f,
@@ -86,12 +86,12 @@ TEST(TestMatrix3, Hadamard) {
 
 TEST(TestMatrix3, Det) {
 	Matrix3 m1(1.0f, 2.0f, 3.0f,
-               4.0f, 5.0f, 6.0f,
-               7.0f, 8.0f, 9.0f);
+	           4.0f, 5.0f, 6.0f,
+	           7.0f, 8.0f, 9.0f);
 
 	Matrix3 m2(-23, -33, 4,
-               -4, -3, 6,
-               -7, 8, -1);
+	           -4, -3, 6,
+	           -7, 8, -1);
 
 	EXPECT_EQ(0.0f, m1.Det());
 	EXPECT_EQ(0.0f, (m1 + m1).Det());
@@ -105,8 +105,8 @@ TEST(TestMatrix3, Inverse) {
 	EXPECT_EQ(matrix, matrix.Inverse());
 	EXPECT_EQ(Matrix3(0.0f), Matrix3(1.0f).Inverse());
 	EXPECT_EQ(Matrix3(0.75f, -0.25f, -0.25f,
-                      -0.25f, 0.75f, -0.25f,
-                      -0.25f, -0.25f, 0.75f), (matrix + 1.0f).Inverse());
+	                  -0.25f, 0.75f, -0.25f,
+	                  -0.25f, -0.25f, 0.75f), (matrix + 1.0f).Inverse());
 }
 
 TEST(TestMatrix3, Transpose) {
@@ -132,12 +132,12 @@ TEST(TestMatrix3, MatrixVectorMultiply) {
 
 TEST(TestMatrix3, MatrixMatrixMultiply) {
 	Matrix3 m1(1.0f, 2.0f, 3.0f,
-               4.0f, 5.0f, 6.0f,
-               7.0f, 8.0f, 9.0f);
+	           4.0f, 5.0f, 6.0f,
+	           7.0f, 8.0f, 9.0f);
 
 	Matrix3 m2(13.0f, 14.0f, 15.0f,
-               17.0f, 83.0f, 32.0f,
-               3.0f, 15.0f, 7.0f);
+	           17.0f, 83.0f, 32.0f,
+	           3.0f, 15.0f, 7.0f);
 
 	EXPECT_EQ(Matrix3::Identity(), Matrix3::Identity() * Matrix3::Identity());
 	EXPECT_EQ(Matrix3(56.0f, 225.0f, 100.0f,
@@ -155,10 +155,10 @@ TEST(TestMatrix3, Rotate) {
 	                  0.0f,    -s,     c), Matrix3::RotateX(r));
 
 	EXPECT_EQ(Matrix3(   c,  0.0f,    -s,
-	                  0.0f,  1.0f,  0.0f,
+	                     0.0f,  1.0f,  0.0f,
 	                     s,  0.0f,     c), Matrix3::RotateY(r));
 
 	EXPECT_EQ(Matrix3(   c,     s,  0.0f,
-                        -s,     c,  0.0f,
-                      0.0f,  0.0f,  1.0f), Matrix3::RotateZ(r));
+	                     -s,     c,  0.0f,
+	                     0.0f,  0.0f,  1.0f), Matrix3::RotateZ(r));
 }

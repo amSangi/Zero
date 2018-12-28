@@ -195,7 +195,7 @@ Matrix4& Matrix4::operator-=(const Matrix4& rhs) {
     return *this;
 }
 
-float Matrix4::Determinant() const {
+float Matrix4::Det() const {
     float A2323 = matrix[2][2] * matrix[3][3] - matrix[2][3] * matrix[3][2];
     float A1323 = matrix[2][1] * matrix[3][3] - matrix[2][3] * matrix[3][1];
     float A1223 = matrix[2][1] * matrix[3][2] - matrix[2][2] * matrix[3][1];
@@ -305,7 +305,7 @@ Matrix4 Matrix4::RotateX(const Radian& angle) {
     return Matrix4(1.0f, 0.0f, 0.0f, 0.0f,
                    0.0f,    c,    s, 0.0f,
                    0.0f,   -s,    c, 0.0f,
-                   0.0f, 0.0f, 0.0f, 0.0f);
+                   0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 Matrix4 Matrix4::RotateY(const Radian& angle) {
@@ -314,7 +314,7 @@ Matrix4 Matrix4::RotateY(const Radian& angle) {
     return Matrix4(    c, 0.0f,   -s, 0.0f,
                     0.0f, 1.0f, 0.0f, 0.0f,
                        s, 0.0f,    c, 0.0f,
-                    0.0f, 0.0f, 0.0f, 0.0f);
+                    0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 Matrix4 Matrix4::RotateZ(const Radian& angle) {
@@ -323,7 +323,7 @@ Matrix4 Matrix4::RotateZ(const Radian& angle) {
     return Matrix4(   c,    s, 0.0f, 0.0f,
                      -s,    c, 0.0f, 0.0f,
                    0.0f, 0.0f, 1.0f, 0.0f,
-                   0.0f, 0.0f, 0.0f, 0.0f);
+                   0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 Matrix4 Matrix4::RotateX(const Degree& angle) {

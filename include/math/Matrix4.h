@@ -44,9 +44,9 @@ namespace Zero {
         Matrix4& operator-=(const Matrix4& rhs);
 
         /* ********** Matrix4 Operations ********** */
-        float Determinant() const;
+        float Det() const;
         bool InverseUtil(Matrix4& out, float epsilon=1e-05f) const;
-        Matrix4 Inverse(float epsilon=1e05f) const;
+        Matrix4 Inverse(float epsilon=1e-05f) const;
         Matrix4 Transpose() const;
         Vector4 operator*(const Vector4& rhs) const;
         Matrix4 operator*(const Matrix4& rhs) const;
