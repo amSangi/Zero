@@ -1,3 +1,6 @@
+
+#include <math/Matrix3.h>
+
 #include "Matrix3.h"
 #include "Vector3.h"
 
@@ -11,6 +14,14 @@ Matrix3::Matrix3(float m[3][3]) {
     }
 }
 
+Matrix3::Matrix3(float value) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            matrix[i][j] = value;
+        }
+    }
+}
+
 Matrix3::Matrix3(float e00, float e01, float e02,
                  float e10, float e11, float e12,
                  float e20, float e21, float e22) {
@@ -20,7 +31,7 @@ Matrix3::Matrix3(float e00, float e01, float e02,
     matrix[2][0] = e20; matrix[2][1] = e21; matrix[2][2] = e22;
 }
 
-bool Matrix3::operator==(const Matrix3& o) {
+bool Matrix3::operator==(const Matrix3& o) const {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             if (!equal(matrix[i][j], o.matrix[i][j])) {
@@ -31,7 +42,7 @@ bool Matrix3::operator==(const Matrix3& o) {
     return true;
 }
 
-bool Matrix3::operator!=(const Matrix3& o) {
+bool Matrix3::operator!=(const Matrix3& o) const {
     return !(operator==(o));
 }
 
@@ -207,7 +218,7 @@ bool Matrix3::InverseUtil(Matrix3& out, float epsilon) const {
 }
 
 Matrix3 Matrix3::Inverse(float epsilon) const {
-    Matrix3 m{};
+    Matrix3 m(0.0f);
     InverseUtil(m, epsilon);
     return m;
 }

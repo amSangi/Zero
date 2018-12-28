@@ -8,6 +8,7 @@ namespace Zero {
     public:
         Matrix4() = default;
         explicit Matrix4(float m[4][4]);
+        explicit Matrix4(float value);
         Matrix4(float e00, float e01, float e02, float e03,
                 float e10, float e11, float e12, float e13,
                 float e20, float e21, float e22, float e23,
@@ -16,8 +17,8 @@ namespace Zero {
         ~Matrix4() = default;
         Matrix4& operator=(const Matrix4& o) = default;
 
-        bool operator==(const Matrix4& o);
-        bool operator!=(const Matrix4& o);
+        bool operator==(const Matrix4& o) const;
+        bool operator!=(const Matrix4& o) const;
 
         const float operator()(size_t row, size_t col) const;
         float operator()(size_t row, size_t col);

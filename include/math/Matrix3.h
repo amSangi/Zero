@@ -9,6 +9,7 @@ namespace Zero {
 
         Matrix3() = default;
         explicit Matrix3(float m[3][3]);
+        explicit Matrix3(float value);
         Matrix3(float e00, float e01, float e02,
                 float e10, float e11, float e12,
                 float e20, float e21, float e22);
@@ -16,8 +17,8 @@ namespace Zero {
         ~Matrix3() = default;
         Matrix3& operator=(const Matrix3& o) = default;
 
-        bool operator==(const Matrix3& o);
-        bool operator!=(const Matrix3& o);
+        bool operator==(const Matrix3& o) const;
+        bool operator!=(const Matrix3& o) const;
 
         const float operator()(size_t row, size_t col) const;
         float operator()(size_t row, size_t col);

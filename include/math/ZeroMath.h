@@ -92,6 +92,7 @@ namespace Zero {
 
         Degree ToDegree() const;
 
+        static inline Radian FromDegree(float d)           { return Radian(d * DEGREE_TO_RADIAN); }
 
         float rad;
 
@@ -145,6 +146,7 @@ namespace Zero {
 
         Radian ToRadian() const                            { return Radian(deg * DEGREE_TO_RADIAN); }
 
+        static inline Degree FromRadian(float r)           { return Degree(r * RADIAN_TO_DEGREE); }
 
         float deg;
 

@@ -1,3 +1,6 @@
+
+#include <math/Matrix4.h>
+
 #include "Matrix4.h"
 #include "Vector4.h"
 
@@ -7,6 +10,14 @@ Matrix4::Matrix4(float m[4][4]) {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             matrix[i][j] = m[i][j];
+        }
+    }
+}
+
+Matrix4::Matrix4(float value) {
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            matrix[i][j] = value;
         }
     }
 }
@@ -22,7 +33,7 @@ Matrix4::Matrix4(float e00, float e01, float e02, float e03,
     matrix[3][0] = e30; matrix[3][1] = e31; matrix[3][2] = e32; matrix[3][3] = e33;
 }
 
-bool Matrix4::operator==(const Matrix4& o) {
+bool Matrix4::operator==(const Matrix4& o) const {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             if (!equal(matrix[i][j], o.matrix[i][j])) {
@@ -34,7 +45,7 @@ bool Matrix4::operator==(const Matrix4& o) {
     return true;
 }
 
-bool Matrix4::operator!=(const Matrix4& o) {
+bool Matrix4::operator!=(const Matrix4& o) const {
     return !(operator==(o));
 }
 
