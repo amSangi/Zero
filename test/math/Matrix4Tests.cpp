@@ -177,12 +177,12 @@ TEST(TestMatrix4, Rotate) {
 	                  0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateX(r));
 
 	EXPECT_EQ(Matrix4(   c,  0.0f,    -s,  0.0f,
-	                     0.0f,  1.0f,  0.0f,  0.0f,
+	                  0.0f,  1.0f,  0.0f,  0.0f,
 	                     s,  0.0f,     c,  0.0f,
-	                     0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateY(r));
+	                  0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateY(r));
 
 	EXPECT_EQ(Matrix4(   c,     s,  0.0f,  0.0f,
-	                     -s,     c,  0.0f,  0.0f,
-	                     0.0f,  0.0f,  1.0f,  0.0f,
-	                     0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateZ(r));
+	                    -s,     c,  0.0f,  0.0f,
+	                  0.0f,  0.0f,  1.0f,  0.0f,
+	                  0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateZ(r));
 }

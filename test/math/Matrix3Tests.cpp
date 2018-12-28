@@ -155,10 +155,10 @@ TEST(TestMatrix3, Rotate) {
 	                  0.0f,    -s,     c), Matrix3::RotateX(r));
 
 	EXPECT_EQ(Matrix3(   c,  0.0f,    -s,
-	                     0.0f,  1.0f,  0.0f,
+	                  0.0f,  1.0f,  0.0f,
 	                     s,  0.0f,     c), Matrix3::RotateY(r));
 
 	EXPECT_EQ(Matrix3(   c,     s,  0.0f,
-	                     -s,     c,  0.0f,
-	                     0.0f,  0.0f,  1.0f), Matrix3::RotateZ(r));
+	                    -s,     c,  0.0f,
+	                  0.0f,  0.0f,  1.0f), Matrix3::RotateZ(r));
 }
