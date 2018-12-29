@@ -1,17 +1,20 @@
+
+#include <math/Quaternion.h>
+
 #include "Quaternion.h"
 #include "Matrix3.h"
 #include "Vector3.h"
 
 using namespace Zero;
 
-bool Quaternion::operator==(const Quaternion& other) {
+bool Quaternion::operator==(const Quaternion& other) const {
 	return equal(w, other.w) &&
            equal(x, other.x) &&
            equal(y, other.y) &&
            equal(z, other.z);
 }
 
-bool Quaternion::operator!=(const Quaternion& other) {
+bool Quaternion::operator!=(const Quaternion& other) const {
 	return !operator==(other);
 }
 
@@ -26,6 +29,11 @@ Quaternion Quaternion::operator-(float scalar) {
 
 Quaternion Quaternion::operator*(float scalar) {
 	return Quaternion(w * scalar, x * scalar, y * scalar, z * scalar);
+}
+
+Quaternion Quaternion::operator/(float scalar) {
+	float inv_scalar = 1.0f / scalar;
+	return Quaternion(w * inv_scalar, x * inv_scalar, y * inv_scalar, z * inv_scalar);
 }
 
 Quaternion& Quaternion::operator+=(float scalar) {
@@ -108,10 +116,10 @@ Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
 }
 
 Vector3 Quaternion::operator*(const Vector3& v) const {
-	Vector3 u = xyz();
-	return (2.0f * Vector3::Dot(u, v) * u)
-           + (w * w - Vector3::Dot(u, u) * v)
-           + (2.0f * w * Vector3::Cross(u, v));
+	Vector3 u = XYZ();
+	Vector3 c1 = Vector3::Cross(u, v);
+	Vector3 c2 = Vector3::Cross(u, c1);
+	return v + 2.0f * ((c1 * w) + c2);
 }
 
 /* ********** Quaternion Operations ********** */
@@ -129,7 +137,8 @@ Quaternion& Quaternion::UnitNorm() {
 		z *= inv_norm;
 	}
 	else {
-		w = x = y = z = 0.0f;
+		w = 1.0f;
+		x = y = z = 0.0f;
 	}
 	return *this;
 }
@@ -151,7 +160,8 @@ Quaternion& Quaternion::Inverse() {
 		z *= -inv_norm;
 	}
 	else {
-		w = x = y = z = 0.0f;
+		w = 1.0f;
+		x = y = z = 0.0f;
 	}
 	return *this;
 }
@@ -161,27 +171,6 @@ Quaternion& Quaternion::Negate() {
 	x = -x;
 	y = -y;
 	z = -z;
-	return *this;
-}
-
-Quaternion& Quaternion::RotateX(Radian angle) {
-	float half_hangle_rad = angle.rad * 0.5f;
-	w *= cos(half_hangle_rad);
-	x *= sin(half_hangle_rad);
-	return *this;
-}
-
-Quaternion& Quaternion::RotateY(Radian angle) {
-	float half_hangle_rad = angle.rad * 0.5f;
-	w *= cos(half_hangle_rad);
-	y *= sin(half_hangle_rad);
-	return *this;
-}
-
-Quaternion& Quaternion::RotateZ(Radian angle) {
-	float half_hangle_rad = angle.rad * 0.5f;
-	w *= cos(half_hangle_rad);
-	z *= sin(half_hangle_rad);
 	return *this;
 }
 
@@ -201,41 +190,30 @@ Quaternion Quaternion::InverseCopy() const {
 }
 
 Vector3 Quaternion::GetEulerAngles() const {
-	return Vector3(GetRoll().rad,
-                   GetPitch().rad,
-                   GetYaw().rad);
-}
+	float ww = w * w;
+	float xx = x * x;
+	float yy = y * y;
+	float zz = z * z;
 
-Radian Quaternion::GetRoll() const {
-	float sinr_cosp = 2.0f * (w * x + y * z);
-	float cosr_cosp = 1.0f - (2.0f * (x * x + y * y));
-	float roll = atan2(sinr_cosp, cosr_cosp);
+	float unit = xx + yy + zz + ww;
+	float test = x * y + z * w;
 
-	return Radian(roll);
-}
-
-Radian Quaternion::GetPitch() const {
-	float pitch;
-	float sinp = 2.0f * (w * y - z * x);
-	if (sinp >= 1) {
-		pitch = copysign(PI * 0.5f, sinp);
-	}
-	else {
-		pitch = asin(sinp);
+	if (test > 0.499f * unit) {
+		return Vector3(2.0f * Zero::atan2(x, w), Zero::PI_2, 0.0f);
 	}
 
-	return Radian(pitch);
+	if (test < -0.499f * unit) {
+		return Vector3(-2.0f * Zero::atan2(x, w), -Zero::PI_2, 0.0f);
+	}
+
+	float heading = Zero::atan2(2.0f * (y * w - x * z), xx - yy - zz + ww);
+	float attitude = Zero::asin(2.0f * test / unit);
+	float bank = Zero::atan2(2.0f * (x * w - y * z), -xx + yy - zz + ww);
+
+	return Vector3(heading, attitude, bank);
 }
 
-Radian Quaternion::GetYaw() const {
-	float siny_cosp = 2.0f * (w * z + x * y);
-	float cosy_cosp = 1.0f - (2.0f * (y * y + z * z));
-	float yaw = atan2(siny_cosp, cosy_cosp);
-
-	return Radian(yaw);
-}
-
-Vector3 Quaternion::xyz() const {
+Vector3 Quaternion::XYZ() const {
 	return Vector3(x, y, z);
 }
 
@@ -302,22 +280,25 @@ Quaternion Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, cons
 	return FromMatrix3(rotation_matrix);
 }
 
-Quaternion Quaternion::FromEuler(float x, float y, float z) {
-	float z_half = z * 0.5f;
-	float y_half = y * 0.5f;
-	float x_half = x * 0.5f;
+Quaternion Quaternion::FromEuler(Radian rx, Radian ry, Radian rz) {
+	float x = 0.5f * rx.rad;
+	float y = 0.5f * ry.rad;
+	float z = 0.5f * rz.rad;
 
-	float cz = cos(z_half);
-	float sz = sin(z_half);
-	float cy = cos(y_half);
-	float sy = sin(y_half);
-	float cx = cos(x_half);
-	float sx = sin(x_half);
+	float cx = cos(x);
+	float sx = sin(x);
+	float cy = cos(y);
+	float sy = sin(y);
+	float cz = cos(z);
+	float sz = sin(z);
 
-	return Quaternion((cz * cy * cx) + (sz * sy * sz),
-                      (cz * cy * sx) - (sz * sy * cx),
-                      (sz * cy * sx) + (cz * sy * cx),
-                      (sz * cy * cx) - (cz * sy * sx));
+	float cxcy = cx * cy;
+	float sxsy = sx * sy;
+
+	return Quaternion((cxcy * cz) - (sxsy * sz),
+                      (cxcy * sz) + (sxsy * cz),
+                      (sx * cy * cz) + (cx * sy * sz),
+                      (cx * sy * cz) - (sx * cy * sz));
 }
 
 Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
@@ -344,7 +325,7 @@ Quaternion Quaternion::LookRotation(const Vector3& direction, const Vector3& up)
 	Vector3 right = Vector3::Cross(direction, up);
 	Vector3 recomputed_up = Vector3::Cross(right, direction);
 
-	Quaternion rot1 = FromToRotation(Vector3::Front(), direction);
+	Quaternion rot1 = FromToRotation(Vector3::Forward(), direction);
 	Vector3 new_up = rot1 * Vector3::Up();
 	Quaternion rot2 = FromToRotation(new_up, recomputed_up);
 
@@ -360,7 +341,7 @@ Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
 	Vector3 rotation_axis;
 
 	if (theta < -1.0f + EPSILON) {
-		rotation_axis = Vector3::Cross(Vector3::Front(), from_N);
+		rotation_axis = Vector3::Cross(Vector3::Forward(), from_N);
 
 		if (rotation_axis.SquareMagnitude() < EPSILON) {
 			rotation_axis = Vector3::Cross(Vector3::Right(), from_N);

@@ -16,7 +16,8 @@ namespace Zero {
     using Vector4 = Vector<4>;
 
     /* ********** Constants ********** */
-    static const float PI = 3.141593;
+    static const float PI = 3.14159265359f;
+    static const float PI_2 = 3.14159265359f * 0.5f;
     static const float DEGREE_TO_RADIAN = PI / 180.0f;
     static const float RADIAN_TO_DEGREE = 180.0f / PI;
     static const float EPSILON = 1e-06;

@@ -37,8 +37,8 @@ TEST(TestVector, UsefulConstructors) {
 	EXPECT_EQ(Vector3(-1.0f, 0.0f, 0.0f),       v3);
 	EXPECT_EQ(Vector4(-1.0f, 0.0f, 0.0f, 0.0f), v4);
 
-	v3 = Vector3::Front();
-	v4 = Vector4::Front();
+	v3 = Vector3::Forward();
+	v4 = Vector4::Forward();
 
 	EXPECT_EQ(Vector3(0.0f, 0.0f, 1.0f),       v3);
 	EXPECT_EQ(Vector4(0.0f, 0.0f, 1.0f, 0.0f), v4);
@@ -167,7 +167,7 @@ TEST(TestVector, Dot) {
 }
 
 TEST(TestVector, Cross) {
-	Vector3 front = Vector3::Front();
+	Vector3 front = Vector3::Forward();
 	Vector3 back = Vector3::Back();
 	Vector3 right = Vector3::Right();
 	Vector3 left = Vector3::Left();

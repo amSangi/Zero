@@ -174,7 +174,7 @@ namespace Zero {
 		static Vector<dims> Down();
 		static Vector<dims> Right();
 		static Vector<dims> Left();
-		static Vector<dims> Front();
+		static Vector<dims> Forward();
 		static Vector<dims> Back();
 
 	}; // template class Vector
@@ -216,7 +216,7 @@ namespace Zero {
 	}
 
 	template<int dims>
-	Vector<dims> Vector<dims>::Front() {
+	Vector<dims> Vector<dims>::Forward() {
 		static_assert(dims > 2, "Require at least 3 dimensions");
 		return Vector<dims>(0.0f, 0.0f, 1.0f);
 	}

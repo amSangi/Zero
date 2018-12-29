@@ -1,0 +1,185 @@
+#include "gtest/gtest.h"
+#include "Quaternion.h"
+#include "Vector3.h"
+#include "ZeroMath.h"
+
+using namespace Zero;
+
+TEST(TestQuaternion, ScalarOperations) {
+	Quaternion quat = Quaternion::Identity();
+
+	EXPECT_EQ(Quaternion(2.0f, 1.0f, 1.0f, 1.0f), quat + 1.0f);
+	EXPECT_EQ(Quaternion(0.0f, -1.0f, -1.0f, -1.0f), quat - 1.0f);
+	EXPECT_EQ(Quaternion(5.0f, 2.5f, 2.5f, 2.5f), (quat + 1.0f) * 2.5f);
+	EXPECT_EQ(Quaternion(1.0f, 0.5f, 0.5f, 0.5f), (quat + 1.0f) / 2.0f);
+
+	quat += 1.0f;
+	EXPECT_EQ(Quaternion(2.0f, 1.0f, 1.0f, 1.0f), quat);
+	quat -= 2.0f;
+	EXPECT_EQ(Quaternion(0.0f, -1.0f, -1.0f, -1.0f), quat);
+	quat *= 2.5f;
+	EXPECT_EQ(Quaternion(0.0f, -2.5f, -2.5f, -2.5f), quat);
+	quat /= 2.5f;
+	EXPECT_EQ(Quaternion(0.0f, -1.0f, -1.0f, -1.0f), quat);
+}
+
+TEST(TestQuaternion, QuaternionQuaternionOperations) {
+	Quaternion quat1 = Quaternion::Identity();
+	Quaternion quat2(2.5f, 3.5f, 1.0f, 5.0f);
+
+	EXPECT_EQ(Quaternion(3.5f, 3.5f, 1.0f, 5.0f), quat1 + quat2);
+	EXPECT_EQ(Quaternion(-1.5f, -3.5f, -1.0f, -5.0f), quat1 - quat2);
+
+	EXPECT_TRUE(quat1 * quat2 == quat2 *quat1);
+	EXPECT_EQ(Quaternion(2.5f, 3.5f, 1.0f, 5.0f), quat1 * quat2);
+
+	Quaternion q1(1.0f, 2.0f, 3.0f, 4.0f);
+	Quaternion q2(5.0f, 6.0f, 7.0f, 8.0f);
+	EXPECT_TRUE(q1 * q2 != q2 * q1);
+	EXPECT_EQ(Quaternion(-60.0f, 12.0f, 30.0f, 24.0f), q1 * q2);
+	EXPECT_EQ(Quaternion(-60.0f, 20.0f, 14.0f, 32.0f), q2 * q1);
+
+
+
+	quat1 += quat2;
+	EXPECT_EQ(Quaternion(3.5f, 3.5f, 1.0f, 5.0f), quat1);
+
+	quat1 -= (quat2 * 2.0f);
+	EXPECT_EQ(Quaternion(-1.5f, -3.5f, -1.0f, -5.0f), quat1);
+
+	quat1 = Quaternion::Identity();
+	quat1 *= quat2;
+	EXPECT_EQ(quat2, quat1);
+
+
+	Quaternion temp = q1;
+	q1 *= q2;
+	q2 *= temp;
+	EXPECT_TRUE(q1 != q2);
+	EXPECT_EQ(Quaternion(-60.0f, 12.0f, 30.0f, 24.0f), q1);
+	EXPECT_EQ(Quaternion(-60.0f, 20.0f, 14.0f, 32.0f), q2);
+}
+
+TEST(TestQuaternion, QuaternionVectorOperations) {
+	Quaternion identity = Quaternion::Identity();
+	Vector3 expected, actual;
+
+	Vector3 vector(1.0f, 2.0f, 3.0f);
+	expected = vector;
+	actual = identity * vector;
+	EXPECT_EQ(expected, actual);
+
+
+	expected = Vector3(25.0f, 2.0f, -9.0f);
+	actual = Quaternion(1.0f, 2.0f, 3.0f, 4.0f) * Vector3(1.0f, 2.0f, 3.0f);
+	EXPECT_EQ(expected, actual);
+
+	expected = Vector3(261.0f, -1514.0f, -419.0f);
+	actual = Quaternion(13.0f, 11.0f, 3.0f, -4.0f) * vector;
+	EXPECT_EQ(expected, actual);
+
+	expected = Vector3(-1078029.0f, 6407.0f, -2368179.0f);
+	actual = Quaternion(11.0f, -3.0f, 234.0f, 2.0f) * Vector3(11.0f, -13.0f, 21.0f);
+	EXPECT_EQ(expected, actual);
+
+}
+
+TEST(TestQuaternion, Norm) {
+	EXPECT_EQ(0.0f, Quaternion::Zero().Norm());
+	EXPECT_EQ(1.0f, Quaternion::Identity().Norm());
+	EXPECT_EQ(3.0f * Zero::sqrt(395.0f), Quaternion(1.0f, 23.0f, 44.0f, 33.0f).Norm());
+	EXPECT_EQ(Zero::sqrt(3035.0f), Quaternion(1.0f, -3.0f, 44.0f, -33.0f).Norm());
+}
+
+TEST(TestQuaternion, UnitNorm) {
+	Quaternion expected, actual, quat;
+
+	EXPECT_EQ(Quaternion::Identity(), Quaternion::Identity().UnitNorm());
+
+	quat = Quaternion(0.0f, 1.0f, 1.0f, 1.0f);
+	expected = quat / Zero::sqrt(3.0f);
+	actual = quat.UnitNorm();
+	EXPECT_EQ(expected, actual);
+
+	quat = Quaternion(25.0f, -13.0f, -3.0f, 231.0f);
+	expected = quat / (2.0f * Zero::sqrt(13541.0f));
+	actual = quat.UnitNorm();
+	EXPECT_EQ(expected, actual);
+}
+
+TEST(TestQuaternion, Conjugate) {
+	EXPECT_EQ(Quaternion::Identity(), Quaternion::Identity().Conjugate());
+	EXPECT_EQ(Quaternion(1.0f, -3.0f, 4.5f, 13.3f), Quaternion(1.0f, 3.0f, -4.5f, -13.3f).Conjugate());
+}
+
+TEST(TestQuaternion, Inverse) {
+	Quaternion expected, actual, quat;
+
+	quat = Quaternion::Identity();
+	expected = quat;
+	actual = quat.Inverse();
+	EXPECT_EQ(expected, actual);
+
+	quat = Quaternion(25.0f, -13.0f, -3.0f, 231.0f);
+	expected = Quaternion(25.0f, 13.0f, 3.0f, -231.0f) / (2.0f * Zero::sqrt(13541.0f));
+	actual = quat.Inverse();
+	EXPECT_EQ(expected, actual);
+
+	quat = Quaternion(35.0f, 10.0f, 11.0f, 12.0f);
+	expected = Quaternion(35.0f, -10.0f, -11.0f, -12.0f) / Zero::sqrt(1590.0f);
+	actual = quat.Inverse();
+	EXPECT_EQ(expected, actual);
+
+}
+
+TEST(TestQuaternion, Negate) {
+	EXPECT_EQ(Quaternion::Identity() * -1.0f, Quaternion::Identity().Negate());
+	EXPECT_EQ(Quaternion(1.0f, -3.0f, -4.5f, 5.0f), Quaternion(-1.0f, 3.0f, 4.5f, -5.0f).Negate());
+}
+
+TEST(TestQuaternion, GetEulerAngles) {
+	Radian angle, zero;
+	zero = Radian(0.0f);
+
+	EXPECT_EQ(Vector3::Zero(), Quaternion::Identity().GetEulerAngles());
+
+	angle = Radian::FromDegree(45.0f);
+	EXPECT_EQ(Vector3(angle.rad, 0.0f, 0.0f),
+              Quaternion::FromEuler(angle, zero, zero).GetEulerAngles());
+
+	angle = Radian::FromDegree(-33.5f);
+	EXPECT_EQ(Vector3(0.0f, angle.rad, 0.0f),
+              Quaternion::FromEuler(zero, angle, zero).GetEulerAngles());
+
+	angle = Radian::FromDegree(-117.23f);
+	EXPECT_EQ(Vector3(0.0f, 0.0f, angle.rad),
+              Quaternion::FromEuler(zero, zero, angle).GetEulerAngles());
+}
+
+TEST(TestQuaternion, Dot) {
+
+}
+
+TEST(TestQuaternion, FromAxisAngle) {
+
+}
+
+TEST(TestQuaternion, FromAxes) {
+
+}
+
+TEST(TestQuaternion, FromEuler) {
+
+}
+
+TEST(TestQuaternion, FromMatrix3) {
+
+}
+
+TEST(TestQuaternion, LookRotation) {
+
+}
+
+TEST(TestQuaternion, FromToRotation) {
+
+}

@@ -13,14 +13,15 @@ namespace Zero {
 
 		Quaternion& operator=(const Quaternion& other) = default;
 
-		inline bool operator==(const Quaternion& other);
-		inline bool operator!=(const Quaternion& other);
+		bool operator==(const Quaternion& other) const;
+		bool operator!=(const Quaternion& other) const;
 
 
 		/* ********** Scalar Operations ********** */
 		Quaternion operator+(float scalar);
 		Quaternion operator-(float scalar);
 		Quaternion operator*(float scalar);
+		Quaternion operator/(float scalar);
 
 		Quaternion& operator+=(float scalar);
 		Quaternion& operator-=(float scalar);
@@ -46,19 +47,13 @@ namespace Zero {
 		Quaternion& Conjugate();
 		Quaternion& Inverse();
 		Quaternion& Negate();
-		Quaternion& RotateX(Radian angle);
-		Quaternion& RotateY(Radian angle);
-		Quaternion& RotateZ(Radian angle);
 
 		Quaternion UnitNormCopy() const;
 		Quaternion ConjugateCopy() const;
 		Quaternion InverseCopy() const;
 
 		Vector3 GetEulerAngles() const;
-		Radian GetRoll() const;
-		Radian GetPitch() const;
-		Radian GetYaw() const;
-		Vector3 xyz() const;
+		Vector3 XYZ() const;
 		Matrix3 GetRotationMatrix() const;
 
 
@@ -69,7 +64,7 @@ namespace Zero {
 		static Quaternion FromAxisAngle(const Vector3& axis, Radian angle);
 		static Quaternion FromAxisAngle(const Vector3& axis, Degree angle);
 		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
-		static Quaternion FromEuler(float x, float y, float z);
+		static Quaternion FromEuler(Radian x, Radian y, Radian z);
 		static Quaternion FromMatrix3(const Matrix3& matrix);
 		static Quaternion LookRotation(const Vector3& direction, const Vector3& up);
 		static Quaternion FromToRotation(const Vector3& from, const Vector3& to);
