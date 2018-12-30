@@ -5,107 +5,127 @@
 
 namespace Zero {
 
+	namespace VectorImpl {
 
-	template<int dims>
-	class VectorBase {
-	public:
-		VectorBase() = default;
-		explicit VectorBase(float value) {
-			for (int i = 0; i < dims; ++i) {
-				data[i] = value;
+		template<int dims>
+		class VectorBase {
+		public:
+			VectorBase() = default;
+
+			explicit VectorBase(float value) {
+				for (int i = 0; i < dims; ++i) {
+					data[i] = value;
+				}
 			}
-		}
-		VectorBase(float x1, float y1) {
-			static_assert(dims > 1, "Require at least 2 dimensions");
-			data[0] = x1;
-			data[1] = y1;
-		}
-		VectorBase(float x1, float y1, float z1) {
-			static_assert(dims > 2, "Require at least 3 dimensions");
-			data[0] = x1;
-			data[1] = y1;
-			data[2] = z1;
-		}
-		VectorBase(float x1, float y1, float z1, float w1) {
-			static_assert(dims > 3, "Require at least 4 dimensions");
-			data[0] = x1;
-			data[1] = y1;
-			data[2] = z1;
-			data[3] = w1;
-		}
 
-		inline float* Data()                  { return data; }
-		inline const float* Data() const      { return data; }
+			VectorBase(float x1, float y1) {
+				static_assert(dims > 1, "Require at least 2 dimensions");
+				data[0] = x1;
+				data[1] = y1;
+			}
 
-	public:
-		float data[dims];
+			VectorBase(float x1, float y1, float z1) {
+				static_assert(dims > 2, "Require at least 3 dimensions");
+				data[0] = x1;
+				data[1] = y1;
+				data[2] = z1;
+			}
 
-	}; // template class VectorBase
+			VectorBase(float x1, float y1, float z1, float w1) {
+				static_assert(dims > 3, "Require at least 4 dimensions");
+				data[0] = x1;
+				data[1] = y1;
+				data[2] = z1;
+				data[3] = w1;
+			}
 
-	template<>
-	class VectorBase<2> {
-	public:
-		VectorBase() = default;
-		VectorBase(float x1, float y1)   : x(x1), y(y1) {}
-		explicit VectorBase(float value) : x(value), y(value) {}
+			inline float *Data() { return data; }
 
+			inline const float *Data() const { return data; }
 
-		inline float* Data()                  { return &x; }
-		inline const float* Data() const      { return &x; }
+		public:
+			float data[dims];
 
-	public:
-		float x, y;
+		}; // template class VectorBase
 
-	}; // template specialization class VectorBase<2>
+		template<>
+		class VectorBase<2> {
+		public:
+			VectorBase() = default;
+
+			VectorBase(float x1, float y1) : x(x1), y(y1) {}
+
+			explicit VectorBase(float value) : x(value), y(value) {}
 
 
-	template<>
-	class VectorBase<3> {
-	public:
-		VectorBase() = default;
-		VectorBase(float x1, float y1)            : x(x1), y(y1), z(0.0f) {}
-		VectorBase(float x1, float y1, float z1)  : x(x1), y(y1), z(z1) {}
-		explicit VectorBase(float value)          : x(value), y(value), z(value) {}
+			inline float *Data() { return &x; }
+
+			inline const float *Data() const { return &x; }
+
+		public:
+			float x, y;
+
+		}; // template specialization class VectorBase<2>
 
 
-		inline float* Data()                  { return &x; }
-		inline const float* Data() const      { return &x; }
+		template<>
+		class VectorBase<3> {
+		public:
+			VectorBase() = default;
 
-	public:
-		float x, y, z;
+			VectorBase(float x1, float y1) : x(x1), y(y1), z(0.0f) {}
 
-	}; // template specialization class VectorBase<3>
+			VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
 
-
-	template<>
-	class VectorBase<4> {
-	public:
-		VectorBase() = default;
-		VectorBase(float x1, float y1)                     : x(x1), y(y1), z(0.0f), w(0.0f) {}
-		VectorBase(float x1, float y1, float z1)           : x(x1), y(y1), z(z1), w(0.0f) {}
-		VectorBase(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
-		explicit VectorBase(float value)                   : x(value), y(value), z(value), w(value) {}
-
-		inline float* Data()                  { return &x; }
-		inline const float* Data() const      { return &x; }
-
-	public:
-		float x, y, z, w;
-
-	}; // template specialization class VectorBase<4>
+			explicit VectorBase(float value) : x(value), y(value), z(value) {}
 
 
+			inline float *Data() { return &x; }
 
+			inline const float *Data() const { return &x; }
+
+		public:
+			float x, y, z;
+
+		}; // template specialization class VectorBase<3>
+
+
+		template<>
+		class VectorBase<4> {
+		public:
+			VectorBase() = default;
+
+			VectorBase(float x1, float y1) : x(x1), y(y1), z(0.0f), w(0.0f) {}
+
+			VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1), w(0.0f) {}
+
+			VectorBase(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+
+			explicit VectorBase(float value) : x(value), y(value), z(value), w(value) {}
+
+			inline float *Data() { return &x; }
+
+			inline const float *Data() const { return &x; }
+
+		public:
+			float x, y, z, w;
+
+		}; // template specialization class VectorBase<4>
+
+	} // namespace VectorImpl
+
+	
 	template<int dims>
-	class Vector  : public VectorBase<dims> {
-		using VectorBase<dims>::Data;
+	class Vector  : public VectorImpl::VectorBase<dims> {
+		using VectorBase = VectorImpl::VectorBase<dims>;
+		using VectorBase::Data;
 	public:
 		Vector<dims>() = default;
 		Vector<dims>(const Vector<dims>& other) = default;
-		explicit Vector<dims>(float value) : VectorBase<dims>(value) {}
-		Vector<dims>(float x1, float y1) : VectorBase<dims>(x1, y1) {};
-		Vector<dims>(float x1, float y1, float z1) : VectorBase<dims>(x1, y1, z1) {}
-		Vector<dims>(float x1, float y1, float z1, float w1) : VectorBase<dims>(x1, y1, z1, w1) {}
+		explicit Vector<dims>(float value) : VectorBase(value) {}
+		Vector<dims>(float x1, float y1) : VectorBase(x1, y1) {};
+		Vector<dims>(float x1, float y1, float z1) : VectorBase(x1, y1, z1) {}
+		Vector<dims>(float x1, float y1, float z1, float w1) : VectorBase(x1, y1, z1, w1) {}
 
 		~Vector<dims>() = default;
 		Vector<dims>& operator=(const Vector<dims>& other) = default;
