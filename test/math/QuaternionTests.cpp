@@ -157,11 +157,53 @@ TEST(TestQuaternion, GetEulerAngles) {
 }
 
 TEST(TestQuaternion, Dot) {
-
+	EXPECT_EQ(1.0f, Quaternion::Dot(Quaternion::Identity(), Quaternion::Identity()));
+	float dot = Quaternion::Dot(Quaternion(1.0f, 3.0f, 23.0f, 113.0f), Quaternion(32.0f, 13.0f, 2.0f, 3.0f));
+	EXPECT_EQ(456.0f, dot);
 }
 
-TEST(TestQuaternion, FromAxisAngle) {
+TEST(TestQuaternion, FromAngleAxis) {
+	Quaternion expected, actual;
 
+	// Round to nearest tenth and check
+	auto CHECK_FLT_EQ = [] (Quaternion e, Quaternion a) {
+		EXPECT_EQ(e.w, Zero::floor(a.w * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.x, Zero::floor(a.x * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.y, Zero::floor(a.y * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.z, Zero::floor(a.z * 10.0f + 0.50f) / 10.0f);
+	};
+
+	expected = Quaternion(0.9f, 0.4f, 0.0f, 0.0f);
+	actual = Quaternion::FromAngleAxis(Vector3::Right(), Degree(45.0f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(0.7f, -0.7f, 0.0f, 0.0f);
+	actual = Quaternion::FromAngleAxis(Vector3::Left(), Degree(95.0f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(1.0f, 0.0f, 0.1f, 0.0f);
+	actual = Quaternion::FromAngleAxis(Vector3::Up(), Degree(11.3f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(1.0f, 0.0f, -0.2f, 0.0f);
+	actual = Quaternion::FromAngleAxis(Vector3::Down(), Degree(23.3f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(-1.0f, 0.0f, 0.0f, 0.2f);
+	actual = Quaternion::FromAngleAxis(Vector3::Back(), Degree(385.2f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(0.7f, 0.0f, 0.0f, -0.7f);
+	actual = Quaternion::FromAngleAxis(Vector3::Forward(), Degree(-96.3f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(-1.0f, -0.1f, -0.1f, -0.1f);
+	actual = Quaternion::FromAngleAxis(Vector3::One(), Degree(-334.1f));
+	CHECK_FLT_EQ(expected, actual);
+
+	expected = Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
+	actual = Quaternion::FromAngleAxis(Vector3::Zero(), Degree(-0.1f));
+	CHECK_FLT_EQ(expected, actual);
 }
 
 TEST(TestQuaternion, FromAxes) {

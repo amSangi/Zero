@@ -1,6 +1,3 @@
-
-#include <math/Quaternion.h>
-
 #include "Quaternion.h"
 #include "Matrix3.h"
 #include "Vector3.h"
@@ -257,19 +254,20 @@ float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 	return (lhs.w * rhs.w) + (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
 
-Quaternion Quaternion::FromAxisAngle(const Vector3& axis, Radian angle) {
+Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Radian angle) {
+	Vector3 normalized = Vector3::Normalize(axis);
 	float half_angle_rad = angle.rad * 0.5f;
-	float sin_half_angle_rad = sin(half_angle_rad);
+	float sin_half_angle_rad = Zero::sin(half_angle_rad);
 
 	// Assume axis is normalized
-	return Quaternion(cos(half_angle_rad),
-                      axis.x * sin_half_angle_rad,
-                      axis.y * sin_half_angle_rad,
-                      axis.z * sin_half_angle_rad);
+	return Quaternion(Zero::cos(half_angle_rad),
+	                  normalized.x * sin_half_angle_rad,
+	                  normalized.y * sin_half_angle_rad,
+	                  normalized.z * sin_half_angle_rad);
 }
 
-Quaternion Quaternion::FromAxisAngle(const Vector3& axis, Degree angle) {
-	return FromAxisAngle(axis, angle.ToRadian());
+Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Degree angle) {
+	return FromAngleAxis(axis, angle.ToRadian());
 }
 
 Quaternion Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) {
@@ -348,7 +346,7 @@ Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
 		}
 
 		rotation_axis.Normalize();
-		return FromAxisAngle(rotation_axis, Degree(180.0f));
+		return FromAngleAxis(rotation_axis, Degree(180.0f));
 	}
 
 	rotation_axis = Vector3::Cross(from_N, to_N);

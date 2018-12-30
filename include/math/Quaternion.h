@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Degree.h"
+#include "Radian.h"
 #include "ZeroMath.h"
 
 namespace Zero {
@@ -61,10 +63,10 @@ namespace Zero {
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
 
-		static Quaternion FromAxisAngle(const Vector3& axis, Radian angle);
-		static Quaternion FromAxisAngle(const Vector3& axis, Degree angle);
+		static Quaternion FromAngleAxis(const Vector3& axis, Radian angle);
+		static Quaternion FromAngleAxis(const Vector3& axis, Degree angle);
 		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
-		static Quaternion FromEuler(Radian x, Radian y, Radian z);
+		static Quaternion FromEuler(Radian rx, Radian ry, Radian rz);
 		static Quaternion FromMatrix3(const Matrix3& matrix);
 		static Quaternion LookRotation(const Vector3& direction, const Vector3& up);
 		static Quaternion FromToRotation(const Vector3& from, const Vector3& to);

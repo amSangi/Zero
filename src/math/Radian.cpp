@@ -1,4 +1,5 @@
-#include "ZeroMath.h"
+#include "Degree.h"
+#include "Radian.h"
 
 using namespace Zero;
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Degree.h"
+#include "Radian.h"
 #include "ZeroMath.h"
 
 namespace Zero {
