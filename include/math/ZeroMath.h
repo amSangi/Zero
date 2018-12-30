@@ -5,11 +5,18 @@
 namespace Zero {
 
     /* ********** Forward Declarations ********** */
+    class Box;
+    class Cone;
     class Degree;
+    class Frustrum;
+    class Line;
     class Matrix3;
     class Matrix4;
+    class Plane;
     class Quaternion;
     class Radian;
+    class Ray;
+    class Sphere;
     template<int dims> class Vector;
     using Vector2 = Vector<2>;
     using Vector3 = Vector<3>;
