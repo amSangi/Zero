@@ -1,5 +1,4 @@
-#include "Degree.h"
-#include "Radian.h"
+#include "Angle.h"
 
 using namespace Zero;
 

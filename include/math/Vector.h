@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Degree.h"
-#include "Radian.h"
+#include "Angle.h"
 #include "ZeroMath.h"
 
 namespace Zero {

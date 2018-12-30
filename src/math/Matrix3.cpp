@@ -1,6 +1,4 @@
 
-#include <math/Matrix3.h>
-
 #include "Matrix3.h"
 #include "Vector3.h"
 
