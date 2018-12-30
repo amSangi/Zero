@@ -52,12 +52,6 @@ namespace Zero {
         Vector3 operator*(const Vector3& rhs) const;
         Matrix3 operator*(const Matrix3& rhs) const;
 
-        static Matrix3 RotateX(Radian angle);
-        static Matrix3 RotateY(Radian angle);
-        static Matrix3 RotateZ(Radian angle);
-        static Matrix3 RotateX(Degree angle);
-        static Matrix3 RotateY(Degree angle);
-        static Matrix3 RotateZ(Degree angle);
         static Matrix3 Identity();
 
         float matrix[3][3];

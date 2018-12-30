@@ -207,7 +207,7 @@ Vector3 Quaternion::GetEulerAngles() const {
 	float attitude = Zero::asin(2.0f * test / unit);
 	float bank = Zero::atan2(2.0f * (x * w - y * z), -xx + yy - zz + ww);
 
-	return Vector3(heading, attitude, bank);
+	return Vector3(bank, heading, attitude);
 }
 
 Vector3 Quaternion::XYZ() const {
@@ -278,17 +278,17 @@ Quaternion Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, cons
 	return FromMatrix3(rotation_matrix);
 }
 
-Quaternion Quaternion::FromEuler(Radian rx, Radian ry, Radian rz) {
-	float x = 0.5f * rx.rad;
-	float y = 0.5f * ry.rad;
-	float z = 0.5f * rz.rad;
+Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
+	float rx = 0.5f * x.rad;
+	float ry = 0.5f * y.rad;
+	float rz = 0.5f * z.rad;
 
-	float cx = cos(x);
-	float sx = sin(x);
-	float cy = cos(y);
-	float sy = sin(y);
-	float cz = cos(z);
-	float sz = sin(z);
+	float cx = cos(rx);
+	float sx = sin(rx);
+	float cy = cos(ry);
+	float sy = sin(ry);
+	float cz = cos(rz);
+	float sz = sin(rz);
 
 	float cxcy = cx * cy;
 	float sxsy = sx * sy;

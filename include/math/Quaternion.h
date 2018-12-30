@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Angle.h"
+#include "Vector3.h"
 #include "ZeroMath.h"
 
 namespace Zero {
@@ -65,9 +66,9 @@ namespace Zero {
 		static Quaternion FromAngleAxis(const Vector3& axis, Radian angle);
 		static Quaternion FromAngleAxis(const Vector3& axis, Degree angle);
 		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
-		static Quaternion FromEuler(Radian rx, Radian ry, Radian rz);
+		static Quaternion FromEuler(Radian x, Radian y, Radian z);
 		static Quaternion FromMatrix3(const Matrix3& matrix);
-		static Quaternion LookRotation(const Vector3& direction, const Vector3& up);
+		static Quaternion LookRotation(const Vector3& direction, const Vector3& up = Vector3::Up());
 		static Quaternion FromToRotation(const Vector3& from, const Vector3& to);
 
 		/* ********** Useful Quaternions ********** */

@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "Angle.h"
 #include "Quaternion.h"
 #include "Vector3.h"
 #include "ZeroMath.h"
@@ -137,25 +138,6 @@ TEST(TestQuaternion, Negate) {
 	EXPECT_EQ(Quaternion(1.0f, -3.0f, -4.5f, 5.0f), Quaternion(-1.0f, 3.0f, 4.5f, -5.0f).Negate());
 }
 
-TEST(TestQuaternion, GetEulerAngles) {
-	Radian angle, zero;
-	zero = Radian(0.0f);
-
-	EXPECT_EQ(Vector3::Zero(), Quaternion::Identity().GetEulerAngles());
-
-	angle = Radian::FromDegree(45.0f);
-	EXPECT_EQ(Vector3(angle.rad, 0.0f, 0.0f),
-              Quaternion::FromEuler(angle, zero, zero).GetEulerAngles());
-
-	angle = Radian::FromDegree(-33.5f);
-	EXPECT_EQ(Vector3(0.0f, angle.rad, 0.0f),
-              Quaternion::FromEuler(zero, angle, zero).GetEulerAngles());
-
-	angle = Radian::FromDegree(-117.23f);
-	EXPECT_EQ(Vector3(0.0f, 0.0f, angle.rad),
-              Quaternion::FromEuler(zero, zero, angle).GetEulerAngles());
-}
-
 TEST(TestQuaternion, Dot) {
 	EXPECT_EQ(1.0f, Quaternion::Dot(Quaternion::Identity(), Quaternion::Identity()));
 	float dot = Quaternion::Dot(Quaternion(1.0f, 3.0f, 23.0f, 113.0f), Quaternion(32.0f, 13.0f, 2.0f, 3.0f));
@@ -206,22 +188,12 @@ TEST(TestQuaternion, FromAngleAxis) {
 	CHECK_FLT_EQ(expected, actual);
 }
 
-TEST(TestQuaternion, FromAxes) {
-
-}
-
-TEST(TestQuaternion, FromEuler) {
-
-}
-
-TEST(TestQuaternion, FromMatrix3) {
-
-}
-
 TEST(TestQuaternion, LookRotation) {
-
+	EXPECT_EQ(Vector3(0.0f, 90.0f * DEGREE_TO_RADIAN, 0.0f),
+              Quaternion::LookRotation(Vector3::Right()).GetEulerAngles());
 }
 
 TEST(TestQuaternion, FromToRotation) {
-
+	EXPECT_EQ(Vector3(0.0f, 90.0f * DEGREE_TO_RADIAN, 0.0f),
+              Quaternion::FromToRotation(Vector3::Right(), Vector3::Up()).GetEulerAngles());
 }

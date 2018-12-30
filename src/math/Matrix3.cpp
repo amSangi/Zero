@@ -1,4 +1,6 @@
 
+#include <math/Matrix3.h>
+
 #include "Matrix3.h"
 #include "Vector3.h"
 
@@ -251,42 +253,6 @@ Matrix3 Matrix3::operator*(const Matrix3& rhs) const {
     }
 
     return m;
-}
-
-Matrix3 Matrix3::RotateX(Radian angle) {
-    float c = cos(angle.rad);
-    float s = sin(angle.rad);
-    return Matrix3(1.0f, 0.0f, 0.0f,
-                   0.0f,    c,    s,
-                   0.0f,   -s,    c);
-}
-
-Matrix3 Matrix3::RotateY(Radian angle) {
-    float c = cos(angle.rad);
-    float s = sin(angle.rad);
-    return Matrix3(   c,   0.0f,   -s,
-                   0.0f,   1.0f, 0.0f,
-                      s,   0.0f,    c);
-}
-
-Matrix3 Matrix3::RotateZ(Radian angle) {
-    float c = cos(angle.rad);
-    float s = sin(angle.rad);
-    return Matrix3(   c,    s,  0.0f,
-                     -s,    c,  0.0f,
-                   0.0f, 0.0f,  1.0f);
-}
-
-Matrix3 Matrix3::RotateX(Degree angle) {
-    return RotateX(angle.ToRadian());
-}
-
-Matrix3 Matrix3::RotateY(Degree angle) {
-    return RotateY(angle.ToRadian());
-}
-
-Matrix3 Matrix3::RotateZ(Degree angle) {
-    return RotateZ(angle.ToRadian());
 }
 
 Matrix3 Matrix3::Identity() {

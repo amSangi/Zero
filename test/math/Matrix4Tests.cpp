@@ -165,24 +165,3 @@ TEST(TestMatrix4, MatrixMatrixMultiply) {
 	                  424.0f, 1037.0f, 554.0f, 196.0f,
 	                  624.0f, 1541.0f, 822.0f, 292.0f), m1 * m2);
 }
-
-TEST(TestMatrix4, Rotate) {
-	Radian r = Radian::FromDegree(133.5f);
-	float c = Zero::cos(r.rad);
-	float s = Zero::sin(r.rad);
-
-	EXPECT_EQ(Matrix4(1.0f,  0.0f,  0.0f,  0.0f,
-	                  0.0f,     c,     s,  0.0f,
-	                  0.0f,    -s,     c,  0.0f,
-	                  0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateX(r));
-
-	EXPECT_EQ(Matrix4(   c,  0.0f,    -s,  0.0f,
-	                  0.0f,  1.0f,  0.0f,  0.0f,
-	                     s,  0.0f,     c,  0.0f,
-	                  0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateY(r));
-
-	EXPECT_EQ(Matrix4(   c,     s,  0.0f,  0.0f,
-	                    -s,     c,  0.0f,  0.0f,
-	                  0.0f,  0.0f,  1.0f,  0.0f,
-	                  0.0f,  0.0f,  0.0f,  1.0f), Matrix4::RotateZ(r));
-}

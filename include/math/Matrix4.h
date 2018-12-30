@@ -52,12 +52,6 @@ namespace Zero {
         Vector4 operator*(const Vector4& rhs) const;
         Matrix4 operator*(const Matrix4& rhs) const;
 
-        static Matrix4 RotateX(const Radian& angle);
-        static Matrix4 RotateY(const Radian& angle);
-        static Matrix4 RotateZ(const Radian& angle);
-        static Matrix4 RotateX(const Degree& angle);
-        static Matrix4 RotateY(const Degree& angle);
-        static Matrix4 RotateZ(const Degree& angle);
         static Matrix4 Identity();
         static Matrix4 Identity3();
 

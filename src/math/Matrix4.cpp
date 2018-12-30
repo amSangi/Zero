@@ -297,45 +297,6 @@ Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
     return m;
 }
 
-Matrix4 Matrix4::RotateX(const Radian& angle) {
-    float c = cos(angle.rad);
-    float s = sin(angle.rad);
-    return Matrix4(1.0f, 0.0f, 0.0f, 0.0f,
-                   0.0f,    c,    s, 0.0f,
-                   0.0f,   -s,    c, 0.0f,
-                   0.0f, 0.0f, 0.0f, 1.0f);
-}
-
-Matrix4 Matrix4::RotateY(const Radian& angle) {
-    float c = cos(angle.rad);
-    float s = sin(angle.rad);
-    return Matrix4(    c, 0.0f,   -s, 0.0f,
-                    0.0f, 1.0f, 0.0f, 0.0f,
-                       s, 0.0f,    c, 0.0f,
-                    0.0f, 0.0f, 0.0f, 1.0f);
-}
-
-Matrix4 Matrix4::RotateZ(const Radian& angle) {
-    float c = cos(angle.rad);
-    float s = sin(angle.rad);
-    return Matrix4(   c,    s, 0.0f, 0.0f,
-                     -s,    c, 0.0f, 0.0f,
-                   0.0f, 0.0f, 1.0f, 0.0f,
-                   0.0f, 0.0f, 0.0f, 1.0f);
-}
-
-Matrix4 Matrix4::RotateX(const Degree& angle) {
-    return RotateX(angle.ToRadian());
-}
-
-Matrix4 Matrix4::RotateY(const Degree& angle) {
-    return RotateY(angle.ToRadian());
-}
-
-Matrix4 Matrix4::RotateZ(const Degree& angle) {
-    return RotateZ(angle.ToRadian());
-}
-
 Matrix4 Matrix4::Identity() {
     return Matrix4(1.0f, 0.0f, 0.0f, 0.0f,
                    0.0f, 1.0f, 0.0f, 0.0f,
