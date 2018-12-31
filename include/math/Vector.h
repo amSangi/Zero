@@ -253,7 +253,7 @@ namespace Zero {
 
 	template<int dims>
 	float Vector<dims>::Magnitude() const {
-		return Zero::sqrt(SquareMagnitude());
+		return Zero::Sqrt(SquareMagnitude());
 	}
 
 	template<int dims>
@@ -270,7 +270,7 @@ namespace Zero {
 	Vector<dims>& Vector<dims>::Abs() {
 		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			data[i] = Zero::abs(data[i]);
+			data[i] = Zero::Abs(data[i]);
 		}
 		return *this;
 	}
@@ -347,8 +347,8 @@ namespace Zero {
 		float dot = Dot(from, to);
 		float square_mag_from = from.SquareMagnitude();
 		float square_mag_to = to.SquareMagnitude();
-		float inv_sqrt = 1.0f / sqrt(square_mag_from * square_mag_to);
-		float angle = Zero::acos( dot * inv_sqrt );
+		float inv_sqrt = 1.0f / Sqrt(square_mag_from * square_mag_to);
+		float angle = Zero::Acos(dot * inv_sqrt);
 		return Radian(angle);
 	}
 
@@ -360,7 +360,7 @@ namespace Zero {
 		const float* data = Data();
 		const float* rhs_data = o.Data();
 		for (int i = 0; i < dims; ++i) {
-			if (!equal(data[i], rhs_data[i])) return false;
+			if (!Equal(data[i], rhs_data[i])) return false;
 		}
 
 		return true;

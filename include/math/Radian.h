@@ -15,8 +15,8 @@ namespace Zero {
 
 
 		/* ********** Comparison Operators ********** */
-		bool operator==(const Radian& r) const             { return equal(rad, r.rad); }
-		bool operator!=(const Radian& r) const             { return !equal(rad, r.rad); }
+		bool operator==(const Radian& r) const             { return Equal(rad, r.rad); }
+		bool operator!=(const Radian& r) const             { return !Equal(rad, r.rad); }
 		bool operator>=(const Radian& r) const             { return rad >= r.rad; }
 		bool operator>(const Radian& r)  const             { return rad > r.rad;  }
 		bool operator<=(const Radian& r) const             { return rad <= r.rad; }

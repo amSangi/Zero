@@ -15,7 +15,7 @@ Sphere::Sphere(const Vector3& center, float radius)
    : center_(center), radius_(radius) {}
 
 bool Sphere::operator==(const Sphere& o) {
-	return center_ == o.center_ && Zero::equal(radius_, o.radius_);
+	return center_ == o.center_ && Zero::Equal(radius_, o.radius_);
 }
 
 bool Sphere::operator!=(const Sphere& o) {

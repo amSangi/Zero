@@ -33,7 +33,7 @@ Matrix4::Matrix4(float e00, float e01, float e02, float e03,
 bool Matrix4::operator==(const Matrix4& o) const {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
-            if (!equal(matrix[i][j], o.matrix[i][j])) {
+            if (!Equal(matrix[i][j], o.matrix[i][j])) {
                 return false;
             }
         }
@@ -230,7 +230,7 @@ bool Matrix4::InverseUtil(Matrix4& out, float epsilon) const {
                 + matrix[0][2] * ( matrix[1][0] * A1323 - matrix[1][1] * A0323 + matrix[1][3] * A0123 )
                 - matrix[0][3] * ( matrix[1][0] * A1223 - matrix[1][1] * A0223 + matrix[1][2] * A0123 ) ;
 
-    if (Zero::abs(det) <= epsilon) return false;
+    if (Zero::Abs(det) <= epsilon) return false;
 
     float inv_det = 1.0f / det;
 

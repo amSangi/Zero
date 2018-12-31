@@ -5,10 +5,10 @@
 using namespace Zero;
 
 bool Quaternion::operator==(const Quaternion& other) const {
-	return equal(w, other.w) &&
-           equal(x, other.x) &&
-           equal(y, other.y) &&
-           equal(z, other.z);
+	return Equal(w, other.w) &&
+			Equal(x, other.x) &&
+			Equal(y, other.y) &&
+			Equal(z, other.z);
 }
 
 bool Quaternion::operator!=(const Quaternion& other) const {
@@ -121,7 +121,7 @@ Vector3 Quaternion::operator*(const Vector3& v) const {
 
 /* ********** Quaternion Operations ********** */
 float Quaternion::Norm() const {
-	return sqrt((w * w) + (x * x) + (y * y) + (z * z));
+	return Sqrt((w * w) + (x * x) + (y * y) + (z * z));
 }
 
 Quaternion& Quaternion::UnitNorm() {
@@ -196,16 +196,16 @@ Vector3 Quaternion::GetEulerAngles() const {
 	float test = x * y + z * w;
 
 	if (test > 0.499f * unit) {
-		return Vector3(2.0f * Zero::atan2(x, w), Zero::PI_2, 0.0f);
+		return Vector3(2.0f * Zero::Atan2(x, w), Zero::PI_2, 0.0f);
 	}
 
 	if (test < -0.499f * unit) {
-		return Vector3(-2.0f * Zero::atan2(x, w), -Zero::PI_2, 0.0f);
+		return Vector3(-2.0f * Zero::Atan2(x, w), -Zero::PI_2, 0.0f);
 	}
 
-	float heading = Zero::atan2(2.0f * (y * w - x * z), xx - yy - zz + ww);
-	float attitude = Zero::asin(2.0f * test / unit);
-	float bank = Zero::atan2(2.0f * (x * w - y * z), -xx + yy - zz + ww);
+	float heading = Zero::Atan2(2.0f * (y * w - x * z), xx - yy - zz + ww);
+	float attitude = Zero::Asin(2.0f * test / unit);
+	float bank = Zero::Atan2(2.0f * (x * w - y * z), -xx + yy - zz + ww);
 
 	return Vector3(bank, heading, attitude);
 }
@@ -257,10 +257,10 @@ float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Radian angle) {
 	Vector3 normalized = Vector3::Normalize(axis);
 	float half_angle_rad = angle.rad * 0.5f;
-	float sin_half_angle_rad = Zero::sin(half_angle_rad);
+	float sin_half_angle_rad = Zero::Sin(half_angle_rad);
 
 	// Assume axis is normalized
-	return Quaternion(Zero::cos(half_angle_rad),
+	return Quaternion(Zero::Cos(half_angle_rad),
 	                  normalized.x * sin_half_angle_rad,
 	                  normalized.y * sin_half_angle_rad,
 	                  normalized.z * sin_half_angle_rad);
@@ -283,12 +283,12 @@ Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
 	float ry = 0.5f * y.rad;
 	float rz = 0.5f * z.rad;
 
-	float cx = cos(rx);
-	float sx = sin(rx);
-	float cy = cos(ry);
-	float sy = sin(ry);
-	float cz = cos(rz);
-	float sz = sin(rz);
+	float cx = Cos(rx);
+	float sx = Sin(rx);
+	float cy = Cos(ry);
+	float sy = Sin(ry);
+	float cz = Cos(rz);
+	float sz = Sin(rz);
 
 	float cxcy = cx * cy;
 	float sxsy = sx * sy;
@@ -300,14 +300,14 @@ Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
 }
 
 Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
-	float w = sqrt( max(0.0f, 1.0f + matrix(0, 0) + matrix(1, 1) + matrix(2, 2)) ) * 0.5f;
-	float x = sqrt( max(0.0f, 1.0f + matrix(0, 0) - matrix(1, 1) - matrix(2, 2)) ) * 0.5f;
-	float y = sqrt( max(0.0f, 1.0f - matrix(0, 0) + matrix(1, 1) - matrix(2, 2)) ) * 0.5f;
-	float z = sqrt( max(0.0f, 1.0f - matrix(0, 0) - matrix(1, 1) + matrix(2, 2)) ) * 0.5f;
+	float w = Sqrt(Max(0.0f, 1.0f + matrix(0, 0) + matrix(1, 1) + matrix(2, 2))) * 0.5f;
+	float x = Sqrt(Max(0.0f, 1.0f + matrix(0, 0) - matrix(1, 1) - matrix(2, 2))) * 0.5f;
+	float y = Sqrt(Max(0.0f, 1.0f - matrix(0, 0) + matrix(1, 1) - matrix(2, 2))) * 0.5f;
+	float z = Sqrt(Max(0.0f, 1.0f - matrix(0, 0) - matrix(1, 1) + matrix(2, 2))) * 0.5f;
 
-	x = copysign(x, matrix(2, 1) - matrix(1, 2));
-	y = copysign(y, matrix(0, 2) - matrix(2, 0));
-	z = copysign(z, matrix(2, 0) - matrix(0, 2));
+	x = Copysign(x, matrix(2, 1) - matrix(1, 2));
+	y = Copysign(y, matrix(0, 2) - matrix(2, 0));
+	z = Copysign(z, matrix(2, 0) - matrix(0, 2));
 
 	return Quaternion(w, x, y, z);
 }
@@ -350,7 +350,7 @@ Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
 	}
 
 	rotation_axis = Vector3::Cross(from_N, to_N);
-	float s = sqrt( (1.0f + theta) * 2.0f);
+	float s = Sqrt((1.0f + theta) * 2.0f);
 	float inv_s = 1.0f / s;
 
 	return Quaternion(s * 0.5f,

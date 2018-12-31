@@ -16,8 +16,8 @@ namespace Zero {
 
 
 		/* ********** Comparison Operators ********** */
-		bool operator==(const Degree& d) const             { return equal(deg, d.deg); }
-		bool operator!=(const Degree& d) const             { return !equal(deg, d.deg); }
+		bool operator==(const Degree& d) const             { return Equal(deg, d.deg); }
+		bool operator!=(const Degree& d) const             { return !Equal(deg, d.deg); }
 		bool operator>=(const Degree& d) const             { return deg >= d.deg; }
 		bool operator>(const Degree& d)  const             { return deg > d.deg;  }
 		bool operator<=(const Degree& d) const             { return deg <= d.deg; }

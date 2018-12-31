@@ -98,7 +98,7 @@ TEST(TestVector, Magnitude) {
 	Vector4 negative_vector(-1.0f, -2.0f, -3.0f, -4.0f);
 	Vector4 zero_vector(0.0f);
 
-	float magnitude = Zero::sqrt(1.0f + 4.0f + 9.0f + 16.0f);
+	float magnitude = Zero::Sqrt(1.0f + 4.0f + 9.0f + 16.0f);
 	EXPECT_EQ(magnitude, simple_vector.Magnitude());
 	EXPECT_EQ(magnitude, negative_vector.Magnitude());
 	EXPECT_EQ(0.0f, zero_vector.Magnitude());
@@ -126,7 +126,7 @@ TEST(TestVector, Abs) {
 }
 
 TEST(TestVector, Normalize) {
-	Vector3 expected(1.0f / Zero::sqrt(3.0f));
+	Vector3 expected(1.0f / Zero::Sqrt(3.0f));
 
 	// Static Method
 	EXPECT_EQ(expected, Vector3::Normalize(Vector3::One()));
@@ -136,9 +136,9 @@ TEST(TestVector, Normalize) {
 	EXPECT_TRUE(actual.Normalize());
 	EXPECT_EQ(expected, actual);
 
-	EXPECT_TRUE(Zero::equal(expected.x, actual.x));
-	EXPECT_TRUE(Zero::equal(expected.y, actual.y));
-	EXPECT_TRUE(Zero::equal(expected.z, actual.z));
+	EXPECT_TRUE(Zero::Equal(expected.x, actual.x));
+	EXPECT_TRUE(Zero::Equal(expected.y, actual.y));
+	EXPECT_TRUE(Zero::Equal(expected.z, actual.z));
 }
 
 TEST(TestVector, NormalizeComplex) {
@@ -151,10 +151,10 @@ TEST(TestVector, NormalizeComplex) {
 	// Instance method
 	EXPECT_TRUE(actual.Normalize());
 	EXPECT_EQ(expected, actual);
-	EXPECT_TRUE(Zero::equal(expected.x, actual.x));
-	EXPECT_TRUE(Zero::equal(expected.y, actual.y));
-	EXPECT_TRUE(Zero::equal(expected.z, actual.z));
-	EXPECT_TRUE(Zero::equal(expected.w, actual.w));
+	EXPECT_TRUE(Zero::Equal(expected.x, actual.x));
+	EXPECT_TRUE(Zero::Equal(expected.y, actual.y));
+	EXPECT_TRUE(Zero::Equal(expected.z, actual.z));
+	EXPECT_TRUE(Zero::Equal(expected.w, actual.w));
 }
 
 TEST(TestVector, Dot) {
@@ -163,7 +163,7 @@ TEST(TestVector, Dot) {
 
 	float dot = Vector4::Dot(Vector4(-2.3f, 43.104f, -253.1345f, 23.0f),
                              Vector4(1.0f, 323.4f, 234.3f, -34.0f));
-	EXPECT_TRUE(Zero::equal(-46153.9f, dot, 1e-01));
+	EXPECT_TRUE(Zero::Equal(-46153.9f, dot, 1e-01));
 }
 
 TEST(TestVector, Cross) {
@@ -217,12 +217,12 @@ TEST(TestVector, ReflectComplex) {
 
 TEST(TestVector, Distance) {
 	EXPECT_EQ(1.0f, Vector3::Distance(Vector3::Up(), Vector3::Zero()));
-	EXPECT_EQ(Zero::sqrt(2.0f), Vector3::Distance(Vector3::Up(), Vector3::Right()));
+	EXPECT_EQ(Zero::Sqrt(2.0f), Vector3::Distance(Vector3::Up(), Vector3::Right()));
 	EXPECT_EQ(2.0f, Vector3::Distance(Vector3::Up(), Vector3::Down()));
 
 	float expected = 46.8359f;
 	float actual = Vector3::Distance(Vector3(2.34f, 19.0f, 15.2f), Vector3(14.13f, -3.234f, -24.3f));
-	EXPECT_TRUE(Zero::equal(expected, actual, 1e-04));
+	EXPECT_TRUE(Zero::Equal(expected, actual, 1e-04));
 }
 
 TEST(TestVector, SquareDistance) {
@@ -232,7 +232,7 @@ TEST(TestVector, SquareDistance) {
 
 	float expected = 2193.6;
 	float actual = Vector3::SquareDistance(Vector3(2.34f, 19.0f, 15.2f), Vector3(14.13f, -3.234f, -24.3f));
-	EXPECT_TRUE(Zero::equal(expected, actual, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected, actual, 1e-01));
 }
 
 TEST(TestVector, Lerp) {
@@ -251,9 +251,9 @@ TEST(TestVector, LerpComplex) {
 
 	Vector3 expected_mid(17.2f, -9.1f, 145.4f);
 	Vector3 actual_mid = Vector3::Lerp(start, end, 0.5f);
-	EXPECT_TRUE(Zero::equal(expected_mid.x, actual_mid.x, 1e-01));
-	EXPECT_TRUE(Zero::equal(expected_mid.y, actual_mid.y, 1e-01));
-	EXPECT_TRUE(Zero::equal(expected_mid.z, actual_mid.z, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected_mid.x, actual_mid.x, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected_mid.y, actual_mid.y, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected_mid.z, actual_mid.z, 1e-01));
 
 	EXPECT_EQ(end, Vector3::Lerp(start, end, 1.0f));
 }
@@ -277,7 +277,7 @@ TEST(TestVector, Angle) {
 	actual = Vector3::Angle(Vector3(1.0f, 1.0f), Vector3(-1.0f, 1.0f));
 	EXPECT_EQ(expected, actual);
 
-	expected = Radian(Zero::acos(1.0f / 3.0f));
+	expected = Radian(Zero::Acos(1.0f / 3.0f));
 	actual = Vector3::Angle(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, -1.0f));
 	EXPECT_EQ(expected, actual);
 

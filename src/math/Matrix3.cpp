@@ -31,7 +31,7 @@ Matrix3::Matrix3(float e00, float e01, float e02,
 bool Matrix3::operator==(const Matrix3& o) const {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
-            if (!equal(matrix[i][j], o.matrix[i][j])) {
+            if (!Equal(matrix[i][j], o.matrix[i][j])) {
                 return false;
             }
         }
@@ -197,7 +197,7 @@ bool Matrix3::InverseUtil(Matrix3& out, float epsilon) const {
                 - matrix[0][1] * (t2 - t3)
                 + matrix[0][2] * (t4 - matrix[1][1] * matrix[2][0]);
 
-    if (Zero::abs(det) <= epsilon) return false;
+    if (Zero::Abs(det) <= epsilon) return false;
 
     float inv_det = 1.0f / det;
 
