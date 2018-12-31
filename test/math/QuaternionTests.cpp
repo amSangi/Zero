@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 #include "Angle.h"
 #include "Quaternion.h"
-#include "Vector3.h"
-#include "ZeroMath.h"
 
 using namespace Zero;
 

@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "Vector.h"
-#include "ZeroMath.h"
 
 using namespace Zero;
 

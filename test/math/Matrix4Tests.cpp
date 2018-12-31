@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "Matrix4.h"
 #include "Vector4.h"
-#include "ZeroMath.h"
 
 using namespace Zero;
 
