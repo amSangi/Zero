@@ -280,7 +280,7 @@ namespace Zero {
 		float magnitude = Magnitude();
 
 		float inv_magnitude = 1.0f / magnitude;
-		if (magnitude > 0.0f) {
+		if (magnitude > SMALL_EPSILON) {
 			operator*=(inv_magnitude);
 			return true;
 		}

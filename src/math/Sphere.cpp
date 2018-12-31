@@ -1,18 +1,15 @@
-
-#include <math/Sphere.h>
-
 #include "Sphere.h"
 
 using namespace Zero;
 
-Sphere::Sphere(float radius)
-   : radius(radius), center(0.0f) {}
+Sphere::Sphere(float r)
+   : center(Vector3::Zero()), radius(r) {}
 
-Sphere::Sphere(const Vector3& center)
-   : radius(0.0f), center(center) {}
+Sphere::Sphere(const Vector3& c)
+   : center(c), radius(0.0f) {}
 
-Sphere::Sphere(const Vector3& center, float radius)
-   : center(center), radius(radius) {}
+Sphere::Sphere(const Vector3& c, float r)
+   : center(c), radius(r) {}
 
 bool Sphere::operator==(const Sphere& o) const {
 	return center == o.center && Zero::Equal(radius, o.radius);
@@ -24,7 +21,7 @@ bool Sphere::operator!=(const Sphere& o) const {
 
 
 /* ********** Intersection Tests ********** */
-bool Sphere::Contains(const Box& box) const {
+bool Sphere::Contains(const BoundingBox& box) const {
 	return false; // stub
 }
 
@@ -50,7 +47,7 @@ bool Sphere::Contains(const Sphere& other) const {
 }
 
 bool Sphere::Contains(const Vector3& point) const {
-	return (point - center).SquareMagnitude() <= (radius * radius);
+	return Vector3::SquareDistance(center, point) <= (radius * radius);
 }
 
 
@@ -66,7 +63,7 @@ void Sphere::Merge(const Sphere& other) {
 		Vector3 direction = center - other.center;
 		float distance = direction.Magnitude();
 		// Normalize direction
-		direction /= distance;
+		if (distance > SMALL_EPSILON) direction /= distance;
 
 		// Half of diameter of enclosing circle
 		float merged_radius = (distance + radius + other.radius) * 0.5f;

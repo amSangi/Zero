@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector3.h"
-#include "ZeroMath.h"
 
 namespace Zero {
 
@@ -20,11 +19,11 @@ namespace Zero {
 
 		/* ********** Intersection Tests ********** */
 		/**
-		 * @brief Check if a box is inside the sphere
-		 * @param box The box
+		 * @brief Check if a bounding box is inside the sphere
+		 * @param box The bounding box
 		 * @return True if box is inside this. Otherwise false.
 		 */
-		bool Contains(const Box& box) const;
+		bool Contains(const BoundingBox& box) const;
 
 		/**
 		 * @brief Check if a cone is inside the sphere
