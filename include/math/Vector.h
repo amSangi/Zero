@@ -383,30 +383,22 @@ namespace Zero {
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator+(float scalar) const {
-		Vector<dims> v = *this;
-		v += scalar;
-		return v;
+		return Vector<dims>(*this) += scalar;
 	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator-(float scalar) const {
-		Vector<dims> v = *this;
-		v -= scalar;
-		return v;
+		return Vector<dims>(*this) -= scalar;
 	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator*(float scalar) const {
-		Vector<dims> v = *this;
-		v *= scalar;
-		return v;
+		return Vector<dims>(*this) *= scalar;
 	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator/(float scalar) const {
-		Vector<dims> v = *this;
-		v /= scalar;
-		return v;
+		return Vector<dims>(*this) /= scalar;
 	}
 
 	template<int dims>
@@ -448,46 +440,22 @@ namespace Zero {
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator+(const Vector<dims>& rhs) const {
-		Vector<dims> v = *this;
-		float* data = v.Data();
-		const float* rhs_data = rhs.Data();
-		for (int i = 0; i < dims; ++i) {
-			data[i] += rhs_data[i];
-		}
-		return v;
+		return Vector<dims>(*this) += rhs;
 	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator-(const Vector<dims>& rhs) const {
-		Vector<dims> v = *this;
-		float* data = v.Data();
-		const float* rhs_data = rhs.Data();
-		for (int i = 0; i < dims; ++i) {
-			data[i] -= rhs_data[i];
-		}
-		return v;
+		return Vector<dims>(*this) -= rhs;
 	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator*(const Vector<dims>& rhs) const {
-		Vector<dims> v = *this;
-		float* data = v.Data();
-		const float* rhs_data = rhs.Data();
-		for (int i = 0; i < dims; ++i) {
-			data[i] *= rhs_data[i];
-		}
-		return v;
+		return Vector<dims>(*this) *= rhs;
 	}
 
 	template<int dims>
 	Vector<dims> Vector<dims>::operator/(const Vector<dims>& rhs) const {
-		Vector<dims> v = *this;
-		float* data = v.Data();
-		const float* rhs_data = rhs.Data();
-		for (int i = 0; i < dims; ++i) {
-			data[i] /= rhs_data[i];
-		}
-		return v;
+		return Vector<dims>(*this) /= rhs;
 	}
 
 	template<int dims>

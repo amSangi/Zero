@@ -172,18 +172,15 @@ Quaternion& Quaternion::Negate() {
 }
 
 Quaternion Quaternion::UnitNormCopy() const {
-	Quaternion q = *this;
-	return q.UnitNorm();
+	return Quaternion(*this).UnitNorm();
 }
 
 Quaternion Quaternion::ConjugateCopy() const {
-	Quaternion q = *this;
-	return q.Conjugate();
+	return Quaternion(*this).Conjugate();
 }
 
 Quaternion Quaternion::InverseCopy() const {
-	Quaternion q = *this;
-	return q.Inverse();
+	return Quaternion(*this).Inverse();
 }
 
 Vector3 Quaternion::GetEulerAngles() const {

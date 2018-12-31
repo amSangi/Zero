@@ -60,44 +60,19 @@ float* Matrix3::operator[](size_t index) {
 }
 
 Matrix3 Matrix3::operator+(float scalar) const {
-    Matrix3 m{};
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] + scalar;
-        }
-    }
-    return m;
+    return Matrix3(*this) += scalar;
 }
 
 Matrix3 Matrix3::operator-(float scalar) const {
-    Matrix3 m{};
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] - scalar;
-        }
-    }
-    return m;
+    return Matrix3(*this) -= scalar;
 }
 
 Matrix3 Matrix3::operator*(float scalar) const {
-    Matrix3 m{};
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] * scalar;
-        }
-    }
-    return m;
+    return Matrix3(*this) *= scalar;
 }
 
 Matrix3 Matrix3::operator/(float scalar) const {
-    Matrix3 m{};
-    float inv_scalar = 1.0f / scalar;
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] * inv_scalar;
-        }
-    }
-    return m;
+    return Matrix3(*this) /= scalar;
 }
 
 Matrix3& Matrix3::operator+=(float scalar) {
@@ -144,23 +119,11 @@ Matrix3 Matrix3::Hadamard(const Matrix3& lhs, const Matrix3& rhs) {
 }
 
 Matrix3 Matrix3::operator+(const Matrix3& rhs) const {
-    Matrix3 m{};
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] + rhs.matrix[i][j];
-        }
-    }
-    return m;
+    return Matrix3(*this) += rhs;
 }
 
 Matrix3 Matrix3::operator-(const Matrix3& rhs) const {
-    Matrix3 m{};
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-            m.matrix[i][j] = matrix[i][j] - rhs.matrix[i][j];
-        }
-    }
-    return m;
+    return Matrix3(*this) -= rhs;
 }
 
 Matrix3& Matrix3::operator+=(const Matrix3& rhs) {

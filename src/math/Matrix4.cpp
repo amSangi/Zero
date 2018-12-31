@@ -63,44 +63,19 @@ float* Matrix4::operator[](size_t index) {
 }
 
 Matrix4 Matrix4::operator+(float scalar) const {
-    Matrix4 m{};
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] + scalar;
-        }
-    }
-    return m;
+    return Matrix4(*this) += scalar;
 }
 
 Matrix4 Matrix4::operator-(float scalar) const {
-    Matrix4 m{};
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] - scalar;
-        }
-    }
-    return m;
+    return Matrix4(*this) -= scalar;
 }
 
 Matrix4 Matrix4::operator*(float scalar) const {
-    Matrix4 m{};
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] * scalar;
-        }
-    }
-    return m;
+    return Matrix4(*this) *= scalar;
 }
 
 Matrix4 Matrix4::operator/(float scalar) const {
-    Matrix4 m{};
-    float inv_scalar = 1.0f / scalar;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] * inv_scalar;
-        }
-    }
-    return m;
+    return Matrix4(*this) /= scalar;
 }
 
 Matrix4& Matrix4::operator+=(float scalar) {
@@ -151,27 +126,11 @@ Matrix4 Matrix4::Hadamard(const Matrix4& lhs, const Matrix4& rhs) {
 }
 
 Matrix4 Matrix4::operator+(const Matrix4& rhs) const {
-    Matrix4 m{};
-
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] + rhs.matrix[i][j];
-        }
-    }
-
-    return m;
+    return Matrix4(*this) += rhs;
 }
 
 Matrix4 Matrix4::operator-(const Matrix4& rhs) const {
-    Matrix4 m{};
-
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m.matrix[i][j] = matrix[i][j] - rhs.matrix[i][j];
-        }
-    }
-
-    return m;
+    return Matrix4(*this) -= rhs;
 }
 
 Matrix4& Matrix4::operator+=(const Matrix4& rhs) {
