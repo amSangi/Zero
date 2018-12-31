@@ -6,10 +6,11 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest-src/goo
 
 add_executable(${PROJECT_NAME} AllTests.cpp
                                math/AngleTests.cpp
-                               math/VectorTests.cpp
                                math/Matrix3Tests.cpp
                                math/Matrix4Tests.cpp
-                               math/QuaternionTests.cpp)
+                               math/QuaternionTests.cpp
+                               math/SphereTests.cpp
+                               math/VectorTests.cpp)
 
 target_link_libraries(${PROJECT_NAME} ZeroCore)
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
