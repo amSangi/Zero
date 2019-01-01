@@ -5,8 +5,7 @@
 namespace Zero {
 
     /* ********** Forward Declarations ********** */
-    class BoundingBox;
-    class Cone;
+    class Box;
     class Degree;
     class Frustrum;
     class Line;

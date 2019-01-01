@@ -19,18 +19,11 @@ namespace Zero {
 
 		/* ********** Intersection Tests ********** */
 		/**
-		 * @brief Check if a bounding box is inside the sphere
-		 * @param box The bounding box
+		 * @brief Check if a box is inside the sphere
+		 * @param box The box
 		 * @return True if box is inside this. Otherwise false.
 		 */
-		bool Contains(const BoundingBox& box) const;
-
-		/**
-		 * @brief Check if a cone is inside the sphere
-		 * @param cone The cone
-		 * @return True if cone is inside this. Otherwise false.
-		 */
-		bool Contains(const Cone& cone) const;
+		bool Contains(const Box& box) const;
 
 		/**
 		 * @brief Check if a Frustrum is inside the sphere
@@ -56,7 +49,7 @@ namespace Zero {
 		/**
 		 * @brief Check if a point is inside the sphere
 		 * @param point The point
-		 * @return True if the point is inside the sphere. Otherwise false.
+		 * @return True if the point is inside this. Otherwise false.
 		 */
 		bool Contains(const Vector3& point) const;
 
@@ -76,6 +69,7 @@ namespace Zero {
 		 * @return A new sphere that contains both lhs and rhs
 		 */
 		static Sphere Merge(const Sphere& lhs, const Sphere& rhs);
+
 		static Sphere Zero();
 
 	public:

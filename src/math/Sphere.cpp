@@ -12,7 +12,7 @@ Sphere::Sphere(const Vector3& c, float r)
    : center(c), radius(r) {}
 
 bool Sphere::operator==(const Sphere& o) const {
-	return center == o.center && Zero::Equal(radius, o.radius);
+	return (center == o.center) && Zero::Equal(radius, o.radius);
 }
 
 bool Sphere::operator!=(const Sphere& o) const {
@@ -21,11 +21,7 @@ bool Sphere::operator!=(const Sphere& o) const {
 
 
 /* ********** Intersection Tests ********** */
-bool Sphere::Contains(const BoundingBox& box) const {
-	return false; // stub
-}
-
-bool Sphere::Contains(const Cone& cone) const {
+bool Sphere::Contains(const Box& box) const {
 	return false; // stub
 }
 
