@@ -1,4 +1,5 @@
 #include "Sphere.h"
+#include "Box.h"
 
 using namespace Zero;
 
@@ -22,15 +23,7 @@ bool Sphere::operator!=(const Sphere& o) const {
 
 /* ********** Intersection Tests ********** */
 bool Sphere::Contains(const Box& box) const {
-	return false; // stub
-}
-
-bool Sphere::Contains(const Frustrum& frustrum) const {
-	return false; // stub
-}
-
-bool Sphere::Contains(const Ray& ray) const {
-	return false; // stub
+	return Contains(box.min) && Contains(box.max);
 }
 
 bool Sphere::Contains(const Sphere& other) const {
@@ -39,11 +32,16 @@ bool Sphere::Contains(const Sphere& other) const {
 	}
 
 	float radius_difference = radius - other.radius;
-	return (other.center - center).SquareMagnitude() <= (radius_difference * radius_difference);
+	return Vector3::SquareDistance(center, other.center) <= (radius_difference * radius_difference);
 }
 
 bool Sphere::Contains(const Vector3& point) const {
 	return Vector3::SquareDistance(center, point) <= (radius * radius);
+}
+
+bool Sphere::Intersects(const Sphere& other) const {
+	float max = Zero::Max(0.0f, radius + other.radius);
+	return Vector3::SquareDistance(center, other.center) <= (max * max);
 }
 
 

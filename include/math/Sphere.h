@@ -26,20 +26,6 @@ namespace Zero {
 		bool Contains(const Box& box) const;
 
 		/**
-		 * @brief Check if a Frustrum is inside the sphere
-		 * @param frustrum The frustrum
-		 * @return True if frustrum is inside this. Otherwise false.
-		 */
-		bool Contains(const Frustrum& frustrum) const;
-
-		/**
-		 * @brief Check if a ray is inside the sphere
-		 * @param ray The ray
-		 * @return True if ray is inside this. Otherwise false.
-		 */
-		bool Contains(const Ray& ray) const;
-
-		/**
 		 * @brief Check if another sphere is inside the sphere
 		 * @param other The other sphere
 		 * @return True if the other sphere is inside this. Otherwise false.
@@ -52,6 +38,14 @@ namespace Zero {
 		 * @return True if the point is inside this. Otherwise false.
 		 */
 		bool Contains(const Vector3& point) const;
+
+
+		/**
+		 * @brief Check if another sphere intersects this sphere
+		 * @param other The other sphere
+		 * @return True if the other sphere intersects this. Otherwise false.
+		 */
+		bool Intersects(const Sphere& other) const;
 
 		/* ********** Merge ********** */
 		/**

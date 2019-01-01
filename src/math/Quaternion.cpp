@@ -310,8 +310,6 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
 }
 
 Quaternion Quaternion::LookRotation(const Vector3& direction, const Vector3& up) {
-	// Source: https://github.com/opengl-tutorials/ogl/blob/master/common/quaternion_utils.cpp
-
 	if (direction.SquareMagnitude() < EPSILON) {
 		return Identity();
 	}
@@ -328,7 +326,6 @@ Quaternion Quaternion::LookRotation(const Vector3& direction, const Vector3& up)
 }
 
 Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
-	// Source: https://github.com/opengl-tutorials/ogl/blob/master/common/quaternion_utils.cpp
 	Vector3 from_N = Vector3::Normalize(from);
 	Vector3 to_N = Vector3::Normalize(to);
 
