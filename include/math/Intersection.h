@@ -5,7 +5,7 @@
 namespace Zero {
 
 	class Intersection {
-
+	public:
 		static bool BoxSphereIntersect(const Box& box, const Sphere& sphere);
 
 	}; // class Intersection

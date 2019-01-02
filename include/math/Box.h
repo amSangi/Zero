@@ -17,6 +17,7 @@ namespace Zero {
         bool operator!=(const Box& other) const;
 
         /* ********** Intersection Tests ********** */
+
         /**
          * @brief Check if another box is inside the box
          * @param other The other box
@@ -38,17 +39,18 @@ namespace Zero {
          */
         bool Intersects(const Box& other) const;
 
-        /* ********** Useful Methods ********** */
+        /* ********** Merge ********** */
+        void Merge(const Box& other);
+
+        /* ********** Box Operations ********** */
         Vector3 Size() const;
 
         Vector3 Center() const;
 
-
-        /* ********** Merge ********** */
-        void Merge(const Box& other);
-
+        /* ********** Static Methods ********** */
         static Box Merge(const Box& lhs, const Box& rhs);
 
+        static Box Unit();
 
     public:
         Vector3 min;

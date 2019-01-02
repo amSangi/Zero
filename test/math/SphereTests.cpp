@@ -1,29 +1,31 @@
 #include "gtest/gtest.h"
 #include "Sphere.h"
+#include "Box.h"
 
 using namespace Zero;
 
-TEST(TestSphere, ContainsBoundingBox) {
-	FAIL(); // stub
+TEST(TestSphere, ContainsBox) {
+	Sphere sphere(250.0f);
+
+	EXPECT_TRUE(sphere.Contains(Box::Unit()));
+	EXPECT_TRUE(sphere.Contains(Box(Vector3::Zero(), Vector3(0.0f, 0.0f, 175.0f))));
+	EXPECT_TRUE(sphere.Contains(Box(Vector3::Zero(), Vector3(0.0f, 0.0f, 250.0f))));
+	EXPECT_TRUE(sphere.Contains(Box(Vector3::Zero(), Vector3(0.0f, 0.0f, 150.0f))));
+	EXPECT_TRUE(sphere.Contains(Box(Vector3(0.0f, 0.0f, 120.0f), Vector3(0.0f, 0.0f, 150.0f))));
+	EXPECT_TRUE(sphere.Contains(Box(Vector3(0.0f, 0.0f, -120.0f), Vector3(0.0f, 0.0f, 150.0f))));
+
+	EXPECT_FALSE(sphere.Contains(Box(Vector3::Zero(), Vector3(11350.0f))));
+	EXPECT_FALSE(sphere.Contains(Box(Vector3(-125.0f), Vector3(1100.0f))));
+	EXPECT_FALSE(sphere.Contains(Box(Vector3(-125.0f), Vector3(1100.0f))));
 }
 
-TEST(TestSphere, ContainsCone) {
-	FAIL(); // stub
-}
-
-TEST(TestSphere, ContainsFrustrum) {
-	FAIL(); // stub
-}
-
-TEST(TestSphere, ContainsRay) {
-	FAIL(); // stub
-}
 
 TEST(TestSphere, ContainsSphere) {
     Sphere big_sphere(100.0f);
     Sphere small_sphere(Vector3(0.0f, 0.0f, 100.0f - 30.125f), 30.125f);
 
     EXPECT_TRUE(big_sphere.Contains(small_sphere));
+
     EXPECT_FALSE(small_sphere.Contains(big_sphere));
 }
 
@@ -45,7 +47,21 @@ TEST(TestSphere, ContainsPoint) {
     EXPECT_TRUE(sphere.Contains(Vector3(0.0f, 0.0f, 99.9f)));
     EXPECT_TRUE(sphere.Contains(Vector3(0.0f, 0.0f, 99.9f)));
     EXPECT_TRUE(sphere.Contains(Vector3(0.0f, 0.0f, 100.0f)));
-    EXPECT_FALSE(sphere.Contains(Vector3(0.0f, 0.0f, 100.00001f)));
+
+	EXPECT_FALSE(sphere.Contains(Vector3(0.0f, 0.0f, 125.0f)));
+	EXPECT_FALSE(sphere.Contains(Vector3(0.0f, 0.0f, 100.00001f)));
+	EXPECT_FALSE(sphere.Contains(Vector3(-3420.234f, 10.0f, 234.0f)));
+}
+
+TEST(TestSphere, IntersectsSphere) {
+	Sphere big_sphere(Vector3::Zero(), 1100.0f);
+
+	EXPECT_TRUE(big_sphere.Intersects(big_sphere));
+	EXPECT_TRUE(big_sphere.Intersects(Sphere(Vector3(100.0f, 0.0f, 0.0f), 25.0f)));
+	EXPECT_TRUE(big_sphere.Intersects(Sphere(Vector3(1100.1f, 0.0f, 0.0f), 0.1f)));
+
+	EXPECT_FALSE(big_sphere.Intersects(Sphere(Vector3(1100.1f, 0.0f, 0.0f), 0.05f)));
+	EXPECT_FALSE(big_sphere.Intersects(Sphere(Vector3(-10000.0f, 0.0f, 0.0f), 10.0f)));
 }
 
 TEST(TestSphere, Merge) {

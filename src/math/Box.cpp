@@ -34,15 +34,6 @@ bool Box::Intersects(const Box& other) const {
              (min.z > other.max.z || other.min.z > max.z));
 }
 
-/* ********** Intersection Tests ********** */
-Vector3 Box::Size() const {
-	return max - min;
-}
-
-Vector3 Box::Center() const {
-	return (min + max) * 0.5f;
-}
-
 
 /* ********** Merge ********** */
 void Box::Merge(const Box& other) {
@@ -55,9 +46,25 @@ void Box::Merge(const Box& other) {
 	max.z = Zero::Max(max.z, other.max.z);
 }
 
+
+/* ********** Box Operations ********** */
+Vector3 Box::Size() const {
+	return max - min;
+}
+
+Vector3 Box::Center() const {
+	return (min + max) * 0.5f;
+}
+
+
+/* ********** Static Methods ********** */
 Box Box::Merge(const Box& lhs, const Box& rhs) {
     Box lhs_copy(lhs);
     lhs_copy.Merge(rhs);
     return lhs_copy;
+}
+
+Box Box::Unit() {
+	return Box(Vector3::Zero(), Vector3::One());
 }
 
