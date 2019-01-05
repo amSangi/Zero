@@ -1,4 +1,5 @@
 #include "Matrix4.h"
+#include "Matrix3.h"
 #include "Vector4.h"
 
 using namespace Zero;
@@ -17,6 +18,28 @@ Matrix4::Matrix4(float value) {
             matrix[i][j] = value;
         }
     }
+}
+
+Matrix4::Matrix4(const Matrix3& m3) {
+    matrix[0][0] = m3(0, 0);
+    matrix[0][1] = m3(0, 1);
+    matrix[0][2] = m3(0, 2);
+    matrix[0][3] = 0.0f;
+
+    matrix[1][0] = m3(1, 0);
+    matrix[1][1] = m3(1, 1);
+    matrix[1][2] = m3(1, 2);
+    matrix[1][3] = 0.0f;
+
+    matrix[2][0] = m3(2, 0);
+    matrix[2][1] = m3(2, 1);
+    matrix[2][2] = m3(2, 2);
+    matrix[2][3] = 0.0f;
+
+    matrix[3][0] = 0.0f;
+    matrix[3][1] = 0.0f;
+    matrix[3][2] = 0.0f;
+    matrix[3][3] = 1.0f;
 }
 
 Matrix4::Matrix4(float e00, float e01, float e02, float e03,

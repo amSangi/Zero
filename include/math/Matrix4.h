@@ -10,6 +10,7 @@ namespace Zero {
         Matrix4() = default;
         explicit Matrix4(float m[4][4]);
         explicit Matrix4(float value);
+        explicit Matrix4(const Matrix3& m3);
         Matrix4(float e00, float e01, float e02, float e03,
                 float e10, float e11, float e12, float e13,
                 float e20, float e21, float e22, float e23,

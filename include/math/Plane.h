@@ -7,9 +7,10 @@ namespace Zero {
 	class Plane {
 	public:
 		Plane() = default;
-		Plane(const Vector4& plane);
 		Plane(const Vector3& normal, float d);
+		Plane(const Vector3& normal, const Vector3& point);
 		Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3);
+		explicit Plane(const Vector4& plane);
 		explicit Plane(const Vector3& normal);
 		Plane(const Plane& other) = default;
 
@@ -23,18 +24,11 @@ namespace Zero {
 
 		/* ********** Intersection Tests ********** */
 		/**
-		 * @brief Check if a point lies on this plane
-		 * @param point The point
-		 * @return True if the point is on this plane. Otherwise false.
-		 */
-		bool Contains(const Vector3& point) const;
-
-		/**
 		 * @brief Check if another plane and this plane intersect
 		 * @param other The other plane
 		 * @return True if the other plane intersects with this. Otherwise false.
 		 */
-		bool Intersects(const Plane& other) const;
+		bool Intersects(const Plane& other, float epsilon = EPSILON) const;
 
 		/* ********** Transform Operations ********** */
 		void Transform(const Matrix3& matrix);
@@ -44,9 +38,11 @@ namespace Zero {
 		/* ********** Plane Operations ********** */
 		Vector3 Project(const Vector3& point) const;
 
-		Vector3 Reflect(const Vector3& point) const;
+		Vector3 Reflect(const Vector3& incident) const;
 
 		float Distance(const Vector3& point) const;
+
+		bool Normalize();
 
 		/* ********** Static Operations ********** */
 		static Plane Transform(const Plane& plane, const Matrix3& matrix);

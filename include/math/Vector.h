@@ -167,6 +167,8 @@ namespace Zero {
 
 		bool Normalize();
 
+		bool IsEpsilon(float epsilon = EPSILON) const;
+
 		/* ********** Static Operations ********** */
 		static inline Vector<dims> Normalize(const Vector<dims>& v);
 
@@ -286,6 +288,18 @@ namespace Zero {
 		}
 
 		return false;
+	}
+
+	template<int dims>
+	bool Vector<dims>::IsEpsilon(float epsilon) const {
+		const float* data = Data();
+		for (int i = 0; i < dims; ++i) {
+			if (data[i] > epsilon) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/* ********** Static Operations Implementation ********** */

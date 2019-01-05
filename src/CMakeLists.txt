@@ -6,6 +6,7 @@ add_library(${PROJECT_NAME}  math/Box.cpp
                              math/Intersection.cpp
                              math/Matrix3.cpp
                              math/Matrix4.cpp
+                             math/Plane.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
                              math/Sphere.cpp)
