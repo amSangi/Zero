@@ -156,6 +156,15 @@ TEST(TestVector, NormalizeComplex) {
 	EXPECT_TRUE(Zero::Equal(expected.w, actual.w));
 }
 
+TEST(TestVector, IsEpsilon) {
+	EXPECT_TRUE(Vector3::Zero().IsEpsilon());
+	EXPECT_TRUE(Vector3(EPSILON).IsEpsilon());
+
+	EXPECT_FALSE(Vector3::One().IsEpsilon());
+	EXPECT_FALSE(Vector3(0.00001f).IsEpsilon());
+	EXPECT_FALSE(Vector3(-1.0f).IsEpsilon());
+}
+
 TEST(TestVector, Dot) {
 	EXPECT_EQ(0.0f, Vector4::Dot(Vector4::Zero(), Vector4::Zero()));
 	EXPECT_EQ(4.0f, Vector4::Dot(Vector4::One(), Vector4::One()));

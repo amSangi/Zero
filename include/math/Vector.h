@@ -294,7 +294,7 @@ namespace Zero {
 	bool Vector<dims>::IsEpsilon(float epsilon) const {
 		const float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			if (data[i] > epsilon) {
+			if (Zero::Abs(data[i]) > epsilon) {
 				return false;
 			}
 		}

@@ -6,7 +6,7 @@
 using namespace Zero;
 
 Plane::Plane(const Vector4& plane)
-   : normal(plane.x, plane.y, plane.z), d(plane.w) {}
+   : normal(Vector3::Normalize(Vector3(plane.x, plane.y, plane.z))), d(plane.w) {}
 
 Plane::Plane(const Vector3& normal, float d)
    : normal(normal), d(d) {}
@@ -15,7 +15,7 @@ Plane::Plane(const Vector3& normal, const Vector3& point)
    : normal(normal), d(Vector3::Dot(normal, point)) {}
 
 Plane::Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
-   : normal(Vector3::Cross(p2 - p1, p3 - p1)), d(Vector3::Dot(normal, p1)) {}
+   : normal(Vector3::Normalize(Vector3::Cross(p2 - p1, p3 - p1))), d(-1.0f * Vector3::Dot(normal, p1)) {}
 
 Plane::Plane(const Vector3& normal)
    : normal(normal), d(0.0f) {}
@@ -35,7 +35,7 @@ Vector4 Plane::ToVector4() const {
 
 /* ********** Intersection Tests ********** */
 bool Plane::Intersects(const Plane& other, float epsilon) const {
-	return Vector3::Cross(normal, other.normal).IsEpsilon(epsilon);
+	return !( Vector3::Cross(normal, other.normal).IsEpsilon(epsilon) );
 }
 
 
@@ -59,11 +59,15 @@ Vector3 Plane::Reflect(const Vector3& incident) const {
 }
 
 float Plane::Distance(const Vector3& point) const {
-	return Vector3::Dot(normal, point) - d;
+	return Vector3::Dot(normal, point) + d;
 }
 
 bool Plane::Normalize() {
 	return normal.Normalize();
+}
+
+Plane Plane::Flip() const {
+	return Plane(normal * -1.0f, -d);
 }
 
 /* ********** Static Operations ********** */
@@ -77,4 +81,16 @@ Plane Plane::Transform(const Plane& plane, const Matrix4& matrix) {
 	Plane plane_copy(plane);
 	plane_copy.Transform(matrix);
 	return plane_copy;
+}
+
+Plane Plane::Up() {
+	return Plane(Vector3::Up());
+}
+
+Plane Plane::Right() {
+	return Plane(Vector3::Right());
+}
+
+Plane Plane::Forward() {
+	return Plane(Vector3::Forward());
 }

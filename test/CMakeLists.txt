@@ -10,6 +10,7 @@ add_executable(${PROJECT_NAME} AllTests.cpp
                                math/IntersectionTests.cpp
                                math/Matrix3Tests.cpp
                                math/Matrix4Tests.cpp
+                               math/PlaneTests.cpp
                                math/QuaternionTests.cpp
                                math/SphereTests.cpp
                                math/VectorTests.cpp)

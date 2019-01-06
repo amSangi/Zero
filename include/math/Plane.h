@@ -4,6 +4,9 @@
 
 namespace Zero {
 
+	/**
+	 * @brief A plane represented as Ax + By + Cz + D = 0
+	 */
 	class Plane {
 	public:
 		Plane() = default;
@@ -44,10 +47,18 @@ namespace Zero {
 
 		bool Normalize();
 
+		Plane Flip() const;
+
 		/* ********** Static Operations ********** */
 		static Plane Transform(const Plane& plane, const Matrix3& matrix);
 
 		static Plane Transform(const Plane& plane, const Matrix4& matrix);
+
+		static Plane Up();
+
+		static Plane Right();
+
+		static Plane Forward();
 
 	public:
 		Vector3 normal;
