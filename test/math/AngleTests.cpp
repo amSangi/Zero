@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Angle.h"
+#include "Angle.hpp"
 
 using namespace Zero;
 

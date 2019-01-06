@@ -1,5 +1,5 @@
-#include "Box.h"
-#include "Sphere.h"
+#include "Box.hpp"
+#include "Sphere.hpp"
 
 using namespace Zero;
 

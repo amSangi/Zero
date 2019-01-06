@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Vector.h"
+#include "Vector.hpp"
 
 using namespace Zero;
 

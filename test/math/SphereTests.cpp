@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "Sphere.h"
-#include "Box.h"
+#include "Sphere.hpp"
+#include "Box.hpp"
 
 using namespace Zero;
 

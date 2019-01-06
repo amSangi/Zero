@@ -1,6 +1,6 @@
-#include "Matrix4.h"
-#include "Matrix3.h"
-#include "Vector4.h"
+#include "Matrix4.hpp"
+#include "Matrix3.hpp"
+#include "Vector4.hpp"
 
 using namespace Zero;
 

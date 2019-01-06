@@ -1,6 +1,6 @@
-#include "Intersection.h"
-#include "Box.h"
-#include "Sphere.h"
+#include "Intersection.hpp"
+#include "Box.hpp"
+#include "Sphere.hpp"
 
 
 using namespace Zero;

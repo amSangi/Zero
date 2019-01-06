@@ -1,6 +1,6 @@
-#include "Quaternion.h"
-#include "Matrix3.h"
-#include "Vector3.h"
+#include "Quaternion.hpp"
+#include "Matrix3.hpp"
+#include "Vector3.hpp"
 
 using namespace Zero;
 

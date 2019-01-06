@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Angle.h"
-#include "Vector3.h"
-#include "ZeroMath.h"
+#include "Angle.hpp"
+#include "Vector3.hpp"
+#include "ZeroMath.hpp"
 
 namespace Zero {
 

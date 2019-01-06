@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Angle.h"
-#include "ZeroMath.h"
+#include "Angle.hpp"
+#include "ZeroMath.hpp"
 
 namespace Zero {
 

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "Matrix4.h"
-#include "Vector4.h"
+#include "Matrix4.hpp"
+#include "Vector4.hpp"
 
 using namespace Zero;
 

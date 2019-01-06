@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Radian.h"
-#include "ZeroMath.h"
+#include "Radian.hpp"
+#include "ZeroMath.hpp"
 
 namespace Zero {
 

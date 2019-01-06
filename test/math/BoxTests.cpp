@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Box.h"
+#include "Box.hpp"
 
 using namespace Zero;
 
