@@ -5,6 +5,9 @@
 
 namespace Zero {
 
+	/**
+	 * @brief Encapsulate a degree as a class for type-safety
+	 */
 	class Degree {
 	public:
 		Degree() : deg(0.0f) {}

@@ -4,6 +4,9 @@
 
 namespace Zero {
 
+	/**
+	 * @brief Encapsulate a radian as a class for type-safety
+	 */
 	class Radian {
 	public:
 		Radian() : rad(0.0f) {}

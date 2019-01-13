@@ -62,7 +62,6 @@ namespace Zero {
 		/* ********** Static Operations ********** */
 		static float Dot(const Quaternion& lhs, const Quaternion& rhs);
 
-
 		static Quaternion FromAngleAxis(const Vector3& axis, Radian angle);
 		static Quaternion FromAngleAxis(const Vector3& axis, Degree angle);
 		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
@@ -75,9 +74,7 @@ namespace Zero {
 		static Quaternion Identity();
 		static Quaternion Zero();
 
-	public:
-		float w;
-		float x, y, z;
+		float w, x, y, z;
 
 	}; // class Quaternion
 

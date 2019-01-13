@@ -284,10 +284,3 @@ Matrix4 Matrix4::Identity() {
                    0.0f, 0.0f, 1.0f, 0.0f,
                    0.0f, 0.0f, 0.0f, 1.0f);
 }
-
-Matrix4 Matrix4::Identity3() {
-    return Matrix4(1.0f, 0.0f, 0.0f, 0.0f,
-                   0.0f, 1.0f, 0.0f, 0.0f,
-                   0.0f, 0.0f, 1.0f, 0.0f,
-                   0.0f, 0.0f, 0.0f, 0.0f);
-}

@@ -7,6 +7,10 @@ namespace Zero {
 
 	namespace VectorImpl {
 
+		/**
+		 * @brief A simple base container for the vector
+		 * @tparam dims the dimensions of the vector
+		 */
 		template<int dims>
 		class VectorBase {
 		public:
@@ -43,7 +47,6 @@ namespace Zero {
 
 			inline const float *Data() const { return data; }
 
-		public:
 			float data[dims];
 
 		}; // template class VectorBase
@@ -62,7 +65,6 @@ namespace Zero {
 
 			inline const float *Data() const { return &x; }
 
-		public:
 			float x, y;
 
 		}; // template specialization class VectorBase<2>
@@ -84,7 +86,6 @@ namespace Zero {
 
 			inline const float *Data() const { return &x; }
 
-		public:
 			float x, y, z;
 
 		}; // template specialization class VectorBase<3>
@@ -107,7 +108,6 @@ namespace Zero {
 
 			inline const float *Data() const { return &x; }
 
-		public:
 			float x, y, z, w;
 
 		}; // template specialization class VectorBase<4>
@@ -188,7 +188,6 @@ namespace Zero {
 
 		static inline Radian Angle(const Vector<dims>& from, const Vector<dims>& to);
 
-	public:
 
 		/* ********** Useful Vectors ********** */
 		static Vector<dims> Zero();

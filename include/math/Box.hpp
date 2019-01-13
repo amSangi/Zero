@@ -40,21 +40,41 @@ namespace Zero {
         bool Intersects(const Box& other) const;
 
         /* ********** Merge ********** */
+
+        /**
+         * @brief Make this box the merger of this and the other box
+         * @param other The other box
+         */
         void Merge(const Box& other);
 
         /* ********** Box Operations ********** */
+
+        /**
+         * @return the size of this box
+         */
         Vector3 Size() const;
 
+        /**
+         * @return the center position of this box
+         */
         Vector3 Center() const;
 
         /* ********** Static Methods ********** */
+
+        /**
+         * @brief Return a new box that is the merger of lhs and rhs
+         * @param lhs the first box
+         * @param rhs the second box
+         * @return a new box that is the merger of the two given boxes
+         */
         static Box Merge(const Box& lhs, const Box& rhs);
 
+        /**
+         * @return a Box of unit size
+         */
         static Box Unit();
 
-    public:
-        Vector3 min;
-        Vector3 max;
+        Vector3 min, max;
 
     }; // class Box
 

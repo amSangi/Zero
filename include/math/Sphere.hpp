@@ -12,10 +12,10 @@ namespace Zero {
 		Sphere(const Vector3& center, float radius);
 
 		~Sphere() = default;
-		Sphere& operator=(const Sphere& o) = default;
+		Sphere& operator=(const Sphere& other) = default;
 
-		bool operator==(const Sphere& o) const;
-		bool operator!=(const Sphere& o) const;
+		bool operator==(const Sphere& other) const;
+		bool operator!=(const Sphere& other) const;
 
 		/* ********** Intersection Tests ********** */
 		/**
@@ -66,7 +66,6 @@ namespace Zero {
 
 		static Sphere Zero();
 
-	public:
 		Vector3 center;
 		float radius;
 

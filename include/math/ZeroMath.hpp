@@ -45,9 +45,9 @@ namespace Zero {
     inline float Min(float a, float b)                     { return std::fmin(a, b);       }
     inline float Ceil(float a)                             { return std::ceil(a);          }
     inline float Floor(float a)                            { return std::floor(a);         }
-    inline bool Equal(float a,
-                      float b,
-                      float eps = EPSILON)                 { return std::abs(a - b) < eps; }
+    inline bool  Equal(float a,
+                       float b,
+                       float eps = EPSILON)                { return std::abs(a - b) < eps; }
 
 } // namespace Zero
 

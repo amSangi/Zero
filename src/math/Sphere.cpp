@@ -12,12 +12,12 @@ Sphere::Sphere(const Vector3& c)
 Sphere::Sphere(const Vector3& c, float r)
    : center(c), radius(r) {}
 
-bool Sphere::operator==(const Sphere& o) const {
-	return (center == o.center) && Zero::Equal(radius, o.radius);
+bool Sphere::operator==(const Sphere& other) const {
+	return (center == other.center) && Zero::Equal(radius, other.radius);
 }
 
-bool Sphere::operator!=(const Sphere& o) const {
-	return !operator==(o);
+bool Sphere::operator!=(const Sphere& other) const {
+	return !operator==(other);
 }
 
 

@@ -28,10 +28,10 @@ Matrix3::Matrix3(float e00, float e01, float e02,
     matrix[2][0] = e20; matrix[2][1] = e21; matrix[2][2] = e22;
 }
 
-bool Matrix3::operator==(const Matrix3& o) const {
+bool Matrix3::operator==(const Matrix3& other) const {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
-            if (!Equal(matrix[i][j], o.matrix[i][j])) {
+            if (!Equal(matrix[i][j], other.matrix[i][j])) {
                 return false;
             }
         }
@@ -39,8 +39,8 @@ bool Matrix3::operator==(const Matrix3& o) const {
     return true;
 }
 
-bool Matrix3::operator!=(const Matrix3& o) const {
-    return !(operator==(o));
+bool Matrix3::operator!=(const Matrix3& other) const {
+    return !(operator==(other));
 }
 
 const float Matrix3::operator()(size_t row, size_t col) const {
