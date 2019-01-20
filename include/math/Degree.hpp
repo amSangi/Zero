@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Radian.hpp"
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 namespace Zero {
 
@@ -10,8 +10,8 @@ namespace Zero {
 	 */
 	class Degree {
 	public:
-		Degree() : deg(0.0f) {}
-		explicit Degree(float d) : deg(d) {}
+		Degree() : deg_(0.0f) {}
+		explicit Degree(float d) : deg_(d) {}
 		Degree(const Degree& other) = default;
 		~Degree() = default;
 
@@ -19,12 +19,12 @@ namespace Zero {
 
 
 		/* ********** Comparison Operators ********** */
-		bool operator==(const Degree& d) const             { return Equal(deg, d.deg); }
-		bool operator!=(const Degree& d) const             { return !Equal(deg, d.deg); }
-		bool operator>=(const Degree& d) const             { return deg >= d.deg; }
-		bool operator>(const Degree& d)  const             { return deg > d.deg;  }
-		bool operator<=(const Degree& d) const             { return deg <= d.deg; }
-		bool operator<(const Degree& d)  const             { return deg < d.deg;  }
+		bool operator==(const Degree& d) const             { return Equal(deg_, d.deg_); }
+		bool operator!=(const Degree& d) const             { return !Equal(deg_, d.deg_); }
+		bool operator>=(const Degree& d) const             { return deg_ >= d.deg_; }
+		bool operator>(const Degree& d)  const             { return deg_ > d.deg_;  }
+		bool operator<=(const Degree& d) const             { return deg_ <= d.deg_; }
+		bool operator<(const Degree& d)  const             { return deg_ < d.deg_;  }
 
 		bool operator==(const Radian& r) const             { return operator==(r.ToDegree()); }
 		bool operator!=(const Radian& r) const             { return operator!=(r.ToDegree()); }
@@ -34,31 +34,31 @@ namespace Zero {
 		bool operator<(const Radian& r)  const             { return operator<(r.ToDegree());  }
 
 		/* ********** Math Operators ********** */
-		Degree operator+(const Degree& d) const            { return Degree(deg + d.deg); }
-		Degree operator-(const Degree& d) const            { return Degree(deg - d.deg); }
-		Degree operator*(const Degree& d) const            { return Degree(deg * d.deg); }
-		Degree operator/(const Degree& d) const            { return Degree(deg / d.deg); }
+		Degree operator+(const Degree& d) const            { return Degree(deg_ + d.deg_); }
+		Degree operator-(const Degree& d) const            { return Degree(deg_ - d.deg_); }
+		Degree operator*(const Degree& d) const            { return Degree(deg_ * d.deg_); }
+		Degree operator/(const Degree& d) const            { return Degree(deg_ / d.deg_); }
 
-		Degree& operator+=(const Degree& d)                { deg += d.deg; return *this; }
-		Degree& operator-=(const Degree& d)                { deg -= d.deg; return *this; }
-		Degree& operator*=(const Degree& d)                { deg *= d.deg; return *this; }
-		Degree& operator/=(const Degree& d)                { deg /= d.deg; return *this; }
+		Degree& operator+=(const Degree& d)                { deg_ += d.deg_; return *this; }
+		Degree& operator-=(const Degree& d)                { deg_ -= d.deg_; return *this; }
+		Degree& operator*=(const Degree& d)                { deg_ *= d.deg_; return *this; }
+		Degree& operator/=(const Degree& d)                { deg_ /= d.deg_; return *this; }
 
-		Degree operator+(const Radian& r) const            { return Degree(deg + r.ToDegree().deg); }
-		Degree operator-(const Radian& r) const            { return Degree(deg - r.ToDegree().deg); }
-		Degree operator*(const Radian& r) const            { return Degree(deg * r.ToDegree().deg); }
-		Degree operator/(const Radian& r) const            { return Degree(deg / r.ToDegree().deg); }
+		Degree operator+(const Radian& r) const            { return Degree(deg_ + r.ToDegree().deg_); }
+		Degree operator-(const Radian& r) const            { return Degree(deg_ - r.ToDegree().deg_); }
+		Degree operator*(const Radian& r) const            { return Degree(deg_ * r.ToDegree().deg_); }
+		Degree operator/(const Radian& r) const            { return Degree(deg_ / r.ToDegree().deg_); }
 
-		Degree& operator+=(const Radian& r)                { deg += r.ToDegree().deg; return *this; }
-		Degree& operator-=(const Radian& r)                { deg -= r.ToDegree().deg; return *this; }
-		Degree& operator*=(const Radian& r)                { deg *= r.ToDegree().deg; return *this; }
-		Degree& operator/=(const Radian& r)                { deg /= r.ToDegree().deg; return *this; }
+		Degree& operator+=(const Radian& r)                { deg_ += r.ToDegree().deg_; return *this; }
+		Degree& operator-=(const Radian& r)                { deg_ -= r.ToDegree().deg_; return *this; }
+		Degree& operator*=(const Radian& r)                { deg_ *= r.ToDegree().deg_; return *this; }
+		Degree& operator/=(const Radian& r)                { deg_ /= r.ToDegree().deg_; return *this; }
 
-		Radian ToRadian() const                            { return Radian(deg * DEGREE_TO_RADIAN); }
+		Radian ToRadian() const                            { return Radian(deg_ * DEGREE_TO_RADIAN); }
 
 		static inline Degree FromRadian(float r)           { return Degree(r * RADIAN_TO_DEGREE); }
 
-		float deg;
+		float deg_;
 
 	}; // class Degree
 

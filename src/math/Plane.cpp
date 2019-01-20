@@ -6,22 +6,22 @@
 using namespace Zero;
 
 Plane::Plane(const Vector4& plane)
-   : normal(Vector3::Normalize(Vector3(plane.x, plane.y, plane.z))), d(plane.w) {}
+   : normal_(Vector3::Normalize(Vector3(plane.x_, plane.y_, plane.z_))), d_(plane.w_) {}
 
 Plane::Plane(const Vector3& normal, float d)
-   : normal(normal), d(d) {}
+   : normal_(normal), d_(d) {}
 
 Plane::Plane(const Vector3& normal, const Vector3& point)
-   : normal(normal), d(Vector3::Dot(normal, point)) {}
+   : normal_(normal), d_(Vector3::Dot(normal, point)) {}
 
 Plane::Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3)
-   : normal(Vector3::Normalize(Vector3::Cross(p2 - p1, p3 - p1))), d(-1.0f * Vector3::Dot(normal, p1)) {}
+   : normal_(Vector3::Normalize(Vector3::Cross(p2 - p1, p3 - p1))), d_(-1.0f * Vector3::Dot(normal_, p1)) {}
 
 Plane::Plane(const Vector3& normal)
-   : normal(normal), d(0.0f) {}
+   : normal_(normal), d_(0.0f) {}
 
 bool Plane::operator==(const Plane& other) const {
-	return (normal == other.normal) && Zero::Equal(d, other.d);
+	return (normal_ == other.normal_) && Zero::Equal(d_, other.d_);
 }
 
 bool Plane::operator!=(const Plane& other) const {
@@ -29,13 +29,13 @@ bool Plane::operator!=(const Plane& other) const {
 }
 
 Vector4 Plane::ToVector4() const {
-	return Vector4(normal.x, normal.y, normal.z, d);
+	return Vector4(normal_.x_, normal_.y_, normal_.z_, d_);
 }
 
 
 /* ********** Intersection Tests ********** */
 bool Plane::Intersects(const Plane& other, float epsilon) const {
-	return !( Vector3::Cross(normal, other.normal).IsEpsilon(epsilon) );
+	return !( Vector3::Cross(normal_, other.normal_).IsEpsilon(epsilon) );
 }
 
 
@@ -51,23 +51,23 @@ void Plane::Transform(const Matrix4& matrix) {
 
 /* ********** Plane Operations ********** */
 Vector3 Plane::Project(const Vector3& point) const {
-	return point - (Distance(point) * normal);
+	return point - (Distance(point) * normal_);
 }
 
 Vector3 Plane::Reflect(const Vector3& incident) const {
-	return Vector3::Reflect(incident, normal);
+	return Vector3::Reflect(incident, normal_);
 }
 
 float Plane::Distance(const Vector3& point) const {
-	return Vector3::Dot(normal, point) + d;
+	return Vector3::Dot(normal_, point) + d_;
 }
 
 bool Plane::Normalize() {
-	return normal.Normalize();
+	return normal_.Normalize();
 }
 
 Plane Plane::Flip() const {
-	return Plane(normal * -1.0f, -d);
+	return Plane(normal_ * -1.0f, -d_);
 }
 
 /* ********** Static Operations ********** */

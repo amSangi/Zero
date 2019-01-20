@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Angle.hpp"
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 namespace Zero {
 
@@ -91,7 +91,7 @@ namespace Zero {
          */
         static Matrix4 Identity();
 
-        float matrix[4][4];
+        float matrix_[4][4];
 
     }; // class Matrix4
 

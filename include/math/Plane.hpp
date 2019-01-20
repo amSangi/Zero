@@ -105,8 +105,8 @@ namespace Zero {
 		 */
 		static Plane Forward();
 
-		Vector3 normal;
-		float d;
+		Vector3 normal_;
+		float d_;
 
 	}; // class Plane
 

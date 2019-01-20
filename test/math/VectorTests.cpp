@@ -135,9 +135,9 @@ TEST(TestVector, Normalize) {
 	EXPECT_TRUE(actual.Normalize());
 	EXPECT_EQ(expected, actual);
 
-	EXPECT_TRUE(Zero::Equal(expected.x, actual.x));
-	EXPECT_TRUE(Zero::Equal(expected.y, actual.y));
-	EXPECT_TRUE(Zero::Equal(expected.z, actual.z));
+	EXPECT_TRUE(Zero::Equal(expected.x_, actual.x_));
+	EXPECT_TRUE(Zero::Equal(expected.y_, actual.y_));
+	EXPECT_TRUE(Zero::Equal(expected.z_, actual.z_));
 }
 
 TEST(TestVector, NormalizeComplex) {
@@ -150,10 +150,10 @@ TEST(TestVector, NormalizeComplex) {
 	// Instance method
 	EXPECT_TRUE(actual.Normalize());
 	EXPECT_EQ(expected, actual);
-	EXPECT_TRUE(Zero::Equal(expected.x, actual.x));
-	EXPECT_TRUE(Zero::Equal(expected.y, actual.y));
-	EXPECT_TRUE(Zero::Equal(expected.z, actual.z));
-	EXPECT_TRUE(Zero::Equal(expected.w, actual.w));
+	EXPECT_TRUE(Zero::Equal(expected.x_, actual.x_));
+	EXPECT_TRUE(Zero::Equal(expected.y_, actual.y_));
+	EXPECT_TRUE(Zero::Equal(expected.z_, actual.z_));
+	EXPECT_TRUE(Zero::Equal(expected.w_, actual.w_));
 }
 
 TEST(TestVector, IsEpsilon) {
@@ -259,9 +259,9 @@ TEST(TestVector, LerpComplex) {
 
 	Vector3 expected_mid(17.2f, -9.1f, 145.4f);
 	Vector3 actual_mid = Vector3::Lerp(start, end, 0.5f);
-	EXPECT_TRUE(Zero::Equal(expected_mid.x, actual_mid.x, 1e-01));
-	EXPECT_TRUE(Zero::Equal(expected_mid.y, actual_mid.y, 1e-01));
-	EXPECT_TRUE(Zero::Equal(expected_mid.z, actual_mid.z, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected_mid.x_, actual_mid.x_, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected_mid.y_, actual_mid.y_, 1e-01));
+	EXPECT_TRUE(Zero::Equal(expected_mid.z_, actual_mid.z_, 1e-01));
 
 	EXPECT_EQ(end, Vector3::Lerp(start, end, 1.0f));
 }

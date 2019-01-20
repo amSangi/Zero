@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 namespace Zero {
 
@@ -9,8 +9,8 @@ namespace Zero {
 	 */
 	class Radian {
 	public:
-		Radian() : rad(0.0f) {}
-		explicit Radian(float r) : rad(r) {}
+		Radian() : rad_(0.0f) {}
+		explicit Radian(float r) : rad_(r) {}
 		Radian(const Radian& other) = default;
 		~Radian() = default;
 
@@ -18,12 +18,12 @@ namespace Zero {
 
 
 		/* ********** Comparison Operators ********** */
-		bool operator==(const Radian& r) const             { return Equal(rad, r.rad); }
-		bool operator!=(const Radian& r) const             { return !Equal(rad, r.rad); }
-		bool operator>=(const Radian& r) const             { return rad >= r.rad; }
-		bool operator>(const Radian& r)  const             { return rad > r.rad;  }
-		bool operator<=(const Radian& r) const             { return rad <= r.rad; }
-		bool operator<(const Radian& r)  const             { return rad < r.rad;  }
+		bool operator==(const Radian& r) const             { return Equal(rad_, r.rad_); }
+		bool operator!=(const Radian& r) const             { return !Equal(rad_, r.rad_); }
+		bool operator>=(const Radian& r) const             { return rad_ >= r.rad_; }
+		bool operator>(const Radian& r)  const             { return rad_ > r.rad_;  }
+		bool operator<=(const Radian& r) const             { return rad_ <= r.rad_; }
+		bool operator<(const Radian& r)  const             { return rad_ < r.rad_;  }
 
 		bool operator==(const Degree& d) const;
 		bool operator!=(const Degree& d) const;
@@ -33,15 +33,15 @@ namespace Zero {
 		bool operator<(const Degree& d)  const;
 
 		/* ********** Math Operators ********** */
-		Radian operator+(const Radian& r) const            { return Radian(rad + r.rad); }
-		Radian operator-(const Radian& r) const            { return Radian(rad - r.rad); }
-		Radian operator*(const Radian& r) const            { return Radian(rad * r.rad); }
-		Radian operator/(const Radian& r) const            { return Radian(rad / r.rad); }
+		Radian operator+(const Radian& r) const            { return Radian(rad_ + r.rad_); }
+		Radian operator-(const Radian& r) const            { return Radian(rad_ - r.rad_); }
+		Radian operator*(const Radian& r) const            { return Radian(rad_ * r.rad_); }
+		Radian operator/(const Radian& r) const            { return Radian(rad_ / r.rad_); }
 
-		Radian& operator+=(const Radian& r)                { rad += r.rad; return *this; }
-		Radian& operator-=(const Radian& r)                { rad -= r.rad; return *this; }
-		Radian& operator*=(const Radian& r)                { rad *= r.rad; return *this; }
-		Radian& operator/=(const Radian& r)                { rad /= r.rad; return *this; }
+		Radian& operator+=(const Radian& r)                { rad_ += r.rad_; return *this; }
+		Radian& operator-=(const Radian& r)                { rad_ -= r.rad_; return *this; }
+		Radian& operator*=(const Radian& r)                { rad_ *= r.rad_; return *this; }
+		Radian& operator/=(const Radian& r)                { rad_ /= r.rad_; return *this; }
 
 		Radian operator+(const Degree& d) const;
 		Radian operator-(const Degree& d) const;
@@ -57,7 +57,7 @@ namespace Zero {
 
 		static inline Radian FromDegree(float d)           { return Radian(d * DEGREE_TO_RADIAN); }
 
-		float rad;
+		float rad_;
 
 	}; // class Radian
 

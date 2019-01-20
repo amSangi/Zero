@@ -147,10 +147,10 @@ TEST(TestQuaternion, FromAngleAxis) {
 
 	// Round to nearest tenth and check
 	auto CHECK_FLT_EQ = [] (Quaternion e, Quaternion a) {
-		EXPECT_EQ(e.w, Zero::Floor(a.w * 10.0f + 0.50f) / 10.0f);
-		EXPECT_EQ(e.x, Zero::Floor(a.x * 10.0f + 0.50f) / 10.0f);
-		EXPECT_EQ(e.y, Zero::Floor(a.y * 10.0f + 0.50f) / 10.0f);
-		EXPECT_EQ(e.z, Zero::Floor(a.z * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.w_, Zero::Floor(a.w_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.x_, Zero::Floor(a.x_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.y_, Zero::Floor(a.y_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.z_, Zero::Floor(a.z_ * 10.0f + 0.50f) / 10.0f);
 	};
 
 	expected = Quaternion(0.9f, 0.4f, 0.0f, 0.0f);

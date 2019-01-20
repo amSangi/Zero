@@ -1,4 +1,4 @@
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 int main(int argc, char *argv[])
 {

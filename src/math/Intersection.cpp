@@ -12,34 +12,34 @@ bool Intersection::BoxSphereIntersect(const Box& box, const Sphere& sphere) {
 	float difference;
 
 	// Get square x distance
-	if (sphere.center.x < box.min.x) {
-		difference = sphere.center.x - box.min.x;
+	if (sphere.center_.x_ < box.min.x_) {
+		difference = sphere.center_.x_ - box.min.x_;
 		square_distance += (difference * difference);
 	}
-	else if (sphere.center.x > box.max.x) {
-		difference = sphere.center.x - box.max.x;
+	else if (sphere.center_.x_ > box.max.x_) {
+		difference = sphere.center_.x_ - box.max.x_;
 		square_distance += (difference * difference);
 	}
 
 	// Get square y distance
-	if (sphere.center.y < box.min.y) {
-		difference = sphere.center.y - box.min.y;
+	if (sphere.center_.y_ < box.min.y_) {
+		difference = sphere.center_.y_ - box.min.y_;
 		square_distance += (difference * difference);
 	}
-	else if (sphere.center.y > box.max.y) {
-		difference = sphere.center.y - box.max.y;
+	else if (sphere.center_.y_ > box.max.y_) {
+		difference = sphere.center_.y_ - box.max.y_;
 		square_distance += (difference * difference);
 	}
 
 	// Get square z distance
-	if (sphere.center.z < box.min.z) {
-		difference = sphere.center.z - box.min.z;
+	if (sphere.center_.z_ < box.min.z_) {
+		difference = sphere.center_.z_ - box.min.z_;
 		square_distance += (difference * difference);
 	}
-	else if (sphere.center.z > box.max.z) {
-		difference = sphere.center.z - box.min.z;
+	else if (sphere.center_.z_ > box.max.z_) {
+		difference = sphere.center_.z_ - box.min.z_;
 		square_distance += (difference * difference);
 	}
 
-	return square_distance <= (sphere.radius * sphere.radius);
+	return square_distance <= (sphere.radius_ * sphere.radius_);
 }

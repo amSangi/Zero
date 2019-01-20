@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include "ZBase.hpp"
 
 namespace Zero {
 
@@ -20,17 +21,13 @@ namespace Zero {
 
     /* ********** Constants ********** */
     static const float PI = 3.14159265359f;
-    static const float PI_2 = 3.14159265359f * 0.5f;
+    static const float PI_2 = PI * 0.5f;
     static const float DEGREE_TO_RADIAN = PI / 180.0f;
     static const float RADIAN_TO_DEGREE = 180.0f / PI;
     static const float SMALL_EPSILON = 1.19209290E-07F;
     static const float EPSILON = 1e-06f;
 
-    /* ********** Types ********** */
-    using size_t = std::size_t;
-
     /* ********** Basic Math Functions ********** */
-
     inline float Sqrt(float value)                         { return sqrtf(value);          }
     inline float Abs(float value)                          { return fabsf(value);          }
     inline float Sin(float value)                          { return sinf(value);           }

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Angle.hpp"
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 namespace Zero {
 
-	namespace VectorImpl {
+	namespace Internal {
 
 		/**
 		 * @brief A simple base container for the vector
@@ -18,36 +18,36 @@ namespace Zero {
 
 			explicit VectorBase(float value) {
 				for (int i = 0; i < dims; ++i) {
-					data[i] = value;
+					data_[i] = value;
 				}
 			}
 
-			VectorBase(float x1, float y1) {
+			VectorBase(float x, float y) {
 				static_assert(dims > 1, "Require at least 2 dimensions");
-				data[0] = x1;
-				data[1] = y1;
+				data_[0] = x;
+				data_[1] = y;
 			}
 
-			VectorBase(float x1, float y1, float z1) {
+			VectorBase(float x, float y, float z) {
 				static_assert(dims > 2, "Require at least 3 dimensions");
-				data[0] = x1;
-				data[1] = y1;
-				data[2] = z1;
+				data_[0] = x;
+				data_[1] = y;
+				data_[2] = z;
 			}
 
-			VectorBase(float x1, float y1, float z1, float w1) {
+			VectorBase(float x, float y, float z, float w) {
 				static_assert(dims > 3, "Require at least 4 dimensions");
-				data[0] = x1;
-				data[1] = y1;
-				data[2] = z1;
-				data[3] = w1;
+				data_[0] = x;
+				data_[1] = y;
+				data_[2] = z;
+				data_[3] = w;
 			}
 
-			inline float *Data() { return data; }
+			inline float *Data() { return data_; }
 
-			inline const float *Data() const { return data; }
+			inline const float *Data() const { return data_; }
 
-			float data[dims];
+			float data_[dims];
 
 		}; // template class VectorBase
 
@@ -56,16 +56,16 @@ namespace Zero {
 		public:
 			VectorBase() = default;
 
-			VectorBase(float x1, float y1) : x(x1), y(y1) {}
+			VectorBase(float x, float y) : x_(x), y_(y) {}
 
-			explicit VectorBase(float value) : x(value), y(value) {}
+			explicit VectorBase(float value) : x_(value), y_(value) {}
 
 
-			inline float *Data() { return &x; }
+			inline float *Data() { return &x_; }
 
-			inline const float *Data() const { return &x; }
+			inline const float *Data() const { return &x_; }
 
-			float x, y;
+			float x_, y_;
 
 		}; // template specialization class VectorBase<2>
 
@@ -75,18 +75,18 @@ namespace Zero {
 		public:
 			VectorBase() = default;
 
-			VectorBase(float x1, float y1) : x(x1), y(y1), z(0.0f) {}
+			VectorBase(float x, float y) : x_(x), y_(y), z_(0.0f) {}
 
-			VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+			VectorBase(float x, float y, float z) : x_(x), y_(y), z_(z) {}
 
-			explicit VectorBase(float value) : x(value), y(value), z(value) {}
+			explicit VectorBase(float value) : x_(value), y_(value), z_(value) {}
 
 
-			inline float *Data() { return &x; }
+			inline float *Data() { return &x_; }
 
-			inline const float *Data() const { return &x; }
+			inline const float *Data() const { return &x_; }
 
-			float x, y, z;
+			float x_, y_, z_;
 
 		}; // template specialization class VectorBase<3>
 
@@ -96,36 +96,36 @@ namespace Zero {
 		public:
 			VectorBase() = default;
 
-			VectorBase(float x1, float y1) : x(x1), y(y1), z(0.0f), w(0.0f) {}
+			VectorBase(float x, float y) : x_(x), y_(y), z_(0.0f), w_(0.0f) {}
 
-			VectorBase(float x1, float y1, float z1) : x(x1), y(y1), z(z1), w(0.0f) {}
+			VectorBase(float x, float y, float z) : x_(x), y_(y), z_(z), w_(0.0f) {}
 
-			VectorBase(float x1, float y1, float z1, float w1) : x(x1), y(y1), z(z1), w(w1) {}
+			VectorBase(float x, float y, float z, float w) : x_(x), y_(y), z_(z), w_(w) {}
 
-			explicit VectorBase(float value) : x(value), y(value), z(value), w(value) {}
+			explicit VectorBase(float value) : x_(value), y_(value), z_(value), w_(value) {}
 
-			inline float *Data() { return &x; }
+			inline float *Data() { return &x_; }
 
-			inline const float *Data() const { return &x; }
+			inline const float *Data() const { return &x_; }
 
-			float x, y, z, w;
+			float x_, y_, z_, w_;
 
 		}; // template specialization class VectorBase<4>
 
-	} // namespace VectorImpl
+	} // namespace Internal
 
 	
 	template<int dims>
-	class Vector  : public VectorImpl::VectorBase<dims> {
-		using VectorBase = VectorImpl::VectorBase<dims>;
+	class Vector  : public Internal::VectorBase<dims> {
+		using VectorBase = Internal::VectorBase<dims>;
 		using VectorBase::Data;
 	public:
 		Vector<dims>() = default;
 		Vector<dims>(const Vector<dims>& other) = default;
 		explicit Vector<dims>(float value) : VectorBase(value) {}
-		Vector<dims>(float x1, float y1) : VectorBase(x1, y1) {};
-		Vector<dims>(float x1, float y1, float z1) : VectorBase(x1, y1, z1) {}
-		Vector<dims>(float x1, float y1, float z1, float w1) : VectorBase(x1, y1, z1, w1) {}
+		Vector<dims>(float x, float y) : VectorBase(x, y) {};
+		Vector<dims>(float x, float y, float z) : VectorBase(x, y, z) {}
+		Vector<dims>(float x, float y, float z, float w) : VectorBase(x, y, z, w) {}
 
 		~Vector<dims>() = default;
 		Vector<dims>& operator=(const Vector<dims>& other) = default;
@@ -330,9 +330,9 @@ namespace Zero {
 	template<int dims>
 	Vector<dims> Vector<dims>::Cross(const Vector<dims>& lhs, const Vector<dims>& rhs) {
 		static_assert(dims == 3, "Only 3D cross product supported");
-		return Vector<dims>(lhs.y * rhs.z - lhs.z * rhs.y,
-                            lhs.z * rhs.x - lhs.x * rhs.z,
-                            lhs.x * rhs.y - lhs.y * rhs.x);
+		return Vector<dims>(lhs.y_ * rhs.z_ - lhs.z_ * rhs.y_,
+                            lhs.z_ * rhs.x_ - lhs.x_ * rhs.z_,
+                            lhs.x_ * rhs.y_ - lhs.y_ * rhs.x_);
 	}
 
 	template<int dims>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 namespace Zero {
 

@@ -66,8 +66,8 @@ namespace Zero {
 
 		static Sphere Zero();
 
-		Vector3 center;
-		float radius;
+		Vector3 center_;
+		float radius_;
 
 	}; // class Sphere
 

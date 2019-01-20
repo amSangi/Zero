@@ -20,30 +20,30 @@ bool Box::Contains(const Box& other) const {
 }
 
 bool Box::Contains(const Vector3& point) const {
-	return (min.x <= point.x) &&
-           (min.y <= point.y) &&
-           (min.z <= point.z) &&
-           (point.x <= max.x) &&
-           (point.y <= max.y) &&
-           (point.z <= max.z);
+	return (min.x_ <= point.x_) &&
+           (min.y_ <= point.y_) &&
+           (min.z_ <= point.z_) &&
+           (point.x_ <= max.x_) &&
+           (point.y_ <= max.y_) &&
+           (point.z_ <= max.z_);
 }
 
 bool Box::Intersects(const Box& other) const {
-	return !((min.x > other.max.x || other.min.x > max.x) ||
-             (min.y > other.max.y || other.min.y > max.y) ||
-             (min.z > other.max.z || other.min.z > max.z));
+	return !((min.x_ > other.max.x_ || other.min.x_ > max.x_) ||
+             (min.y_ > other.max.y_ || other.min.y_ > max.y_) ||
+             (min.z_ > other.max.z_ || other.min.z_ > max.z_));
 }
 
 
 /* ********** Merge ********** */
 void Box::Merge(const Box& other) {
-	min.x = Zero::Min(min.x, other.min.x);
-	min.y = Zero::Min(min.y, other.min.y);
-	min.z = Zero::Min(min.z, other.min.z);
+	min.x_ = Zero::Min(min.x_, other.min.x_);
+	min.y_ = Zero::Min(min.y_, other.min.y_);
+	min.z_ = Zero::Min(min.z_, other.min.z_);
 
-	max.x = Zero::Max(max.x, other.max.x);
-	max.y = Zero::Max(max.y, other.max.y);
-	max.z = Zero::Max(max.z, other.max.z);
+	max.x_ = Zero::Max(max.x_, other.max.x_);
+	max.y_ = Zero::Max(max.y_, other.max.y_);
+	max.z_ = Zero::Max(max.z_, other.max.z_);
 }
 
 

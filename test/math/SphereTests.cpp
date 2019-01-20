@@ -76,13 +76,13 @@ TEST(TestSphere, Merge) {
 	EXPECT_TRUE(merged_sphere.Contains(s2));
 	EXPECT_FALSE(s1.Contains(merged_sphere));
 	EXPECT_FALSE(s2.Contains(merged_sphere));
-	EXPECT_TRUE(merged_sphere.radius >= s1.radius);
-	EXPECT_TRUE(merged_sphere.radius >= s2.radius);
+	EXPECT_TRUE(merged_sphere.radius_ >= s1.radius_);
+	EXPECT_TRUE(merged_sphere.radius_ >= s2.radius_);
 
 	s1.Merge(s2);
 	EXPECT_TRUE(s1.Contains(s2));
 	EXPECT_FALSE(s2.Contains(s1));
-	EXPECT_TRUE(s1.radius >= s2.radius);
+	EXPECT_TRUE(s1.radius_ >= s2.radius_);
 	EXPECT_EQ(merged_sphere, s1);
 }
 

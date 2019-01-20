@@ -5,10 +5,10 @@
 using namespace Zero;
 
 bool Quaternion::operator==(const Quaternion& other) const {
-	return Equal(w, other.w) &&
-			Equal(x, other.x) &&
-			Equal(y, other.y) &&
-			Equal(z, other.z);
+	return Equal(w_, other.w_) &&
+			Equal(x_, other.x_) &&
+			Equal(y_, other.y_) &&
+			Equal(z_, other.z_);
 }
 
 bool Quaternion::operator!=(const Quaternion& other) const {
@@ -17,98 +17,98 @@ bool Quaternion::operator!=(const Quaternion& other) const {
 
 /* ********** Scalar Operations ********** */
 Quaternion Quaternion::operator+(float scalar) {
-	return Quaternion(w + scalar, x + scalar, y + scalar, z + scalar);
+	return Quaternion(w_ + scalar, x_ + scalar, y_ + scalar, z_ + scalar);
 }
 
 Quaternion Quaternion::operator-(float scalar) {
-	return Quaternion(w - scalar, x - scalar, y - scalar, z - scalar);
+	return Quaternion(w_ - scalar, x_ - scalar, y_ - scalar, z_ - scalar);
 }
 
 Quaternion Quaternion::operator*(float scalar) {
-	return Quaternion(w * scalar, x * scalar, y * scalar, z * scalar);
+	return Quaternion(w_ * scalar, x_ * scalar, y_ * scalar, z_ * scalar);
 }
 
 Quaternion Quaternion::operator/(float scalar) {
 	float inv_scalar = 1.0f / scalar;
-	return Quaternion(w * inv_scalar, x * inv_scalar, y * inv_scalar, z * inv_scalar);
+	return Quaternion(w_ * inv_scalar, x_ * inv_scalar, y_ * inv_scalar, z_ * inv_scalar);
 }
 
 Quaternion& Quaternion::operator+=(float scalar) {
-	w += scalar;
-	x += scalar;
-	y += scalar;
-	z += scalar;
+	w_ += scalar;
+	x_ += scalar;
+	y_ += scalar;
+	z_ += scalar;
 	return *this;
 }
 
 Quaternion& Quaternion::operator-=(float scalar) {
-	w -= scalar;
-	x -= scalar;
-	y -= scalar;
-	z -= scalar;
+	w_ -= scalar;
+	x_ -= scalar;
+	y_ -= scalar;
+	z_ -= scalar;
 	return *this;
 }
 
 Quaternion& Quaternion::operator*=(float scalar) {
-	w *= scalar;
-	x *= scalar;
-	y *= scalar;
-	z *= scalar;
+	w_ *= scalar;
+	x_ *= scalar;
+	y_ *= scalar;
+	z_ *= scalar;
 	return *this;
 }
 
 Quaternion& Quaternion::operator/=(float scalar) {
 	float inv_scalar = 1.0f / scalar;
-	w *= inv_scalar;
-	x *= inv_scalar;
-	y *= inv_scalar;
-	z *= inv_scalar;
+	w_ *= inv_scalar;
+	x_ *= inv_scalar;
+	y_ *= inv_scalar;
+	z_ *= inv_scalar;
 	return *this;
 }
 
 /* ********** Quaternion/Quaternion Operations ********** */
 Quaternion Quaternion::operator+(const Quaternion& rhs) {
-	return Quaternion(w + rhs.w, x + rhs.x, y + rhs.y, z + rhs.z);
+	return Quaternion(w_ + rhs.w_, x_ + rhs.x_, y_ + rhs.y_, z_ + rhs.z_);
 }
 
 Quaternion Quaternion::operator-(const Quaternion& rhs) {
-	return Quaternion(w - rhs.w, x - rhs.x, y - rhs.y, z - rhs.z);
+	return Quaternion(w_ - rhs.w_, x_ - rhs.x_, y_ - rhs.y_, z_ - rhs.z_);
 }
 
 Quaternion Quaternion::operator*(const Quaternion& rhs) {
 	return Quaternion(
-		(w * rhs.w) - (x * rhs.x) - (y * rhs.y) - (z * rhs.z),
-		(w * rhs.x) + (x * rhs.w) + (y * rhs.z) - (z * rhs.y),
-		(w * rhs.y) - (x * rhs.z) + (y * rhs.w) + (z * rhs.x),
-		(w * rhs.z) + (x * rhs.y) - (y * rhs.x) + (z * rhs.w)
+		(w_ * rhs.w_) - (x_ * rhs.x_) - (y_ * rhs.y_) - (z_ * rhs.z_),
+		(w_ * rhs.x_) + (x_ * rhs.w_) + (y_ * rhs.z_) - (z_ * rhs.y_),
+		(w_ * rhs.y_) - (x_ * rhs.z_) + (y_ * rhs.w_) + (z_ * rhs.x_),
+		(w_ * rhs.z_) + (x_ * rhs.y_) - (y_ * rhs.x_) + (z_ * rhs.w_)
 	);
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& rhs) {
-	w += rhs.w;
-	x += rhs.x;
-	y += rhs.y;
-	z += rhs.z;
+	w_ += rhs.w_;
+	x_ += rhs.x_;
+	y_ += rhs.y_;
+	z_ += rhs.z_;
 	return *this;
 }
 
 Quaternion& Quaternion::operator-=(const Quaternion& rhs) {
-	w -= rhs.w;
-	x -= rhs.x;
-	y -= rhs.y;
-	z -= rhs.z;
+	w_ -= rhs.w_;
+	x_ -= rhs.x_;
+	y_ -= rhs.y_;
+	z_ -= rhs.z_;
 	return *this;
 }
 
 Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
-	float new_w = (w * rhs.w) - (x * rhs.x) - (y * rhs.y) - (z * rhs.z);
-	float new_x = (w * rhs.x) + (x * rhs.w) + (y * rhs.z) - (z * rhs.y);
-	float new_y = (w * rhs.y) - (x * rhs.z) + (y * rhs.w) + (z * rhs.x);
-	float new_z = (w * rhs.z) + (x * rhs.y) - (y * rhs.x) + (z * rhs.w);
-	w = new_w;
-	x = new_x;
-	y = new_y;
-	z = new_z;
+	float new_w = (w_ * rhs.w_) - (x_ * rhs.x_) - (y_ * rhs.y_) - (z_ * rhs.z_);
+	float new_x = (w_ * rhs.x_) + (x_ * rhs.w_) + (y_ * rhs.z_) - (z_ * rhs.y_);
+	float new_y = (w_ * rhs.y_) - (x_ * rhs.z_) + (y_ * rhs.w_) + (z_ * rhs.x_);
+	float new_z = (w_ * rhs.z_) + (x_ * rhs.y_) - (y_ * rhs.x_) + (z_ * rhs.w_);
+	w_ = new_w;
+	x_ = new_x;
+	y_ = new_y;
+	z_ = new_z;
 	return *this;
 }
 
@@ -116,34 +116,34 @@ Vector3 Quaternion::operator*(const Vector3& v) const {
 	Vector3 u = XYZ();
 	Vector3 c1 = Vector3::Cross(u, v);
 	Vector3 c2 = Vector3::Cross(u, c1);
-	return v + 2.0f * ((c1 * w) + c2);
+	return v + 2.0f * ((c1 * w_) + c2);
 }
 
 /* ********** Quaternion Operations ********** */
 float Quaternion::Norm() const {
-	return Sqrt((w * w) + (x * x) + (y * y) + (z * z));
+	return Sqrt((w_ * w_) + (x_ * x_) + (y_ * y_) + (z_ * z_));
 }
 
 Quaternion& Quaternion::UnitNorm() {
 	float norm = Norm();
 	if (norm > 0.0f) {
 		float inv_norm = 1.0f / norm;
-		w *= inv_norm;
-		x *= inv_norm;
-		y *= inv_norm;
-		z *= inv_norm;
+		w_ *= inv_norm;
+		x_ *= inv_norm;
+		y_ *= inv_norm;
+		z_ *= inv_norm;
 	}
 	else {
-		w = 1.0f;
-		x = y = z = 0.0f;
+		w_ = 1.0f;
+		x_ = y_ = z_ = 0.0f;
 	}
 	return *this;
 }
 
 Quaternion& Quaternion::Conjugate() {
-	x = -x;
-	y = -y;
-	z = -z;
+	x_ = -x_;
+	y_ = -y_;
+	z_ = -z_;
  	return *this;
 }
 
@@ -151,23 +151,23 @@ Quaternion& Quaternion::Inverse() {
 	float norm = Norm();
 	if (norm > 0.0f) {
 		float inv_norm = 1.0f / norm;
-		w *= inv_norm;
-		x *= -inv_norm;
-		y *= -inv_norm;
-		z *= -inv_norm;
+		w_ *= inv_norm;
+		x_ *= -inv_norm;
+		y_ *= -inv_norm;
+		z_ *= -inv_norm;
 	}
 	else {
-		w = 1.0f;
-		x = y = z = 0.0f;
+		w_ = 1.0f;
+		x_ = y_ = z_ = 0.0f;
 	}
 	return *this;
 }
 
 Quaternion& Quaternion::Negate() {
-	w = -w;
-	x = -x;
-	y = -y;
-	z = -z;
+	w_ = -w_;
+	x_ = -x_;
+	y_ = -y_;
+	z_ = -z_;
 	return *this;
 }
 
@@ -184,31 +184,31 @@ Quaternion Quaternion::InverseCopy() const {
 }
 
 Vector3 Quaternion::GetEulerAngles() const {
-	float ww = w * w;
-	float xx = x * x;
-	float yy = y * y;
-	float zz = z * z;
+	float ww = w_ * w_;
+	float xx = x_ * x_;
+	float yy = y_ * y_;
+	float zz = z_ * z_;
 
 	float unit = xx + yy + zz + ww;
-	float test = x * y + z * w;
+	float test = x_ * y_ + z_ * w_;
 
 	if (test > 0.499f * unit) {
-		return Vector3(2.0f * Zero::Atan2(x, w), Zero::PI_2, 0.0f);
+		return Vector3(2.0f * Zero::Atan2(x_, w_), Zero::PI_2, 0.0f);
 	}
 
 	if (test < -0.499f * unit) {
-		return Vector3(-2.0f * Zero::Atan2(x, w), -Zero::PI_2, 0.0f);
+		return Vector3(-2.0f * Zero::Atan2(x_, w_), -Zero::PI_2, 0.0f);
 	}
 
-	float heading = Zero::Atan2(2.0f * (y * w - x * z), xx - yy - zz + ww);
+	float heading = Zero::Atan2(2.0f * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
 	float attitude = Zero::Asin(2.0f * test / unit);
-	float bank = Zero::Atan2(2.0f * (x * w - y * z), -xx + yy - zz + ww);
+	float bank = Zero::Atan2(2.0f * (x_ * w_ - y_ * z_), -xx + yy - zz + ww);
 
 	return Vector3(bank, heading, attitude);
 }
 
 Vector3 Quaternion::XYZ() const {
-	return Vector3(x, y, z);
+	return Vector3(x_, y_, z_);
 }
 
 Matrix3 Quaternion::GetRotationMatrix() const {
@@ -217,17 +217,17 @@ Matrix3 Quaternion::GetRotationMatrix() const {
 		return Matrix3::Identity();
 	}
 
-	float xx = q.x * q.x;
-	float yy = q.y * q.y;
-	float zz = q.z * q.z;
+	float xx = q.x_ * q.x_;
+	float yy = q.y_ * q.y_;
+	float zz = q.z_ * q.z_;
 
-	float xy = q.x * q.y;
-	float xz = q.x * q.z;
-	float yz = q.y * q.z;
+	float xy = q.x_ * q.y_;
+	float xz = q.x_ * q.z_;
+	float yz = q.y_ * q.z_;
 
-	float wx = q.w * q.x;
-	float wy = q.w * q.y;
-	float wz = q.w * q.z;
+	float wx = q.w_ * q.x_;
+	float wy = q.w_ * q.y_;
+	float wz = q.w_ * q.z_;
 
 	float e00 = 1.0f - (2.0f * (yy + zz));
 	float e01 = 2.0f * (xy - wz);
@@ -248,19 +248,19 @@ Matrix3 Quaternion::GetRotationMatrix() const {
 
 /* ********** Static Operations ********** */
 float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
-	return (lhs.w * rhs.w) + (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
+	return (lhs.w_ * rhs.w_) + (lhs.x_ * rhs.x_) + (lhs.y_ * rhs.y_) + (lhs.z_ * rhs.z_);
 }
 
 Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Radian angle) {
 	Vector3 normalized = Vector3::Normalize(axis);
-	float half_angle_rad = angle.rad * 0.5f;
+	float half_angle_rad = angle.rad_ * 0.5f;
 	float sin_half_angle_rad = Zero::Sin(half_angle_rad);
 
 	// Assume axis is normalized
 	return Quaternion(Zero::Cos(half_angle_rad),
-	                  normalized.x * sin_half_angle_rad,
-	                  normalized.y * sin_half_angle_rad,
-	                  normalized.z * sin_half_angle_rad);
+	                  normalized.x_ * sin_half_angle_rad,
+	                  normalized.y_ * sin_half_angle_rad,
+	                  normalized.z_ * sin_half_angle_rad);
 }
 
 Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Degree angle) {
@@ -268,17 +268,17 @@ Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Degree angle) {
 }
 
 Quaternion Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) {
-	Matrix3 rotation_matrix(xAxis.x, yAxis.x, zAxis.x,
-                            xAxis.y, yAxis.y, zAxis.y,
-                            xAxis.z, yAxis.z, zAxis.z);
+	Matrix3 rotation_matrix(xAxis.x_, yAxis.x_, zAxis.x_,
+                            xAxis.y_, yAxis.y_, zAxis.y_,
+                            xAxis.z_, yAxis.z_, zAxis.z_);
 
 	return FromMatrix3(rotation_matrix);
 }
 
 Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
-	float rx = 0.5f * x.rad;
-	float ry = 0.5f * y.rad;
-	float rz = 0.5f * z.rad;
+	float rx = 0.5f * x.rad_;
+	float ry = 0.5f * y.rad_;
+	float rz = 0.5f * z.rad_;
 
 	float cx = Cos(rx);
 	float sx = Sin(rx);
@@ -348,9 +348,9 @@ Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
 	float inv_s = 1.0f / s;
 
 	return Quaternion(s * 0.5f,
-                      rotation_axis.x * inv_s,
-                      rotation_axis.y * inv_s,
-                      rotation_axis.z * inv_s);
+                      rotation_axis.x_ * inv_s,
+                      rotation_axis.y_ * inv_s,
+                      rotation_axis.z_ * inv_s);
 }
 
 /* ********** Useful Quaternions ********** */

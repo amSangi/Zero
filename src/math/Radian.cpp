@@ -27,41 +27,41 @@ bool Radian::operator<(const Degree& d) const {
 }
 
 Radian Radian::operator+(const Degree& d) const {
-    return Radian(rad + d.ToRadian().rad);
+    return Radian(rad_ + d.ToRadian().rad_);
 }
 
 Radian Radian::operator-(const Degree& d) const {
-    return Radian(rad - d.ToRadian().rad);
+    return Radian(rad_ - d.ToRadian().rad_);
 }
 
 Radian Radian::operator*(const Degree& d) const {
-    return Radian(rad * d.ToRadian().rad);
+    return Radian(rad_ * d.ToRadian().rad_);
 }
 
 Radian Radian::operator/(const Degree& d) const {
-    return Radian(rad / d.ToRadian().rad);
+    return Radian(rad_ / d.ToRadian().rad_);
 }
 
 Radian& Radian::operator+=(const Degree& d) {
-    rad += d.ToRadian().rad;
+    rad_ += d.ToRadian().rad_;
     return *this;
 }
 
 Radian& Radian::operator-=(const Degree& d) {
-    rad -= d.ToRadian().rad;
+    rad_ -= d.ToRadian().rad_;
     return *this;
 }
 
 Radian& Radian::operator*=(const Degree& d) {
-    rad *= d.ToRadian().rad;
+    rad_ *= d.ToRadian().rad_;
     return *this;
 }
 
 Radian& Radian::operator/=(const Degree& d) {
-    rad /= d.ToRadian().rad;
+    rad_ /= d.ToRadian().rad_;
     return *this;
 }
 
 Degree Radian::ToDegree() const {
-    return Degree(rad * RADIAN_TO_DEGREE);
+    return Degree(rad_ * RADIAN_TO_DEGREE);
 }

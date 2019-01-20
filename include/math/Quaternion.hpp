@@ -2,14 +2,14 @@
 
 #include "Angle.hpp"
 #include "Vector3.hpp"
-#include "ZeroMath.hpp"
+#include "ZMath.hpp"
 
 namespace Zero {
 
 	class Quaternion {
 	public:
-		Quaternion() : w(1.0f), x(0.0f), y(0.0f), z(0.0f) {}
-		Quaternion(float w1, float x1, float y1, float z1) : w(w1), x(x1), y(y1), z(z1) {}
+		Quaternion() : w_(1.0f), x_(0.0f), y_(0.0f), z_(0.0f) {}
+		Quaternion(float w1, float x1, float y1, float z1) : w_(w1), x_(x1), y_(y1), z_(z1) {}
 		Quaternion(const Quaternion& other) = default;
 		~Quaternion() = default;
 
@@ -74,7 +74,7 @@ namespace Zero {
 		static Quaternion Identity();
 		static Quaternion Zero();
 
-		float w, x, y, z;
+		float w_, x_, y_, z_;
 
 	}; // class Quaternion
 
