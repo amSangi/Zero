@@ -1,7 +1,7 @@
 #include "Matrix3.hpp"
 #include "Vector3.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 Matrix3::Matrix3(float m[3][3]) {
     for (int i = 0; i < 3; ++i) {
@@ -160,7 +160,7 @@ bool Matrix3::InverseUtil(Matrix3& out, float epsilon) const {
                 - matrix_[0][1] * (t2 - t3)
                 + matrix_[0][2] * (t4 - matrix_[1][1] * matrix_[2][0]);
 
-    if (Zero::Abs(det) <= epsilon) return false;
+    if (zero::Abs(det) <= epsilon) return false;
 
     float inv_det = 1.0f / det;
 

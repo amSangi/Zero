@@ -2,7 +2,7 @@
 #include "Matrix3.hpp"
 #include "Vector3.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 TEST(TestMatrix3, ScalarOperations) {
 	Matrix3 matrix = Matrix3::Identity();

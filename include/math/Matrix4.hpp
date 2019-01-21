@@ -3,7 +3,7 @@
 #include "Angle.hpp"
 #include "ZMath.hpp"
 
-namespace Zero {
+namespace zero {
 
     class Matrix4 {
     public:
@@ -95,4 +95,4 @@ namespace Zero {
 
     }; // class Matrix4
 
-} // namespace Zero
+} // namespace zero

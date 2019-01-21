@@ -2,7 +2,7 @@
 
 #include "Vector3.hpp"
 
-namespace Zero {
+namespace zero {
 
 	class Sphere {
 	public:
@@ -71,4 +71,4 @@ namespace Zero {
 
 	}; // class Sphere
 
-} // namespace Zero
+} // namespace zero

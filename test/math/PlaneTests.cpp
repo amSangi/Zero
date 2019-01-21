@@ -2,7 +2,7 @@
 #include "Plane.hpp"
 #include "ZMath.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 TEST(TestPlane, Constructor) {
 	Vector3 left = Vector3::Left();

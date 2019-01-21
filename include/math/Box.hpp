@@ -2,7 +2,7 @@
 
 #include "Vector3.hpp"
 
-namespace Zero {
+namespace zero {
 
     class Box {
     public:
@@ -78,4 +78,4 @@ namespace Zero {
 
     }; // class Box
 
-} // namespace Zero
+} // namespace zero

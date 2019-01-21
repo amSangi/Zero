@@ -2,7 +2,7 @@
 
 #include "ZPlatform.hpp"
 
-namespace Zero {
+namespace zero {
 
 	/*********** Types ***********/
 	using int8   = signed   char;
@@ -24,4 +24,4 @@ namespace Zero {
 
 	using size_t = uint32;
 
-} // namespace Zero
+} // namespace zero

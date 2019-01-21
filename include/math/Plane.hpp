@@ -2,7 +2,7 @@
 
 #include "Vector3.hpp"
 
-namespace Zero {
+namespace zero {
 
 	/**
 	 * @brief A plane represented as Ax + By + Cz + D = 0
@@ -110,4 +110,4 @@ namespace Zero {
 
 	}; // class Plane
 
-} // namespace Zero
+} // namespace zero

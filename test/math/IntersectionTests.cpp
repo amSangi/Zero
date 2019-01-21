@@ -3,7 +3,7 @@
 #include "Box.hpp"
 #include "Sphere.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 TEST(TestIntersection, BoxSphereIntersect) {
 	Sphere sphere(Vector3::Zero(), 100.0f);

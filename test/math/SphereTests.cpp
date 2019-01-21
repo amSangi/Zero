@@ -2,7 +2,7 @@
 #include "Sphere.hpp"
 #include "Box.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 TEST(TestSphere, ContainsBox) {
 	Sphere sphere(250.0f);

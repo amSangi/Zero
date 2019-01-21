@@ -3,7 +3,7 @@
 #include "Matrix4.hpp"
 #include "Vector4.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 Plane::Plane(const Vector4& plane)
    : normal_(Vector3::Normalize(Vector3(plane.x_, plane.y_, plane.z_))), d_(plane.w_) {}
@@ -21,7 +21,7 @@ Plane::Plane(const Vector3& normal)
    : normal_(normal), d_(0.0f) {}
 
 bool Plane::operator==(const Plane& other) const {
-	return (normal_ == other.normal_) && Zero::Equal(d_, other.d_);
+	return (normal_ == other.normal_) && zero::Equal(d_, other.d_);
 }
 
 bool Plane::operator!=(const Plane& other) const {

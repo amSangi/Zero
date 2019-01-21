@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "Box.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 TEST(TestBox, ContainsBox) {
 	Box box(Vector3::Zero(), Vector3(100.0f));

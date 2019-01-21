@@ -3,9 +3,9 @@
 #include "Angle.hpp"
 #include "ZMath.hpp"
 
-namespace Zero {
+namespace zero {
 
-	namespace Internal {
+	namespace detail {
 
 		/**
 		 * @brief A simple base container for the vector
@@ -112,12 +112,12 @@ namespace Zero {
 
 		}; // template specialization class VectorBase<4>
 
-	} // namespace Internal
+	} // namespace detail
 
 	
 	template<int dims>
-	class Vector  : public Internal::VectorBase<dims> {
-		using VectorBase = Internal::VectorBase<dims>;
+	class Vector  : public detail::VectorBase<dims> {
+		using VectorBase = detail::VectorBase<dims>;
 		using VectorBase::Data;
 	public:
 		Vector<dims>() = default;
@@ -254,7 +254,7 @@ namespace Zero {
 
 	template<int dims>
 	float Vector<dims>::Magnitude() const {
-		return Zero::Sqrt(SquareMagnitude());
+		return zero::Sqrt(SquareMagnitude());
 	}
 
 	template<int dims>
@@ -271,7 +271,7 @@ namespace Zero {
 	Vector<dims>& Vector<dims>::Abs() {
 		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			data[i] = Zero::Abs(data[i]);
+			data[i] = zero::Abs(data[i]);
 		}
 		return *this;
 	}
@@ -293,7 +293,7 @@ namespace Zero {
 	bool Vector<dims>::IsEpsilon(float epsilon) const {
 		const float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			if (Zero::Abs(data[i]) > epsilon) {
+			if (zero::Abs(data[i]) > epsilon) {
 				return false;
 			}
 		}
@@ -361,7 +361,7 @@ namespace Zero {
 		float square_mag_from = from.SquareMagnitude();
 		float square_mag_to = to.SquareMagnitude();
 		float inv_sqrt = 1.0f / Sqrt(square_mag_from * square_mag_to);
-		float angle = Zero::Acos(dot * inv_sqrt);
+		float angle = zero::Acos(dot * inv_sqrt);
 		return Radian(angle);
 	}
 
@@ -533,4 +533,4 @@ namespace Zero {
 		return v / scalar;
 	}
 
-} // namespace Zero
+} // namespace zero

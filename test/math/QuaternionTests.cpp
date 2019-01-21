@@ -2,7 +2,7 @@
 #include "Angle.hpp"
 #include "Quaternion.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 TEST(TestQuaternion, ScalarOperations) {
 	Quaternion quat = Quaternion::Identity();
@@ -86,8 +86,8 @@ TEST(TestQuaternion, QuaternionVectorOperations) {
 TEST(TestQuaternion, Norm) {
 	EXPECT_EQ(0.0f, Quaternion::Zero().Norm());
 	EXPECT_EQ(1.0f, Quaternion::Identity().Norm());
-	EXPECT_EQ(3.0f * Zero::Sqrt(395.0f), Quaternion(1.0f, 23.0f, 44.0f, 33.0f).Norm());
-	EXPECT_EQ(Zero::Sqrt(3035.0f), Quaternion(1.0f, -3.0f, 44.0f, -33.0f).Norm());
+	EXPECT_EQ(3.0f * zero::Sqrt(395.0f), Quaternion(1.0f, 23.0f, 44.0f, 33.0f).Norm());
+	EXPECT_EQ(zero::Sqrt(3035.0f), Quaternion(1.0f, -3.0f, 44.0f, -33.0f).Norm());
 }
 
 TEST(TestQuaternion, UnitNorm) {
@@ -96,12 +96,12 @@ TEST(TestQuaternion, UnitNorm) {
 	EXPECT_EQ(Quaternion::Identity(), Quaternion::Identity().UnitNorm());
 
 	quat = Quaternion(0.0f, 1.0f, 1.0f, 1.0f);
-	expected = quat / Zero::Sqrt(3.0f);
+	expected = quat / zero::Sqrt(3.0f);
 	actual = quat.UnitNorm();
 	EXPECT_EQ(expected, actual);
 
 	quat = Quaternion(25.0f, -13.0f, -3.0f, 231.0f);
-	expected = quat / (2.0f * Zero::Sqrt(13541.0f));
+	expected = quat / (2.0f * zero::Sqrt(13541.0f));
 	actual = quat.UnitNorm();
 	EXPECT_EQ(expected, actual);
 }
@@ -120,12 +120,12 @@ TEST(TestQuaternion, Inverse) {
 	EXPECT_EQ(expected, actual);
 
 	quat = Quaternion(25.0f, -13.0f, -3.0f, 231.0f);
-	expected = Quaternion(25.0f, 13.0f, 3.0f, -231.0f) / (2.0f * Zero::Sqrt(13541.0f));
+	expected = Quaternion(25.0f, 13.0f, 3.0f, -231.0f) / (2.0f * zero::Sqrt(13541.0f));
 	actual = quat.Inverse();
 	EXPECT_EQ(expected, actual);
 
 	quat = Quaternion(35.0f, 10.0f, 11.0f, 12.0f);
-	expected = Quaternion(35.0f, -10.0f, -11.0f, -12.0f) / Zero::Sqrt(1590.0f);
+	expected = Quaternion(35.0f, -10.0f, -11.0f, -12.0f) / zero::Sqrt(1590.0f);
 	actual = quat.Inverse();
 	EXPECT_EQ(expected, actual);
 
@@ -147,10 +147,10 @@ TEST(TestQuaternion, FromAngleAxis) {
 
 	// Round to nearest tenth and check
 	auto CHECK_FLT_EQ = [] (Quaternion e, Quaternion a) {
-		EXPECT_EQ(e.w_, Zero::Floor(a.w_ * 10.0f + 0.50f) / 10.0f);
-		EXPECT_EQ(e.x_, Zero::Floor(a.x_ * 10.0f + 0.50f) / 10.0f);
-		EXPECT_EQ(e.y_, Zero::Floor(a.y_ * 10.0f + 0.50f) / 10.0f);
-		EXPECT_EQ(e.z_, Zero::Floor(a.z_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.w_, zero::Floor(a.w_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.x_, zero::Floor(a.x_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.y_, zero::Floor(a.y_ * 10.0f + 0.50f) / 10.0f);
+		EXPECT_EQ(e.z_, zero::Floor(a.z_ * 10.0f + 0.50f) / 10.0f);
 	};
 
 	expected = Quaternion(0.9f, 0.4f, 0.0f, 0.0f);

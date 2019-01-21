@@ -2,7 +2,7 @@
 #include "Matrix3.hpp"
 #include "Vector3.hpp"
 
-using namespace Zero;
+using namespace zero;
 
 bool Quaternion::operator==(const Quaternion& other) const {
 	return Equal(w_, other.w_) &&
@@ -193,16 +193,16 @@ Vector3 Quaternion::GetEulerAngles() const {
 	float test = x_ * y_ + z_ * w_;
 
 	if (test > 0.499f * unit) {
-		return Vector3(2.0f * Zero::Atan2(x_, w_), Zero::PI_2, 0.0f);
+		return Vector3(2.0f * zero::Atan2(x_, w_), zero::PI_2, 0.0f);
 	}
 
 	if (test < -0.499f * unit) {
-		return Vector3(-2.0f * Zero::Atan2(x_, w_), -Zero::PI_2, 0.0f);
+		return Vector3(-2.0f * zero::Atan2(x_, w_), -zero::PI_2, 0.0f);
 	}
 
-	float heading = Zero::Atan2(2.0f * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
-	float attitude = Zero::Asin(2.0f * test / unit);
-	float bank = Zero::Atan2(2.0f * (x_ * w_ - y_ * z_), -xx + yy - zz + ww);
+	float heading = zero::Atan2(2.0f * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
+	float attitude = zero::Asin(2.0f * test / unit);
+	float bank = zero::Atan2(2.0f * (x_ * w_ - y_ * z_), -xx + yy - zz + ww);
 
 	return Vector3(bank, heading, attitude);
 }
@@ -254,10 +254,10 @@ float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Radian angle) {
 	Vector3 normalized = Vector3::Normalize(axis);
 	float half_angle_rad = angle.rad_ * 0.5f;
-	float sin_half_angle_rad = Zero::Sin(half_angle_rad);
+	float sin_half_angle_rad = zero::Sin(half_angle_rad);
 
 	// Assume axis is normalized
-	return Quaternion(Zero::Cos(half_angle_rad),
+	return Quaternion(zero::Cos(half_angle_rad),
 	                  normalized.x_ * sin_half_angle_rad,
 	                  normalized.y_ * sin_half_angle_rad,
 	                  normalized.z_ * sin_half_angle_rad);

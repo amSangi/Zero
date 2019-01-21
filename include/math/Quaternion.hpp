@@ -4,7 +4,7 @@
 #include "Vector3.hpp"
 #include "ZMath.hpp"
 
-namespace Zero {
+namespace zero {
 
 	class Quaternion {
 	public:
@@ -78,4 +78,4 @@ namespace Zero {
 
 	}; // class Quaternion
 
-} // namespace Zero
+} // namespace zero

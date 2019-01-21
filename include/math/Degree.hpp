@@ -3,7 +3,7 @@
 #include "Radian.hpp"
 #include "ZMath.hpp"
 
-namespace Zero {
+namespace zero {
 
 	/**
 	 * @brief Encapsulate a degree as a class for type-safety
@@ -62,4 +62,4 @@ namespace Zero {
 
 	}; // class Degree
 
-} // namespace Zero
+} // namespace zero

@@ -2,7 +2,7 @@
 
 #include "ZMath.hpp"
 
-namespace Zero {
+namespace zero {
 
 	class Intersection {
 	public:
@@ -17,4 +17,4 @@ namespace Zero {
 
 	}; // class Intersection
 
-} // namespace Zero
+} // namespace zero
