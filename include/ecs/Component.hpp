@@ -1,24 +1,18 @@
 #pragma once
 
+#include "Entity.hpp"
 #include "ZBase.hpp"
 
 namespace zero {
 
+
 	/**
 	 * @brief The Component in the Entity-Component-System
 	 */
-	class Component {
-	public:
-		Component() = default;
-		virtual ~Component() = default;
-
-		inline void SetActive(bool active) {
-			active_ = active;
-		}
-
-	protected:
-		bool active_;
-
-	}; // abstract class Component
+	struct Component {
+		Entity owner_ = Entity(0);
+		uint32 component_id_ = 0;
+		bool active_ = true;
+	}; // struct Component
 
 } // namespace zero

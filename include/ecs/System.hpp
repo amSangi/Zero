@@ -34,76 +34,54 @@ namespace zero {
 
 	protected:
 
-
 		/* ********** Entity Operations ********** */
-		/**
-		 * @brief See EntityManager documentation
-		 */
 		Entity CreateEntity() {
 			return entity_manager_->CreateEntity();
 		}
 
-		/**
-		 * @brief See EntityManager documentation
-		 */
+		Entity CopyEntity(Entity entity) {
+			return entity_manager_->CopyEntity(entity);
+		}
+
 		void DestroyEntity(Entity entity) {
 			entity_manager_->DestroyEntity(entity);
 		}
 
+		bool IsValidEntity(Entity entity) {
+			return entity_manager_->IsValidEntity(entity);
+		}
 
 
 		/* ********** Component Operations ********** */
-
-		/**
-		 * @brief See Registry documentation
-		 */
 		template<class T>
 		T ViewComponent(Entity entity) const {
 			return registry_->ViewComponent<T>(entity);
 		}
 
-		/**
-		 * @brief See Registry documentation
-		 */
 		template<class T>
 		T* ViewAllComponents() const {
 			return registry_->ViewAllComponents<T>();
 		}
 
-		/**
-		 * @brief See Registry documentation
-		 */
 		template<class T>
 		void AddComponent(Entity entity) {
 			registry_->AddComponent<T>(entity);
 		}
 
-		/**
-		 * @brief See Registry documentation
-		 */
 		template<class T>
 		void RemoveComponent(Entity entity) {
 			registry_->RemoveComponent<T>(entity);
 		}
 
-		/**
-		 * @brief See Registry documentation
-		 */
 		void RemoveAllComponents(Entity entity) {
 			registry_->RemoveAllComponents(entity);
 		}
 
-		/**
-		 * @brief See Registry documentation
-		 */
 		template<class T>
 		void DisableComponent(Entity entity) {
 			registry_->DisableComponent<T>(entity);
 		}
 
-		/**
-		 * @brief See Registry documentation
-		 */
 		void DisableAllComponents(Entity entity) {
 			registry_->DisableAllComponents(entity);
 		}

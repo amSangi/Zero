@@ -12,7 +12,9 @@ namespace zero {
 	public:
 		Engine()
 		: entity_manager_(std::make_shared<EntityManager>()),
-		registry_(std::make_shared<Registry>()) {}
+		registry_(std::make_shared<Registry>()) {
+			entity_manager_->registry_ = registry_;
+		}
 
 		virtual ~Engine() = default;
 

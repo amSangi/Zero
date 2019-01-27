@@ -1,8 +1,15 @@
 #pragma once
 
+#include <memory>
+#include <typeindex>
+#include <typeinfo>
+#include <unordered_map>
+#include <vector>
 #include "Entity.hpp"
+#include "Component.hpp"
 
 namespace zero {
+
 
 	/**
 	 * @brief A Registry that manages all the components in the game.
@@ -12,92 +19,50 @@ namespace zero {
 		Registry() = default;
 		~Registry() = default;
 
+		Registry(const Registry& other) = delete;
+		Registry& operator=(const Registry& other) = delete;
 
-
-		/**
-		 * @brief Retrieve component T that belongs to the entity
-		 * @tparam T the component type
-		 * @param entity the entity
-		 * @return the component of type T of the entity
-		 */
 		template<class T>
-		T ViewComponent(Entity entity) const {
+		T* ViewComponent(Entity entity) const {
 			// TODO: Finish Implementation
-			return T();
+			return nullptr; // stub
 		}
 
-
-
-		/**
-		 * @brief Retrieve all the components of a given type
-		 * @tparam T the component type
-		 * @return all the components with the given type
-		 */
 		template<class T>
-		T* ViewAllComponents() const {
+		std::vector<T*> ViewAllComponents() const {
 			// TODO: Finish Implementation
-			return nullptr;
+			return std::vector<T*>(); // stub
 		}
 
-
-
-		/**
-		 * @brief Add a new component of type T to the entity
-		 * @tparam T the component type
-		 * @param entity the entity
-		 */
 		template<class T>
 		void AddComponent(Entity entity) {
 			// TODO: Finish Implementation
 		}
 
+		void CopyComponents(Entity existing_entity, Entity new_entity) {
+			// TODO: Finish Implementation
+		}
 
-
-		/**
-		 * @brief Remove component T that belongs to the entity
-		 * @tparam T the component type
-		 * @param entity the entity
-		 */
 		template<class T>
 		void RemoveComponent(Entity entity) {
 			// TODO: Finish Implementation
 		}
 
-
-
-		/**
-		 * @brief Remove all components that belong to the entity
-		 * @param entity the entity
-		 */
 		void RemoveAllComponents(Entity entity) {
 			// TODO: Finish Implementation
 		}
 
-
-
-		/**
-		 * @brief Disable component T of the entity
-		 * @tparam T the component type
-		 * @param entity the entity
-		 */
 		template<class T>
 		void DisableComponent(Entity entity) {
 			// TODO: Finish Implementation
 		}
 
-
-
-		/**
-		 * @brief Disable all components that belong to the entity
-		 * @param entity the entity
-		 */
 		void DisableAllComponents(Entity entity) {
 			// TODO: Finish Implementation
 		}
 
 
 	private:
-		// TODO: Create Component Containers
 
 	}; // class Registry
 
