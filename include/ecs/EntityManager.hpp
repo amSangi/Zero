@@ -74,14 +74,14 @@ namespace zero {
 
 		/**
 		 * @brief Return the number of entities that can be held
-		 * @return the entities capacity
+		 * @return the capacity of the entities container
 		 */
 		uint64 EntityCapacity() const   { return entities_.capacity(); }
 
-		ConstIterator CBegin() const { return ConstIterator(*this, entities_.cbegin(), entities_.cend()); }
-		ConstIterator CEnd() const   { return ConstIterator(*this, entities_.cend(), entities_.cend());   }
-		Iterator Begin()             { return Iterator(*this, entities_.begin(), entities_.end()); }
-		Iterator End()               { return Iterator(*this, entities_.end(), entities_.end());   }
+		ConstIterator CBegin() const    { return ConstIterator(*this, entities_.cbegin(), entities_.cend()); }
+		ConstIterator CEnd() const      { return ConstIterator(*this, entities_.cend(), entities_.cend());   }
+		Iterator Begin()                { return Iterator(*this, entities_.begin(), entities_.end()); }
+		Iterator End()                  { return Iterator(*this, entities_.end(), entities_.end());   }
 
 
 		/* ********** Entity Operations ********** */
@@ -135,7 +135,8 @@ namespace zero {
 		 * @return True if the entity is valid. Otherwise false.
 		 */
 		bool IsValidEntity(Entity entity) const {
-			return (entity.Index() < entities_.size()) && (entities_[entity.Index()].Version() == entity.Version());
+			return (entity.Index() < entities_.size())
+			&& (entities_[entity.Index()].Version() == entity.Version());
 		}
 
 	private:
