@@ -15,8 +15,8 @@ namespace zero {
 	using uint32 = unsigned int;
 
 #ifdef PLATFORM_WINDOWS
-	using int64  = signed   __int64
-	using uint64 = unsigned __int64
+	using int64  = signed   __int64;
+	using uint64 = unsigned __int64;
 #else
 	using int64  = signed   long long;
 	using uint64 = unsigned long long;
