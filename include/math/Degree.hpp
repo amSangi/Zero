@@ -4,6 +4,7 @@
 #include "ZMath.hpp"
 
 namespace zero {
+namespace math {
 
 	/**
 	 * @brief Encapsulate a degree as a class for type-safety
@@ -62,4 +63,5 @@ namespace zero {
 
 	}; // class Degree
 
+} // namespace math
 } // namespace zero

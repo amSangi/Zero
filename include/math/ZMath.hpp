@@ -4,6 +4,7 @@
 #include "ZBase.hpp"
 
 namespace zero {
+namespace math {
 
     /* ********** Forward Declarations ********** */
     class Box;
@@ -46,6 +47,7 @@ namespace zero {
                        float b,
                        float eps = EPSILON)                { return std::abs(a - b) < eps; }
 
+} // namespace math
 } // namespace zero
 
 

@@ -1,7 +1,7 @@
 #include "Sphere.hpp"
 #include "Box.hpp"
 
-using namespace zero;
+using namespace zero::math;
 
 Sphere::Sphere(float r)
    : center_(Vector3::Zero()), radius_(r) {}
@@ -13,7 +13,7 @@ Sphere::Sphere(const Vector3& c, float r)
    : center_(c), radius_(r) {}
 
 bool Sphere::operator==(const Sphere& other) const {
-	return (center_ == other.center_) && zero::Equal(radius_, other.radius_);
+	return (center_ == other.center_) && Equal(radius_, other.radius_);
 }
 
 bool Sphere::operator!=(const Sphere& other) const {
@@ -40,7 +40,7 @@ bool Sphere::Contains(const Vector3& point) const {
 }
 
 bool Sphere::Intersects(const Sphere& other) const {
-	float max = zero::Max(0.0f, radius_ + other.radius_);
+	float max = Max(0.0f, radius_ + other.radius_);
 	return Vector3::SquareDistance(center_, other.center_) <= (max * max);
 }
 

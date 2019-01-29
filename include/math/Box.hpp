@@ -3,7 +3,11 @@
 #include "Vector3.hpp"
 
 namespace zero {
+namespace math {
 
+    /**
+     * @brief A simple 3D box represented by min/max vector3s
+     */
     class Box {
     public:
         Box() = default;
@@ -78,4 +82,5 @@ namespace zero {
 
     }; // class Box
 
+} // namespace math
 } // namespace zero

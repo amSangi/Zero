@@ -4,7 +4,11 @@
 #include "ZMath.hpp"
 
 namespace zero {
+namespace math {
 
+    /**
+     * @brief A 3x3 Matrix
+     */
     class Matrix3 {
     public:
 
@@ -96,4 +100,5 @@ namespace zero {
 
     }; // class Matrix3
 
+} // namespace math
 } // namespace zero

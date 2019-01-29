@@ -1,6 +1,6 @@
 #include "Angle.hpp"
 
-using namespace zero;
+using namespace zero::math;
 
 bool Radian::operator==(const Degree& d) const {
     return operator==(d.ToRadian());

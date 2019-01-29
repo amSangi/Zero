@@ -3,7 +3,7 @@
 #include "Sphere.hpp"
 
 
-using namespace zero;
+using namespace zero::math;
 
 bool Intersection::BoxSphereIntersect(const Box& box, const Sphere& sphere) {
 	// Arvo's Box/Sphere Intersection Test

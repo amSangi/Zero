@@ -2,7 +2,7 @@
 #include "Matrix3.hpp"
 #include "Vector4.hpp"
 
-using namespace zero;
+using namespace zero::math;
 
 Matrix4::Matrix4(float m[4][4]) {
     for (int i = 0; i < 4; ++i) {
@@ -212,7 +212,7 @@ bool Matrix4::InverseUtil(Matrix4& out, float epsilon) const {
                 + matrix_[0][2] * ( matrix_[1][0] * A1323 - matrix_[1][1] * A0323 + matrix_[1][3] * A0123 )
                 - matrix_[0][3] * ( matrix_[1][0] * A1223 - matrix_[1][1] * A0223 + matrix_[1][2] * A0123 ) ;
 
-    if (zero::Abs(det) <= epsilon) return false;
+    if (Abs(det) <= epsilon) return false;
 
     float inv_det = 1.0f / det;
 

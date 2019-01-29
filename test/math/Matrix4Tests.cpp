@@ -2,7 +2,7 @@
 #include "Matrix4.hpp"
 #include "Vector4.hpp"
 
-using namespace zero;
+using namespace zero::math;
 
 TEST(TestMatrix4, ScalarOperations) {
 	Matrix4 matrix = Matrix4::Identity();

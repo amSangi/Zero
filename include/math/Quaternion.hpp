@@ -5,7 +5,11 @@
 #include "ZMath.hpp"
 
 namespace zero {
+namespace math {
 
+	/**
+	 * @brief A Quaternion used for orientations and rotations
+	 */
 	class Quaternion {
 	public:
 		Quaternion() : w_(1.0f), x_(0.0f), y_(0.0f), z_(0.0f) {}
@@ -78,4 +82,5 @@ namespace zero {
 
 	}; // class Quaternion
 
+} // namespace math
 } // namespace zero

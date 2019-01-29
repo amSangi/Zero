@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "Vector.hpp"
 
-using namespace zero;
+using namespace zero::math;
 
 TEST(TestVector, UsefulConstructors) {
 	Vector2 v2 = Vector2::Up();
@@ -97,7 +97,7 @@ TEST(TestVector, Magnitude) {
 	Vector4 negative_vector(-1.0f, -2.0f, -3.0f, -4.0f);
 	Vector4 zero_vector(0.0f);
 
-	float magnitude = zero::Sqrt(1.0f + 4.0f + 9.0f + 16.0f);
+	float magnitude = Sqrt(1.0f + 4.0f + 9.0f + 16.0f);
 	EXPECT_EQ(magnitude, simple_vector.Magnitude());
 	EXPECT_EQ(magnitude, negative_vector.Magnitude());
 	EXPECT_EQ(0.0f, zero_vector.Magnitude());
@@ -125,7 +125,7 @@ TEST(TestVector, Abs) {
 }
 
 TEST(TestVector, Normalize) {
-	Vector3 expected(1.0f / zero::Sqrt(3.0f));
+	Vector3 expected(1.0f / Sqrt(3.0f));
 
 	// Static Method
 	EXPECT_EQ(expected, Vector3::Normalize(Vector3::One()));
@@ -135,9 +135,9 @@ TEST(TestVector, Normalize) {
 	EXPECT_TRUE(actual.Normalize());
 	EXPECT_EQ(expected, actual);
 
-	EXPECT_TRUE(zero::Equal(expected.x_, actual.x_));
-	EXPECT_TRUE(zero::Equal(expected.y_, actual.y_));
-	EXPECT_TRUE(zero::Equal(expected.z_, actual.z_));
+	EXPECT_TRUE(Equal(expected.x_, actual.x_));
+	EXPECT_TRUE(Equal(expected.y_, actual.y_));
+	EXPECT_TRUE(Equal(expected.z_, actual.z_));
 }
 
 TEST(TestVector, NormalizeComplex) {
@@ -150,10 +150,10 @@ TEST(TestVector, NormalizeComplex) {
 	// Instance method
 	EXPECT_TRUE(actual.Normalize());
 	EXPECT_EQ(expected, actual);
-	EXPECT_TRUE(zero::Equal(expected.x_, actual.x_));
-	EXPECT_TRUE(zero::Equal(expected.y_, actual.y_));
-	EXPECT_TRUE(zero::Equal(expected.z_, actual.z_));
-	EXPECT_TRUE(zero::Equal(expected.w_, actual.w_));
+	EXPECT_TRUE(Equal(expected.x_, actual.x_));
+	EXPECT_TRUE(Equal(expected.y_, actual.y_));
+	EXPECT_TRUE(Equal(expected.z_, actual.z_));
+	EXPECT_TRUE(Equal(expected.w_, actual.w_));
 }
 
 TEST(TestVector, IsEpsilon) {
@@ -171,7 +171,7 @@ TEST(TestVector, Dot) {
 
 	float dot = Vector4::Dot(Vector4(-2.3f, 43.104f, -253.1345f, 23.0f),
                              Vector4(1.0f, 323.4f, 234.3f, -34.0f));
-	EXPECT_TRUE(zero::Equal(-46153.9f, dot, 1e-01));
+	EXPECT_TRUE(Equal(-46153.9f, dot, 1e-01));
 }
 
 TEST(TestVector, Cross) {
@@ -225,12 +225,12 @@ TEST(TestVector, ReflectComplex) {
 
 TEST(TestVector, Distance) {
 	EXPECT_EQ(1.0f, Vector3::Distance(Vector3::Up(), Vector3::Zero()));
-	EXPECT_EQ(zero::Sqrt(2.0f), Vector3::Distance(Vector3::Up(), Vector3::Right()));
+	EXPECT_EQ(Sqrt(2.0f), Vector3::Distance(Vector3::Up(), Vector3::Right()));
 	EXPECT_EQ(2.0f, Vector3::Distance(Vector3::Up(), Vector3::Down()));
 
 	float expected = 46.8359f;
 	float actual = Vector3::Distance(Vector3(2.34f, 19.0f, 15.2f), Vector3(14.13f, -3.234f, -24.3f));
-	EXPECT_TRUE(zero::Equal(expected, actual, 1e-04));
+	EXPECT_TRUE(Equal(expected, actual, 1e-04));
 }
 
 TEST(TestVector, SquareDistance) {
@@ -240,7 +240,7 @@ TEST(TestVector, SquareDistance) {
 
 	float expected = 2193.6;
 	float actual = Vector3::SquareDistance(Vector3(2.34f, 19.0f, 15.2f), Vector3(14.13f, -3.234f, -24.3f));
-	EXPECT_TRUE(zero::Equal(expected, actual, 1e-01));
+	EXPECT_TRUE(Equal(expected, actual, 1e-01));
 }
 
 TEST(TestVector, Lerp) {
@@ -259,9 +259,9 @@ TEST(TestVector, LerpComplex) {
 
 	Vector3 expected_mid(17.2f, -9.1f, 145.4f);
 	Vector3 actual_mid = Vector3::Lerp(start, end, 0.5f);
-	EXPECT_TRUE(zero::Equal(expected_mid.x_, actual_mid.x_, 1e-01));
-	EXPECT_TRUE(zero::Equal(expected_mid.y_, actual_mid.y_, 1e-01));
-	EXPECT_TRUE(zero::Equal(expected_mid.z_, actual_mid.z_, 1e-01));
+	EXPECT_TRUE(Equal(expected_mid.x_, actual_mid.x_, 1e-01));
+	EXPECT_TRUE(Equal(expected_mid.y_, actual_mid.y_, 1e-01));
+	EXPECT_TRUE(Equal(expected_mid.z_, actual_mid.z_, 1e-01));
 
 	EXPECT_EQ(end, Vector3::Lerp(start, end, 1.0f));
 }
@@ -285,7 +285,7 @@ TEST(TestVector, Angle) {
 	actual = Vector3::Angle(Vector3(1.0f, 1.0f), Vector3(-1.0f, 1.0f));
 	EXPECT_EQ(expected, actual);
 
-	expected = Radian(zero::Acos(1.0f / 3.0f));
+	expected = Radian(Acos(1.0f / 3.0f));
 	actual = Vector3::Angle(Vector3(1.0f, 1.0f, 1.0f), Vector3(1.0f, 1.0f, -1.0f));
 	EXPECT_EQ(expected, actual);
 

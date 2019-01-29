@@ -1,7 +1,7 @@
 #include "Box.hpp"
 #include "Sphere.hpp"
 
-using namespace zero;
+using namespace zero::math;
 
 Box::Box(const Vector3& min, const Vector3& max)
    : min(min), max(max) {}
@@ -37,13 +37,13 @@ bool Box::Intersects(const Box& other) const {
 
 /* ********** Merge ********** */
 void Box::Merge(const Box& other) {
-	min.x_ = zero::Min(min.x_, other.min.x_);
-	min.y_ = zero::Min(min.y_, other.min.y_);
-	min.z_ = zero::Min(min.z_, other.min.z_);
+	min.x_ = Min(min.x_, other.min.x_);
+	min.y_ = Min(min.y_, other.min.y_);
+	min.z_ = Min(min.z_, other.min.z_);
 
-	max.x_ = zero::Max(max.x_, other.max.x_);
-	max.y_ = zero::Max(max.y_, other.max.y_);
-	max.z_ = zero::Max(max.z_, other.max.z_);
+	max.x_ = Max(max.x_, other.max.x_);
+	max.y_ = Max(max.y_, other.max.y_);
+	max.z_ = Max(max.z_, other.max.z_);
 }
 
 

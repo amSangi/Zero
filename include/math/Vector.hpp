@@ -4,6 +4,7 @@
 #include "ZMath.hpp"
 
 namespace zero {
+namespace math {
 
 	namespace detail {
 
@@ -114,7 +115,11 @@ namespace zero {
 
 	} // namespace detail
 
-	
+
+	/**
+	 * @brief An dims sized mathematical vector
+	 * @tparam dims The vector dimensions
+	 */
 	template<int dims>
 	class Vector  : public detail::VectorBase<dims> {
 		using VectorBase = detail::VectorBase<dims>;
@@ -254,7 +259,7 @@ namespace zero {
 
 	template<int dims>
 	float Vector<dims>::Magnitude() const {
-		return zero::Sqrt(SquareMagnitude());
+		return Sqrt(SquareMagnitude());
 	}
 
 	template<int dims>
@@ -271,7 +276,7 @@ namespace zero {
 	Vector<dims>& Vector<dims>::Abs() {
 		float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			data[i] = zero::Abs(data[i]);
+			data[i] = math::Abs(data[i]);
 		}
 		return *this;
 	}
@@ -293,7 +298,7 @@ namespace zero {
 	bool Vector<dims>::IsEpsilon(float epsilon) const {
 		const float* data = Data();
 		for (int i = 0; i < dims; ++i) {
-			if (zero::Abs(data[i]) > epsilon) {
+			if (math::Abs(data[i]) > epsilon) {
 				return false;
 			}
 		}
@@ -361,7 +366,7 @@ namespace zero {
 		float square_mag_from = from.SquareMagnitude();
 		float square_mag_to = to.SquareMagnitude();
 		float inv_sqrt = 1.0f / Sqrt(square_mag_from * square_mag_to);
-		float angle = zero::Acos(dot * inv_sqrt);
+		float angle = Acos(dot * inv_sqrt);
 		return Radian(angle);
 	}
 
@@ -533,4 +538,5 @@ namespace zero {
 		return v / scalar;
 	}
 
+} // namespace math
 } // namespace zero
