@@ -9,4 +9,5 @@ add_library(${PROJECT_NAME}  math/Box.cpp
                              math/Plane.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
-                             math/Sphere.cpp)
+                             math/Sphere.cpp
+                             memory/PoolAllocator.cpp)

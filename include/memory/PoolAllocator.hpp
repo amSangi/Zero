@@ -7,7 +7,7 @@ namespace memory {
 
 	class PoolAllocator : public IAllocator {
 	public:
-		explicit PoolAllocator(size_t block_size);
+		explicit PoolAllocator(size_t pool_size);
 		~PoolAllocator() override;
 
 		PoolAllocator& operator=(const PoolAllocator& other) = delete;
@@ -20,7 +20,7 @@ namespace memory {
 		void Deallocate(void *pointer, size_t n) override;
 
 	private:
-		size_t block_size_;
+		size_t pool_size_;
 
 		
 	}; // class PoolAllocator
