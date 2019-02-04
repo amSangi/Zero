@@ -1,26 +1,19 @@
 #pragma once
 
+#include <stdint.h>
 #include "ZPlatform.hpp"
 
 namespace zero {
 
 	/*********** Types ***********/
-	using int8   = signed   char;
-	using uint8  = unsigned char;
-
-	using int16  = signed   short;
-	using uint16 = unsigned short;
-
-	using int32  = signed   int;
-	using uint32 = unsigned int;
-
-#ifdef PLATFORM_WINDOWS
-	using int64  = signed   __int64;
-	using uint64 = unsigned __int64;
-#else
-	using int64  = signed   long long;
-	using uint64 = unsigned long long;
-#endif
+	using int8   = int8_t;
+	using uint8  = uint8_t;
+	using int16  = int16_t;
+	using uint16 = uint16_t;
+	using int32  = int32_t;
+	using uint32 = uint32_t;
+	using int64  = int64_t;
+	using uint64 = uint64_t;
 
 	using size_t = uint32;
 
