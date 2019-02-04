@@ -4,6 +4,7 @@
 #include "ecs/EntityManager.hpp"
 #include "ecs/System.hpp"
 #include "engine/Engine.hpp"
+#include "memory/PoolAllocator.hpp"
 
 using namespace zero; 
 

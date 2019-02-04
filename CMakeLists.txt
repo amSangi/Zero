@@ -12,6 +12,7 @@ include_directories(include)
 include_directories(include/core)
 include_directories(include/ecs)
 include_directories(include/math)
+include_directories(include/memory)
 
 add_subdirectory(src)
 add_subdirectory(thirdparty)
