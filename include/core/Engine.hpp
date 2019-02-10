@@ -2,19 +2,14 @@
 
 #include <memory>
 #include <vector>
-#include "ecs/EntityManager.hpp"
-#include "ecs/Registry.hpp"
-#include "ecs/System.hpp"
+#include "core/ZBase.hpp"
+#include "System.hpp"
 
 namespace zero {
 
 	class Engine {
 	public:
-		Engine()
-		: entity_manager_(std::make_shared<EntityManager>()),
-		registry_(std::make_shared<Registry>()) {
-			entity_manager_->registry_ = registry_;
-		}
+		Engine();
 
 		virtual ~Engine() = default;
 
@@ -45,14 +40,12 @@ namespace zero {
 		 * @param system the System
 		 */
 		void AddSystem(std::unique_ptr<System> system) {
-			system->entity_manager_ = entity_manager_;
-			system->registry_ = registry_;
+			system->registry_ = &registry_;
 			systems_.push_back(std::move(system));
 		}
 
-	private:
-		std::shared_ptr<EntityManager> entity_manager_;
-		std::shared_ptr<Registry> registry_;
+	protected:
+		entt::registry<> registry_;
 		std::vector<std::unique_ptr<System>> systems_;
 
 	}; // abstract class Engine

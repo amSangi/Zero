@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include "ZBase.hpp"
+#include "core/ZBase.hpp"
 
 namespace zero {
 namespace math {
