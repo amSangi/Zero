@@ -10,6 +10,7 @@ set(ZERO_TEST_OUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 include_directories(include)
 include_directories(include/core)
+include_directories(include/event)
 include_directories(include/math)
 include_directories(thirdparty/entt/src/entt)
 

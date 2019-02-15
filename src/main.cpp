@@ -1,7 +1,9 @@
-#include "engine/Engine.hpp"
+#include "core/Engine.hpp"
+#include "event/EventBus.hpp"
 
-using namespace zero; 
+using namespace zero;
 
 int main(int argc, char *argv[])
 {
+	event::EventBus bus;
 }
