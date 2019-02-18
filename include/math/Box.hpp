@@ -78,7 +78,7 @@ namespace math {
          */
         static Box Unit();
 
-        Vector3 min, max;
+        Vector3 min_, max_;
 
     }; // class Box
 

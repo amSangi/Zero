@@ -23,7 +23,7 @@ bool Sphere::operator!=(const Sphere& other) const {
 
 /* ********** Intersection Tests ********** */
 bool Sphere::Contains(const Box& box) const {
-	return Contains(box.min) && Contains(box.max);
+	return Contains(box.min_) && Contains(box.max_);
 }
 
 bool Sphere::Contains(const Sphere& other) const {

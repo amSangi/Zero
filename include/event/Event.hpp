@@ -57,27 +57,33 @@ namespace event {
 	}; // enum EventType
 
 	struct Event {
+		virtual ~Event() = default;
 		EventType type;
 	}; // struct Event
 
 	struct SystemEvent : public Event {
 		// TODO: Finish Implementation
+		~SystemEvent() override = default;
 	}; // struct SystemEvent
 
 	struct MouseEvent : public Event {
 		// TODO: Finish Implementation
+		~MouseEvent() override = default;
 	}; // struct MouseEvent
 
 	struct KeyboardEvent : public Event {
 		// TODO: Finish Implementation
+		~KeyboardEvent() override = default;
 	}; // struct KeyboardEvent
 
 	struct UIEvent : public Event {
 		// TODO: Finish Implementation
+		~UIEvent() override = default;
 	}; // struct UIEvent
 
 	struct WindowEvent : public Event {
 		// TODO: Finish Implementation
+		~WindowEvent() override = default;
 	}; // struct WindowEvent
 
 
