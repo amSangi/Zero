@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "core/ZBase.hpp"
+#include "event/EventBus.hpp"
 #include "System.hpp"
 
 namespace zero {
@@ -26,6 +27,7 @@ namespace zero {
 
 	protected:
 		entt::registry<> registry_;
+		event::EventBus event_bus_;
 		std::vector<std::unique_ptr<System>> systems_;
 
 	}; // class Engine

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "entt.hpp"
+#include "event/EventBus.hpp"
 
 namespace zero {
 
@@ -34,7 +35,8 @@ namespace zero {
 		virtual void ShutDown() = 0;
 
 	protected:
-		const entt::registry<>* registry_;
+		entt::registry<>* registry_ = nullptr;
+		event::EventBus* event_bus_ = nullptr;
 
 	}; // abstract class System
 

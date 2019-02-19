@@ -1,4 +1,3 @@
-#include <vector>
 #include "EventBus.hpp"
 
 using namespace zero::event;
@@ -20,7 +19,7 @@ void EventBus::Enqueue(EventBus::EventPtr event) {
 
 void EventBus::Dispatch(EventBus::EventPtr event) {
 	for (const auto& handler : handlers_) {
-		switch (event->type) {
+		switch (event->type_) {
 			/* ********** System ********** */
 			case NONE:
 			case TIMER:
