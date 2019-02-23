@@ -135,73 +135,305 @@ namespace math {
 		~Vector<dims>() = default;
 		Vector<dims>& operator=(const Vector<dims>& other) = default;
 
+		/**
+		 * @brief Get the component at the index
+		 * @param index The index
+		 * @return the component
+		 */
 		float operator[](size_t index);
+
+		/**
+		 * @brief Get the component at the index
+		 * @param index The index
+		 * @return the component
+		 */
 		const float operator[](size_t index) const;
 
+		/**
+		 * @brief Check if the two given vectors are equal
+		 * @param o The other vector
+		 * @return True if the components are equal. False otherwise.
+		 */
 		inline bool operator==(const Vector<dims>& o) const;
+
+		/**
+		 * @brief Check if the two given vectors are not equal
+		 * @param o The other vector
+		 * @return True if the components are not equal. False otherwise.
+		 */
 		inline bool operator!=(const Vector<dims>& o) const;
 
 		/* ********** Scalar Operations ********** */
+
+		/**
+		 * @brief Add the components by the given scalar
+		 * @param scalar The scalar
+		 * @return A new Vector containing the sums
+		 */
 		Vector<dims> operator+(float scalar) const;
+
+		/**
+		 * @brief Subtract the components by the given scalar
+		 * @param scalar The scalar
+		 * @return A new Vector containing the differences
+		 */
 		Vector<dims> operator-(float scalar) const;
+
+		/**
+		 * @brief Multiply the components by the given scalar
+		 * @param scalar The scalar
+		 * @return A new Vector containing the products
+		 */
 		Vector<dims> operator*(float scalar) const;
+
+		/**
+		 * @brief Divide the components by the given scalar
+		 * @param scalar The scalar
+		 * @return A new Vector containing the quotients
+		 */
 		Vector<dims> operator/(float scalar) const;
 
+		/**
+		 * @brief Add the components by the given scalar
+		 * @param scalar The scalar
+		 * @return The same Vector containing the sums
+		 */
 		Vector<dims>& operator+=(float scalar);
+
+		/**
+		 * @brief Subtract the components by the given scalar
+		 * @param scalar The scalar
+		 * @return The same Vector containing the differences
+		 */
 		Vector<dims>& operator-=(float scalar);
+
+		/**
+		 * @brief Multiply the components by the given scalar
+		 * @param scalar The scalar
+		 * @return The same Vector containing the products
+		 */
 		Vector<dims>& operator*=(float scalar);
+
+		/**
+		 * @brief Divide the components by the given scalar
+		 * @param scalar The scalar
+		 * @return The same Vector containing the quotients
+		 */
 		Vector<dims>& operator/=(float scalar);
 
 		/* **** Component-Wise Vector Operations **** */
+
+		/**
+		 * @brief Add the components of this with the components of rhs
+		 * @param rhs The right vector
+		 * @return A new Vector containing the sums
+		 */
 		Vector<dims> operator+(const Vector<dims>& rhs) const;
+
+		/**
+		 * @brief Subtract the components of this by the components of rhs
+		 * @param rhs The right vector
+		 * @return A new Vector containing the differences
+		 */
 		Vector<dims> operator-(const Vector<dims>& rhs) const;
+
+		/**
+		 * @brief Multiply the components of this by the components of rhs
+		 * @param rhs The right vector
+		 * @return A new Vector containing the products
+		 */
 		Vector<dims> operator*(const Vector<dims>& rhs) const;
+
+		/**
+		 * @brief Divide the components of this by the components of rhs
+		 * @param rhs The right vector
+		 * @return A new Vector containing the quotients
+		 */
 		Vector<dims> operator/(const Vector<dims>& rhs) const;
 
+		/**
+		 * @brief Add the components of this with the components of rhs
+		 * @param rhs The right vector
+		 * @return The same Vector containing the sums
+		 */
 		Vector<dims>& operator+=(const Vector<dims>& rhs);
+
+		/**
+		 * @brief Subtract the components of this by the components of rhs
+		 * @param rhs The right vector
+		 * @return The same Vector containing the differences
+		 */
 		Vector<dims>& operator-=(const Vector<dims>& rhs);
+
+		/**
+		 * @brief Multiply the components of this by the components of rhs
+		 * @param rhs The right vector
+		 * @return The same Vector containing the products
+		 */
 		Vector<dims>& operator*=(const Vector<dims>& rhs);
+
+		/**
+		 * @brief Divide the components of this by the components of rhs
+		 * @param rhs The right vector
+		 * @return The same Vector containing the quotients
+		 */
 		Vector<dims>& operator/=(const Vector<dims>& rhs);
 
 		/* ********** Vector Operations ********** */
+
+		/**
+		 * @brief Get the magnitude
+		 * @return the magnitude
+		 */
 		float Magnitude() const;
 
+		/**
+		 * @brief Get the squared magnitude
+		 * @return the square magnitude
+		 */
 		float SquareMagnitude() const;
 
+		/**
+		 * @brief Take the absolute value of all the components
+		 * @return The same vector (this)
+		 */
 		Vector<dims>& Abs();
 
+		/**
+		 * @brief Normalize the vector if it's possible
+		 * @return True if magnitude is > EPSILON. False otherwise.
+		 */
 		bool Normalize();
 
+		/**
+		 * @brief Check to see if all of the components are less than or equal to an epsilon value
+		 * @param epsilon the epsilon value (very small)
+		 * @return True if the components are <= epsilon. False otherwise.
+		 */
 		bool IsEpsilon(float epsilon = EPSILON) const;
 
 		/* ********** Static Operations ********** */
+
+		/**
+		 * @brief Get a copy of the normalized vector
+		 * @param v the vector
+		 * @return a copy of the vector normalized
+		 */
 		static inline Vector<dims> Normalize(const Vector<dims>& v);
 
+		/**
+		 * @brief Get a copy of the vector with all of its components being >= 0
+		 * @param v the vector
+		 * @return the absolute valued vector copy
+		 */
 		static inline Vector<dims> AbsCopy(const Vector<dims>& v);
 
+		/**
+		 * @brief Get the dot product between two vectors
+		 * @param lhs The left vector
+		 * @param rhs The right vector
+		 * @return the dot product
+		 */
 		static inline float Dot(const Vector<dims>& lhs, const Vector<dims>& rhs);
 
+		/**
+		 * @brief Get the cross product between two vectors
+		 * @param lhs The left vector
+		 * @param rhs The right vector
+		 * @return the cross product
+		 */
 		static inline Vector<dims> Cross(const Vector<dims>& lhs, const Vector<dims>& rhs);
 
+		/**
+		 * @brief Get the outgoing, reflected vector
+		 * @param in The incident vector
+		 * @param normal The normal vector
+		 * @return the reflected vector
+		 */
 		static inline Vector<dims> Reflect(const Vector<dims>& in, const Vector<dims>& normal);
 
+		/**
+		 * @brief Get the distance from `from` to `to`
+		 * @param from The source vector
+		 * @param to The destination vector
+		 * @return the distance between the two vectors
+		 */
 		static inline float Distance(const Vector<dims>& from, const Vector<dims>& to);
 
+		/**
+		 * @brief Get the square distance from `from` to `to`
+		 * @param from The source vector
+		 * @param to The destination vector
+		 * @return the square distance between the two vectors
+		 */
 		static inline float SquareDistance(const Vector<dims>& from, const Vector<dims>& to);
 
+		/**
+		 * @brief Get the linearly interpolated vector between the start and end vectors
+		 * @param start The start vector
+		 * @param end The end vector
+		 * @param t The amount to lerp by with range [0, 1]
+		 * @return The vector between the start and end (inclusive)
+		 */
 		static inline Vector<dims> Lerp(const Vector<dims>& start, const Vector<dims>& end, float t);
 
+		/**
+		 * @brief Get the angle between the two vector
+		 * @param from The source vector
+		 * @param to The destination vector
+		 * @return the angle between the two vectors
+		 */
 		static inline Radian Angle(const Vector<dims>& from, const Vector<dims>& to);
 
 
 		/* ********** Useful Vectors ********** */
+
+		/**
+		 * @brief Create the zero vector
+		 * @return the Zero vector
+		 */
 		static Vector<dims> Zero();
+
+		/**
+		 * @brief Create the unit vector
+		 * @return the Unit vector
+		 */
 		static Vector<dims> One();
+
+		/**
+		 * @brief Create the up vector (+y is up)
+		 * @return the Up vector
+		 */
 		static Vector<dims> Up();
+
+		/**
+		 * @brief Create the down vector (-y is down)
+		 * @return the Down vector
+		 */
 		static Vector<dims> Down();
+
+		/**
+		 * @brief Create the right vector (+x is right)
+		 * @return the Right vector
+		 */
 		static Vector<dims> Right();
+
+		/**
+		 * @brief Create the left vector (-x is left)
+		 * @return the Left vector
+		 */
 		static Vector<dims> Left();
+
+		/**
+		 * @brief Create the forward vector (+z is forward)
+		 * @return the Forward vector
+		 */
 		static Vector<dims> Forward();
+
+		/**
+		 * @brief Create the back vector (-z is back)
+		 * @return the Back vector
+		 */
 		static Vector<dims> Back();
 
 	}; // template class Vector

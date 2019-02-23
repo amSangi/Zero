@@ -55,10 +55,22 @@ namespace math {
 		Degree& operator*=(const Radian& r)                { deg_ *= r.ToDegree().deg_; return *this; }
 		Degree& operator/=(const Radian& r)                { deg_ /= r.ToDegree().deg_; return *this; }
 
+		/**
+		 * @brief Convert this Degree object into a Radian object
+		 * @return The Radian object
+		 */
 		Radian ToRadian() const                            { return Radian(deg_ * DEGREE_TO_RADIAN); }
 
+		/**
+		 * @brief Create a Degree from a radian value
+		 * @param r The radian value
+		 * @return The Degree
+		 */
 		static inline Degree FromRadian(float r)           { return Degree(r * RADIAN_TO_DEGREE); }
 
+		/**
+		 * @brief The degree value
+		 */
 		float deg_;
 
 	}; // class Degree

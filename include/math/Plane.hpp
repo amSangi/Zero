@@ -21,7 +21,18 @@ namespace math {
 		~Plane() = default;
 		Plane& operator=(const Plane& other) = default;
 
+		/**
+		 * @brief Check if the plane is equal to another plane
+		 * @param other The other plane
+		 * @return True if the normal and D are equal. False otherwise.
+		 */
 		bool operator==(const Plane& other) const;
+
+		/**
+		 * @brief Check if the plane is not equal to another plane
+		 * @param other The other plane
+		 * @return True if the normal or D are not equal. False otherwise.
+		 */
 		bool operator!=(const Plane& other) const;
 
 		/**
@@ -87,8 +98,21 @@ namespace math {
 		Plane Flip() const;
 
 		/* ********** Static Operations ********** */
+
+		/**
+		 * @brief Apply a matrix3 transformation to a given plane
+		 * @param plane The plane
+		 * @param matrix The transformation
+		 * @return A transformed plane
+		 */
 		static Plane Transform(const Plane& plane, const Matrix3& matrix);
 
+		/**
+		 * @brief Apply a matrix4 transformation to a given plane
+		 * @param plane The plane
+		 * @param matrix The transformation
+		 * @return A transformed plane
+		 */
 		static Plane Transform(const Plane& plane, const Matrix4& matrix);
 
 		/**
@@ -106,7 +130,14 @@ namespace math {
 		 */
 		static Plane Forward();
 
+		/**
+		 * @brief The normal of the plane <A, B, C>: Ax + By + Cz + D = 0
+		 */
 		Vector3 normal_;
+
+		/**
+		 * @brief The D component of the plane equation: Ax + By + Cz + D = 0
+		 */
 		float d_;
 
 	}; // class Plane

@@ -93,16 +93,16 @@ TEST(TestQuaternion, Norm) {
 TEST(TestQuaternion, UnitNorm) {
 	Quaternion expected, actual, quat;
 
-	EXPECT_EQ(Quaternion::Identity(), Quaternion::Identity().UnitNorm());
+	EXPECT_EQ(Quaternion::Identity(), Quaternion::Identity().Unit());
 
 	quat = Quaternion(0.0f, 1.0f, 1.0f, 1.0f);
 	expected = quat / Sqrt(3.0f);
-	actual = quat.UnitNorm();
+	actual = quat.Unit();
 	EXPECT_EQ(expected, actual);
 
 	quat = Quaternion(25.0f, -13.0f, -3.0f, 231.0f);
 	expected = quat / (2.0f * Sqrt(13541.0f));
-	actual = quat.UnitNorm();
+	actual = quat.Unit();
 	EXPECT_EQ(expected, actual);
 }
 

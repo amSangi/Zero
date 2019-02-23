@@ -124,7 +124,7 @@ float Quaternion::Norm() const {
 	return Sqrt((w_ * w_) + (x_ * x_) + (y_ * y_) + (z_ * z_));
 }
 
-Quaternion& Quaternion::UnitNorm() {
+Quaternion& Quaternion::Unit() {
 	float norm = Norm();
 	if (norm > 0.0f) {
 		float inv_norm = 1.0f / norm;
@@ -171,8 +171,8 @@ Quaternion& Quaternion::Negate() {
 	return *this;
 }
 
-Quaternion Quaternion::UnitNormCopy() const {
-	return Quaternion(*this).UnitNorm();
+Quaternion Quaternion::UnitCopy() const {
+	return Quaternion(*this).Unit();
 }
 
 Quaternion Quaternion::ConjugateCopy() const {
@@ -212,7 +212,7 @@ Vector3 Quaternion::XYZ() const {
 }
 
 Matrix3 Quaternion::GetRotationMatrix() const {
-	Quaternion q = UnitNormCopy();
+	Quaternion q = UnitCopy();
 	if (q == Zero()) {
 		return Matrix3::Identity();
 	}

@@ -17,7 +17,18 @@ namespace math {
         ~Box() = default;
         Box& operator=(const Box& other) = default;
 
+        /**
+         * @brief Check if the box is equal to another box
+         * @param other The other box
+         * @return True if the two boxes are equal. False otherwise.
+         */
         bool operator==(const Box& other) const;
+
+        /**
+         * @brief Check if the box is not equal to another box
+         * @param other The other box
+         * @return True if the two boxes are not equal. False otherwise.
+         */
         bool operator!=(const Box& other) const;
 
         /* ********** Intersection Tests ********** */
@@ -78,7 +89,15 @@ namespace math {
          */
         static Box Unit();
 
-        Vector3 min_, max_;
+        /**
+         * @brief The minimum point of the 3D box
+         */
+        Vector3 min_;
+
+        /**
+         * @brief The maximum point of the 3D box
+         */
+        Vector3 max_;
 
     }; // class Box
 

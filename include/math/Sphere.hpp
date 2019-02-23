@@ -18,7 +18,18 @@ namespace math {
 		~Sphere() = default;
 		Sphere& operator=(const Sphere& other) = default;
 
+		/**
+		 * @brief Check if this sphere is equal to another sphere
+		 * @param other The other sphere
+		 * @return True if the center and radii are equal. False otherwise.
+		 */
 		bool operator==(const Sphere& other) const;
+
+		/**
+		 * @brief Check if this sphere is not equal to another sphere
+		 * @param other The other sphere
+		 * @return True if the centers or radii are not equal. False otherwise.
+		 */
 		bool operator!=(const Sphere& other) const;
 
 		/* ********** Intersection Tests ********** */
@@ -68,9 +79,20 @@ namespace math {
 		 */
 		static Sphere Merge(const Sphere& lhs, const Sphere& rhs);
 
+		/**
+		 * @brief Create a Zero-point and Zero-radius sphere
+		 * @return The zero sphere
+		 */
 		static Sphere Zero();
 
+		/**
+		 * @brief The center point of the sphere
+		 */
 		Vector3 center_;
+
+		/**
+		 * @brief The radius of the sphere
+		 */
 		float radius_;
 
 	}; // class Sphere

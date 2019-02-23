@@ -54,10 +54,22 @@ namespace math {
 		Radian& operator*=(const Degree& d);
 		Radian& operator/=(const Degree& d);
 
+		/**
+		 * @brief Convert this Radian object into a Degree object
+		 * @return The Degree object
+		 */
 		Degree ToDegree() const;
 
+		/**
+		 * @brief Create a Radian from a degree value
+		 * @param d The degree value
+		 * @return The Radian
+		 */
 		static inline Radian FromDegree(float d)           { return Radian(d * DEGREE_TO_RADIAN); }
 
+		/**
+		 * @brief The radian value
+		 */
 		float rad_;
 
 	}; // class Radian
