@@ -21,12 +21,12 @@ namespace math {
     using Vector4 = Vector<4>;
 
     /* ********** Constants ********** */
-    static const float PI = 3.14159265359f;
-    static const float PI_2 = PI * 0.5f;
-    static const float DEGREE_TO_RADIAN = PI / 180.0f;
-    static const float RADIAN_TO_DEGREE = 180.0f / PI;
-    static const float SMALL_EPSILON = 1.19209290E-07F;
-    static const float EPSILON = 1e-06f;
+    static constexpr float PI = 3.14159265359f;
+    static constexpr float PI_2 = PI * 0.5f;
+    static constexpr float DEGREE_TO_RADIAN = PI / 180.0f;
+    static constexpr float RADIAN_TO_DEGREE = 180.0f / PI;
+    static constexpr float SMALL_EPSILON = 1.19209290E-07F;
+    static constexpr float EPSILON = 1e-06f;
 
     /* ********** Basic Math Functions ********** */
     inline float Sqrt(float value)                         { return sqrtf(value);          }
