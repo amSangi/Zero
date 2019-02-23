@@ -35,7 +35,15 @@ namespace zero {
 		virtual void ShutDown() = 0;
 
 	protected:
+
+		/**
+		 * @brief The registry used by the game
+		 */
 		entt::registry<>* registry_ = nullptr;
+
+		/**
+		 * @brief The event bus used by the game
+		 */
 		event::EventBus* event_bus_ = nullptr;
 
 	}; // abstract class System

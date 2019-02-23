@@ -11,7 +11,6 @@ namespace math {
      */
     class Matrix3 {
     public:
-
         Matrix3() = default;
         explicit Matrix3(float m[3][3]);
         explicit Matrix3(float value);
