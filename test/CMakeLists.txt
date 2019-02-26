@@ -4,7 +4,7 @@ set(EXECUTABLE_OUTPUT_PATH ${ZERO_TEST_OUT_PATH})
 
 include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest-src/googletest/include)
 
-add_executable(${PROJECT_NAME} AllTests.cpp
+add_executable(${PROJECT_NAME} TestMain.cpp
                                math/AngleTests.cpp
                                math/BoxTests.cpp
                                math/IntersectionTests.cpp
