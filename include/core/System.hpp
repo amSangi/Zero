@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "entt.hpp"
 #include "event/EventBus.hpp"
 
@@ -12,12 +11,16 @@ namespace zero {
      * @see https://skypjack.github.io/entt/classentt_1_1Registry.html
      */
     class System {
-        friend class Engine;
-        using Entity = entt::registry<>::entity_type;
-        using EventPtr = std::shared_ptr<event::Event>;
-        using EventHandlerPtr = std::shared_ptr<event::EventHandler>;
     public:
+
+        /**
+         * @brief Default Constructor
+         */
         System() = default;
+
+        /**
+         * @brief Default Virtual Destructor
+         */
         virtual ~System() = default;
 
         /**
@@ -41,13 +44,13 @@ namespace zero {
         /**
          * @brief The registry used by the game
          */
-        entt::registry<>* registry_ = nullptr;
+        std::shared_ptr<entt::registry<>> registry_{nullptr};
 
         /**
          * @brief Register an event handler from the event bus
          * @param handler The event handler
          */
-        inline void RegisterEventHandler(EventHandlerPtr handler) {
+        inline void RegisterEventHandler(std::shared_ptr<event::EventHandler> handler) {
             event_bus_->AddEventHandler(std::move(handler));
         }
 
@@ -55,7 +58,7 @@ namespace zero {
          * @brief Deregister an event handler from the event bus
          * @param handler The event handler
          */
-        inline void DeregisterEventHandler(EventHandlerPtr handler) {
+        inline void DeregisterEventHandler(std::shared_ptr<event::EventHandler> handler) {
             event_bus_->RemoveEventHandler(std::move(handler));
         }
 
@@ -63,7 +66,7 @@ namespace zero {
          * @brief Post an event to the event bus
          * @param event The event
          */
-        inline void PostEvent(EventPtr event) {
+        inline void PostEvent(std::shared_ptr<event::Event> event) {
             event_bus_->Post(std::move(event));
         }
 
@@ -72,8 +75,7 @@ namespace zero {
         /**
          * @brief The event bus used by the game
          */
-        event::EventBus* event_bus_ = nullptr;
-
+        std::shared_ptr<event::EventBus> event_bus_{nullptr};
 
     }; // abstract class System
 
