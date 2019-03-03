@@ -1,9 +1,13 @@
 #pragma once
 
 #include "entt.hpp"
-#include "event/EventBus.hpp"
 
 namespace zero {
+
+    /* ********** Forward Declarations ********** */
+    namespace event { class EventBus; }
+    namespace ui    { class Window; }
+    class Engine;
 
     /**
      * @brief Systems work on entity components and run the game
@@ -14,9 +18,11 @@ namespace zero {
     public:
 
         /**
-         * @brief Default Constructor
+         * @brief System Constructor
+         * @param engine the engine this system belongs to
          */
-        System() = default;
+        explicit System(std::shared_ptr<Engine> engine)
+        : engine_(std::move(engine)) {}
 
         /**
          * @brief Default Virtual Destructor
@@ -39,43 +45,30 @@ namespace zero {
          */
         virtual void ShutDown() = 0;
 
+        /**
+         * @brief Get the game engine window
+         * @return the window
+         */
+        ui::Window* GetWindow();
+
+        /**
+         * @brief Get the game engine entity-component registry
+         * @return the registry
+         */
+        entt::registry<>& GetRegistry();
+
+        /**
+         * @brief Get the game engine event bus
+         * @return the event bus
+         */
+        event::EventBus& GetEventBus();
+
     protected:
 
         /**
-         * @brief The registry used by the game
+         * @brief The Game Engine this system belongs to
          */
-        std::shared_ptr<entt::registry<>> registry_{nullptr};
-
-        /**
-         * @brief Register an event handler from the event bus
-         * @param handler The event handler
-         */
-        inline void RegisterEventHandler(std::shared_ptr<event::EventHandler> handler) {
-            event_bus_->AddEventHandler(std::move(handler));
-        }
-
-        /**
-         * @brief Deregister an event handler from the event bus
-         * @param handler The event handler
-         */
-        inline void DeregisterEventHandler(std::shared_ptr<event::EventHandler> handler) {
-            event_bus_->RemoveEventHandler(std::move(handler));
-        }
-
-        /**
-         * @brief Post an event to the event bus
-         * @param event The event
-         */
-        inline void PostEvent(std::shared_ptr<event::Event> event) {
-            event_bus_->Post(std::move(event));
-        }
-
-    private:
-
-        /**
-         * @brief The event bus used by the game
-         */
-        std::shared_ptr<event::EventBus> event_bus_{nullptr};
+        std::shared_ptr<Engine> engine_{nullptr};
 
     }; // abstract class System
 

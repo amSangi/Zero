@@ -1,9 +1,9 @@
 #pragma once
 
-class Event;
-
 namespace zero {
 namespace event {
+
+    class Event;
 
     class EventHandler {
     public:

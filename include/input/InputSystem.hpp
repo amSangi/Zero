@@ -13,7 +13,17 @@ namespace input {
         using Iterator = DeviceContainer::iterator;
         using ConstIterator = DeviceContainer::const_iterator;
     public:
-        InputSystem() = default;
+
+        /**
+         * @brief InputSystem Constructor
+         * @param engine the engine this input system belongs to
+         */
+        explicit InputSystem(std::shared_ptr<Engine> engine)
+        : System(std::move(engine)) {}
+
+        /**
+         * @brief Virtual Destructor
+         */
         ~InputSystem() override = default;
 
 

@@ -3,14 +3,22 @@
 #include <memory>
 #include <vector>
 #include "entt.hpp"
+#include "System.hpp"
 #include "core/ZBase.hpp"
 #include "event/EventBus.hpp"
-#include "System.hpp"
+#include "input/InputSystem.hpp"
 
 namespace zero {
 
+    /* ********** Forward Declarations ********** */
+    namespace ui { class Window; }
     class EngineConfig;
 
+    /* ********** Engine ********** */
+
+    /**
+     * @brief The Game Engine
+     */
     class Engine {
     public:
 
@@ -19,7 +27,7 @@ namespace zero {
          * @param config the Engine configuration
          * @return an Engine
          */
-        static std::unique_ptr<Engine> Create(const EngineConfig& config);
+        static std::shared_ptr<Engine> Create(const EngineConfig& config);
 
         /**
          * @brief Engine destructor
@@ -47,7 +55,33 @@ namespace zero {
          */
         void ShutDown();
 
+
+        /* ********** Accessors ********** */
+
+        /**
+         * @brief Get the event bus
+         * @return the event bus
+         */
+        inline event::EventBus& GetEventBus()  { return event_bus_;    }
+
+        /**
+         * @brief Get the game registry
+         * @return the registry
+         */
+        inline entt::registry<>& GetRegistry() { return registry_;     }
+
+        /**
+         * @brief Get the game window
+         * @return the window
+         */
+        inline ui::Window* GetWindow()         { return window_.get(); }
+
     protected:
+
+        /**
+         * @brief The event bus
+         */
+        event::EventBus event_bus_;
 
         /**
          * @brief The registry containing the entities and their components
@@ -56,19 +90,24 @@ namespace zero {
         entt::registry<> registry_;
 
         /**
-         * @brief The event bus
+         * @brief The game window
          */
-        event::EventBus event_bus_;
+        std::unique_ptr<ui::Window> window_;
 
         /**
-         * @brief The systems
+         * @brief The input system
          */
-        std::vector<std::unique_ptr<System>> systems_;
+        input::InputSystem input_system_;
+
+        /**
+         * @brief The game systems
+         */
+        std::vector<std::unique_ptr<System>> game_systems_;
 
         /**
          * @brief Construct using Engine::Create
          */
-        Engine();
+        Engine() = default;
 
     }; // class Engine
 
