@@ -7,11 +7,11 @@
 #include "core/ZBase.hpp"
 #include "event/EventBus.hpp"
 #include "input/InputSystem.hpp"
+#include "ui/UISystem.hpp"
 
 namespace zero {
 
     /* ********** Forward Declarations ********** */
-    namespace ui { class Window; }
     class EngineConfig;
 
     /* ********** Engine ********** */
@@ -62,19 +62,19 @@ namespace zero {
          * @brief Get the event bus
          * @return the event bus
          */
-        inline event::EventBus& GetEventBus()  { return event_bus_;    }
+        inline event::EventBus& GetEventBus()         { return event_bus_; }
 
         /**
          * @brief Get the game registry
          * @return the registry
          */
-        inline entt::registry<>& GetRegistry() { return registry_;     }
+        inline entt::registry<>& GetRegistry()        { return registry_; }
 
         /**
          * @brief Get the game window
          * @return the window
          */
-        inline ui::Window* GetWindow()         { return window_.get(); }
+        inline const sf::Window& GetWindow() const    { return ui_system_.GetUIWindow(); }
 
     protected:
 
@@ -90,9 +90,9 @@ namespace zero {
         entt::registry<> registry_;
 
         /**
-         * @brief The game window
+         * @brief The UI system
          */
-        std::unique_ptr<ui::Window> window_;
+        ui::UISystem ui_system_;
 
         /**
          * @brief The input system

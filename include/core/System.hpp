@@ -1,12 +1,12 @@
 #pragma once
 
 #include "entt.hpp"
+#include "SFML/Window.hpp"
 
 namespace zero {
 
     /* ********** Forward Declarations ********** */
     namespace event { class EventBus; }
-    namespace ui    { class Window; }
     class Engine;
 
     /**
@@ -49,7 +49,7 @@ namespace zero {
          * @brief Get the game engine window
          * @return the window
          */
-        ui::Window* GetWindow();
+        const sf::Window& GetWindow() const;
 
         /**
          * @brief Get the game engine entity-component registry

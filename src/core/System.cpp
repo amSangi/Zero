@@ -11,6 +11,6 @@ entt::registry<>& System::GetRegistry() {
 	return engine_->GetRegistry();
 }
 
-ui::Window* System::GetWindow(){
+const sf::Window& System::GetWindow() const {
 	return engine_->GetWindow();
 }
