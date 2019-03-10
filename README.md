@@ -6,4 +6,9 @@ learning exercise and the use of third party libraries will be kept to a minimum
 The engine is built using cmake 3.10
 
 ## Development
-Currently working on the entity-component-system
+Currently working on the UI/Input System
+
+## Dependencies
+- EnTT - Used for the entity-component system
+- SFML - Used for cross-platform windowing and input handling
+- GoogleTest - Used for Unit Testing
