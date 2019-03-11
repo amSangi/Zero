@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "EventBus.hpp"
 #include "input/KeyEvent.hpp"
 #include "input/MouseEvent.hpp"

@@ -59,5 +59,5 @@ namespace event {
 
     }; // enum EventType
 
-}
+} // namespace event
 } // namespace zero
