@@ -4,7 +4,7 @@ namespace zero {
 namespace input {
 
     /**
-     * @brief Cross-Platform Keys
+     * @brief Virtual Keys
      */
     enum Key {
         /* ********** Alphabet ********** */
@@ -127,6 +127,7 @@ namespace input {
         KEY_LEFT,
         KEY_RIGHT,
 
+        KEY_COUNT,
     }; // enum Key
 
 } // namespace input

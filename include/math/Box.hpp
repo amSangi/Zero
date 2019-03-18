@@ -6,12 +6,12 @@ namespace zero {
 namespace math {
 
     /**
-     * @brief A simple 3D box represented by min/max vector3s
+     * @brief A simple 3D box represented by min/max Vec3fs
      */
     class Box {
     public:
         Box() = default;
-        Box(const Vector3& min, const Vector3& max);
+        Box(const Vec3f& min, const Vec3f& max);
         Box(const Box& other) = default;
 
         ~Box() = default;
@@ -45,7 +45,7 @@ namespace math {
          * @param point The point
          * @return True if the point is inside this. Otherwise false.
          */
-        bool Contains(const Vector3& point) const;
+        bool Contains(const Vec3f& point) const;
 
         /**
          * @brief Check if another box intersects this box
@@ -67,12 +67,12 @@ namespace math {
         /**
          * @return the size of this box
          */
-        Vector3 Size() const;
+        Vec3f Size() const;
 
         /**
          * @return the center position of this box
          */
-        Vector3 Center() const;
+        Vec3f Center() const;
 
         /* ********** Static Methods ********** */
 
@@ -92,12 +92,12 @@ namespace math {
         /**
          * @brief The minimum point of the 3D box
          */
-        Vector3 min_;
+        Vec3f min_;
 
         /**
          * @brief The maximum point of the 3D box
          */
-        Vector3 max_;
+        Vec3f max_;
 
     }; // class Box
 

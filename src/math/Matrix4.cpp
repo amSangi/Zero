@@ -255,12 +255,12 @@ Matrix4 Matrix4::Transpose() const {
     return m;
 }
 
-Vector4 Matrix4::operator*(const Vector4& rhs) const {
+Vec4f Matrix4::operator*(const Vec4f& rhs) const {
     float x = matrix_[0][0] * rhs.x_ + matrix_[0][1] * rhs.y_ + matrix_[0][2] * rhs.z_ + matrix_[0][3] * rhs.w_;
     float y = matrix_[1][0] * rhs.x_ + matrix_[1][1] * rhs.y_ + matrix_[1][2] * rhs.z_ + matrix_[1][3] * rhs.w_;
     float z = matrix_[2][0] * rhs.x_ + matrix_[2][1] * rhs.y_ + matrix_[2][2] * rhs.z_ + matrix_[2][3] * rhs.w_;
     float w = matrix_[3][0] * rhs.x_ + matrix_[3][1] * rhs.y_ + matrix_[3][2] * rhs.z_ + matrix_[3][3] * rhs.w_;
-    return Vector4(x, y, z, w);
+    return Vec4f(x, y, z, w);
 }
 
 Matrix4 Matrix4::operator*(const Matrix4& rhs) const {

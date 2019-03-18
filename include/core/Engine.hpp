@@ -3,16 +3,15 @@
 #include <memory>
 #include <vector>
 #include "entt.hpp"
-#include "System.hpp"
 #include "core/ZBase.hpp"
 #include "event/EventBus.hpp"
-#include "input/InputSystem.hpp"
 #include "ui/UISystem.hpp"
 
 namespace zero {
 
     /* ********** Forward Declarations ********** */
     class EngineConfig;
+    class System;
 
     /* ********** Engine ********** */
 
@@ -93,11 +92,6 @@ namespace zero {
          * @brief The UI system
          */
         ui::UISystem ui_system_;
-
-        /**
-         * @brief The input system
-         */
-        input::InputSystem input_system_;
 
         /**
          * @brief The game systems

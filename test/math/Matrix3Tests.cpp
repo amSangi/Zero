@@ -120,12 +120,12 @@ TEST(TestMatrix3, Transpose) {
 
 TEST(TestMatrix3, MatrixVectorMultiply) {
 	Matrix3 matrix = Matrix3::Identity();
-	Vector3 vector(1.0f, 2.0f, 3.0f);
+	Vec3f vector(1.0f, 2.0f, 3.0f);
 
-	EXPECT_EQ(Vector3(1.0f, 2.0f, 3.0f), matrix * vector);
-	EXPECT_EQ(Vector3(2.0f, 4.0f, 6.0f), (matrix * 2.0f) * vector);
-	EXPECT_EQ(Vector3(-1.0f, -2.0f, -3.0f), (matrix * -1.0f) * vector);
-	EXPECT_EQ(Vector3(7.0f, 8.0f, 9.0f), (matrix + 1.0f) * vector);
+	EXPECT_EQ(Vec3f(1.0f, 2.0f, 3.0f), matrix * vector);
+	EXPECT_EQ(Vec3f(2.0f, 4.0f, 6.0f), (matrix * 2.0f) * vector);
+	EXPECT_EQ(Vec3f(-1.0f, -2.0f, -3.0f), (matrix * -1.0f) * vector);
+	EXPECT_EQ(Vec3f(7.0f, 8.0f, 9.0f), (matrix + 1.0f) * vector);
 
 }
 

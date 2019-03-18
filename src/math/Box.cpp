@@ -3,7 +3,7 @@
 
 using namespace zero::math;
 
-Box::Box(const Vector3& min, const Vector3& max)
+Box::Box(const Vec3f& min, const Vec3f& max)
    : min_(min), max_(max) {}
 
 bool Box::operator==(const Box& other) const {
@@ -19,7 +19,7 @@ bool Box::Contains(const Box& other) const {
 	return Contains(other.min_) && Contains(other.max_);
 }
 
-bool Box::Contains(const Vector3& point) const {
+bool Box::Contains(const Vec3f& point) const {
 	return (min_.x_ <= point.x_) &&
            (min_.y_ <= point.y_) &&
            (min_.z_ <= point.z_) &&
@@ -48,11 +48,11 @@ void Box::Merge(const Box& other) {
 
 
 /* ********** Box Operations ********** */
-Vector3 Box::Size() const {
+Vec3f Box::Size() const {
 	return max_ - min_;
 }
 
-Vector3 Box::Center() const {
+Vec3f Box::Center() const {
 	return (min_ + max_) * 0.5f;
 }
 
@@ -65,6 +65,6 @@ Box Box::Merge(const Box& lhs, const Box& rhs) {
 }
 
 Box Box::Unit() {
-	return Box(Vector3::Zero(), Vector3::One());
+	return Box(Vec3f::Zero(), Vec3f::One());
 }
 

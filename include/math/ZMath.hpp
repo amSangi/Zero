@@ -15,10 +15,13 @@ namespace math {
     class Quaternion;
     class Radian;
     class Sphere;
-    template<int dims> class Vector;
-    using Vector2 = Vector<2>;
-    using Vector3 = Vector<3>;
-    using Vector4 = Vector<4>;
+    template<int dims, class T> class Vector;
+    using Vec2f = Vector<2, float>;
+    using Vec3f = Vector<3, float>;
+    using Vec4f = Vector<4, float>;
+    using Vec2i = Vector<2, int32>;
+    using Vec3i = Vector<3, int32>;
+    using Vec4i = Vector<4, int32>;
 
     /* ********** Constants ********** */
     static constexpr float PI = 3.14159265359f;

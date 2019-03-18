@@ -11,11 +11,11 @@ namespace math {
 	class Plane {
 	public:
 		Plane() = default;
-		Plane(const Vector3& normal, float d);
-		Plane(const Vector3& normal, const Vector3& point);
-		Plane(const Vector3& p1, const Vector3& p2, const Vector3& p3);
-		explicit Plane(const Vector4& plane);
-		explicit Plane(const Vector3& normal);
+		Plane(const Vec3f& normal, float d);
+		Plane(const Vec3f& normal, const Vec3f& point);
+		Plane(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3);
+		explicit Plane(const Vec4f& plane);
+		explicit Plane(const Vec3f& normal);
 		Plane(const Plane& other) = default;
 
 		~Plane() = default;
@@ -36,9 +36,9 @@ namespace math {
 		bool operator!=(const Plane& other) const;
 
 		/**
-		 * @return a vector4 representing this plane
+		 * @return a vec4f representing this plane
 		 */
-		Vector4 ToVector4() const;
+		Vec4f ToVector4() const;
 
 		/* ********** Intersection Tests ********** */
 
@@ -69,21 +69,21 @@ namespace math {
 		 * @param point the given point
 		 * @return the projected point
 		 */
-		Vector3 Project(const Vector3& point) const;
+		Vec3f Project(const Vec3f& point) const;
 
 		/**
 		 * @brief Compute the reflection ray of a given incident ray
 		 * @param incident the incident ray
 		 * @return the reflection ray
 		 */
-		Vector3 Reflect(const Vector3& incident) const;
+		Vec3f Reflect(const Vec3f& incident) const;
 
 		/**
 		 * @brief Compute the distance from the plant to a point
 		 * @param point the point
 		 * @return the distance from this to the given point
 		 */
-		float Distance(const Vector3& point) const;
+		float Distance(const Vec3f& point) const;
 
 		/**
 		 * @brief Normalize the plane
@@ -116,24 +116,24 @@ namespace math {
 		static Plane Transform(const Plane& plane, const Matrix4& matrix);
 
 		/**
-		 * @return a plane facing the Vector3 up direction
+		 * @return a plane facing the Vec3f up direction
 		 */
 		static Plane Up();
 
 		/**
-		 * @return a plane facing the Vector3 right direction
+		 * @return a plane facing the Vec3f right direction
 		 */
 		static Plane Right();
 
 		/**
-		 * @return a plane facing the Vector3 forward direction
+		 * @return a plane facing the Vec3f forward direction
 		 */
 		static Plane Forward();
 
 		/**
 		 * @brief The normal of the plane <A, B, C>: Ax + By + Cz + D = 0
 		 */
-		Vector3 normal_;
+		Vec3f normal_;
 
 		/**
 		 * @brief The D component of the plane equation: Ax + By + Cz + D = 0

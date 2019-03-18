@@ -137,14 +137,14 @@ namespace math {
 		 */
 		Quaternion& operator*=(const Quaternion& rhs);
 
-		/* ********** Quaternion/Vector3 Operations ********** */
+		/* ********** Quaternion/Vec3f Operations ********** */
 
 		/**
-		 * @brief Perform Quaternion-Vector3 multiplication
-		 * @param v The vector3
-		 * @return The resulting Vector3
+		 * @brief Perform Quaternion-Vec3f multiplication
+		 * @param v The vec3f
+		 * @return The resulting Vec3f
 		 */
-		Vector3 operator*(const Vector3& v) const;
+		Vec3f operator*(const Vec3f& v) const;
 
 		/* ********** Quaternion Operations ********** */
 
@@ -198,15 +198,15 @@ namespace math {
 
 		/**
 		 * @brief Get the Euler representation of this
-		 * @return A Vector3 containing the Euler angles
+		 * @return A Vec3f containing the Euler angles
 		 */
-		Vector3 GetEulerAngles() const;
+		Vec3f GetEulerAngles() const;
 
 		/**
 		 * @brief Get the x, y, z components of this
-		 * @return A Vector3 containing only the x, y, z components
+		 * @return A Vec3f containing only the x, y, z components
 		 */
-		Vector3 XYZ() const;
+		Vec3f XYZ() const;
 
 		/**
 		 * @brief Get the Rotation Matrix3 representation of this
@@ -231,7 +231,7 @@ namespace math {
 		 * @param angle The angle in radians
 		 * @return A new Quaternion representing the rotation
 		 */
-		static Quaternion FromAngleAxis(const Vector3& axis, Radian angle);
+		static Quaternion FromAngleAxis(const Vec3f& axis, Radian angle);
 
 		/**
 		 * @brief Get a Quaternion representing a rotation of angle degrees around an axis
@@ -239,7 +239,7 @@ namespace math {
 		 * @param angle The angle in degrees
 		 * @return A new Quaternion representing the rotation
 		 */
-		static Quaternion FromAngleAxis(const Vector3& axis, Degree angle);
+		static Quaternion FromAngleAxis(const Vec3f& axis, Degree angle);
 
 		/**
 		 * @brief Get a Quaternion representing a rotation in the 3 different axes
@@ -248,7 +248,7 @@ namespace math {
 		 * @param zAxis The z-axis vector
 		 * @return A new Quaternion representing the rotation
 		 */
-		static Quaternion FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
+		static Quaternion FromAxes(const Vec3f& xAxis, const Vec3f& yAxis, const Vec3f& zAxis);
 
 		/**
 		 * @brief Get a Quaternion rotating in the x, y, z axes by their given angles
@@ -272,7 +272,7 @@ namespace math {
 		 * @param up The up vector
 		 * @return A new Quaternion representing the rotation
 		 */
-		static Quaternion LookRotation(const Vector3& direction, const Vector3& up = Vector3::Up());
+		static Quaternion LookRotation(const Vec3f& direction, const Vec3f& up = Vec3f::Up());
 
 		/**
 		 * @brief Get a Quaternion representing a rotation from `from` to `to`
@@ -280,7 +280,7 @@ namespace math {
 		 * @param to The direction to rotate towards
 		 * @return A new Quaternion representing the rotation
 		 */
-		static Quaternion FromToRotation(const Vector3& from, const Vector3& to);
+		static Quaternion FromToRotation(const Vec3f& from, const Vec3f& to);
 
 		/* ********** Useful Quaternions ********** */
 

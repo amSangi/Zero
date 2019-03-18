@@ -139,12 +139,12 @@ TEST(TestMatrix4, Transpose) {
 
 TEST(TestMatrix4, MatrixVectorMultiply) {
 	Matrix4 matrix = Matrix4::Identity();
-	Vector4 vector(1.0f, 2.0f, 3.0f, 4.0f);
+	Vec4f vector(1.0f, 2.0f, 3.0f, 4.0f);
 
-	EXPECT_EQ(Vector4(1.0f, 2.0f, 3.0f, 4.0f), matrix * vector);
-	EXPECT_EQ(Vector4(2.0f, 4.0f, 6.0f, 8.0f), (matrix * 2.0f) * vector);
-	EXPECT_EQ(Vector4(-1.0f, -2.0f, -3.0f, -4.0f), (matrix * -1.0f) * vector);
-	EXPECT_EQ(Vector4(11.0f, 12.0f, 13.0f, 14.0f), (matrix + 1.0f) * vector);
+	EXPECT_EQ(Vec4f(1.0f, 2.0f, 3.0f, 4.0f), matrix * vector);
+	EXPECT_EQ(Vec4f(2.0f, 4.0f, 6.0f, 8.0f), (matrix * 2.0f) * vector);
+	EXPECT_EQ(Vec4f(-1.0f, -2.0f, -3.0f, -4.0f), (matrix * -1.0f) * vector);
+	EXPECT_EQ(Vec4f(11.0f, 12.0f, 13.0f, 14.0f), (matrix + 1.0f) * vector);
 }
 
 TEST(TestMatrix4, MatrixMatrixMultiply) {

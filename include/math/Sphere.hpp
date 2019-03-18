@@ -12,8 +12,8 @@ namespace math {
 	public:
 		Sphere() = default;
 		explicit Sphere(float radius);
-		explicit Sphere(const Vector3& center);
-		Sphere(const Vector3& center, float radius);
+		explicit Sphere(const Vec3f& center);
+		Sphere(const Vec3f& center, float radius);
 
 		~Sphere() = default;
 		Sphere& operator=(const Sphere& other) = default;
@@ -52,7 +52,7 @@ namespace math {
 		 * @param point The point
 		 * @return True if the point is inside this. Otherwise false.
 		 */
-		bool Contains(const Vector3& point) const;
+		bool Contains(const Vec3f& point) const;
 
 
 		/**
@@ -88,7 +88,7 @@ namespace math {
 		/**
 		 * @brief The center point of the sphere
 		 */
-		Vector3 center_;
+		Vec3f center_;
 
 		/**
 		 * @brief The radius of the sphere

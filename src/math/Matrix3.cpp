@@ -193,11 +193,11 @@ Matrix3 Matrix3::Transpose() const {
     return m;
 }
 
-Vector3 Matrix3::operator*(const Vector3& rhs) const {
+Vec3f Matrix3::operator*(const Vec3f& rhs) const {
     float x = matrix_[0][0] * rhs.x_ + matrix_[0][1] * rhs.y_ + matrix_[0][2] * rhs.z_;
     float y = matrix_[1][0] * rhs.x_ + matrix_[1][1] * rhs.y_ + matrix_[1][2] * rhs.z_;
     float z = matrix_[2][0] * rhs.x_ + matrix_[2][1] * rhs.y_ + matrix_[2][2] * rhs.z_;
-    return Vector3(x, y, z);
+    return Vec3f(x, y, z);
 }
 
 Matrix3 Matrix3::operator*(const Matrix3& rhs) const {

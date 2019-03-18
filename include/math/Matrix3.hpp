@@ -190,11 +190,11 @@ namespace math {
         Matrix3 Transpose() const;
 
         /**
-         * @brief Computes the result of a matrix3 - vector3 multiplication
-         * @param rhs the vector3
-         * @return the resulting vector3
+         * @brief Computes the result of a matrix3 - vec3f multiplication
+         * @param rhs the vec3f
+         * @return the resulting vec3f
          */
-        Vector3 operator*(const Vector3& rhs) const;
+        Vec3f operator*(const Vec3f& rhs) const;
 
         /**
          * @brief Computes the result of a matrix3 - matrix3 multiplication

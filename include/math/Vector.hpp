@@ -10,33 +10,34 @@ namespace math {
 
 		/**
 		 * @brief A simple base container for the vector
-		 * @tparam dims the dimensions of the vector
+		 * @tparam dims The dimensions of the vector
+		 * @tparam T The vector element type
 		 */
-		template<int dims>
+		template<int dims, class T>
 		class VectorBase {
 		public:
 			VectorBase() = default;
 
-			explicit VectorBase(float value) {
+			explicit VectorBase(T value) {
 				for (int i = 0; i < dims; ++i) {
 					data_[i] = value;
 				}
 			}
 
-			VectorBase(float x, float y) {
+			VectorBase(T x, T y) {
 				static_assert(dims > 1, "Require at least 2 dimensions");
 				data_[0] = x;
 				data_[1] = y;
 			}
 
-			VectorBase(float x, float y, float z) {
+			VectorBase(T x, T y, T z) {
 				static_assert(dims > 2, "Require at least 3 dimensions");
 				data_[0] = x;
 				data_[1] = y;
 				data_[2] = z;
 			}
 
-			VectorBase(float x, float y, float z, float w) {
+			VectorBase(T x, T y, T z, T w) {
 				static_assert(dims > 3, "Require at least 4 dimensions");
 				data_[0] = x;
 				data_[1] = y;
@@ -44,124 +45,126 @@ namespace math {
 				data_[3] = w;
 			}
 
-			inline float *Data() { return data_; }
+			inline T* Data() { return data_; }
 
-			inline const float *Data() const { return data_; }
+			inline const T* Data() const { return data_; }
 
-			float data_[dims];
+			T data_[dims];
 
 		}; // template class VectorBase
 
-		template<>
-		class VectorBase<2> {
+		template<class T>
+		class VectorBase<2, T> {
 		public:
 			VectorBase() = default;
 
-			VectorBase(float x, float y) : x_(x), y_(y) {}
+			VectorBase(T x, T y) : x_(x), y_(y) {}
 
-			explicit VectorBase(float value) : x_(value), y_(value) {}
-
-
-			inline float *Data() { return &x_; }
-
-			inline const float *Data() const { return &x_; }
-
-			float x_, y_;
-
-		}; // template specialization class VectorBase<2>
+			explicit VectorBase(T value) : x_(value), y_(value) {}
 
 
-		template<>
-		class VectorBase<3> {
+			inline T* Data() { return &x_; }
+
+			inline const T* Data() const { return &x_; }
+
+			T x_, y_;
+
+		}; // partial template specialization class VectorBase<2>
+
+
+		template<class T>
+		class VectorBase<3, T> {
 		public:
 			VectorBase() = default;
 
-			VectorBase(float x, float y) : x_(x), y_(y), z_(0.0f) {}
+			VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f) {}
 
-			VectorBase(float x, float y, float z) : x_(x), y_(y), z_(z) {}
+			VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z) {}
 
-			explicit VectorBase(float value) : x_(value), y_(value), z_(value) {}
-
-
-			inline float *Data() { return &x_; }
-
-			inline const float *Data() const { return &x_; }
-
-			float x_, y_, z_;
-
-		}; // template specialization class VectorBase<3>
+			explicit VectorBase(T value) : x_(value), y_(value), z_(value) {}
 
 
-		template<>
-		class VectorBase<4> {
+			inline T* Data() { return &x_; }
+
+			inline const T* Data() const { return &x_; }
+
+			T x_, y_, z_;
+
+		}; // partial template specialization class VectorBase<3>
+
+
+		template<class T>
+		class VectorBase<4, T> {
 		public:
 			VectorBase() = default;
 
-			VectorBase(float x, float y) : x_(x), y_(y), z_(0.0f), w_(0.0f) {}
+			VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f), w_(0.0f) {}
 
-			VectorBase(float x, float y, float z) : x_(x), y_(y), z_(z), w_(0.0f) {}
+			VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0f) {}
 
-			VectorBase(float x, float y, float z, float w) : x_(x), y_(y), z_(z), w_(w) {}
+			VectorBase(T x, T y, T z, T w) : x_(x), y_(y), z_(z), w_(w) {}
 
-			explicit VectorBase(float value) : x_(value), y_(value), z_(value), w_(value) {}
+			explicit VectorBase(T value) : x_(value), y_(value), z_(value), w_(value) {}
 
-			inline float *Data() { return &x_; }
+			inline T* Data() { return &x_; }
 
-			inline const float *Data() const { return &x_; }
+			inline const T* Data() const { return &x_; }
 
-			float x_, y_, z_, w_;
+			T x_, y_, z_, w_;
 
-		}; // template specialization class VectorBase<4>
+		}; // partial template specialization class VectorBase<4>
 
 	} // namespace detail
 
 
 	/**
-	 * @brief An dims sized mathematical vector
+	 * @brief A dims sized mathematical vector
 	 * @tparam dims The vector dimensions
+	 * @tparam T The vector element type
 	 */
-	template<int dims>
-	class Vector  : public detail::VectorBase<dims> {
-		using VectorBase = detail::VectorBase<dims>;
+	template<int dims, class T>
+	class Vector  : public detail::VectorBase<dims, T> {
+		using VectorBase = detail::VectorBase<dims, T>;
 		using VectorBase::Data;
+		using Vec = Vector<dims, T>;
 	public:
-		Vector<dims>() = default;
-		Vector<dims>(const Vector<dims>& other) = default;
-		explicit Vector<dims>(float value) : VectorBase(value) {}
-		Vector<dims>(float x, float y) : VectorBase(x, y) {};
-		Vector<dims>(float x, float y, float z) : VectorBase(x, y, z) {}
-		Vector<dims>(float x, float y, float z, float w) : VectorBase(x, y, z, w) {}
+		Vector<dims, T>() = default;
+		Vector<dims, T>(const Vec& other) = default;
+		explicit Vector<dims, T>(T value) : VectorBase(value) {}
+		Vector<dims, T>(T x, T y) : VectorBase(x, y) {};
+		Vector<dims, T>(T x, T y, T z) : VectorBase(x, y, z) {}
+		Vector<dims, T>(T x, T y, T z, T w) : VectorBase(x, y, z, w) {}
 
-		~Vector<dims>() = default;
-		Vector<dims>& operator=(const Vector<dims>& other) = default;
-
-		/**
-		 * @brief Get the component at the index
-		 * @param index The index
-		 * @return the component
-		 */
-		float operator[](size_t index);
+		~Vector<dims, T>() = default;
+		Vector<dims, T>& operator=(const Vec& other) = default;
 
 		/**
 		 * @brief Get the component at the index
 		 * @param index The index
 		 * @return the component
 		 */
-		const float operator[](size_t index) const;
+		T operator[](size_t index);
+
+		/**
+		 * @brief Get the component at the index
+		 * @param index The index
+		 * @return the component
+		 */
+		const T operator[](size_t index) const;
 
 		/**
 		 * @brief Check if the two given vectors are equal
 		 * @param o The other vector
 		 * @return True if the components are equal. False otherwise.
 		 */
-		inline bool operator==(const Vector<dims>& o) const;
+		inline bool operator==(const Vec& o) const;
 
 		/**
 		 * @brief Check if the two given vectors are not equal
 		 * @param o The other vector
 		 * @return True if the components are not equal. False otherwise.
 		 */
-		inline bool operator!=(const Vector<dims>& o) const;
+		inline bool operator!=(const Vec& o) const;
 
 		/* ********** Scalar Operations ********** */
 
@@ -170,56 +173,56 @@ namespace math {
 		 * @param scalar The scalar
 		 * @return A new Vector containing the sums
 		 */
-		Vector<dims> operator+(float scalar) const;
+		Vec operator+(T scalar) const;
 
 		/**
 		 * @brief Subtract the components by the given scalar
 		 * @param scalar The scalar
 		 * @return A new Vector containing the differences
 		 */
-		Vector<dims> operator-(float scalar) const;
+		Vec operator-(T scalar) const;
 
 		/**
 		 * @brief Multiply the components by the given scalar
 		 * @param scalar The scalar
 		 * @return A new Vector containing the products
 		 */
-		Vector<dims> operator*(float scalar) const;
+		Vec operator*(T scalar) const;
 
 		/**
 		 * @brief Divide the components by the given scalar
 		 * @param scalar The scalar
 		 * @return A new Vector containing the quotients
 		 */
-		Vector<dims> operator/(float scalar) const;
+		Vec operator/(T scalar) const;
 
 		/**
 		 * @brief Add the components by the given scalar
 		 * @param scalar The scalar
 		 * @return The same Vector containing the sums
 		 */
-		Vector<dims>& operator+=(float scalar);
+		Vec& operator+=(T scalar);
 
 		/**
 		 * @brief Subtract the components by the given scalar
 		 * @param scalar The scalar
 		 * @return The same Vector containing the differences
 		 */
-		Vector<dims>& operator-=(float scalar);
+		Vec& operator-=(T scalar);
 
 		/**
 		 * @brief Multiply the components by the given scalar
 		 * @param scalar The scalar
 		 * @return The same Vector containing the products
 		 */
-		Vector<dims>& operator*=(float scalar);
+		Vec& operator*=(T scalar);
 
 		/**
 		 * @brief Divide the components by the given scalar
 		 * @param scalar The scalar
 		 * @return The same Vector containing the quotients
 		 */
-		Vector<dims>& operator/=(float scalar);
+		Vec& operator/=(T scalar);
 
 		/* **** Component-Wise Vector Operations **** */
 
@@ -228,56 +231,56 @@ namespace math {
 		 * @param rhs The right vector
 		 * @return A new Vector containing the sums
 		 */
-		Vector<dims> operator+(const Vector<dims>& rhs) const;
+		Vec operator+(const Vec& rhs) const;
 
 		/**
 		 * @brief Subtract the components of this by the components of rhs
 		 * @param rhs The right vector
 		 * @return A new Vector containing the differences
 		 */
-		Vector<dims> operator-(const Vector<dims>& rhs) const;
+		Vec operator-(const Vec& rhs) const;
 
 		/**
 		 * @brief Multiply the components of this by the components of rhs
 		 * @param rhs The right vector
 		 * @return A new Vector containing the products
 		 */
-		Vector<dims> operator*(const Vector<dims>& rhs) const;
+		Vec operator*(const Vec& rhs) const;
 
 		/**
 		 * @brief Divide the components of this by the components of rhs
 		 * @param rhs The right vector
 		 * @return A new Vector containing the quotients
 		 */
-		Vector<dims> operator/(const Vector<dims>& rhs) const;
+		Vec operator/(const Vec& rhs) const;
 
 		/**
 		 * @brief Add the components of this with the components of rhs
 		 * @param rhs The right vector
 		 * @return The same Vector containing the sums
 		 */
-		Vector<dims>& operator+=(const Vector<dims>& rhs);
+		Vec& operator+=(const Vec& rhs);
 
 		/**
 		 * @brief Subtract the components of this by the components of rhs
 		 * @param rhs The right vector
 		 * @return The same Vector containing the differences
 		 */
-		Vector<dims>& operator-=(const Vector<dims>& rhs);
+		Vec& operator-=(const Vec& rhs);
 
 		/**
 		 * @brief Multiply the components of this by the components of rhs
 		 * @param rhs The right vector
 		 * @return The same Vector containing the products
 		 */
-		Vector<dims>& operator*=(const Vector<dims>& rhs);
+		Vec& operator*=(const Vec& rhs);
 
 		/**
 		 * @brief Divide the components of this by the components of rhs
 		 * @param rhs The right vector
 		 * @return The same Vector containing the quotients
 		 */
-		Vector<dims>& operator/=(const Vector<dims>& rhs);
+		Vec& operator/=(const Vec& rhs);
 
 		/* ********** Vector Operations ********** */
 
@@ -297,7 +300,7 @@ namespace math {
 		 * @brief Take the absolute value of all the components
 		 * @return The same vector (this)
 		 */
-		Vector<dims>& Abs();
+		Vec& Abs();
 
 		/**
 		 * @brief Normalize the vector if it's possible
@@ -319,14 +322,14 @@ namespace math {
 		 * @param v the vector
 		 * @return a copy of the vector normalized
 		 */
-		static inline Vector<dims> Normalize(const Vector<dims>& v);
+		static inline Vec Normalize(const Vec& v);
 
 		/**
 		 * @brief Get a copy of the vector with all of its components being >= 0
 		 * @param v the vector
 		 * @return the absolute valued vector copy
 		 */
-		static inline Vector<dims> AbsCopy(const Vector<dims>& v);
+		static inline Vec AbsCopy(const Vec& v);
 
 		/**
 		 * @brief Get the dot product between two vectors
@@ -334,7 +337,7 @@ namespace math {
 		 * @param rhs The right vector
 		 * @return the dot product
 		 */
-		static inline float Dot(const Vector<dims>& lhs, const Vector<dims>& rhs);
+		static inline float Dot(const Vec& lhs, const Vec& rhs);
 
 		/**
 		 * @brief Get the cross product between two vectors
@@ -342,7 +345,7 @@ namespace math {
 		 * @param rhs The right vector
 		 * @return the cross product
 		 */
-		static inline Vector<dims> Cross(const Vector<dims>& lhs, const Vector<dims>& rhs);
+		static inline Vec Cross(const Vec& lhs, const Vec& rhs);
 
 		/**
 		 * @brief Get the outgoing, reflected vector
@@ -350,7 +353,7 @@ namespace math {
 		 * @param normal The normal vector
 		 * @return the reflected vector
 		 */
-		static inline Vector<dims> Reflect(const Vector<dims>& in, const Vector<dims>& normal);
+		static inline Vec Reflect(const Vec& in, const Vec& normal);
 
 		/**
 		 * @brief Get the distance from `from` to `to`
@@ -358,7 +361,7 @@ namespace math {
 		 * @param to The destination vector
 		 * @return the distance between the two vectors
 		 */
-		static inline float Distance(const Vector<dims>& from, const Vector<dims>& to);
+		static inline float Distance(const Vec& from, const Vec& to);
 
 		/**
 		 * @brief Get the square distance from `from` to `to`
@@ -366,7 +369,7 @@ namespace math {
 		 * @param to The destination vector
 		 * @return the square distance between the two vectors
 		 */
-		static inline float SquareDistance(const Vector<dims>& from, const Vector<dims>& to);
+		static inline float SquareDistance(const Vec& from, const Vec& to);
 
 		/**
 		 * @brief Get the linearly interpolated vector between the start and end vectors
@@ -375,7 +378,7 @@ namespace math {
 		 * @param t The amount to lerp by with range [0, 1]
 		 * @return The vector between the start and end (inclusive)
 		 */
-		static inline Vector<dims> Lerp(const Vector<dims>& start, const Vector<dims>& end, float t);
+		static inline Vec Lerp(const Vec& start, const Vec& end, float t);
 
 		/**
 		 * @brief Get the angle between the two vector
@@ -383,7 +386,7 @@ namespace math {
 		 * @param to The destination vector
 		 * @return the angle between the two vectors
 		 */
-		static inline Radian Angle(const Vector<dims>& from, const Vector<dims>& to);
+		static inline Radian Angle(const Vec& from, const Vec& to);
 
 
 		/* ********** Useful Vectors ********** */
@@ -392,129 +395,137 @@ namespace math {
 		 * @brief Create the zero vector
 		 * @return the Zero vector
 		 */
-		static Vector<dims> Zero();
+		static Vec Zero();
 
 		/**
 		 * @brief Create the unit vector
 		 * @return the Unit vector
 		 */
-		static Vector<dims> One();
+		static Vec One();
 
 		/**
 		 * @brief Create the up vector (+y is up)
 		 * @return the Up vector
 		 */
-		static Vector<dims> Up();
+		static Vec Up();
 
 		/**
 		 * @brief Create the down vector (-y is down)
 		 * @return the Down vector
 		 */
-		static Vector<dims> Down();
+		static Vec Down();
 
 		/**
 		 * @brief Create the right vector (+x is right)
 		 * @return the Right vector
 		 */
-		static Vector<dims> Right();
+		static Vec Right();
 
 		/**
 		 * @brief Create the left vector (-x is left)
 		 * @return the Left vector
 		 */
-		static Vector<dims> Left();
+		static Vec Left();
 
 		/**
 		 * @brief Create the forward vector (+z is forward)
 		 * @return the Forward vector
 		 */
-		static Vector<dims> Forward();
+		static Vec Forward();
 
 		/**
 		 * @brief Create the back vector (-z is back)
 		 * @return the Back vector
 		 */
-		static Vector<dims> Back();
+		static Vec Back();
 
 	}; // template class Vector
 
+	/* ********** Vectors ********** */
+	using Vec2f = Vector<2, float>;
+	using Vec3f = Vector<3, float>;
+	using Vec4f = Vector<4, float>;
+	using Vec2i = Vector<2, int32>;
+	using Vec3i = Vector<3, int32>;
+	using Vec4i = Vector<4, int32>;
+
 	/* ********** Useful Vectors ********** */
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Zero() {
-		return Vector<dims>(0.0f);
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Zero() {
+		return Vector<dims, T>(0.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::One() {
-		return Vector<dims>(1.0f);
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::One() {
+		return Vector<dims, T>(1.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Up() {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Up() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims>(0.0f, 1.0f);
+		return Vector<dims, T>(0.0f, 1.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Down() {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Down() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims>(0.0f, -1.0f);
+		return Vector<dims, T>(0.0f, -1.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Right() {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Right() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims>(1.0f, 0.0f);
+		return Vector<dims, T>(1.0f, 0.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Left() {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Left() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims>(-1.0f, 0.0f);
+		return Vector<dims, T>(-1.0f, 0.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Forward() {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Forward() {
 		static_assert(dims > 2, "Require at least 3 dimensions");
-		return Vector<dims>(0.0f, 0.0f, 1.0f);
+		return Vector<dims, T>(0.0f, 0.0f, 1.0f);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Back() {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Back() {
 		static_assert(dims > 2, "Require at least 3 dimensions");
-		return Vector<dims>(0.0f, 0.0f, -1.0f);
+		return Vector<dims, T>(0.0f, 0.0f, -1.0f);
 	}
 
 
 	/* ********** Vector Operations Implementation ********** */
 
-	template<int dims>
-	float Vector<dims>::Magnitude() const {
+	template<int dims, class T>
+	float Vector<dims, T>::Magnitude() const {
 		return Sqrt(SquareMagnitude());
 	}
 
-	template<int dims>
-	float Vector<dims>::SquareMagnitude() const {
+	template<int dims, class T>
+	float Vector<dims, T>::SquareMagnitude() const {
 		float square_mag = 0.0f;
-		const float* data = Data();
+		const T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			square_mag += (data[i] * data[i]);
 		}
 		return square_mag;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::Abs() {
-		float* data = Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::Abs() {
+		T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] = math::Abs(data[i]);
 		}
 		return *this;
 	}
 
-	template<int dims>
-	bool Vector<dims>::Normalize() {
+	template<int dims, class T>
+	bool Vector<dims, T>::Normalize() {
 		float magnitude = Magnitude();
 
 		float inv_magnitude = 1.0f / magnitude;
@@ -526,9 +537,9 @@ namespace math {
 		return false;
 	}
 
-	template<int dims>
-	bool Vector<dims>::IsEpsilon(float epsilon) const {
-		const float* data = Data();
+	template<int dims, class T>
+	bool Vector<dims, T>::IsEpsilon(float epsilon) const {
+		const T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			if (math::Abs(data[i]) > epsilon) {
 				return false;
@@ -540,60 +551,60 @@ namespace math {
 
 	/* ********** Static Operations Implementation ********** */
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Normalize(const Vector<dims>& v) {
-		Vector<dims> copy = v;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Normalize(const Vector<dims, T>& v) {
+		Vector<dims, T> copy = v;
 		return copy.Normalize() ? copy : Zero();
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::AbsCopy(const Vector<dims>& v) {
-		Vector<dims> copy = v;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::AbsCopy(const Vector<dims, T>& v) {
+		Vector<dims, T> copy = v;
 		copy.Abs();
 		return copy;
 	}
 
-	template<int dims>
-	float Vector<dims>::Dot(const Vector<dims>& lhs, const Vector<dims>& rhs) {
+	template<int dims, class T>
+	float Vector<dims, T>::Dot(const Vector<dims, T>& lhs, const Vector<dims, T>& rhs) {
 		float result = 0.0f;
-		const float* lhs_data = lhs.Data();
-		const float* rhs_data = rhs.Data();
+		const T* lhs_data = lhs.Data();
+		const T* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
 			result += (lhs_data[i] * rhs_data[i]);
 		}
 		return result;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Cross(const Vector<dims>& lhs, const Vector<dims>& rhs) {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Cross(const Vector<dims, T>& lhs, const Vector<dims, T>& rhs) {
 		static_assert(dims == 3, "Only 3D cross product supported");
-		return Vector<dims>(lhs.y_ * rhs.z_ - lhs.z_ * rhs.y_,
-                            lhs.z_ * rhs.x_ - lhs.x_ * rhs.z_,
-                            lhs.x_ * rhs.y_ - lhs.y_ * rhs.x_);
+		return Vector<dims, T>(lhs.y_ * rhs.z_ - lhs.z_ * rhs.y_,
+                               lhs.z_ * rhs.x_ - lhs.x_ * rhs.z_,
+                               lhs.x_ * rhs.y_ - lhs.y_ * rhs.x_);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Reflect(const Vector<dims>& in, const Vector<dims>& normal) {
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::Reflect(const Vector<dims, T>& in, const Vector<dims, T>& normal) {
 		return in - (normal * 2 * Dot(in, normal));
 	}
 
-	template<int dims>
-	float Vector<dims>::Distance(const Vector<dims>& from, const Vector<dims>& to) {
+	template<int dims, class T>
+	float Vector<dims, T>::Distance(const Vector<dims, T>& from, const Vector<dims, T>& to) {
 		return (from - to).Magnitude();
 	}
 
-	template<int dims>
-	float Vector<dims>::SquareDistance(const Vector<dims>& from, const Vector<dims>& to) {
+	template<int dims, class T>
+	float Vector<dims, T>::SquareDistance(const Vector<dims, T>& from, const Vector<dims, T>& to) {
 		return (from - to).SquareMagnitude();
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::Lerp(const Vector<dims>& start, const Vector<dims>& end, float t) {
+	template<int dims, class T>
+	Vector<dims, T>Vector<dims, T>::Lerp(const Vector<dims, T>& start, const Vector<dims, T>& end, float t) {
 		return (start * (1.0f - t)) + (end * t);
 	}
 
-	template<int dims>
-	Radian Vector<dims>::Angle(const Vector<dims>& from, const Vector<dims>& to) {
+	template<int dims, class T>
+	Radian Vector<dims, T>::Angle(const Vector<dims, T>& from, const Vector<dims, T>& to) {
 		float dot = Dot(from, to);
 		float square_mag_from = from.SquareMagnitude();
 		float square_mag_to = to.SquareMagnitude();
@@ -605,10 +616,10 @@ namespace math {
 
 	/* ********** Operator Overload Implementation ********** */
 
-	template<int dims>
-	bool Vector<dims>::operator==(const Vector<dims>& o) const {
-		const float* data = Data();
-		const float* rhs_data = o.Data();
+	template<int dims, class T>
+	bool Vector<dims, T>::operator==(const Vector<dims, T>& o) const {
+		const T* data = Data();
+		const T* rhs_data = o.Data();
 		for (int i = 0; i < dims; ++i) {
 			if (!Equal(data[i], rhs_data[i])) return false;
 		}
@@ -616,71 +627,71 @@ namespace math {
 		return true;
 	}
 
-	template<int dims>
-	float Vector<dims>::operator[](size_t index) {
+	template<int dims, class T>
+	T Vector<dims, T>::operator[](size_t index) {
 		return Data()[index];
 	}
 
-	template<int dims>
-	const float Vector<dims>::operator[](size_t index) const {
+	template<int dims, class T>
+	const T Vector<dims, T>::operator[](size_t index) const {
 		return Data()[index];
 	}
 
-	template<int dims>
-	bool Vector<dims>::operator!=(const Vector<dims>& o) const {
+	template<int dims, class T>
+	bool Vector<dims, T>::operator!=(const Vector<dims, T>& o) const {
 		return !operator==(o);
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator+(float scalar) const {
-		return Vector<dims>(*this) += scalar;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator+(T scalar) const {
+		return Vector<dims, T>(*this) += scalar;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator-(float scalar) const {
-		return Vector<dims>(*this) -= scalar;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator-(T scalar) const {
+		return Vector<dims, T>(*this) -= scalar;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator*(float scalar) const {
-		return Vector<dims>(*this) *= scalar;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator*(T scalar) const {
+		return Vector<dims, T>(*this) *= scalar;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator/(float scalar) const {
-		return Vector<dims>(*this) /= scalar;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator/(T scalar) const {
+		return Vector<dims, T>(*this) /= scalar;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator+=(float scalar) {
-		float* data = Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator+=(T scalar) {
+		T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] += scalar;
 		}
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator-=(float scalar) {
-		float* data = Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator-=(T scalar) {
+		T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] -= scalar;
 		}
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator*=(float scalar) {
-		float* data = Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator*=(T scalar) {
+		T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] *= scalar;
 		}
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator/=(float scalar) {
-		float* data = Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator/=(T scalar) {
+		T* data = Data();
 		float inv_scalar = 1.0f / scalar;
 		for (int i = 0; i < dims; ++i) {
 			data[i] *= inv_scalar;
@@ -688,60 +699,60 @@ namespace math {
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator+(const Vector<dims>& rhs) const {
-		return Vector<dims>(*this) += rhs;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator+(const Vector<dims, T>& rhs) const {
+		return Vector<dims, T>(*this) += rhs;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator-(const Vector<dims>& rhs) const {
-		return Vector<dims>(*this) -= rhs;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator-(const Vector<dims, T>& rhs) const {
+		return Vector<dims, T>(*this) -= rhs;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator*(const Vector<dims>& rhs) const {
-		return Vector<dims>(*this) *= rhs;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator*(const Vector<dims, T>& rhs) const {
+		return Vector<dims, T>(*this) *= rhs;
 	}
 
-	template<int dims>
-	Vector<dims> Vector<dims>::operator/(const Vector<dims>& rhs) const {
-		return Vector<dims>(*this) /= rhs;
+	template<int dims, class T>
+	Vector<dims, T> Vector<dims, T>::operator/(const Vector<dims, T>& rhs) const {
+		return Vector<dims, T>(*this) /= rhs;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator+=(const Vector<dims>& rhs) {
-		float* data = Data();
-		const float* rhs_data = rhs.Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator+=(const Vector<dims, T>& rhs) {
+		T* data = Data();
+		const T* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] += rhs_data[i];
 		}
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator-=(const Vector<dims>& rhs) {
-		float* data = Data();
-		const float* rhs_data = rhs.Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator-=(const Vector<dims, T>& rhs) {
+		T* data = Data();
+		const T* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] -= rhs_data[i];
 		}
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator*=(const Vector<dims>& rhs) {
-		float* data = Data();
-		const float* rhs_data = rhs.Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator*=(const Vector<dims, T>& rhs) {
+		T* data = Data();
+		const T* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] *= rhs_data[i];
 		}
 		return *this;
 	}
 
-	template<int dims>
-	Vector<dims>& Vector<dims>::operator/=(const Vector<dims>& rhs) {
-		float* data = Data();
-		const float* rhs_data = rhs.Data();
+	template<int dims, class T>
+	Vector<dims, T>& Vector<dims, T>::operator/=(const Vector<dims, T>& rhs) {
+		T* data = Data();
+		const T* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
 			data[i] /= rhs_data[i];
 		}
@@ -750,23 +761,23 @@ namespace math {
 
 
 	// Scalar/Vector Operations
-	template<int dims>
-	inline Vector<dims> operator+(float scalar, const Vector<dims>& v) {
+	template<int dims, class T>
+	inline Vector<dims, T> operator+(T scalar, const Vector<dims, T>& v) {
 		return v + scalar;
 	}
 
-	template<int dims>
-	inline Vector<dims> operator-(float scalar, const Vector<dims>& v) {
+	template<int dims, class T>
+	inline Vector<dims, T> operator-(T scalar, const Vector<dims, T>& v) {
 		return v - scalar;
 	}
 
-	template<int dims>
-	inline Vector<dims> operator*(float scalar, const Vector<dims>& v) {
+	template<int dims, class T>
+	inline Vector<dims, T> operator*(T scalar, const Vector<dims, T>& v) {
 		return v * scalar;
 	}
 
-	template<int dims>
-	inline Vector<dims> operator/(float scalar, const Vector<dims>& v) {
+	template<int dims, class T>
+	inline Vector<dims, T> operator/(T scalar, const Vector<dims, T>& v) {
 		return v / scalar;
 	}
 

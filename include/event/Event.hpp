@@ -1,63 +1,87 @@
 #pragma once
 
 #include "core/ZBase.hpp"
+#include "input/Key.hpp"
+#include "input/MouseButton.hpp"
 #include "EventType.hpp"
 
 namespace zero {
 namespace event {
 
     /**
-     * @brief The base Event class for all game engine events
+     * @brief Window resize events
      */
-    class Event {
-    public:
-        explicit Event(EventType type)
-        : type_(type)
-        , accept_(0)
-        , reserved_(0) {}
+    struct SizeEvent {
+        uint32 width;   // New width, in pixels
+        uint32 height;  // New height, in pixels
+    }; // struct SizeEvent
 
-        Event(const Event& other) = default;
-        virtual ~Event() = default;
 
-        /**
-         * @brief Get the Event Type
-         * @return the event type
-         */
-        inline EventType GetType() const   { return type_;  }
+    /**
+     * @brief Keyboard events
+     */
+    struct KeyEvent {
+        input::Key code;    // Code of the key that triggered this event
+        bool       alt;     // Is the Alt key pressed?
+        bool       control; // Is the Control key pressed?
+        bool       shift;   // Is the Shift key pressed?
+        bool       system;  // Is the System key pressed?
+    }; // struct KeyEvent
 
-        /**
-         * @brief The receiver of the event wants this event
-         * @return True if the accept flag has been set. False otherwise.
-         */
-        inline bool IsAccepted() const     { return accept_;   }
 
-        /**
-         * @brief Sets the accept flag so that the event is accepted by the receiver
-         */
-        inline void Accept()               { accept_ = 1;      }
+    /**
+     * @brief Text input events
+     */
+    struct TextEvent {
+        uint32 unicode; // UTF-32 Unicode value of the character
+    }; // struct TextEvent
 
-        /**
-         * @brief Clears the accept flag so that the event is ignored by the receiver
-         */
-        inline void Ignore()               { accept_ = 0;      }
 
-    protected:
-        /**
-         * @brief The Event Type
-         */
-        EventType type_;
+    /**
+     * @brief Mouse move events
+     */
+    struct MouseMoveEvent {
+        int x; // X position of the mouse pointer, relative to the left of the owner window
+        int y; // Y position of the mouse pointer, relative to the top of the owner window
+    }; // struct MouseMoveEvent
 
-        /**
-         * @brief The accept flag
-         */
-        uint8 accept_   : 1;
 
-        /**
-         * @brief Reserved flags
-         */
-        uint8 reserved_ : 7;
+    /**
+     * @brief Mouse button events
+     */
+    struct MouseButtonEvent {
+        input::MouseButton button; // Mouse button that triggered this event
+        int                x;      // X position of the mouse pointer, relative to the left of the owner window
+        int                y;      // Y position of the mouse pointer, relative to the top of the owner window
+    }; // struct MouseButtonEvent
 
-    }; // class Event
+
+    /**
+     * @brief Mouse wheel scroll events
+     */
+    struct MouseWheelScrollEvent {
+        float delta; // Wheel offset (positive is up/left, negative is down/right). High-precision mice may use floats.
+        int   x;     // X position of the mouse pointer, relative to the left of the owner window
+        int   y;     // Y position of the mouse pointer, relative to the top of the owner window
+    }; // struct MouseWheelScrollEvent
+
+
+    /**
+     * @brief System events passed to the different systems
+     * @note Ensure the type is checked before accessing the correct event
+     */
+    struct Event {
+        EventType type;
+        union
+        {
+            SizeEvent size;
+            KeyEvent key;
+            TextEvent text;
+            MouseMoveEvent mouse_move;
+            MouseButtonEvent mouse_button;
+            MouseWheelScrollEvent mouse_wheel_scroll;
+        };
+    }; // struct Event
 
 } // namespace event
 } // namespace zero

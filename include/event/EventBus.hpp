@@ -10,7 +10,6 @@ namespace zero {
 namespace event {
 
     class EventBus {
-        using EventPtr = std::shared_ptr<Event>;
         using EventHandlerPtr = std::shared_ptr<EventHandler>;
     public:
         EventBus() = default;
@@ -24,14 +23,14 @@ namespace event {
         void AddEventHandler(EventHandlerPtr handler);
         void RemoveEventHandler(EventHandlerPtr handler);
 
-        void Post(EventPtr event);
-        void Dispatch(EventPtr event);
+        void Post(const Event& event);
+        void Dispatch(const Event& event);
         void DispatchEvents();
 
 
     private:
         std::vector<EventHandlerPtr> handlers_;
-        std::deque<EventPtr> event_queue_;
+        std::deque<Event> event_queue_;
 
     }; // class EventBus
 

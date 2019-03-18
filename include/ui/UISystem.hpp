@@ -21,12 +21,12 @@ namespace ui {
         : System(std::move(engine)) {}
 
         /**
-         * @brief Initialize the UISystem
+         * @brief Initialize the window
          */
         void Initialize() override;
 
         /**
-         * @brief Update the UISystem
+         * @brief Update the UISystem and post ui/input events
          * @param dt time between the current and last frame
          */
         void Update(float dt) override;
@@ -46,7 +46,7 @@ namespace ui {
     protected:
 
         /**
-         * @brief The SFML game window
+         * @brief The game window
          */
         sf::Window window_;
 

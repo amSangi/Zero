@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "entt.hpp"
 #include "SFML/Window.hpp"
 
@@ -21,13 +22,12 @@ namespace zero {
          * @brief System Constructor
          * @param engine the engine this system belongs to
          */
-        explicit System(std::shared_ptr<Engine> engine)
-        : engine_(std::move(engine)) {}
+        explicit System(std::shared_ptr<Engine> engine);
 
         /**
          * @brief Default Virtual Destructor
          */
-        virtual ~System() = default;
+        virtual ~System() = 0;
 
         /**
          * @brief Initialize the system. Called after construction.

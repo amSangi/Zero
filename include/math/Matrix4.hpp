@@ -191,11 +191,11 @@ namespace math {
         Matrix4 Transpose() const;
 
         /**
-         * @brief Computes the result of a matrix4 - vector4 multiplication
-         * @param rhs the vector4
-         * @return the resulting vector4
+         * @brief Computes the result of a matrix4 - vec4f multiplication
+         * @param rhs the vec4f
+         * @return the resulting vec4f
          */
-        Vector4 operator*(const Vector4& rhs) const;
+        Vec4f operator*(const Vec4f& rhs) const;
 
         /**
          * @brief Computes the result of a matrix4 - matrix4 multiplication

@@ -112,10 +112,10 @@ Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
 	return *this;
 }
 
-Vector3 Quaternion::operator*(const Vector3& v) const {
-	Vector3 u = XYZ();
-	Vector3 c1 = Vector3::Cross(u, v);
-	Vector3 c2 = Vector3::Cross(u, c1);
+Vec3f Quaternion::operator*(const Vec3f& v) const {
+	Vec3f u = XYZ();
+	Vec3f c1 = Vec3f::Cross(u, v);
+	Vec3f c2 = Vec3f::Cross(u, c1);
 	return v + 2.0f * ((c1 * w_) + c2);
 }
 
@@ -183,7 +183,7 @@ Quaternion Quaternion::InverseCopy() const {
 	return Quaternion(*this).Inverse();
 }
 
-Vector3 Quaternion::GetEulerAngles() const {
+Vec3f Quaternion::GetEulerAngles() const {
 	float ww = w_ * w_;
 	float xx = x_ * x_;
 	float yy = y_ * y_;
@@ -193,22 +193,22 @@ Vector3 Quaternion::GetEulerAngles() const {
 	float test = x_ * y_ + z_ * w_;
 
 	if (test > 0.499f * unit) {
-		return Vector3(2.0f * Atan2(x_, w_), PI_2, 0.0f);
+		return Vec3f(2.0f * Atan2(x_, w_), PI_2, 0.0f);
 	}
 
 	if (test < -0.499f * unit) {
-		return Vector3(-2.0f * Atan2(x_, w_), -PI_2, 0.0f);
+		return Vec3f(-2.0f * Atan2(x_, w_), -PI_2, 0.0f);
 	}
 
 	float heading = Atan2(2.0f * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
 	float attitude = Asin(2.0f * test / unit);
 	float bank = Atan2(2.0f * (x_ * w_ - y_ * z_), -xx + yy - zz + ww);
 
-	return Vector3(bank, heading, attitude);
+	return Vec3f(bank, heading, attitude);
 }
 
-Vector3 Quaternion::XYZ() const {
-	return Vector3(x_, y_, z_);
+Vec3f Quaternion::XYZ() const {
+	return Vec3f(x_, y_, z_);
 }
 
 Matrix3 Quaternion::GetRotationMatrix() const {
@@ -251,8 +251,8 @@ float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 	return (lhs.w_ * rhs.w_) + (lhs.x_ * rhs.x_) + (lhs.y_ * rhs.y_) + (lhs.z_ * rhs.z_);
 }
 
-Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Radian angle) {
-	Vector3 normalized = Vector3::Normalize(axis);
+Quaternion Quaternion::FromAngleAxis(const Vec3f& axis, Radian angle) {
+	Vec3f normalized = Vec3f::Normalize(axis);
 	float half_angle_rad = angle.rad_ * 0.5f;
 	float sin_half_angle_rad = Sin(half_angle_rad);
 
@@ -263,11 +263,11 @@ Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Radian angle) {
 	                  normalized.z_ * sin_half_angle_rad);
 }
 
-Quaternion Quaternion::FromAngleAxis(const Vector3& axis, Degree angle) {
+Quaternion Quaternion::FromAngleAxis(const Vec3f& axis, Degree angle) {
 	return FromAngleAxis(axis, angle.ToRadian());
 }
 
-Quaternion Quaternion::FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis) {
+Quaternion Quaternion::FromAxes(const Vec3f& xAxis, const Vec3f& yAxis, const Vec3f& zAxis) {
 	Matrix3 rotation_matrix(xAxis.x_, yAxis.x_, zAxis.x_,
                             xAxis.y_, yAxis.y_, zAxis.y_,
                             xAxis.z_, yAxis.z_, zAxis.z_);
@@ -309,41 +309,41 @@ Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
 	return Quaternion(w, x, y, z);
 }
 
-Quaternion Quaternion::LookRotation(const Vector3& direction, const Vector3& up) {
+Quaternion Quaternion::LookRotation(const Vec3f& direction, const Vec3f& up) {
 	if (direction.SquareMagnitude() < EPSILON) {
 		return Identity();
 	}
 
 	// Recompute desired up so that it is perpendicular to direction
-	Vector3 right = Vector3::Cross(direction, up);
-	Vector3 recomputed_up = Vector3::Cross(right, direction);
+	Vec3f right = Vec3f::Cross(direction, up);
+	Vec3f recomputed_up = Vec3f::Cross(right, direction);
 
-	Quaternion rot1 = FromToRotation(Vector3::Forward(), direction);
-	Vector3 new_up = rot1 * Vector3::Up();
+	Quaternion rot1 = FromToRotation(Vec3f::Forward(), direction);
+	Vec3f new_up = rot1 * Vec3f::Up();
 	Quaternion rot2 = FromToRotation(new_up, recomputed_up);
 
 	return rot2 * rot1;
 }
 
-Quaternion Quaternion::FromToRotation(const Vector3& from, const Vector3& to) {
-	Vector3 from_N = Vector3::Normalize(from);
-	Vector3 to_N = Vector3::Normalize(to);
+Quaternion Quaternion::FromToRotation(const Vec3f& from, const Vec3f& to) {
+	Vec3f from_N = Vec3f::Normalize(from);
+	Vec3f to_N = Vec3f::Normalize(to);
 
-	float theta = Vector3::Dot(from_N, to_N);
-	Vector3 rotation_axis;
+	float theta = Vec3f::Dot(from_N, to_N);
+	Vec3f rotation_axis;
 
 	if (theta < -1.0f + EPSILON) {
-		rotation_axis = Vector3::Cross(Vector3::Forward(), from_N);
+		rotation_axis = Vec3f::Cross(Vec3f::Forward(), from_N);
 
 		if (rotation_axis.SquareMagnitude() < EPSILON) {
-			rotation_axis = Vector3::Cross(Vector3::Right(), from_N);
+			rotation_axis = Vec3f::Cross(Vec3f::Right(), from_N);
 		}
 
 		rotation_axis.Normalize();
 		return FromAngleAxis(rotation_axis, Degree(180.0f));
 	}
 
-	rotation_axis = Vector3::Cross(from_N, to_N);
+	rotation_axis = Vec3f::Cross(from_N, to_N);
 	float s = Sqrt((1.0f + theta) * 2.0f);
 	float inv_s = 1.0f / s;
 

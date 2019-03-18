@@ -61,24 +61,24 @@ TEST(TestQuaternion, QuaternionQuaternionOperations) {
 
 TEST(TestQuaternion, QuaternionVectorOperations) {
 	Quaternion identity = Quaternion::Identity();
-	Vector3 expected, actual;
+	Vec3f expected, actual;
 
-	Vector3 vector(1.0f, 2.0f, 3.0f);
+	Vec3f vector(1.0f, 2.0f, 3.0f);
 	expected = vector;
 	actual = identity * vector;
 	EXPECT_EQ(expected, actual);
 
 
-	expected = Vector3(25.0f, 2.0f, -9.0f);
-	actual = Quaternion(1.0f, 2.0f, 3.0f, 4.0f) * Vector3(1.0f, 2.0f, 3.0f);
+	expected = Vec3f(25.0f, 2.0f, -9.0f);
+	actual = Quaternion(1.0f, 2.0f, 3.0f, 4.0f) * Vec3f(1.0f, 2.0f, 3.0f);
 	EXPECT_EQ(expected, actual);
 
-	expected = Vector3(261.0f, -1514.0f, -419.0f);
+	expected = Vec3f(261.0f, -1514.0f, -419.0f);
 	actual = Quaternion(13.0f, 11.0f, 3.0f, -4.0f) * vector;
 	EXPECT_EQ(expected, actual);
 
-	expected = Vector3(-1078029.0f, 6407.0f, -2368179.0f);
-	actual = Quaternion(11.0f, -3.0f, 234.0f, 2.0f) * Vector3(11.0f, -13.0f, 21.0f);
+	expected = Vec3f(-1078029.0f, 6407.0f, -2368179.0f);
+	actual = Quaternion(11.0f, -3.0f, 234.0f, 2.0f) * Vec3f(11.0f, -13.0f, 21.0f);
 	EXPECT_EQ(expected, actual);
 
 }
@@ -154,44 +154,44 @@ TEST(TestQuaternion, FromAngleAxis) {
 	};
 
 	expected = Quaternion(0.9f, 0.4f, 0.0f, 0.0f);
-	actual = Quaternion::FromAngleAxis(Vector3::Right(), Degree(45.0f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Right(), Degree(45.0f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(0.7f, -0.7f, 0.0f, 0.0f);
-	actual = Quaternion::FromAngleAxis(Vector3::Left(), Degree(95.0f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Left(), Degree(95.0f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(1.0f, 0.0f, 0.1f, 0.0f);
-	actual = Quaternion::FromAngleAxis(Vector3::Up(), Degree(11.3f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Up(), Degree(11.3f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(1.0f, 0.0f, -0.2f, 0.0f);
-	actual = Quaternion::FromAngleAxis(Vector3::Down(), Degree(23.3f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Down(), Degree(23.3f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(-1.0f, 0.0f, 0.0f, 0.2f);
-	actual = Quaternion::FromAngleAxis(Vector3::Back(), Degree(385.2f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Back(), Degree(385.2f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(0.7f, 0.0f, 0.0f, -0.7f);
-	actual = Quaternion::FromAngleAxis(Vector3::Forward(), Degree(-96.3f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Forward(), Degree(-96.3f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(-1.0f, -0.1f, -0.1f, -0.1f);
-	actual = Quaternion::FromAngleAxis(Vector3::One(), Degree(-334.1f));
+	actual = Quaternion::FromAngleAxis(Vec3f::One(), Degree(-334.1f));
 	CHECK_FLT_EQ(expected, actual);
 
 	expected = Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
-	actual = Quaternion::FromAngleAxis(Vector3::Zero(), Degree(-0.1f));
+	actual = Quaternion::FromAngleAxis(Vec3f::Zero(), Degree(-0.1f));
 	CHECK_FLT_EQ(expected, actual);
 }
 
 TEST(TestQuaternion, LookRotation) {
-	EXPECT_EQ(Vector3(0.0f, 90.0f * DEGREE_TO_RADIAN, 0.0f),
-              Quaternion::LookRotation(Vector3::Right()).GetEulerAngles());
+	EXPECT_EQ(Vec3f(0.0f, 90.0f * DEGREE_TO_RADIAN, 0.0f),
+              Quaternion::LookRotation(Vec3f::Right()).GetEulerAngles());
 }
 
 TEST(TestQuaternion, FromToRotation) {
-	EXPECT_EQ(Vector3(0.0f, 90.0f * DEGREE_TO_RADIAN, 0.0f),
-              Quaternion::FromToRotation(Vector3::Right(), Vector3::Up()).GetEulerAngles());
+	EXPECT_EQ(Vec3f(0.0f, 90.0f * DEGREE_TO_RADIAN, 0.0f),
+              Quaternion::FromToRotation(Vec3f::Right(), Vec3f::Up()).GetEulerAngles());
 }
