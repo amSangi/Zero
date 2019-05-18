@@ -1,5 +1,5 @@
-#include "Box.hpp"
-#include "Sphere.hpp"
+#include "math/Box.hpp"
+#include "math/Sphere.hpp"
 
 using namespace zero::math;
 

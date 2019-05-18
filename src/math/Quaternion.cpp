@@ -1,6 +1,6 @@
-#include "Quaternion.hpp"
-#include "Matrix3.hpp"
-#include "Vector3.hpp"
+#include "math/Quaternion.hpp"
+#include "math/Matrix3.hpp"
+#include "math/Vector3.hpp"
 
 using namespace zero::math;
 

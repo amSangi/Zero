@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "Plane.hpp"
-#include "ZMath.hpp"
+#include "math/Plane.hpp"
+#include "math/ZMath.hpp"
 
 using namespace zero::math;
 

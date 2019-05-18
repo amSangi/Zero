@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "Box.hpp"
+#include "math/Box.hpp"
 
 using namespace zero::math;
 

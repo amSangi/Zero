@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "Sphere.hpp"
-#include "Box.hpp"
+#include "math/Sphere.hpp"
+#include "math/Box.hpp"
 
 using namespace zero::math;
 

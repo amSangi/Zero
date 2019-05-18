@@ -1,5 +1,5 @@
-#include "Engine.hpp"
-#include "System.hpp"
+#include "core/Engine.hpp"
+#include "core/System.hpp"
 
 using namespace zero;
 
@@ -12,8 +12,4 @@ event::EventBus& System::GetEventBus() {
 
 entt::registry<>& System::GetRegistry() {
 	return engine_->GetRegistry();
-}
-
-const sf::Window& System::GetWindow() const {
-	return engine_->GetWindow();
 }

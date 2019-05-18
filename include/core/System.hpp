@@ -2,7 +2,6 @@
 
 #include <memory>
 #include "entt.hpp"
-#include "SFML/Window.hpp"
 
 namespace zero {
 
@@ -44,12 +43,6 @@ namespace zero {
          * @brief Perform all shutdown operations. Called just before destruction.
          */
         virtual void ShutDown() = 0;
-
-        /**
-         * @brief Get the game engine window
-         * @return the window
-         */
-        const sf::Window& GetWindow() const;
 
         /**
          * @brief Get the game engine entity-component registry

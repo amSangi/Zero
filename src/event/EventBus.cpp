@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "EventBus.hpp"
+#include "event/EventBus.hpp"
 
 using namespace zero::event;
 

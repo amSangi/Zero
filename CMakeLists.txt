@@ -9,13 +9,7 @@ set(ZERO_TEST_OUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 
 include_directories(include)
-include_directories(include/core)
-include_directories(include/event)
-include_directories(include/input)
-include_directories(include/math)
-include_directories(include/ui)
 include_directories(thirdparty/entt/src/entt)
-include_directories(thirdparty/sfml/include/)
 
 add_subdirectory(src)
 add_subdirectory(thirdparty)
@@ -28,4 +22,3 @@ set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)
 target_link_libraries(${PROJECT_NAME} EnTT)
-target_link_libraries(${PROJECT_NAME} sfml-system sfml-window sfml-graphics)

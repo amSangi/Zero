@@ -5,7 +5,6 @@
 #include "entt.hpp"
 #include "core/ZBase.hpp"
 #include "event/EventBus.hpp"
-#include "ui/UISystem.hpp"
 
 namespace zero {
 
@@ -26,7 +25,7 @@ namespace zero {
          * @param config the Engine configuration
          * @return an Engine
          */
-        static std::shared_ptr<Engine> Create(const EngineConfig& config);
+        static std::shared_ptr<Engine> Create(const EngineConfig& config) { return nullptr; }
 
         /**
          * @brief Engine destructor
@@ -41,18 +40,18 @@ namespace zero {
         /**
          * @brief Initialize the engine
          */
-        void Initialize();
+        void Initialize() {}
 
         /**
          * @brief Run the engine
          * @return the error code
          */
-        uint32 Run();
+        uint32 Run() { return 0; }
 
         /**
          * @brief Shutdown the engine
          */
-        void ShutDown();
+        void ShutDown() {}
 
 
         /* ********** Accessors ********** */
@@ -69,12 +68,6 @@ namespace zero {
          */
         inline entt::registry<>& GetRegistry()        { return registry_; }
 
-        /**
-         * @brief Get the game window
-         * @return the window
-         */
-        inline const sf::Window& GetWindow() const    { return ui_system_.GetUIWindow(); }
-
     protected:
 
         /**
@@ -87,11 +80,6 @@ namespace zero {
          * @see https://github.com/skypjack/entt
          */
         entt::registry<> registry_;
-
-        /**
-         * @brief The UI system
-         */
-        ui::UISystem ui_system_;
 
         /**
          * @brief The game systems

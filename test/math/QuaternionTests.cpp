@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "Angle.hpp"
-#include "Quaternion.hpp"
+#include "math/Angle.hpp"
+#include "math/Quaternion.hpp"
 
 using namespace zero::math;
 

@@ -1,6 +1,6 @@
-#include "Matrix4.hpp"
-#include "Matrix3.hpp"
-#include "Vector4.hpp"
+#include "math/Matrix4.hpp"
+#include "math/Matrix3.hpp"
+#include "math/Vector4.hpp"
 
 using namespace zero::math;
 

@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-#include "Intersection.hpp"
-#include "Box.hpp"
-#include "Sphere.hpp"
+#include "math/Intersection.hpp"
+#include "math/Box.hpp"
+#include "math/Sphere.hpp"
 
 using namespace zero::math;
 
