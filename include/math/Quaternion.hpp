@@ -4,8 +4,7 @@
 #include "Vector3.hpp"
 #include "ZMath.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
 	/**
 	 * @brief A Quaternion used for orientations and rotations
@@ -318,5 +317,4 @@ namespace math {
 
 	}; // class Quaternion
 
-} // namespace math
 } // namespace zero

@@ -5,8 +5,7 @@
 #include "input/MouseButton.hpp"
 #include "EventType.hpp"
 
-namespace zero {
-namespace event {
+namespace zero::event {
 
     /**
      * @brief Window resize events
@@ -83,5 +82,4 @@ namespace event {
         };
     }; // struct Event
 
-} // namespace event
 } // namespace zero

@@ -1,7 +1,6 @@
 #pragma once
 
-namespace zero {
-namespace input {
+namespace zero::input {
 
     /**
      * @brief Virtual Keys
@@ -130,5 +129,4 @@ namespace input {
         KEY_COUNT,
     }; // enum Key
 
-} // namespace input
 } // namespace zero

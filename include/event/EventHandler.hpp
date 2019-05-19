@@ -2,8 +2,7 @@
 
 #include "Event.hpp"
 
-namespace zero {
-namespace event {
+namespace zero::event {
 
     class EventHandler {
     public:
@@ -12,5 +11,4 @@ namespace event {
     }; // interface EventHandler
 
 
-} // namespace event
 } // namespace zero

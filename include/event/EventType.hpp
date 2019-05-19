@@ -1,7 +1,6 @@
 #pragma once
 
-namespace zero {
-namespace event {
+namespace zero::event {
 
     /**
      * @brief Enum encapsulating all game engine event types
@@ -59,5 +58,4 @@ namespace event {
 
     }; // enum EventType
 
-} // namespace event
 } // namespace zero

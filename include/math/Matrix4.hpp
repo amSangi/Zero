@@ -3,8 +3,7 @@
 #include "Angle.hpp"
 #include "ZMath.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
     /**
      * @brief A 4x4 Matrix
@@ -217,5 +216,4 @@ namespace math {
 
     }; // class Matrix4
 
-} // namespace math
 } // namespace zero

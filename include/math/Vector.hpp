@@ -3,118 +3,117 @@
 #include "Angle.hpp"
 #include "ZMath.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
-	namespace detail {
+namespace detail {
 
-		/**
-		 * @brief A simple base container for the vector
-		 * @tparam dims The dimensions of the vector
-		 * @tparam T The vector element type
-		 */
-		template<int dims, class T>
-		class VectorBase {
-		public:
-			VectorBase() = default;
+    /**
+     * @brief A simple base container for the vector
+     * @tparam dims The dimensions of the vector
+     * @tparam T The vector element type
+     */
+    template<int dims, class T>
+    class VectorBase {
+    public:
+        VectorBase() = default;
 
-			explicit VectorBase(T value) {
-				for (int i = 0; i < dims; ++i) {
-					data_[i] = value;
-				}
-			}
+        explicit VectorBase(T value) {
+            for (int i = 0; i < dims; ++i) {
+                data_[i] = value;
+            }
+        }
 
-			VectorBase(T x, T y) {
-				static_assert(dims > 1, "Require at least 2 dimensions");
-				data_[0] = x;
-				data_[1] = y;
-			}
+        VectorBase(T x, T y) {
+            static_assert(dims > 1, "Require at least 2 dimensions");
+            data_[0] = x;
+            data_[1] = y;
+        }
 
-			VectorBase(T x, T y, T z) {
-				static_assert(dims > 2, "Require at least 3 dimensions");
-				data_[0] = x;
-				data_[1] = y;
-				data_[2] = z;
-			}
+        VectorBase(T x, T y, T z) {
+            static_assert(dims > 2, "Require at least 3 dimensions");
+            data_[0] = x;
+            data_[1] = y;
+            data_[2] = z;
+        }
 
-			VectorBase(T x, T y, T z, T w) {
-				static_assert(dims > 3, "Require at least 4 dimensions");
-				data_[0] = x;
-				data_[1] = y;
-				data_[2] = z;
-				data_[3] = w;
-			}
+        VectorBase(T x, T y, T z, T w) {
+            static_assert(dims > 3, "Require at least 4 dimensions");
+            data_[0] = x;
+            data_[1] = y;
+            data_[2] = z;
+            data_[3] = w;
+        }
 
-			inline T* Data() { return data_; }
+        inline T* Data() { return data_; }
 
-			inline const T* Data() const { return data_; }
+        inline const T* Data() const { return data_; }
 
-			T data_[dims];
+        T data_[dims];
 
-		}; // template class VectorBase
+    }; // template class VectorBase
 
-		template<class T>
-		class VectorBase<2, T> {
-		public:
-			VectorBase() = default;
+    template<class T>
+    class VectorBase<2, T> {
+    public:
+        VectorBase() = default;
 
-			VectorBase(T x, T y) : x_(x), y_(y) {}
+        VectorBase(T x, T y) : x_(x), y_(y) {}
 
-			explicit VectorBase(T value) : x_(value), y_(value) {}
-
-
-			inline T* Data() { return &x_; }
-
-			inline const T* Data() const { return &x_; }
-
-			T x_, y_;
-
-		}; // partial template specialization class VectorBase<2>
+        explicit VectorBase(T value) : x_(value), y_(value) {}
 
 
-		template<class T>
-		class VectorBase<3, T> {
-		public:
-			VectorBase() = default;
+        inline T* Data() { return &x_; }
 
-			VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f) {}
+        inline const T* Data() const { return &x_; }
 
-			VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z) {}
+        T x_, y_;
 
-			explicit VectorBase(T value) : x_(value), y_(value), z_(value) {}
+    }; // partial template specialization class VectorBase<2>
 
 
-			inline T* Data() { return &x_; }
+    template<class T>
+    class VectorBase<3, T> {
+    public:
+        VectorBase() = default;
 
-			inline const T* Data() const { return &x_; }
+        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f) {}
 
-			T x_, y_, z_;
+        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z) {}
 
-		}; // partial template specialization class VectorBase<3>
+        explicit VectorBase(T value) : x_(value), y_(value), z_(value) {}
 
 
-		template<class T>
-		class VectorBase<4, T> {
-		public:
-			VectorBase() = default;
+        inline T* Data() { return &x_; }
 
-			VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f), w_(0.0f) {}
+        inline const T* Data() const { return &x_; }
 
-			VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0f) {}
+        T x_, y_, z_;
 
-			VectorBase(T x, T y, T z, T w) : x_(x), y_(y), z_(z), w_(w) {}
+    }; // partial template specialization class VectorBase<3>
 
-			explicit VectorBase(T value) : x_(value), y_(value), z_(value), w_(value) {}
 
-			inline T* Data() { return &x_; }
+    template<class T>
+    class VectorBase<4, T> {
+    public:
+        VectorBase() = default;
 
-			inline const T* Data() const { return &x_; }
+        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f), w_(0.0f) {}
 
-			T x_, y_, z_, w_;
+        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0f) {}
 
-		}; // partial template specialization class VectorBase<4>
+        VectorBase(T x, T y, T z, T w) : x_(x), y_(y), z_(z), w_(w) {}
 
-	} // namespace detail
+        explicit VectorBase(T value) : x_(value), y_(value), z_(value), w_(value) {}
+
+        inline T* Data() { return &x_; }
+
+        inline const T* Data() const { return &x_; }
+
+        T x_, y_, z_, w_;
+
+    }; // partial template specialization class VectorBase<4>
+
+} // namespace detail
 
 
 	/**
@@ -781,5 +780,4 @@ namespace math {
 		return v / scalar;
 	}
 
-} // namespace math
 } // namespace zero

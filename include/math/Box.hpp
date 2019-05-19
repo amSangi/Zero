@@ -2,8 +2,7 @@
 
 #include "Vector3.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
     /**
      * @brief A simple 3D box represented by min/max Vec3fs
@@ -101,5 +100,4 @@ namespace math {
 
     }; // class Box
 
-} // namespace math
 } // namespace zero

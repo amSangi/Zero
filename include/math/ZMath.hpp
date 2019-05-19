@@ -3,8 +3,7 @@
 #include <cmath>
 #include "core/ZBase.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
     /* ********** Forward Declarations ********** */
     class Box;
@@ -50,7 +49,6 @@ namespace math {
                        float b,
                        float eps = EPSILON)                { return std::abs(a - b) < eps; }
 
-} // namespace math
 } // namespace zero
 
 

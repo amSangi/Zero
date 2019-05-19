@@ -2,8 +2,7 @@
 
 #include "Vector3.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
 	/**
 	 * @brief A 3D sphere with a center and a radius
@@ -97,5 +96,4 @@ namespace math {
 
 	}; // class Sphere
 
-} // namespace math
 } // namespace zero

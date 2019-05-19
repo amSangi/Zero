@@ -2,8 +2,7 @@
 
 #include "ZMath.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
 	/**
 	 * @brief Encapsulate a radian as a class for type-safety
@@ -74,5 +73,4 @@ namespace math {
 
 	}; // class Radian
 
-} // namespace math
 } // namespace zero

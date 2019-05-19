@@ -6,8 +6,7 @@
 #include "Event.hpp"
 #include "EventHandler.hpp"
 
-namespace zero {
-namespace event {
+namespace zero::event {
 
     class EventBus {
         using EventHandlerPtr = std::shared_ptr<EventHandler>;
@@ -34,5 +33,4 @@ namespace event {
 
     }; // class EventBus
 
-} // namespace event
 } // namespace zero

@@ -2,8 +2,7 @@
 
 #include "Vector3.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
 	/**
 	 * @brief A plane represented as Ax + By + Cz + D = 0
@@ -142,5 +141,4 @@ namespace math {
 
 	}; // class Plane
 
-} // namespace math
 } // namespace zero

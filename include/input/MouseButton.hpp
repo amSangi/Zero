@@ -1,7 +1,6 @@
 #pragma once
 
-namespace zero {
-namespace input {
+namespace zero::input {
 
     enum MouseButton {
         MB_LEFT,     // Left mouse button
@@ -14,5 +13,4 @@ namespace input {
 
     }; // enum MouseButton
 
-} // namespace input
 } // namespace zero

@@ -2,8 +2,7 @@
 
 #include "ZMath.hpp"
 
-namespace zero {
-namespace math {
+namespace zero::math {
 
 	/**
 	 * @brief Static class used to check if different shapes intersect
@@ -21,5 +20,4 @@ namespace math {
 
 	}; // class Intersection
 
-} // namespace math
 } // namespace zero

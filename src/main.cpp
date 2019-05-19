@@ -1,34 +1,31 @@
-#include "SFML/Window.hpp"
+#include <stdio.h>
+#include <SDL.h>
 
-int main(int argc, char *argv[])
-{
-	// Request a 24-bits depth buffer when creating the window
-	sf::ContextSettings contextSettings;
-	contextSettings.depthBits = 24;
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
 
-	// Create the main window
-	sf::Window window(sf::VideoMode(640, 480), "Zero Test Game: Empty OpenGL Window", sf::Style::Default, contextSettings);
-
-	// Make it the active window for OpenGL calls
-	window.setActive();
-
-	// Start the game loop
-	while (window.isOpen())
-	{
-		// Process events
-		sf::Event event{};
-		while (window.pollEvent(event))
-		{
-			// Close window: exit
-			if (event.type == sf::Event::Closed)
-				window.close();
-
-			// Escape key: exit
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
-				window.close();
-		}
-
-		// Finally, display the rendered frame on screen
-		window.display();
-	}
+int main(int argc, char* args[]) {
+    SDL_Window* window = nullptr;
+    SDL_Surface* screenSurface = nullptr;
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        fprintf(stderr, "could not initialize sdl: %s\n", SDL_GetError());
+        return 1;
+    }
+    window = SDL_CreateWindow(
+            "hello_sdl",
+            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            SCREEN_WIDTH, SCREEN_HEIGHT,
+            SDL_WINDOW_SHOWN
+    );
+    if (window == nullptr) {
+        fprintf(stderr, "could not create window: %s\n", SDL_GetError());
+        return 1;
+    }
+    screenSurface = SDL_GetWindowSurface(window);
+    SDL_FillRect(screenSurface, nullptr, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+    SDL_UpdateWindowSurface(window);
+    SDL_Delay(2000);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 0;
 }
