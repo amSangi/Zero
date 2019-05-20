@@ -11,4 +11,5 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              math/Plane.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
-                             math/Sphere.cpp)
+                             math/Sphere.cpp
+                             render/Window.cpp)
