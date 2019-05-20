@@ -74,4 +74,4 @@ namespace zero::math {
 
 	}; // class Degree
 
-} // namespace zero
+} // namespace zero::math

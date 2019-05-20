@@ -214,4 +214,4 @@ namespace zero::math {
 
     }; // class Matrix3
 
-} // namespace zero
+} // namespace zero::math

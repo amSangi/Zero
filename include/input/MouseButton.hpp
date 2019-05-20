@@ -13,4 +13,4 @@ namespace zero::input {
 
     }; // enum MouseButton
 
-} // namespace zero
+} // namespace zero::input

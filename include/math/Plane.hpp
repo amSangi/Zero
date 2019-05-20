@@ -141,4 +141,4 @@ namespace zero::math {
 
 	}; // class Plane
 
-} // namespace zero
+} // namespace zero::math

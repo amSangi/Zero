@@ -96,4 +96,4 @@ namespace zero::math {
 
 	}; // class Sphere
 
-} // namespace zero
+} // namespace zero::math

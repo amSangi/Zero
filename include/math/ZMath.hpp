@@ -49,7 +49,7 @@ namespace zero::math {
                        float b,
                        float eps = EPSILON)                { return std::abs(a - b) < eps; }
 
-} // namespace zero
+} // namespace zero::math
 
 
 

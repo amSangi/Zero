@@ -11,4 +11,4 @@ namespace zero::event {
     }; // interface EventHandler
 
 
-} // namespace zero
+} // namespace zero::event

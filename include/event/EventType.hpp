@@ -58,4 +58,4 @@ namespace zero::event {
 
     }; // enum EventType
 
-} // namespace zero
+} // namespace zero::event

@@ -100,4 +100,4 @@ namespace zero::math {
 
     }; // class Box
 
-} // namespace zero
+} // namespace zero::math

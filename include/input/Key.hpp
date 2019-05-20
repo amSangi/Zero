@@ -129,4 +129,4 @@ namespace zero::input {
         KEY_COUNT,
     }; // enum Key
 
-} // namespace zero
+} // namespace zero::input

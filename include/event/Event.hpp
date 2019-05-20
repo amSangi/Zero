@@ -82,4 +82,4 @@ namespace zero::event {
         };
     }; // struct Event
 
-} // namespace zero
+} // namespace zero::event

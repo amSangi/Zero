@@ -317,4 +317,4 @@ namespace zero::math {
 
 	}; // class Quaternion
 
-} // namespace zero
+} // namespace zero::math

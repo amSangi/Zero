@@ -73,4 +73,4 @@ namespace zero::math {
 
 	}; // class Radian
 
-} // namespace zero
+} // namespace zero::math

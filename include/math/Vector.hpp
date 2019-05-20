@@ -780,4 +780,4 @@ namespace detail {
 		return v / scalar;
 	}
 
-} // namespace zero
+} // namespace zero::math

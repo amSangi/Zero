@@ -20,4 +20,4 @@ namespace zero::math {
 
 	}; // class Intersection
 
-} // namespace zero
+} // namespace zero::math

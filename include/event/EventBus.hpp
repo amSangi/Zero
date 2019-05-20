@@ -33,4 +33,4 @@ namespace zero::event {
 
     }; // class EventBus
 
-} // namespace zero
+} // namespace zero::event
