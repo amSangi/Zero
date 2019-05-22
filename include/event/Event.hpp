@@ -11,8 +11,14 @@ namespace zero::event {
      * @brief Window resize events
      */
     struct SizeEvent {
-        uint32 width;   // New width, in pixels
-        uint32 height;  // New height, in pixels
+        /**
+         * @brief New width, in pixels
+         */
+        uint32 width_;
+        /**
+         * @brief New height, in pixels
+         */
+        uint32 height_;
     }; // struct SizeEvent
 
 
@@ -20,11 +26,26 @@ namespace zero::event {
      * @brief Keyboard events
      */
     struct KeyEvent {
-        input::Key code;    // Code of the key that triggered this event
-        bool       alt;     // Is the Alt key pressed?
-        bool       control; // Is the Control key pressed?
-        bool       shift;   // Is the Shift key pressed?
-        bool       system;  // Is the System key pressed?
+        /**
+         * @brief Code of the key that triggered this event
+         */
+        input::Key code_;
+        /**
+         * @brief Is the ALT key pressed?
+         */
+        bool       alt_;
+        /**
+         * @brief Is the CONTROL key pressed?
+         */
+        bool       control_;
+        /**
+         * @brief Is the SHIFT key pressed?
+         */
+        bool       shift_;
+        /**
+         * @brief Is the SYSTEM key pressed?
+         */
+        bool       system_;
     }; // struct KeyEvent
 
 
@@ -32,7 +53,10 @@ namespace zero::event {
      * @brief Text input events
      */
     struct TextEvent {
-        uint32 unicode; // UTF-32 Unicode value of the character
+        /**
+         * @brief UTF-32 Unicode value of the character
+         */
+        uint32 unicode_;
     }; // struct TextEvent
 
 
@@ -40,8 +64,14 @@ namespace zero::event {
      * @brief Mouse move events
      */
     struct MouseMoveEvent {
-        int x; // X position of the mouse pointer, relative to the left of the owner window
-        int y; // Y position of the mouse pointer, relative to the top of the owner window
+        /**
+         * @brief X position of the mouse pointer, relative to the left of the owner window
+         */
+        int x_;
+        /**
+         * @brief Y position of the mouse pointer, relative to the top of the owner window
+         */
+        int y_;
     }; // struct MouseMoveEvent
 
 
@@ -49,9 +79,18 @@ namespace zero::event {
      * @brief Mouse button events
      */
     struct MouseButtonEvent {
-        input::MouseButton button; // Mouse button that triggered this event
-        int                x;      // X position of the mouse pointer, relative to the left of the owner window
-        int                y;      // Y position of the mouse pointer, relative to the top of the owner window
+        /**
+         * @brief Mouse button that triggered this event
+         */
+        input::MouseButton button_;
+        /**
+         * @brief X position of the mouse pointer, relative to the left of the owner window
+         */
+        int                x_;
+        /**
+         * @brief Y position of the mouse pointer, relative to the top of the owner window
+         */
+        int                y_;
     }; // struct MouseButtonEvent
 
 
@@ -59,9 +98,18 @@ namespace zero::event {
      * @brief Mouse wheel scroll events
      */
     struct MouseWheelScrollEvent {
-        float delta; // Wheel offset (positive is up/left, negative is down/right). High-precision mice may use floats.
-        int   x;     // X position of the mouse pointer, relative to the left of the owner window
-        int   y;     // Y position of the mouse pointer, relative to the top of the owner window
+        /**
+         * @brief Wheel offset (positive is up/left, negative is down/right). High-precision mice may use floats.
+         */
+        float delta_;
+        /**
+         * @brief X position of the mouse pointer, relative to the left of the owner window
+         */
+        int   x_;
+        /**
+         * @brief Y position of the mouse pointer, relative to the top of the owner window
+         */
+        int   y_;
     }; // struct MouseWheelScrollEvent
 
 
@@ -70,15 +118,15 @@ namespace zero::event {
      * @note Ensure the type is checked before accessing the correct event
      */
     struct Event {
-        EventType type;
+        EventType type_;
         union
         {
-            SizeEvent size;
-            KeyEvent key;
-            TextEvent text;
-            MouseMoveEvent mouse_move;
-            MouseButtonEvent mouse_button;
-            MouseWheelScrollEvent mouse_wheel_scroll;
+            SizeEvent size_;
+            KeyEvent key_;
+            TextEvent text_;
+            MouseMoveEvent mouse_move_;
+            MouseButtonEvent mouse_button_;
+            MouseWheelScrollEvent mouse_wheel_scroll_;
         };
     }; // struct Event
 

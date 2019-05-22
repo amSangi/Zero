@@ -23,7 +23,7 @@ void Window::Initialize() {
 
     // Get SDL window flags
     uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-    switch (config_.window_mode) {
+    switch (config_.window_mode_) {
         case WindowMode::WINDOW_FULLSCREEN:
             window_flags |= SDL_WINDOW_FULLSCREEN;
             break;
@@ -42,29 +42,29 @@ void Window::Initialize() {
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 32);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        sdl_window_ = SDL_CreateWindow(config_.title.c_str(),
+        sdl_window_ = SDL_CreateWindow(config_.title_.c_str(),
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
-                                       config_.width,
-                                       config_.height,
+                                       config_.width_,
+                                       config_.height_,
                                        window_flags);
         sdl_gl_context_ = SDL_GL_CreateContext(sdl_window_);
         SDL_GL_MakeCurrent(sdl_window_, sdl_gl_context_);
     }
     else {
-        SDL_SetWindowSize(sdl_window_, config_.width, config_.height);
-        SDL_SetWindowTitle(sdl_window_, config_.title.c_str());
+        SDL_SetWindowSize(sdl_window_, config_.width_, config_.height_);
+        SDL_SetWindowTitle(sdl_window_, config_.title_.c_str());
         SDL_SetWindowFullscreen(sdl_window_, window_flags);
     }
 
     // Set the window icon
-    if (!config_.window_icon_image_file.empty()) {
-        SDL_SetWindowIcon(sdl_window_, IMG_Load(config_.window_icon_image_file.c_str()));
+    if (!config_.window_icon_image_file_.empty()) {
+        SDL_SetWindowIcon(sdl_window_, IMG_Load(config_.window_icon_image_file_.c_str()));
     }
 
     // Set the window refresh rate
     int error_code = 0;
-    switch (config_.refresh_rate) {
+    switch (config_.refresh_rate_) {
         case RefreshRate::REFRESH_SYNCHRONIZED:
             error_code = SDL_GL_SetSwapInterval(1);
             break;
@@ -72,6 +72,7 @@ void Window::Initialize() {
             error_code = SDL_GL_SetSwapInterval(-1);
             break;
         default:
+            // Default to immediate updates
             error_code = SDL_GL_SetSwapInterval(0);
             break;
     }

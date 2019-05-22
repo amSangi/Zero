@@ -5,7 +5,7 @@ namespace zero::event {
     /**
      * @brief Enum encapsulating all game engine event types
      */
-    enum EventType {
+    enum class EventType {
 
         /* ********** System ********** */
 
@@ -56,6 +56,6 @@ namespace zero::event {
         LAYOUT_CHANGE,
         RESOLUTION_CHANGE,
 
-    }; // enum EventType
+    }; // enum class EventType
 
 } // namespace zero::event

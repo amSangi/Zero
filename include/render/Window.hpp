@@ -5,6 +5,9 @@
 
 namespace zero::render {
 
+    /**
+     * @brief SDL Window and SDL GL Context Wrapper
+     */
     class Window {
     public:
         explicit Window(WindowConfig config);

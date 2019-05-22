@@ -6,7 +6,7 @@
 namespace zero::render {
 
     /**
-     * Window mode to display as
+     * @brief Window mode to display as
      */
     enum class WindowMode {
         WINDOW_FULLSCREEN,            //<! Display the window in full screen mode
@@ -15,14 +15,14 @@ namespace zero::render {
     }; // enum class WindowMode
 
     /**
-     * Low Level Graphics API Types
+     * @brief Low Level Graphics API Types
      */
     enum class GraphicsAPI {
         GRAPHICS_OPENGL,    //<! Use the OpenGL Graphics API
     }; // enum class GraphicsAPI
 
     /**
-     * The window refresh rate
+     * @brief The window refresh rate
      */
     enum class RefreshRate {
         REFRESH_IMMEDIATE,         //<! Immediate updates
@@ -31,16 +31,16 @@ namespace zero::render {
     }; // enum class RefreshRate
 
     /**
-     * Window configuration parameters
+     * @brief Window configuration parameters
      */
     struct WindowConfig {
-        uint32 width;                          //<! The width of the window in pixels
-        uint32 height;                         //<! The height of the window in pixels
-        WindowMode window_mode;                //<! The window mode of the window
-        GraphicsAPI api;                       //<! The graphics API of the window
-        RefreshRate refresh_rate;              //<! The refresh rate of the window
-        std::string title;                     //<! The title of the window
-        std::string window_icon_image_file;    //<! Fully qualified filename for the window icon
+        uint32 width_;                          //<! The width of the window in pixels
+        uint32 height_;                         //<! The height of the window in pixels
+        WindowMode window_mode_;                //<! The window mode of the window
+        GraphicsAPI api_;                       //<! The graphics API of the window
+        RefreshRate refresh_rate_;              //<! The refresh rate of the window
+        std::string title_;                     //<! The title of the window
+        std::string window_icon_image_file_;    //<! Fully qualified filename for the window icon
     }; // struct WindowConfig
 
 } // namespace zero::render

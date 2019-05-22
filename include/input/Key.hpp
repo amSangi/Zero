@@ -3,9 +3,9 @@
 namespace zero::input {
 
     /**
-     * @brief Virtual Keys
+     * @brief Virtual keyboard keys
      */
-    enum Key {
+    enum class Key {
         /* ********** Alphabet ********** */
         KEY_A,
         KEY_B,
@@ -127,6 +127,6 @@ namespace zero::input {
         KEY_RIGHT,
 
         KEY_COUNT,
-    }; // enum Key
+    }; // enum class Key
 
 } // namespace zero::input

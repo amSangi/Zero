@@ -4,6 +4,10 @@
 
 namespace zero::event {
 
+
+    /**
+     * @brief Handles a given event
+     */
     class EventHandler {
     public:
         virtual ~EventHandler() = 0;

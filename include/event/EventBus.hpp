@@ -8,6 +8,9 @@
 
 namespace zero::event {
 
+    /**
+     * @brief Queues events and dispatches them to subscribed event handlers
+     */
     class EventBus {
         using EventHandlerPtr = std::shared_ptr<EventHandler>;
     public:

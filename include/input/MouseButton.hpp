@@ -2,7 +2,10 @@
 
 namespace zero::input {
 
-    enum MouseButton {
+    /**
+     * @brief Virtual mouse buttons
+     */
+    enum class MouseButton {
         MB_LEFT,     // Left mouse button
         MB_RIGHT,    // Right mouse button
         MB_MIDDLE,   // Middle mouse button
@@ -11,6 +14,6 @@ namespace zero::input {
 
         MB_COUNT,    // Number of buttons. Keep this last
 
-    }; // enum MouseButton
+    }; // enum class MouseButton
 
 } // namespace zero::input
