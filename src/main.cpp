@@ -120,9 +120,10 @@ void Display_Render() {
 int main(int argc, char *argv[]) {
     using namespace zero::render;
 
-    WindowConfig window_config{512,
+    WindowConfig window_config{WindowFlags::WINDOW_MAXIMIZED,
                                512,
-                               WindowMode::WINDOW_FULLSCREEN,
+                               512,
+                               WindowMode::WINDOW_WINDOWED,
                                GraphicsAPI::GRAPHICS_OPENGL,
                                RefreshRate::REFRESH_IMMEDIATE,
                                "Sample Window",
@@ -136,7 +137,7 @@ int main(int argc, char *argv[]) {
     Display_Render();
     window.SwapBuffers();
 
-    SDL_Delay(5000);
+    SDL_Delay(250);
 
     return 0;
 }

@@ -8,8 +8,8 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                math/AngleTests.cpp
                                math/BoxTests.cpp
                                math/IntersectionTests.cpp
-                               math/Matrix3Tests.cpp
-                               math/Matrix4Tests.cpp
+                               math/Matrix3x3Tests.cpp
+                               math/Matrix4x4Tests.cpp
                                math/PlaneTests.cpp
                                math/QuaternionTests.cpp
                                math/SphereTests.cpp

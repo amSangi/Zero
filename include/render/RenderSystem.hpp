@@ -5,7 +5,7 @@
 #include "core/System.hpp"
 #include "ICuller.hpp"
 #include "IRenderer.hpp"
-#include "RenderConfig.hpp"
+#include "RenderSystemConfig.hpp"
 #include "SceneGraph.hpp"
 #include "Window.hpp"
 
@@ -24,7 +24,7 @@ namespace zero::render {
      */
     class RenderSystem : public System {
     public:
-        RenderSystem(RenderConfig config);
+        RenderSystem(RenderSystemConfig config);
         ~RenderSystem() override;
         void Initialize() override;
         void Update(float dt) override;
@@ -34,7 +34,7 @@ namespace zero::render {
         void Propagate();
         std::vector<std::shared_ptr<ICuller>> GetCullers();
 
-        RenderConfig config_;
+        RenderSystemConfig config_;
         Window window_;
         SceneGraph scene_graph_;
         std::unique_ptr<IRenderer> renderer_;

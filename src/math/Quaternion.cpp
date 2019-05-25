@@ -1,5 +1,5 @@
 #include "math/Quaternion.hpp"
-#include "math/Matrix3.hpp"
+#include "math/Matrix3x3.hpp"
 #include "math/Vector3.hpp"
 
 using namespace zero::math;
@@ -211,10 +211,10 @@ Vec3f Quaternion::XYZ() const {
 	return Vec3f(x_, y_, z_);
 }
 
-Matrix3 Quaternion::GetRotationMatrix() const {
+Matrix3x3 Quaternion::GetRotationMatrix() const {
 	Quaternion q = UnitCopy();
 	if (q == Zero()) {
-		return Matrix3::Identity();
+		return Matrix3x3::Identity();
 	}
 
 	float xx = q.x_ * q.x_;
@@ -241,9 +241,9 @@ Matrix3 Quaternion::GetRotationMatrix() const {
 	float e21 = 2.0f * (wx + yz);
 	float e22 = 1.0f - (2.0f * (xx + yy));
 
-	return Matrix3(e00, e01, e02,
-                   e10, e11, e12,
-                   e20, e21, e22);
+	return Matrix3x3(e00, e01, e02,
+                     e10, e11, e12,
+                     e20, e21, e22);
 }
 
 /* ********** Static Operations ********** */
@@ -268,9 +268,9 @@ Quaternion Quaternion::FromAngleAxis(const Vec3f& axis, Degree angle) {
 }
 
 Quaternion Quaternion::FromAxes(const Vec3f& xAxis, const Vec3f& yAxis, const Vec3f& zAxis) {
-	Matrix3 rotation_matrix(xAxis.x_, yAxis.x_, zAxis.x_,
-                            xAxis.y_, yAxis.y_, zAxis.y_,
-                            xAxis.z_, yAxis.z_, zAxis.z_);
+	Matrix3x3 rotation_matrix(xAxis.x_, yAxis.x_, zAxis.x_,
+                              xAxis.y_, yAxis.y_, zAxis.y_,
+                              xAxis.z_, yAxis.z_, zAxis.z_);
 
 	return FromMatrix3(rotation_matrix);
 }
@@ -296,7 +296,7 @@ Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
                       (cx * sy * cz) - (sx * cy * sz));
 }
 
-Quaternion Quaternion::FromMatrix3(const Matrix3& matrix) {
+Quaternion Quaternion::FromMatrix3(const Matrix3x3& matrix) {
 	float w = Sqrt(Max(0.0f, 1.0f + matrix(0, 0) + matrix(1, 1) + matrix(2, 2))) * 0.5f;
 	float x = Sqrt(Max(0.0f, 1.0f + matrix(0, 0) - matrix(1, 1) - matrix(2, 2))) * 0.5f;
 	float y = Sqrt(Max(0.0f, 1.0f - matrix(0, 0) + matrix(1, 1) - matrix(2, 2))) * 0.5f;

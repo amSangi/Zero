@@ -35,6 +35,11 @@ void Window::Initialize() {
             break;
     }
 
+    // Set additional window flags
+    if (config_.window_flags_ & WindowFlags::WINDOW_MAXIMIZED) window_flags |= SDL_WINDOW_MAXIMIZED;
+    if (config_.window_flags_ & WindowFlags::WINDOW_MINIMIZED) window_flags |= SDL_WINDOW_MINIMIZED;
+    if (config_.window_flags_ & WindowFlags::WINDOW_HIDE) window_flags |= SDL_WINDOW_HIDDEN;
+
     if (sdl_window_ == nullptr) {
         SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
         SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);

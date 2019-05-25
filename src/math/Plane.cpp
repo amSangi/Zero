@@ -1,6 +1,6 @@
 #include "math/Plane.hpp"
-#include "math/Matrix3.hpp"
-#include "math/Matrix4.hpp"
+#include "math/Matrix3x3.hpp"
+#include "math/Matrix4x4.hpp"
 #include "math/Vector4.hpp"
 
 using namespace zero::math;
@@ -40,11 +40,11 @@ bool Plane::Intersects(const Plane& other, float epsilon) const {
 
 
 /* ********** Transform Operations ********** */
-void Plane::Transform(const Matrix3& matrix) {
-	Transform(Matrix4(matrix));
+void Plane::Transform(const Matrix3x3& matrix) {
+	Transform(Matrix4x4(matrix));
 }
 
-void Plane::Transform(const Matrix4& matrix) {
+void Plane::Transform(const Matrix4x4& matrix) {
 	*this = Plane(matrix.Inverse().Transpose() * ToVector4());
 }
 
@@ -71,13 +71,13 @@ Plane Plane::Flip() const {
 }
 
 /* ********** Static Operations ********** */
-Plane Plane::Transform(const Plane& plane, const Matrix3& matrix) {
+Plane Plane::Transform(const Plane& plane, const Matrix3x3& matrix) {
 	Plane plane_copy(plane);
 	plane_copy.Transform(matrix);
 	return plane_copy;
 }
 
-Plane Plane::Transform(const Plane& plane, const Matrix4& matrix) {
+Plane Plane::Transform(const Plane& plane, const Matrix4x4& matrix) {
 	Plane plane_copy(plane);
 	plane_copy.Transform(matrix);
 	return plane_copy;

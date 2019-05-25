@@ -54,13 +54,13 @@ namespace zero::math {
 		 * @brief apply a matrix3 transformation to this plane
 		 * @param matrix the matrix3 transformation
 		 */
-		void Transform(const Matrix3& matrix);
+		void Transform(const Matrix3x3& matrix);
 
 		/**
 		 * @brief apply a matrix4 transformation to this plane
 		 * @param matrix the matrix4 transformation
 		 */
-		void Transform(const Matrix4& matrix);
+		void Transform(const Matrix4x4& matrix);
 
 		/* ********** Plane Operations ********** */
 		/**
@@ -104,7 +104,7 @@ namespace zero::math {
 		 * @param matrix The transformation
 		 * @return A transformed plane
 		 */
-		static Plane Transform(const Plane& plane, const Matrix3& matrix);
+		static Plane Transform(const Plane& plane, const Matrix3x3& matrix);
 
 		/**
 		 * @brief Apply a matrix4 transformation to a given plane
@@ -112,7 +112,7 @@ namespace zero::math {
 		 * @param matrix The transformation
 		 * @return A transformed plane
 		 */
-		static Plane Transform(const Plane& plane, const Matrix4& matrix);
+		static Plane Transform(const Plane& plane, const Matrix4x4& matrix);
 
 		/**
 		 * @return a plane facing the Vec3f up direction

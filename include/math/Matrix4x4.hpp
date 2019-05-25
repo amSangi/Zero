@@ -8,33 +8,33 @@ namespace zero::math {
     /**
      * @brief A 4x4 Matrix
      */
-    class Matrix4 {
+    class Matrix4x4 {
     public:
-        Matrix4() = default;
-        explicit Matrix4(float m[4][4]);
-        explicit Matrix4(float value);
-        explicit Matrix4(const Matrix3& m3);
-        Matrix4(float e00, float e01, float e02, float e03,
-                float e10, float e11, float e12, float e13,
-                float e20, float e21, float e22, float e23,
-                float e30, float e31, float e32, float e33);
+        Matrix4x4() = default;
+        explicit Matrix4x4(float m[4][4]);
+        explicit Matrix4x4(float value);
+        explicit Matrix4x4(const Matrix3x3& m3);
+        Matrix4x4(float e00, float e01, float e02, float e03,
+                  float e10, float e11, float e12, float e13,
+                  float e20, float e21, float e22, float e23,
+                  float e30, float e31, float e32, float e33);
 
-        ~Matrix4() = default;
-        Matrix4& operator=(const Matrix4& other) = default;
+        ~Matrix4x4() = default;
+        Matrix4x4& operator=(const Matrix4x4& other) = default;
 
         /**
-         * @brief Check if the matrix4 is equal to another matrix4
-         * @param other The other matrix4
+         * @brief Check if the matrix4x4 is equal to another matrix4
+         * @param other The other matrix4x4
          * @return True if the elements are equal. False otherwise.
          */
-        bool operator==(const Matrix4& other) const;
+        bool operator==(const Matrix4x4& other) const;
 
         /**
-         * @brief Check if the matrix4 is not equal to another matrix4
-         * @param other The other matrix4
+         * @brief Check if the matrix4x4 is not equal to another matrix4
+         * @param other The other matrix4x4
          * @return True if any of the elements are not equal. False otherwise.
          */
-        bool operator!=(const Matrix4& other) const;
+        bool operator!=(const Matrix4x4& other) const;
 
         /**
          * @brief Retrieve the element at the given row and column
@@ -71,98 +71,98 @@ namespace zero::math {
         /**
          * @brief Sum the elements by the given scalar
          * @param scalar The scalar
-         * @return A new matrix4 containing the sums
+         * @return A new matrix4x4 containing the sums
          */
-        Matrix4 operator+(float scalar) const;
+        Matrix4x4 operator+(float scalar) const;
 
         /**
          * @brief Subtract the elements by the given scalar
          * @param scalar The scalar
-         * @return A new matrix4 containing the differences
+         * @return A new matrix4x4 containing the differences
          */
-        Matrix4 operator-(float scalar) const;
+        Matrix4x4 operator-(float scalar) const;
 
         /**
          * @brief Multiply the elements by the given scalar
          * @param scalar The scalar
-         * @return A new matrix4 containing the products
+         * @return A new matrix4x4 containing the products
          */
-        Matrix4 operator*(float scalar) const;
+        Matrix4x4 operator*(float scalar) const;
 
         /**
          * @brief Divide the elements by the given scalar
          * @param scalar The scalar
-         * @return A new matrix4 containing the quotients
+         * @return A new matrix4x4 containing the quotients
          */
-        Matrix4 operator/(float scalar) const;
+        Matrix4x4 operator/(float scalar) const;
 
         /**
          * @brief Sum the elements by the given scalar
          * @param scalar The scalar
-         * @return The same matrix4 containing the sums
+         * @return The same matrix4x4 containing the sums
          */
-        Matrix4& operator+=(float scalar);
+        Matrix4x4& operator+=(float scalar);
 
         /**
          * @brief Subtract the elements by the given scalar
          * @param scalar The scalar
-         * @return The same matrix4 containing the differences
+         * @return The same matrix4x4 containing the differences
          */
-        Matrix4& operator-=(float scalar);
+        Matrix4x4& operator-=(float scalar);
 
         /**
          * @brief Multiply the elements by the given scalar
          * @param scalar The scalar
-         * @return The same matrix4 containing the products
+         * @return The same matrix4x4 containing the products
          */
-        Matrix4& operator*=(float scalar);
+        Matrix4x4& operator*=(float scalar);
 
         /**
          * @brief Divide the elements by the given scalar
          * @param scalar The scalar
-         * @return The same matrix4 containing the quotients
+         * @return The same matrix4x4 containing the quotients
          */
-        Matrix4& operator/=(float scalar);
+        Matrix4x4& operator/=(float scalar);
 
         /* ********** Component-Wise Operations ********** */
 
         /**
          * @brief Multiply each element of lhs with the same element of rhs
-         * @param lhs The left matrix4
-         * @param rhs The right matrix4
+         * @param lhs The left matrix4x4
+         * @param rhs The right matrix4x4
          * @return A new matrix containing the products
          */
-        static Matrix4 Hadamard(const Matrix4& lhs, const Matrix4& rhs);
+        static Matrix4x4 Hadamard(const Matrix4x4& lhs, const Matrix4x4& rhs);
 
         /**
          * @brief Add the elements of this to the same elements of rhs
          * @param rhs The right matrix4
-         * @return A new matrix4 containing the sums
+         * @return A new matrix4x4 containing the sums
          */
-        Matrix4 operator+(const Matrix4& rhs) const;
+        Matrix4x4 operator+(const Matrix4x4& rhs) const;
 
         /**
          * @brief Subtract the elements of this by the same elements of rhs
-         * @param rhs The right matrix4
+         * @param rhs The right matrix4x4
          * @return A new matrix4 containing the differences
          */
-        Matrix4 operator-(const Matrix4& rhs) const;
+        Matrix4x4 operator-(const Matrix4x4& rhs) const;
 
         /**
          * @brief Add the elements of this to the same elements of rhs
-         * @param rhs The right matrix4
-         * @return The same matrix4 containing the sums
+         * @param rhs The right matrix4x4
+         * @return The same matrix4x4 containing the sums
          */
-        Matrix4& operator+=(const Matrix4& rhs);
+        Matrix4x4& operator+=(const Matrix4x4& rhs);
 
         /**
          * @brief Subtract the elements of this by the same elements of rhs
-         * @param rhs The right matrix4
-         * @return The same matrix4 containing the differences
+         * @param rhs The right matrix4x4
+         * @return The same matrix4x4 containing the differences
          */
-        Matrix4& operator-=(const Matrix4& rhs);
+        Matrix4x4& operator-=(const Matrix4x4& rhs);
 
-        /* ********** Matrix4 Operations ********** */
+        /* ********** Matrix4x4 Operations ********** */
         /**
          * @return the determinant of the matrix
          */
@@ -174,39 +174,39 @@ namespace zero::math {
          * @param epsilon the tolerance
          * @return True if the det is not 0. Otherwise false.
          */
-        bool InverseUtil(Matrix4& out, float epsilon=1e-05f) const;
+        bool InverseUtil(Matrix4x4& out, float epsilon=1e-05f) const;
 
         /**
          * @brief Computes the inverse matrix
          * @param epsilon the tolerance
          * @return the inverse matrix of this
          */
-        Matrix4 Inverse(float epsilon=1e-05f) const;
+        Matrix4x4 Inverse(float epsilon=1e-05f) const;
 
         /**
          * @brief Computes the transpose matrix
          * @return the transpose matrix of this
          */
-        Matrix4 Transpose() const;
+        Matrix4x4 Transpose() const;
 
         /**
-         * @brief Computes the result of a matrix4 - vec4f multiplication
+         * @brief Computes the result of a matrix4x4 - vec4f multiplication
          * @param rhs the vec4f
          * @return the resulting vec4f
          */
         Vec4f operator*(const Vec4f& rhs) const;
 
         /**
-         * @brief Computes the result of a matrix4 - matrix4 multiplication
-         * @param rhs the right matrix4
-         * @return the resulting matrix4
+         * @brief Computes the result of a matrix4x4 - matrix4x4 multiplication
+         * @param rhs the right matrix4x4
+         * @return the resulting matrix4x4
          */
-        Matrix4 operator*(const Matrix4& rhs) const;
+        Matrix4x4 operator*(const Matrix4x4& rhs) const;
 
         /**
          * @return the identity matrix
          */
-        static Matrix4 Identity();
+        static Matrix4x4 Identity();
 
 
         /**
@@ -214,6 +214,6 @@ namespace zero::math {
          */
         float matrix_[4][4];
 
-    }; // class Matrix4
+    }; // class Matrix4x4
 
 } // namespace zero::math

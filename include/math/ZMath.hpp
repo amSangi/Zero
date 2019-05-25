@@ -8,8 +8,8 @@ namespace zero::math {
     /* ********** Forward Declarations ********** */
     class Box;
     class Degree;
-    class Matrix3;
-    class Matrix4;
+    class Matrix3x3;
+    class Matrix4x4;
     class Plane;
     class Quaternion;
     class Radian;

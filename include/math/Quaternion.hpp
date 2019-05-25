@@ -211,7 +211,7 @@ namespace zero::math {
 		 * @brief Get the Rotation Matrix3 representation of this
 		 * @return A Matrix3 rotation
 		 */
-		Matrix3 GetRotationMatrix() const;
+		Matrix3x3 GetRotationMatrix() const;
 
 
 		/* ********** Static Operations ********** */
@@ -263,7 +263,7 @@ namespace zero::math {
 		 * @param matrix the matrix3 rotation
 		 * @return A new Quaternion representing the rotation
 		 */
-		static Quaternion FromMatrix3(const Matrix3& matrix);
+		static Quaternion FromMatrix3(const Matrix3x3& matrix);
 
 		/**
 		 * @brief Get a Quaternion with the given direction and up vector

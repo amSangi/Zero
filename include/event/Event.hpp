@@ -118,7 +118,14 @@ namespace zero::event {
      * @note Ensure the type is checked before accessing the correct event
      */
     struct Event {
+        /**
+         * @brief The event type
+         */
         EventType type_;
+
+        /**
+         * @brief The event body
+         */
         union
         {
             SizeEvent size_;

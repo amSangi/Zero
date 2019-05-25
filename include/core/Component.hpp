@@ -11,10 +11,10 @@ namespace zero {
      * @brief The state of any component
      */
     enum class ComponentState {
-        COMPONENT_CREATED,              //<! The component was created
-        COMPONENT_UPDATED,              //<! The component was updated
-        COMPONENT_MARKED_FOR_DELETE,    //<! The component has been marked for deletion
-        COMPONENT_IDLE,                 //<! The component is idle
+        COMPONENT_CREATED,              ///< The component was created
+        COMPONENT_UPDATED,              ///< The component was updated
+        COMPONENT_MARKED_FOR_DELETE,    ///< The component has been marked for deletion
+        COMPONENT_IDLE,                 ///< The component is idle
     }; // enum class ComponentState
 
 	/**

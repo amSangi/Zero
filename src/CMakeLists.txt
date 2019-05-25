@@ -6,8 +6,8 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              core/System.cpp
                              math/Box.cpp
                              math/Intersection.cpp
-                             math/Matrix3.cpp
-                             math/Matrix4.cpp
+                             math/Matrix3x3.cpp
+                             math/Matrix4x4.cpp
                              math/Plane.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
