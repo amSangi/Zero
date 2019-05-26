@@ -11,19 +11,19 @@ GLShader::~GLShader() {
 }
 
 bool GLShader::Compile() {
-
+    return false;
 }
 
 bool GLShader::IsCompiled() const {
-
+    return false;
 }
 
 IShader::Type GLShader::GetType() const {
-
+    return IShader::Type::TYPE_VERTEX_SHADER;
 }
 
 GLuint GLShader::GetNativeIdentifier() {
-
+    return 0;
 }
 
 void GLShader::Cleanup() {

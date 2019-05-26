@@ -8,7 +8,6 @@ set(ZERO_LIB_OUT_PATH ${CMAKE_SOURCE_DIR}/build)
 set(ZERO_EXE_OUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 set(ZERO_TEST_OUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
-
 ## Package Dependencies ##
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(OpenGL REQUIRED)
@@ -36,8 +35,3 @@ set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)
-target_link_libraries(${PROJECT_NAME} EnTT)
-target_link_libraries(${PROJECT_NAME} ${OPENGL_gl_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${SDL2_IMAGE_LIBRARIES})

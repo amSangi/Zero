@@ -3,6 +3,10 @@
 
 using namespace zero::render;
 
+GLProgram::~GLProgram() {
+    Cleanup();
+}
+
 bool GLProgram::Link() {
     return false;
 }
@@ -40,5 +44,13 @@ void GLProgram::SetUniform(const std::string& name, int32 value) {
 }
 
 void GLProgram::SetUniform(const std::string& name, float value) {
+
+}
+
+GLuint GLProgram::GetNativeIdentifier() {
+    return 0;
+}
+
+void GLProgram::Cleanup() {
 
 }

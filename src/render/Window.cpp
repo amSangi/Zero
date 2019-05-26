@@ -1,5 +1,5 @@
+#include <GL/glew.h>
 #include <utility>
-
 #include <SDL.h>
 #include <SDL_image.h>
 #include "render/Window.hpp"
@@ -41,6 +41,7 @@ void Window::Initialize() {
     if (config_.window_flags_ & WindowFlags::WINDOW_HIDE) window_flags |= SDL_WINDOW_HIDDEN;
 
     if (sdl_window_ == nullptr) {
+        // Create Window and OpenGL Context
         SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
         SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
         SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
@@ -55,6 +56,9 @@ void Window::Initialize() {
                                        window_flags);
         sdl_gl_context_ = SDL_GL_CreateContext(sdl_window_);
         SDL_GL_MakeCurrent(sdl_window_, sdl_gl_context_);
+
+        // Initialize GLEW
+        glewInit();
     }
     else {
         SDL_SetWindowSize(sdl_window_, config_.width_, config_.height_);
