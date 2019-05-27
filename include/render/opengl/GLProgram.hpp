@@ -1,20 +1,33 @@
 #pragma once
 
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
 #include <SDL_opengl.h>
+#include "GLShader.hpp"
 #include "../IProgram.hpp"
 
 namespace zero::render {
 
     class GLProgram : public IProgram {
+        template<class T>
+        using UniformMap = std::unordered_map<std::string, T> ;
     public:
 
-        ~GLProgram();
+        static std::shared_ptr<GLProgram> CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders);
+
+        explicit GLProgram(GLuint identifier);
+
+        ~GLProgram() override;
 
         bool Link() override;
 
-        bool Use() override;
+        bool IsLinked() const override;
 
-        bool Finish() override;
+        void Use() override;
+
+        void Finish() override;
 
         void SetUniform(const std::string& name, math::Matrix4x4 value) override;
 
@@ -37,6 +50,13 @@ namespace zero::render {
 
     private:
         GLuint identifier_;
+        UniformMap<math::Matrix4x4> matrix4x4_map_;
+        UniformMap<math::Matrix3x3> matrix3x3_map_;
+        UniformMap<math::Vec4f> vec4f_map_;
+        UniformMap<math::Vec3f> vec3f_map_;
+        UniformMap<uint32> uint32_map_;
+        UniformMap<int32> int32_map_;
+        UniformMap<float> float_map_;
 
     }; // class GLProgram
 

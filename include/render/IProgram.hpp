@@ -5,6 +5,7 @@
 #include "math/Matrix3x3.hpp"
 #include "math/Vector4.hpp"
 #include "math/Vector3.hpp"
+#include "IShader.hpp"
 #include "IRenderResource.hpp"
 
 namespace zero::render {
@@ -16,9 +17,14 @@ namespace zero::render {
     public:
 
         /**
+         * @brief Default Constructor
+         */
+        IProgram() = default;
+
+        /**
          * @brief Virtual Destructor
          */
-        ~IProgram() override = 0;
+        ~IProgram() override = default;
 
         /**
          * @brief Link the graphics program
@@ -27,16 +33,20 @@ namespace zero::render {
         virtual bool Link() = 0;
 
         /**
-         * @brief Set the graphics program as active on the current rendering state
-         * @return True if the program is active. Otherwise false.
+         * @brief Is the Program linked?
+         * @return True if the program is linked. Otherwise false.
          */
-        virtual bool Use() = 0;
+        virtual bool IsLinked() const = 0;
+
+        /**
+         * @brief Set the graphics program as active on the current rendering state
+         */
+        virtual void Use() = 0;
 
         /**
          * @brief Removes the graphics program from the current rendering state
-         * @return True if the program is no longer active. Otherwise false.
          */
-        virtual bool Finish() = 0;
+        virtual void Finish() = 0;
 
         /**
          * @brief Set a Uniform variable

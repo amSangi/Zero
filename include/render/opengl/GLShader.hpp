@@ -9,9 +9,9 @@ namespace zero::render {
     class GLShader : public IShader {
     public:
 
-        explicit GLShader(const std::string& source);
+        GLShader(const std::string& source, IShader::Type type);
 
-        ~GLShader();
+        ~GLShader() override;
 
         bool Compile() override;
 
@@ -26,6 +26,7 @@ namespace zero::render {
 
     private:
         GLuint identifier_;
+        const IShader::Type type_;
 
     }; // class GLShader
 

@@ -47,6 +47,23 @@ namespace zero::render {
     struct Material : public Component {
 
         /**
+         * @brief Shader files used by the material
+         */
+        struct Shaders {
+            /**
+             * @brief The shader name
+             */
+            ///@{
+            std::string vertex_shader_;
+            std::string fragment_shader_;
+            std::string geometry_shader_;
+            std::string tessellation_ctrl_shader_;
+            std::string tessellation_eval_shader_;
+            std::string compute_shader_;
+            ///@}
+        }; // struct Shaders
+
+        /**
          * @brief Fully qualified texture map files
          */
         struct TextureMap {
@@ -103,6 +120,12 @@ namespace zero::render {
          * @brief The texture map
          */
         TextureMap texture_map_;
+
+        /**
+         * @brief The shaders to use
+         */
+         Shaders shaders_;
+
     }; // struct Material
 
     /**

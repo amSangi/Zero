@@ -11,9 +11,14 @@ namespace zero::render {
     public:
 
         /**
+         * @brief Default Constructor
+         */
+        IRenderResource() = default;
+
+        /**
          * @brief Virtual destructor
          */
-        virtual ~IRenderResource() = 0;
+        virtual ~IRenderResource() = default;
 
     protected:
 
