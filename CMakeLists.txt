@@ -25,8 +25,8 @@ include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
 
 ## Subdirectories ##
-add_subdirectory(src)
 add_subdirectory(thirdparty)
+add_subdirectory(src)
 add_subdirectory(test)
 
 

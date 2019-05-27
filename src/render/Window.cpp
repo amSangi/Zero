@@ -14,8 +14,7 @@ Window::Window(WindowConfig config)
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 }
 
-Window::~Window()
-{
+Window::~Window() {
     Cleanup();
 }
 
