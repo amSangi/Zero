@@ -4,16 +4,16 @@
 
 using namespace zero::render;
 
-bool GLCompiler::InitializeShader(ICompiler::ShaderStage stage) {
+bool GLCompiler::InitializeShader(const ICompiler::ShaderStage& stage) {
     std::shared_ptr<GLShader> shader = std::make_shared<GLShader>(stage.source_, stage.type_);
 
-    if (shader->Compile()) return false;
+    if (!shader->Compile()) return false;
 
     shader_map_[stage.name_] = shader;
     return true;
 }
 
-std::shared_ptr<IProgram> GLCompiler::CreateProgram(Material material) {
+std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
     std::vector<std::shared_ptr<GLShader>> shaders;
 
     // Vertex Shader

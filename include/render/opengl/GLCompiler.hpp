@@ -14,9 +14,9 @@ namespace zero::render {
 
         ~GLCompiler() override = default;
 
-        bool InitializeShader(ShaderStage stage) override;
+        bool InitializeShader(const ShaderStage& stage) override;
 
-        std::shared_ptr<IProgram> CreateProgram(Material material) override;
+        std::shared_ptr<IProgram> CreateProgram(const Material& material) override;
 
     private:
         std::unordered_map<std::string, std::shared_ptr<GLShader>> shader_map_;

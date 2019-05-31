@@ -2,18 +2,17 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <string>
 
+#include <GL/glew.h>
 #include "render/Window.hpp"
+#include "render/opengl/GLCompiler.hpp"
+#include "render/opengl/GLProgram.hpp"
 #include <SDL.h>
 #include <SDL_opengl.h>
 
 constexpr int SCREEN_WIDTH = 800;
 constexpr int SCREEN_HEIGHT = 600;
-
-constexpr int OPENGL_MAJOR_VERSION = 2;
-constexpr int OPENGL_MINOR_VERSION = 1;
-
-constexpr SDL_GLprofile OPENGL_PROFILE = SDL_GLprofile::SDL_GL_CONTEXT_PROFILE_CORE;
 
 /*
  * http:*nehe.gamedev.net/article/replacement_for_gluperspective/21002/
@@ -94,11 +93,11 @@ void Display_Render() {
     /* Clear The Screen And The Depth Buffer */
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glColor4f(0, 0, 0, 1.0);
+    glColor4f(1, 1, 1, 1);
 
-    /* Move Left 1.5 Units And Into The Screen 6.0 */
+    /* Move Left 1.5 Units And Out of The Screen 6.0 */
     glLoadIdentity();
-    glTranslatef(-1.5f, 0.0f, -6.0f);
+    glTranslatef(-1.5f, 0.0f, 6.0f);
 
     glBegin( GL_TRIANGLES); /* Drawing Using Triangles */
     glVertex3f(0.0f, 1.0f, 0.0f); /* Top */
@@ -119,6 +118,7 @@ void Display_Render() {
 
 int main(int argc, char *argv[]) {
     using namespace zero::render;
+    using namespace std;
 
     WindowConfig window_config{WindowFlags::WINDOW_MAXIMIZED,
                                512,
@@ -130,14 +130,44 @@ int main(int argc, char *argv[]) {
                                ""};
     Window window(window_config);
 
+    // Initialize window
     window.Initialize();
 
-    Display_InitGL();
-    Display_SetViewport(SCREEN_WIDTH, SCREEN_HEIGHT);
-    Display_Render();
-    window.SwapBuffers();
+    GLCompiler compiler;
 
-    SDL_Delay(250);
+    // Initialize Shaders
+    string vertex_source = "void main() { gl_Position = gl_Vertex; }";
+    string fragment_source = "uniform vec4 color; void main() { gl_FragColor = vec4(1,1,0,1); }";
+    GLCompiler::ShaderStage vertex_stage{ IShader::Type::TYPE_VERTEX_SHADER, "Vertex Shader", vertex_source };
+    GLCompiler::ShaderStage fragment_stage{ IShader::Type::TYPE_FRAGMENT_SHADER, "Fragment Shader", fragment_source };
+    bool vertex_res = compiler.InitializeShader(vertex_stage);
+    bool fragment_res = compiler.InitializeShader(fragment_stage);
+
+    // Create Program
+    Material material;
+    material.shaders_.vertex_shader_ = "Vertex Shader";
+    material.shaders_.fragment_shader_ = "Fragment Shader";
+    auto program = compiler.CreateProgram(material);
+
+    bool quit = false;
+    SDL_Event event;
+    while (!quit)
+    {
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EventType::SDL_QUIT) quit = true;
+        }
+
+        // Draw with program
+        program->Use();
+        Display_InitGL();
+        Display_SetViewport(SCREEN_WIDTH, SCREEN_HEIGHT);
+        Display_Render();
+        program->Finish();
+
+        // Swap
+        window.SwapBuffers();
+    }
 
     return 0;
 }

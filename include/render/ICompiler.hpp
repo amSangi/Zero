@@ -51,14 +51,14 @@ namespace zero::render {
          * @param stage The shader stage
          * @return True if the shader was setup correctly. Otherwise false.
          */
-        virtual bool InitializeShader(ShaderStage stage) = 0;
+        virtual bool InitializeShader(const ShaderStage& stage) = 0;
 
         /**
          * @brief Create a Graphics Program given a material component
          * @param material The material component
          * @return A Graphics Program
          */
-        virtual std::shared_ptr<IProgram> CreateProgram(Material material) = 0;
+        virtual std::shared_ptr<IProgram> CreateProgram(const Material& material) = 0;
 
     }; // class ICompiler
 
