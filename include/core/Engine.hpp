@@ -3,8 +3,9 @@
 #include <memory>
 #include <vector>
 #include <entt.hpp>
-#include "core/ZBase.hpp"
 #include "event/EventBus.hpp"
+#include "NonCopyable.hpp"
+#include "ZBase.hpp"
 
 namespace zero {
 
@@ -17,7 +18,7 @@ namespace zero {
     /**
      * @brief The Game Engine
      */
-    class Engine {
+    class Engine : public NonCopyable {
     public:
 
         /**
@@ -31,11 +32,6 @@ namespace zero {
          * @brief Engine destructor
          */
         ~Engine() = default;
-
-        Engine(const Engine&) = delete;
-        Engine(Engine&&) = delete;
-        Engine& operator=(const Engine&) = delete;
-        Engine& operator=(Engine&&) = delete;
 
         /**
          * @brief Initialize the engine

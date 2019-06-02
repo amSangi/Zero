@@ -17,56 +17,56 @@ namespace zero {
         COMPONENT_IDLE,                 ///< The component is idle
     }; // enum class ComponentState
 
-	/**
-	 * @brief The Component base in the Entity-Component-System
-	 */
-	struct Component {
-		using Entity = entt::registry<>::entity_type;
+    /**
+     * @brief The Component base in the Entity-Component-System
+     */
+    struct Component {
+        using Entity = entt::registry<>::entity_type;
 
-		/*!
-		 * @brief The entity that owns this component
-		 */
-		Entity owner_;
+        /**
+         * @brief The entity that owns this component
+         */
+        Entity owner_;
 
-		/*!
-		 * @brief The state of the component
-		 */
-		ComponentState state_ = ComponentState::COMPONENT_CREATED;
-	}; // struct Component
+        /**
+         * @brief The state of the component
+         */
+        ComponentState state_ = ComponentState::COMPONENT_CREATED;
+    }; // struct Component
 
-	/**
-	 * @brief A general hierarchical component
-	 */
-	struct ParentComponent : public Component {
-	    /*!
-	     * @brief The parent entity
-	     */
-	    Entity parent_;
+    /**
+     * @brief A general hierarchical component
+     */
+    struct ParentComponent : public Component {
+        /**
+         * @brief The parent entity
+         */
+        Entity parent_;
 
-	    /*!
-	     * @brief The list of child entities
-	     */
-	    std::vector<Entity> children_;
-	}; // struct ParentComponent
+        /**
+         * @brief The list of child entities
+         */
+        std::vector<Entity> children_;
+    }; // struct ParentComponent
 
-	/**
-	 * @brief The transform component containing position, orientation, and scale information
-	 */
-	struct Transform : public ParentComponent {
-	    /*!
-	     * @brief The scale of the entity
-	     */
+    /**
+     * @brief The transform component containing position, orientation, and scale information
+     */
+    struct Transform : public ParentComponent {
+        /**
+         * @brief The scale in 3D space
+         */
         math::Vec3f scale_;
 
-        /*!
+        /**
          * @brief The position in 3D space
          */
-	    math::Vec3f position_;
+        math::Vec3f position_;
 
-	    /*!
-	     * @brief The orientation in 3D space
-	     */
-	    math::Quaternion orientation_;
-	}; // struct Transform
+        /**
+         * @brief The orientation in 3D space
+         */
+        math::Quaternion orientation_;
+    }; // struct Transform
 
 } // namespace zero

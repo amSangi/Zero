@@ -2,7 +2,7 @@
 
 #include <string>
 #include <SDL_opengl.h>
-#include "../IShader.hpp"
+#include "render/IShader.hpp"
 
 namespace zero::render {
 

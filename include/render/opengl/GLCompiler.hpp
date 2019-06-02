@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include "GLShader.hpp"
-#include "../ICompiler.hpp"
+#include "render/ICompiler.hpp"
 
 namespace zero::render {
 

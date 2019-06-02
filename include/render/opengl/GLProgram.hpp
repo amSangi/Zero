@@ -6,7 +6,7 @@
 #include <vector>
 #include <SDL_opengl.h>
 #include "GLShader.hpp"
-#include "../IProgram.hpp"
+#include "render/IProgram.hpp"
 
 namespace zero::render {
 

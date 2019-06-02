@@ -7,7 +7,7 @@ namespace zero::render {
     /**
      * @brief Root base class for render resources
      */
-    class IRenderResource : private NonCopyable {
+    class IRenderResource : public NonCopyable {
     public:
 
         /**
