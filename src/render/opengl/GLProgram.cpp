@@ -6,8 +6,10 @@ using namespace zero::render;
 std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
         const std::vector<std::shared_ptr<zero::render::GLShader>>& shaders) {
 
-    GLuint program_identifier = glCreateProgram();
-    std::shared_ptr<GLProgram> program = std::make_shared<GLProgram>(program_identifier);
+    if (shaders.empty()) return nullptr;
+
+    std::shared_ptr<GLProgram> program = std::make_shared<GLProgram>();
+    GLuint program_identifier = program->GetNativeIdentifier();
 
     for (auto& shader : shaders) {
         if (!shader->IsCompiled()) return nullptr;
@@ -23,13 +25,14 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
     return program;
 }
 
-GLProgram::GLProgram(GLuint identifier) : identifier_(identifier) {}
+GLProgram::GLProgram() : identifier_(glCreateProgram()) {}
 
 GLProgram::~GLProgram() {
     Cleanup();
 }
 
 bool GLProgram::Link() {
+    if (IsLinked()) return true;
     glLinkProgram(identifier_);
     return IsLinked();
 }

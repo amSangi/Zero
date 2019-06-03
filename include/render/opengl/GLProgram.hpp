@@ -17,7 +17,7 @@ namespace zero::render {
 
         static std::shared_ptr<GLProgram> CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders);
 
-        explicit GLProgram(GLuint identifier);
+        GLProgram();
 
         ~GLProgram() override;
 

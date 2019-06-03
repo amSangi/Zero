@@ -40,6 +40,7 @@ GLShader::~GLShader() {
 }
 
 bool GLShader::Compile() {
+    if (IsCompiled()) return true;
     glCompileShader(identifier_);
     return IsCompiled();
 }
