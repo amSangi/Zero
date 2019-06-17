@@ -3,10 +3,8 @@
 #include <memory>
 #include <vector>
 #include "core/System.hpp"
-#include "ICuller.hpp"
 #include "IRenderer.hpp"
 #include "RenderSystemConfig.hpp"
-#include "SceneGraph.hpp"
 #include "Window.hpp"
 
 namespace zero::render {
@@ -31,12 +29,10 @@ namespace zero::render {
         void ShutDown() override;
 
     private:
-        void Propagate();
-        std::vector<std::shared_ptr<ICuller>> GetCullers();
+        void Propagate() {}
 
         RenderSystemConfig config_;
         Window window_;
-        SceneGraph scene_graph_;
         std::unique_ptr<IRenderer> renderer_;
     }; // class RenderSystem
 
