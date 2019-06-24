@@ -42,36 +42,36 @@ TEST(TestBox, Merge) {
 	Box box(Vec3f::Zero(), Vec3f(100.0f));
 	Box other_box(Vec3f(100.0f), Vec3f(250.0f));
 
-	EXPECT_EQ(box, Box::Merge(box, box));
-	EXPECT_EQ(Box(Vec3f::Zero(), Vec3f(250.0f)), Box::Merge(box, other_box));
+	EXPECT_EQ(Box::Merge(box, box), box);
+	EXPECT_EQ(Box::Merge(box, other_box), Box(Vec3f::Zero(), Vec3f(250.0f)));
 }
 
 TEST(TestBox, MergeContainingBox) {
 	Box box(Vec3f(-1000.0f), Vec3f(1000.0f));
 	Box other_box(Vec3f::Zero(), Vec3f(250.0f));
 
-	EXPECT_EQ(box, Box::Merge(box, other_box));
+	EXPECT_EQ(Box::Merge(box, other_box), box);
 	other_box = Box(Vec3f(-100.0f), Vec3f(100.1f));
-	EXPECT_EQ(box, Box::Merge(box, other_box));
+	EXPECT_EQ(Box::Merge(box, other_box), box);
 }
 
 TEST(TestBox, MergeInsideBox) {
 	Box box(Vec3f::Zero(), Vec3f(100.0f));
 	Box other_box(Vec3f::Zero(), Vec3f(250.0f));
 
-	EXPECT_EQ(other_box, Box::Merge(box, other_box));
+	EXPECT_EQ(Box::Merge(box, other_box), other_box);
 	other_box = Box(Vec3f(-100.0f), Vec3f(100.1f));
-	EXPECT_EQ(other_box, Box::Merge(box, other_box));
+	EXPECT_EQ(Box::Merge(box, other_box), other_box);
 }
 
 TEST(TestBox, Size) {
-	EXPECT_EQ(Vec3f::One(), Box::Unit().Size());
-	EXPECT_EQ(Vec3f(100.0f), Box(Vec3f::Zero(), Vec3f(100.0f)).Size());
-	EXPECT_EQ(Vec3f(50.0f), Box(Vec3f(-25.0f), Vec3f(25.0f)).Size());
+	EXPECT_EQ(Box::Unit().Size(), Vec3f::One());
+	EXPECT_EQ(Box(Vec3f::Zero(), Vec3f(100.0f)).Size(), Vec3f(100.0f));
+	EXPECT_EQ(Box(Vec3f(-25.0f), Vec3f(25.0f)).Size(), Vec3f(50.0f));
 }
 
 TEST(TestBox, Center) {
-	EXPECT_EQ(Vec3f(0.5f), Box::Unit().Center());
-	EXPECT_EQ(Vec3f(50.0f), Box(Vec3f::Zero(), Vec3f(100.0f)).Center());
-	EXPECT_EQ(Vec3f(0.0f), Box(Vec3f(-25.0f), Vec3f(25.0f)).Center());
+	EXPECT_EQ(Box::Unit().Center(), Vec3f(0.5f));
+	EXPECT_EQ(Box(Vec3f::Zero(), Vec3f(100.0f)).Center(), Vec3f(50.0f));
+	EXPECT_EQ(Box(Vec3f(-25.0f), Vec3f(25.0f)).Center(), Vec3f(0.0f));
 }

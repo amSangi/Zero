@@ -12,12 +12,12 @@ TEST(TestPlane, Constructor) {
 	Vec3f down = Vec3f::Down();
 
 	Plane plane(right, left, forward);
-	EXPECT_EQ(Plane::Up(), plane);
-	EXPECT_EQ(Plane::Up().Flip(), Plane(left, right, forward));
+	EXPECT_EQ(plane, Plane::Up());
+	EXPECT_EQ(Plane(left, right, forward), Plane::Up().Flip());
 
 
-	EXPECT_EQ(Plane::Right(), Plane(forward, down, up));
-	EXPECT_EQ(Plane::Right().Flip(), Plane(forward, up, down));
+	EXPECT_EQ(Plane(forward, down, up), Plane::Right());
+	EXPECT_EQ(Plane(forward, up, down), Plane::Right().Flip());
 }
 
 TEST(TestPlane, Intersects) {
@@ -56,26 +56,26 @@ TEST(TestPlane, Intersects) {
 
 TEST(TestPlane, Reflect) {
 	Plane plane = Plane::Up();
-	EXPECT_EQ(Vec3f(1.0f, -1.0f), plane.Reflect(Vec3f(1.0f, 1.0f)));
-	EXPECT_EQ(Vec3f(-1.0f, -1.0f), plane.Reflect(Vec3f(-1.0f, 1.0f)));
+	EXPECT_EQ(plane.Reflect(Vec3f(1.0f, 1.0f)), Vec3f(1.0f, -1.0f));
+	EXPECT_EQ(plane.Reflect(Vec3f(-1.0f, 1.0f)), Vec3f(-1.0f, -1.0f));
 
 	plane = Plane::Right();
-	EXPECT_EQ(Vec3f(1.0f, -1.0f), plane.Reflect(Vec3f(-1.0f, -1.0f)));
-	EXPECT_EQ(Vec3f(-1.0f, 1.0f), plane.Reflect(Vec3f(1.0f, 1.0f)));
+	EXPECT_EQ(plane.Reflect(Vec3f(-1.0f, -1.0f)), Vec3f(1.0f, -1.0f));
+	EXPECT_EQ(plane.Reflect(Vec3f(1.0f, 1.0f)), Vec3f(-1.0f, 1.0f));
 
 	plane = Plane::Forward();
-	EXPECT_EQ(Vec3f(0.0f, -1.0f, 1.0f), plane.Reflect(Vec3f(0.0f, -1.0f, -1.0f)));
-	EXPECT_EQ(Vec3f(0.0f, 1.0f, 1.0f), plane.Reflect(Vec3f(0.0f, 1.0f, -1.0f)));
+	EXPECT_EQ(plane.Reflect(Vec3f(0.0f, -1.0f, -1.0f)), Vec3f(0.0f, -1.0f, 1.0f));
+	EXPECT_EQ(plane.Reflect(Vec3f(0.0f, 1.0f, -1.0f)), Vec3f(0.0f, 1.0f, 1.0f));
 }
 
 TEST(TestPlane, Distance) {
 	Plane plane = Plane::Up();
 
-	EXPECT_EQ(0.0f, plane.Distance(Vec3f::Zero()));
-	EXPECT_EQ(0.0f, plane.Distance(Vec3f(1.0f, 0.0f)));
-	EXPECT_EQ(1.0f, plane.Distance(Vec3f::One()));
-	EXPECT_EQ(50.0f, plane.Distance(Vec3f(25.0f, 50.0f, 75.0f)));
+	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 0.0f);
+	EXPECT_EQ(plane.Distance(Vec3f(1.0f, 0.0f)), 0.0f);
+	EXPECT_EQ(plane.Distance(Vec3f::One()), 1.0f);
+	EXPECT_EQ(plane.Distance(Vec3f(25.0f, 50.0f, 75.0f)), 50.0f);
 
 	plane = Plane(Vec3f::One(), 15.0f);
-	EXPECT_EQ(15.0f, plane.Distance(Vec3f::Zero()));
+	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 15.0f);
 }

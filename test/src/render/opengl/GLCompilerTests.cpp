@@ -26,7 +26,7 @@ TEST_F(TestGLCompiler, CreateProgram) {
     material.shaders_.compute_shader_ = "Unknown Compute Shader";
 
     auto program = compiler_->CreateProgram(material);
-    ASSERT_NE(nullptr, program);
+    ASSERT_NE(program, nullptr);
     EXPECT_TRUE(program->IsLinked());
 }
 
@@ -36,5 +36,5 @@ TEST_F(TestGLCompiler, CreateProgramNoShaders) {
     material.shaders_.fragment_shader_ = "Fragment";
 
     auto program = compiler_->CreateProgram(material);
-    ASSERT_EQ(nullptr, program);
+    ASSERT_EQ(program, nullptr);
 }

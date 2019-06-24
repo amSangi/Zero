@@ -83,7 +83,7 @@ TEST(TestSphere, Merge) {
 	EXPECT_TRUE(s1.Contains(s2));
 	EXPECT_FALSE(s2.Contains(s1));
 	EXPECT_TRUE(s1.radius_ >= s2.radius_);
-	EXPECT_EQ(merged_sphere, s1);
+	EXPECT_EQ(s1, merged_sphere);
 }
 
 TEST(TestSphere, MergeItself) {
@@ -94,10 +94,10 @@ TEST(TestSphere, MergeItself) {
     EXPECT_TRUE(s1.Contains(s1));
     EXPECT_TRUE(s1.Contains(merged_itself));
     EXPECT_TRUE(merged_itself.Contains(s1));
-    EXPECT_EQ(s1, merged_itself);
+    EXPECT_EQ(merged_itself, s1);
 
     s1.Merge(s1);
-    EXPECT_EQ(merged_itself, s1);
+    EXPECT_EQ(s1, merged_itself);
 }
 
 TEST(TestSphere, MergeContainingSphere) {
@@ -110,10 +110,10 @@ TEST(TestSphere, MergeContainingSphere) {
     EXPECT_FALSE(s2.Contains(s1));
     EXPECT_TRUE(merged_sphere.Contains(s1));
     EXPECT_TRUE(merged_sphere.Contains(s2));
-    EXPECT_EQ(s1, merged_sphere);
+    EXPECT_EQ(merged_sphere, s1);
 
     s1.Merge(s2);
-    EXPECT_EQ(merged_sphere, s1);
+    EXPECT_EQ(s1, merged_sphere);
 }
 
 TEST(TestSphere, MergeInsideSphere) {
@@ -125,5 +125,5 @@ TEST(TestSphere, MergeInsideSphere) {
 
     s2.Merge(s1);
     EXPECT_TRUE(s2.Contains(s1));
-    EXPECT_EQ(s1, s2);
+    EXPECT_EQ(s2, s1);
 }

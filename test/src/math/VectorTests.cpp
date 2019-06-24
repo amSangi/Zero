@@ -4,92 +4,70 @@
 using namespace zero::math;
 
 TEST(TestVector, UsefulConstructors) {
-	Vec2f v2 = Vec2f::Up();
-	Vec3f v3 = Vec3f::Up();
-	Vec4f v4 = Vec4f::Up();
+	EXPECT_EQ(Vec2f::Up(), Vec2f(0.0f, 1.0f));
+	EXPECT_EQ(Vec3f::Up(), Vec3f(0.0f, 1.0f, 0.0f));
+	EXPECT_EQ(Vec4f::Up(), Vec4f(0.0f, 1.0f, 0.0f, 0.0f));
 
-	EXPECT_EQ(Vec2f(0.0f, 1.0f),             v2);
-	EXPECT_EQ(Vec3f(0.0f, 1.0f, 0.0f),       v3);
-	EXPECT_EQ(Vec4f(0.0f, 1.0f, 0.0f, 0.0f), v4);
+	EXPECT_EQ(Vec2f::Down(), Vec2f(0.0f, -1.0f));
+	EXPECT_EQ(Vec3f::Down(), Vec3f(0.0f, -1.0f, 0.0f));
+	EXPECT_EQ(Vec4f::Down(), Vec4f(0.0f, -1.0f, 0.0f, 0.0f));
 
-	v2 = Vec2f::Down();
-	v3 = Vec3f::Down();
-	v4 = Vec4f::Down();
+	EXPECT_EQ(Vec2f::Right(), Vec2f(1.0f, 0.0f));
+	EXPECT_EQ(Vec3f::Right(), Vec3f(1.0f, 0.0f, 0.0f));
+	EXPECT_EQ(Vec4f::Right(), Vec4f(1.0f, 0.0f, 0.0f, 0.0f));
 
-	EXPECT_EQ(Vec2f(0.0f, -1.0f),             v2);
-	EXPECT_EQ(Vec3f(0.0f, -1.0f, 0.0f),       v3);
-	EXPECT_EQ(Vec4f(0.0f, -1.0f, 0.0f, 0.0f), v4);
+	EXPECT_EQ(Vec2f::Left(), Vec2f(-1.0f, 0.0f));
+	EXPECT_EQ(Vec3f::Left(), Vec3f(-1.0f, 0.0f, 0.0f));
+	EXPECT_EQ(Vec4f::Left(), Vec4f(-1.0f, 0.0f, 0.0f, 0.0f));
 
-	v2 = Vec2f::Right();
-	v3 = Vec3f::Right();
-	v4 = Vec4f::Right();
+	EXPECT_EQ(Vec3f::Forward(), Vec3f(0.0f, 0.0f, 1.0f));
+	EXPECT_EQ(Vec4f::Forward(), Vec4f(0.0f, 0.0f, 1.0f, 0.0f));
 
-	EXPECT_EQ(Vec2f(1.0f, 0.0f),             v2);
-	EXPECT_EQ(Vec3f(1.0f, 0.0f, 0.0f),       v3);
-	EXPECT_EQ(Vec4f(1.0f, 0.0f, 0.0f, 0.0f), v4);
-
-	v2 = Vec2f::Left();
-	v3 = Vec3f::Left();
-	v4 = Vec4f::Left();
-
-	EXPECT_EQ(Vec2f(-1.0f, 0.0f),             v2);
-	EXPECT_EQ(Vec3f(-1.0f, 0.0f, 0.0f),       v3);
-	EXPECT_EQ(Vec4f(-1.0f, 0.0f, 0.0f, 0.0f), v4);
-
-	v3 = Vec3f::Forward();
-	v4 = Vec4f::Forward();
-
-	EXPECT_EQ(Vec3f(0.0f, 0.0f, 1.0f),       v3);
-	EXPECT_EQ(Vec4f(0.0f, 0.0f, 1.0f, 0.0f), v4);
-
-	v3 = Vec3f::Back();
-	v4 = Vec4f::Back();
-
-	EXPECT_EQ(Vec3f(0.0f, 0.0f, -1.0f),       v3);
-	EXPECT_EQ(Vec4f(0.0f, 0.0f, -1.0f, 0.0f), v4);
+	EXPECT_EQ(Vec3f::Back(), Vec3f(0.0f, 0.0f, -1.0f));
+	EXPECT_EQ(Vec4f::Back(), Vec4f(0.0f, 0.0f, -1.0f, 0.0f));
 }
 
 TEST(TestVector, ScalarOperations) {
+	EXPECT_EQ(Vec4f::One(), Vec4f(1.0f));
+
+
+	EXPECT_EQ(Vec4f::One() * 2.0f, Vec4f(2.0f));
+	EXPECT_EQ(Vec4f::One() * 1.5f, Vec4f(1.5f));
+	EXPECT_EQ(Vec4f::One() * 3.0f, Vec4f(3.0f));
+	EXPECT_EQ(Vec4f::One() / 1.0f, Vec4f(1.0f));
+
 	Vec4f v = Vec4f::One();
-	EXPECT_EQ(Vec4f(1.0f), v);
-
-
-	EXPECT_EQ(Vec4f(2.0f), v * 2.0f);
-	EXPECT_EQ(Vec4f(1.5f), v * 1.5f);
-	EXPECT_EQ(Vec4f(3.0f), v * 3.0f);
-	EXPECT_EQ(Vec4f(1.0f), v / 1.0f);
-
-	v += 1.0f;
-	EXPECT_EQ(Vec4f(2.0f), v);
+    v += 1.0f;
+	EXPECT_EQ(v, Vec4f(2.0f));
 	v -= 0.5f;
-	EXPECT_EQ(Vec4f(1.5f), v);
+	EXPECT_EQ(v, Vec4f(1.5f));
 	v *= 2.0f;
-	EXPECT_EQ(Vec4f(3.0f), v);
+	EXPECT_EQ(v, Vec4f(3.0f));
 	v /= 3.0f;
-	EXPECT_EQ(Vec4f(1.0f), v);
+	EXPECT_EQ(v, Vec4f(1.0f));
 }
 
 TEST(TestVector, VectorVectorOperations) {
 	Vec4f v = Vec4f::One();
 	Vec4f v2 = Vec4f::One();
 
-	EXPECT_EQ(Vec4f(2.0f), v + v2);
-	EXPECT_EQ(Vec4f(0.0f), v - v2);
-	EXPECT_EQ(Vec4f(3.0f), (v + 1.0f) * (v2 * 1.5f));
-	EXPECT_EQ(Vec4f(0.5f), v / (v2 + 1.0f));
+	EXPECT_EQ(v + v2, Vec4f(2.0f));
+	EXPECT_EQ(v - v2, Vec4f(0.0f));
+	EXPECT_EQ((v + 1.0f) * (v2 * 1.5f), Vec4f(3.0f));
+	EXPECT_EQ(v / (v2 + 1.0f), Vec4f(0.5f));
 
 
 	v += v2;
-	EXPECT_EQ(Vec4f(2.0f), v);
+	EXPECT_EQ(v, Vec4f(2.0f));
 
 	v -= Vec4f(1.0f, 2.0f, 3.0f, 4.0f);
-	EXPECT_EQ(Vec4f(1.0f, 0.0f, -1.0f, -2.0f), v);
+	EXPECT_EQ(v, Vec4f(1.0f, 0.0f, -1.0f, -2.0f));
 
 	v *= Vec4f(1.0f, 2.0f, 3.0f, 4.0f);
-	EXPECT_EQ(Vec4f(1.0f, 0.0f, -3.0f, -8.0f), v);
+	EXPECT_EQ(v, Vec4f(1.0f, 0.0f, -3.0f, -8.0f));
 
 	v /= Vec4f(-1.0f, -2.0f, -3.0f, -4.0f);
-	EXPECT_EQ(Vec4f(-1.0f, 0.0f, 1.0f, 2.0f), v);
+	EXPECT_EQ(v, Vec4f(-1.0f, 0.0f, 1.0f, 2.0f));
 }
 
 TEST(TestVector, Magnitude) {
@@ -98,9 +76,9 @@ TEST(TestVector, Magnitude) {
 	Vec4f zero_vector(0.0f);
 
 	float magnitude = Sqrt(1.0f + 4.0f + 9.0f + 16.0f);
-	EXPECT_EQ(magnitude, simple_vector.Magnitude());
-	EXPECT_EQ(magnitude, negative_vector.Magnitude());
-	EXPECT_EQ(0.0f, zero_vector.Magnitude());
+	EXPECT_EQ(simple_vector.Magnitude(), magnitude);
+	EXPECT_EQ(negative_vector.Magnitude(), magnitude);
+	EXPECT_EQ(zero_vector.Magnitude(), 0.0f);
 }
 
 TEST(TestVector, SquareMagnitude) {
@@ -109,9 +87,9 @@ TEST(TestVector, SquareMagnitude) {
 	Vec4f zero_vector(0.0f);
 
 	float square_magnitude = 1.0f + 4.0f + 9.0f + 16.0f;
-	EXPECT_EQ(square_magnitude, simple_vector.SquareMagnitude());
-	EXPECT_EQ(square_magnitude, negative_vector.SquareMagnitude());
-	EXPECT_EQ(0.0f, zero_vector.SquareMagnitude());
+	EXPECT_EQ(simple_vector.SquareMagnitude(), square_magnitude);
+	EXPECT_EQ(negative_vector.SquareMagnitude(), square_magnitude);
+	EXPECT_EQ(zero_vector.SquareMagnitude(), 0.0f);
 }
 
 TEST(TestVector, Abs) {
@@ -119,21 +97,21 @@ TEST(TestVector, Abs) {
 	Vec4f negative_vector(-1.0f, -2.0f, -3.0f, -4.0f);
 
 	Vec4f positive(1.0f, 2.0f, 3.0f, 4.0f);
-	EXPECT_EQ(positive, simple_vector.Abs());
-	EXPECT_EQ(positive, negative_vector.Abs());
-	EXPECT_EQ(Vec4f(0.0f), Vec4f::Zero().Abs());
+	EXPECT_EQ(simple_vector.Abs(), positive);
+	EXPECT_EQ(negative_vector.Abs(), positive);
+	EXPECT_EQ(Vec4f::Zero().Abs(), Vec4f(0.0f));
 }
 
 TEST(TestVector, Normalize) {
 	Vec3f expected(1.0f / Sqrt(3.0f));
 
 	// Static Method
-	EXPECT_EQ(expected, Vec3f::Normalize(Vec3f::One()));
+	EXPECT_EQ(Vec3f::Normalize(Vec3f::One()), expected);
 
 	// Instance method
 	Vec3f actual = Vec3f::One();
 	EXPECT_TRUE(actual.Normalize());
-	EXPECT_EQ(expected, actual);
+	EXPECT_EQ(actual, expected);
 
 	EXPECT_TRUE(Equal(expected.x_, actual.x_));
 	EXPECT_TRUE(Equal(expected.y_, actual.y_));
@@ -145,11 +123,11 @@ TEST(TestVector, NormalizeComplex) {
 	Vec4f actual(-2.3f, -10.3f, 13.0f, 3.0f);
 
 	// Static method
-	EXPECT_EQ(expected, Vec4f::Normalize(actual));
+	EXPECT_EQ(Vec4f::Normalize(actual), expected);
 
 	// Instance method
 	EXPECT_TRUE(actual.Normalize());
-	EXPECT_EQ(expected, actual);
+	EXPECT_EQ(actual, expected);
 	EXPECT_TRUE(Equal(expected.x_, actual.x_));
 	EXPECT_TRUE(Equal(expected.y_, actual.y_));
 	EXPECT_TRUE(Equal(expected.z_, actual.z_));
@@ -166,8 +144,8 @@ TEST(TestVector, IsEpsilon) {
 }
 
 TEST(TestVector, Dot) {
-	EXPECT_EQ(0.0f, Vec4f::Dot(Vec4f::Zero(), Vec4f::Zero()));
-	EXPECT_EQ(4.0f, Vec4f::Dot(Vec4f::One(), Vec4f::One()));
+	EXPECT_EQ(Vec4f::Dot(Vec4f::Zero(), Vec4f::Zero()), 0.0f);
+	EXPECT_EQ(Vec4f::Dot(Vec4f::One(), Vec4f::One()), 4.0f);
 
 	float dot = Vec4f::Dot(Vec4f(-2.3f, 43.104f, -253.1345f, 23.0f),
                              Vec4f(1.0f, 323.4f, 234.3f, -34.0f));
@@ -182,19 +160,19 @@ TEST(TestVector, Cross) {
 	Vec3f up = Vec3f::Up();
 	Vec3f down = Vec3f::Down();
 
-	EXPECT_EQ(front, Vec3f::Cross(right, up));
-	EXPECT_EQ(back, Vec3f::Cross(up, right));
-	EXPECT_EQ(up, Vec3f::Cross(front, right));
-	EXPECT_EQ(down, Vec3f::Cross(right, front));
-	EXPECT_EQ(right, Vec3f::Cross(up, front));
-	EXPECT_EQ(left, Vec3f::Cross(front, up));
+	EXPECT_EQ(Vec3f::Cross(right, up), front);
+	EXPECT_EQ(Vec3f::Cross(up, right), back);
+	EXPECT_EQ(Vec3f::Cross(front, right), up);
+	EXPECT_EQ(Vec3f::Cross(right, front), down);
+	EXPECT_EQ(Vec3f::Cross(up, front), right);
+	EXPECT_EQ(Vec3f::Cross(front, up), left);
 }
 
 TEST(TestVector, CrossComplex) {
 	Vec3f v1(2.3f, 3.1f, 1.5f);
 	Vec3f v2(1.9f, 2.3f, 3.15f);
 
-	EXPECT_EQ(Vec3f(6.315f, -4.395f, -0.6f), Vec3f::Cross(v1, v2));
+	EXPECT_EQ(Vec3f::Cross(v1, v2), Vec3f(6.315f, -4.395f, -0.6f));
 }
 
 TEST(TestVector, Reflect) {
@@ -203,15 +181,15 @@ TEST(TestVector, Reflect) {
 
 	incident = Vec3f(1.0f, -1.0f);
 	reflect = Vec3f::Reflect(incident, normal);
-	EXPECT_EQ(Vec3f(1.0f, 1.0f), reflect);
+	EXPECT_EQ(reflect, Vec3f(1.0f, 1.0f));
 
 	incident = -1.0f * normal;
 	reflect = Vec3f::Reflect(incident, normal);
-	EXPECT_EQ(normal, reflect);
+	EXPECT_EQ(reflect, normal);
 
 	incident = Vec3f(-1.0f, -1.0f);
 	reflect = Vec3f::Reflect(incident, normal);
-	EXPECT_EQ(Vec3f(-1.0f, 1.0f), reflect);
+	EXPECT_EQ(reflect, Vec3f(-1.0f, 1.0f));
 }
 
 TEST(TestVector, ReflectComplex) {
@@ -220,13 +198,13 @@ TEST(TestVector, ReflectComplex) {
 
 	incident = -1.0f * normal;
 	reflect = Vec3f::Reflect(incident, normal);
-	EXPECT_EQ(normal, reflect);
+	EXPECT_EQ(reflect, normal);
 }
 
 TEST(TestVector, Distance) {
-	EXPECT_EQ(1.0f, Vec3f::Distance(Vec3f::Up(), Vec3f::Zero()));
-	EXPECT_EQ(Sqrt(2.0f), Vec3f::Distance(Vec3f::Up(), Vec3f::Right()));
-	EXPECT_EQ(2.0f, Vec3f::Distance(Vec3f::Up(), Vec3f::Down()));
+	EXPECT_EQ(Vec3f::Distance(Vec3f::Up(), Vec3f::Zero()), 1.0f);
+	EXPECT_EQ(Vec3f::Distance(Vec3f::Up(), Vec3f::Right()), Sqrt(2.0f));
+	EXPECT_EQ(Vec3f::Distance(Vec3f::Up(), Vec3f::Down()), 2.0f);
 
 	float expected = 46.8359f;
 	float actual = Vec3f::Distance(Vec3f(2.34f, 19.0f, 15.2f), Vec3f(14.13f, -3.234f, -24.3f));
@@ -234,9 +212,9 @@ TEST(TestVector, Distance) {
 }
 
 TEST(TestVector, SquareDistance) {
-	EXPECT_EQ(1.0f, Vec3f::SquareDistance(Vec3f::Up(), Vec3f::Zero()));
-	EXPECT_EQ(2.0f, Vec3f::SquareDistance(Vec3f::Up(), Vec3f::Right()));
-	EXPECT_EQ(4.0f, Vec3f::SquareDistance(Vec3f::Up(), Vec3f::Down()));
+	EXPECT_EQ(Vec3f::SquareDistance(Vec3f::Up(), Vec3f::Zero()), 1.0f);
+	EXPECT_EQ(Vec3f::SquareDistance(Vec3f::Up(), Vec3f::Right()), 2.0f);
+	EXPECT_EQ(Vec3f::SquareDistance(Vec3f::Up(), Vec3f::Down()), 4.0f);
 
 	float expected = 2193.6;
 	float actual = Vec3f::SquareDistance(Vec3f(2.34f, 19.0f, 15.2f), Vec3f(14.13f, -3.234f, -24.3f));
@@ -246,16 +224,16 @@ TEST(TestVector, SquareDistance) {
 TEST(TestVector, Lerp) {
 	Vec3f start(0.0f);
 	Vec3f end(0.0f, 10.0f);
-	EXPECT_EQ(start, Vec3f::Lerp(start, end, 0.0f));
-	EXPECT_EQ(Vec3f(0.0f, 5.0f), Vec3f::Lerp(start, end, 0.5f));
-	EXPECT_EQ(end, Vec3f::Lerp(start, end, 1.0f));
+	EXPECT_EQ(Vec3f::Lerp(start, end, 0.0f), start);
+	EXPECT_EQ(Vec3f::Lerp(start, end, 0.5f), Vec3f(0.0f, 5.0f));
+	EXPECT_EQ(Vec3f::Lerp(start, end, 1.0f), end);
 }
 
 TEST(TestVector, LerpComplex) {
 	Vec3f start(2.3f, 5.0f, -13.3f);
 	Vec3f end(32.0f, -23.1f, 304.1f);
 
-	EXPECT_EQ(start, Vec3f::Lerp(start, end, 0.0f));
+	EXPECT_EQ(Vec3f::Lerp(start, end, 0.0f), start);
 
 	Vec3f expected_mid(17.2f, -9.1f, 145.4f);
 	Vec3f actual_mid = Vec3f::Lerp(start, end, 0.5f);
@@ -263,7 +241,7 @@ TEST(TestVector, LerpComplex) {
 	EXPECT_TRUE(Equal(expected_mid.y_, actual_mid.y_, 1e-01));
 	EXPECT_TRUE(Equal(expected_mid.z_, actual_mid.z_, 1e-01));
 
-	EXPECT_EQ(end, Vec3f::Lerp(start, end, 1.0f));
+	EXPECT_EQ(Vec3f::Lerp(start, end, 1.0f), end);
 }
 
 TEST(TestVector, Angle) {
@@ -271,25 +249,25 @@ TEST(TestVector, Angle) {
 
 	expected = Radian(PI / 2.0f);
 	actual = Vec3f::Angle(Vec3f::Right(), Vec3f::Up());
-	EXPECT_EQ(expected, actual);
+	EXPECT_EQ(actual, expected);
 
 	expected = Radian(PI);
 	actual = Vec3f::Angle(Vec3f::Right(), Vec3f::Left());
-	EXPECT_EQ(expected, actual);
+    EXPECT_EQ(actual, expected);
 
 	expected = Radian(PI / 2.0f);
 	actual = Vec3f::Angle(Vec3f::Right(), Vec3f::Down());
-	EXPECT_EQ(expected, actual);
+    EXPECT_EQ(actual, expected);
 
 	expected = Radian(PI / 2.0f);
 	actual = Vec3f::Angle(Vec3f(1.0f, 1.0f), Vec3f(-1.0f, 1.0f));
-	EXPECT_EQ(expected, actual);
+    EXPECT_EQ(actual, expected);
 
 	expected = Radian(Acos(1.0f / 3.0f));
 	actual = Vec3f::Angle(Vec3f(1.0f, 1.0f, 1.0f), Vec3f(1.0f, 1.0f, -1.0f));
-	EXPECT_EQ(expected, actual);
+    EXPECT_EQ(actual, expected);
 
 	expected = Radian(0.0f);
 	actual = Vec3f::Angle(Vec3f(5.0f, 13.3f, -13.32f), Vec3f(5.0f, 13.3f, -13.32f));
-	EXPECT_EQ(expected, actual);
+    EXPECT_EQ(actual, expected);
 }
