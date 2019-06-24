@@ -63,6 +63,12 @@ namespace zero::render {
         virtual void SetUniform(const std::string& name, float value) = 0;
         ///@}
 
+        /**
+         * @brief Set the uniform variables in the graphics program
+         *   The graphics program must be active.
+         */
+        virtual void FlushUniforms() = 0;
+
     }; // class IProgram
 
 } // namespace zero::render

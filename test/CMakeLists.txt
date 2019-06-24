@@ -17,7 +17,8 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/math/VectorTests.cpp
                                src/render/opengl/GLCompilerTests.cpp
                                src/render/opengl/GLProgramTests.cpp
-                               src/render/opengl/GLShaderTests.cpp)
+                               src/render/opengl/GLShaderTests.cpp
+                               src/render/opengl/GLTextureTests.cpp)
 
 target_link_libraries(${PROJECT_NAME} ZeroCore)
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)

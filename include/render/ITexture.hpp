@@ -14,12 +14,13 @@ namespace zero::render {
     public:
 
         /**
-         * @brief Texture filtering techniques for texture sampling
+         * @brief Texture filtering techniques for texture sampling.
+         *   For magnification filtering, only Nearest and Linear are used.
          */
         enum class Filter {
-            NEAREST,                ///< Use the texel that is the nearest to the centre of the pixel
+            NEAREST,                ///< Use the texel that is nearest to the centre of the pixel. The default filter.
             LINEAR,                 ///< Use the weighted average of the four nearest texels to the centre of the pixel
-            NEAREST_MIPMAP_NEAREST, ///< Nearest mipmap with nearest neighbour interpolation of texels
+            NEAREST_MIPMAP_NEAREST, ///< Nearest mipmap with nearest neighbour interpolation of texels.
             LINEAR_MIPMAP_NEAREST,  ///< Nearest mipmap with linear interpolation of texels
             NEAREST_MIPMAP_LINEAR,  ///< Linear interpolation of the two closest mipmaps using nearest interpolation
             LINEAR_MIPMAP_LINEAR,   ///< Linear interpolation of the two closest mipmaps using linear interpolation
@@ -44,42 +45,6 @@ namespace zero::render {
          * @brief Virtual Destructor
          */
         ~ITexture() override = default;
-
-        /**
-         * @brief Set the wrapping technique for the s coordinate in the coordinates (s, t, r).
-         * @param s The wrapping technique
-         */
-        virtual void SetWrappingS(Wrapping s) = 0;
-
-        /**
-         * @brief Set the wrapping technique for the t coordinate in the coordinates (s, t, r).
-         * @param t The wrapping technique
-         */
-        virtual void SetWrappingT(Wrapping t) = 0;
-
-        /**
-         * @brief Set the wrapping technique for the r coordinate in the coordinates (s, t, r).
-         * @param r The wrapping technique
-         */
-        virtual void SetWrappingR(Wrapping r) = 0;
-
-        /**
-         * @brief Set the texture filtering techniques.
-         * @param minification The texture minification technique to use
-         * @param magnification The texture magnification technique to use
-         */
-        virtual void SetFilters(Filter minification, Filter magnification) = 0;
-
-        /**
-         * @brief Generate MipMaps
-         */
-        virtual void GenerateMipMaps() = 0;
-
-        /**
-         * @brief Set the border colour.
-         * @param colour The colour.
-         */
-        virtual void SetBorderColour(math::Vec3f colour) = 0;
 
     }; // class ITexture
 

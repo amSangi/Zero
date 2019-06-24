@@ -25,7 +25,7 @@ namespace zero::render {
         void Cleanup() override;
 
     private:
-        GLuint identifier_;
+        GLuint id_;
         const IShader::Type type_;
 
     }; // class GLShader

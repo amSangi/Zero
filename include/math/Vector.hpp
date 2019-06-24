@@ -123,10 +123,11 @@ namespace detail {
 	 */
 	template<int dims, class T>
 	class Vector  : public detail::VectorBase<dims, T> {
-		using VectorBase = detail::VectorBase<dims, T>;
-		using VectorBase::Data;
-		using Vec = Vector<dims, T>;
 	public:
+        using VectorBase = detail::VectorBase<dims, T>;
+        using VectorBase::Data;
+        using Vec = Vector<dims, T>;
+
 		Vector<dims, T>() = default;
 		Vector<dims, T>(const Vec& other) = default;
 		explicit Vector<dims, T>(T value) : VectorBase(value) {}

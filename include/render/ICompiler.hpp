@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 #include "Components.hpp"
-#include "IShader.hpp"
+#include "ShaderStage.hpp"
 #include "IProgram.hpp"
 
 namespace zero::render {
@@ -13,28 +13,6 @@ namespace zero::render {
      */
     class ICompiler {
     public:
-
-        /**
-         * @brief Container for a Graphics Shader
-         */
-        struct ShaderStage {
-
-            /**
-             * @brief The Shader Type
-             */
-            IShader::Type type_;
-
-            /**
-             * @brief The Shader name
-             */
-            std::string name_;
-
-            /**
-             * @brief The Shader source code
-             */
-            std::string source_;
-
-        }; // struct ShaderStage
 
         /**
          * @brief Default Constructor

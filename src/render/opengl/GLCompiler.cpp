@@ -4,7 +4,7 @@
 
 using namespace zero::render;
 
-bool GLCompiler::InitializeShader(const ICompiler::ShaderStage& stage) {
+bool GLCompiler::InitializeShader(const ShaderStage& stage) {
     std::shared_ptr<GLShader> shader = std::make_shared<GLShader>(stage.source_, stage.type_);
 
     if (!shader->Compile()) return false;

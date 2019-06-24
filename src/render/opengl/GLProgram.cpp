@@ -25,7 +25,7 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
     return program;
 }
 
-GLProgram::GLProgram() : identifier_(glCreateProgram()) {}
+GLProgram::GLProgram() : id_(glCreateProgram()) {}
 
 GLProgram::~GLProgram() {
     Cleanup();
@@ -33,18 +33,18 @@ GLProgram::~GLProgram() {
 
 bool GLProgram::Link() {
     if (IsLinked()) return true;
-    glLinkProgram(identifier_);
+    glLinkProgram(id_);
     return IsLinked();
 }
 
 bool GLProgram::IsLinked() const {
     GLint result = GL_FALSE;
-    glGetProgramiv(identifier_, GL_LINK_STATUS, &result);
+    glGetProgramiv(id_, GL_LINK_STATUS, &result);
     return (result == GL_TRUE);
 }
 
 void GLProgram::Use() {
-    glUseProgram(identifier_);
+    glUseProgram(id_);
 }
 
 void GLProgram::Finish() {
@@ -79,12 +79,49 @@ void GLProgram::SetUniform(const std::string& name, float value) {
     float_map_[name] = value;
 }
 
+void GLProgram::FlushUniforms() {
+    // Flush Matrix4x4
+    for (const auto& iter : matrix4x4_map_) {
+        glUniformMatrix4fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_FALSE, iter.second[0]);
+    }
+
+    // Flush Matrix3x3
+    for (const auto& iter : matrix3x3_map_) {
+        glUniformMatrix3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_FALSE, iter.second[0]);
+    }
+
+    // Flush Vec4f
+    for (const auto& iter : vec4f_map_) {
+        glUniform4fv(glGetUniformLocation(id_, iter.first.c_str()), 1, (iter.second).Data());
+    }
+
+    // Flush Vec3f
+    for (const auto& iter : vec3f_map_) {
+        glUniform3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, (iter.second).Data());
+    }
+
+    // Flush uint32
+    for (const auto& iter : uint32_map_) {
+        glUniform1ui(glGetUniformLocation(id_, iter.first.c_str()), iter.second);
+    }
+
+    // Flush int32
+    for (const auto& iter : int32_map_) {
+        glUniform1i(glGetUniformLocation(id_, iter.first.c_str()), iter.second);
+    }
+
+    // Flush float
+    for (const auto& iter : float_map_) {
+        glUniform1f(glGetUniformLocation(id_, iter.first.c_str()), iter.second);
+    }
+}
+
 GLuint GLProgram::GetNativeIdentifier() {
-    return identifier_;
+    return id_;
 }
 
 void GLProgram::Cleanup() {
-    if (glIsProgram(identifier_)) {
-        glDeleteProgram(identifier_);
+    if (glIsProgram(id_)) {
+        glDeleteProgram(id_);
     }
 }

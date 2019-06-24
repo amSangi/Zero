@@ -43,13 +43,15 @@ namespace zero::render {
 
         void SetUniform(const std::string& name, float value) override;
 
+        void FlushUniforms() override ;
+
         GLuint GetNativeIdentifier();
 
     protected:
         void Cleanup() override;
 
     private:
-        GLuint identifier_;
+        GLuint id_;
         UniformMap<math::Matrix4x4> matrix4x4_map_;
         UniformMap<math::Matrix3x3> matrix3x3_map_;
         UniformMap<math::Vec4f> vec4f_map_;
