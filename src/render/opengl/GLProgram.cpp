@@ -116,7 +116,7 @@ void GLProgram::FlushUniforms() {
     }
 }
 
-GLuint GLProgram::GetNativeIdentifier() {
+GLuint GLProgram::GetNativeIdentifier() const {
     return id_;
 }
 

@@ -9,7 +9,7 @@ bool GLCompiler::InitializeShader(const ShaderStage& stage) {
 
     if (!shader->Compile()) return false;
 
-    shader_map_[stage.name_] = shader;
+    shader_map_[stage.filename_] = shader;
     return true;
 }
 

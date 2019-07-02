@@ -51,7 +51,7 @@ namespace zero::render {
          */
         struct Shaders {
             /**
-             * @brief The shader name
+             * @brief The fully qualified shader file name
              */
             ///@{
             std::string vertex_shader_;
@@ -64,30 +64,20 @@ namespace zero::render {
         }; // struct Shaders
 
         /**
-         * @brief Fully qualified texture map files
+         * @brief Texture files used by the material
          */
         struct TextureMap {
 
             /**
-             * @brief The fully qualified ambient texture map file name
+             * @brief The fully qualified texture map file name
              */
+            ///@{
             std::string ambient_map_;
-            /**
-             * @brief The fully qualified diffuse texture map file name
-             */
             std::string diffuse_map_;
-            /**
-             * @brief The fully qualified specular texture map file name
-             */
             std::string specular_map_;
-            /**
-             * @brief The fully qualified alpha texture map file name
-             */
             std::string alpha_map_;
-            /**
-             * @brief The fully qualified bump texture map file name
-             */
             std::string bump_map_;
+            ///@}
 
         }; // struct TextureMap
 

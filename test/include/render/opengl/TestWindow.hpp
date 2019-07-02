@@ -15,12 +15,15 @@ protected:
                                                  zero::render::GraphicsAPI::GRAPHICS_OPENGL,
                                                  zero::render::RefreshRate::REFRESH_IMMEDIATE,
                                                  "Test Window"};
+        SetUp(window_config);
+    }
 
-        test_window_ = std::make_shared<zero::render::Window>(window_config);
+    virtual void SetUp(zero::render::WindowConfig config) {
+        test_window_ = std::make_shared<zero::render::Window>(config);
         test_window_->Initialize();
     }
 
-private:
+protected:
     std::shared_ptr<zero::render::Window> test_window_;
 
 }; // class TestWindow

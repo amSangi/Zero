@@ -19,7 +19,7 @@ namespace zero::render {
 
         IShader::Type GetType() const override;
 
-        GLuint GetNativeIdentifier();
+        GLuint GetNativeIdentifier() const;
 
     protected:
         void Cleanup() override;

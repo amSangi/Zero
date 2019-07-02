@@ -34,7 +34,7 @@ namespace zero::render {
         /**
          * @brief Create a Graphics Program given a material component
          * @param material The material component
-         * @return A Graphics Program
+         * @return a graphics program. nullptr if a valid graphics program failed to be created.
          */
         virtual std::shared_ptr<IProgram> CreateProgram(const Material& material) = 0;
 

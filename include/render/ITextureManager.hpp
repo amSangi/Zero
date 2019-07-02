@@ -1,9 +1,8 @@
 #pragma once
 
 #include <memory>
-#include "ShaderStage.hpp"
-#include "ICompiler.hpp"
-#include "IProgram.hpp"
+#include <string>
+#include "ITexture.hpp"
 #include "Components.hpp"
 
 namespace zero::render {
@@ -22,18 +21,36 @@ namespace zero::render {
         virtual ~ITextureManager() = default;
 
         /**
-         * @brief Initialize the Shader
-         * @param shader_stage The shader stage to initialize
-         * @return True if the shader was initialized successfully. Otherwise false.
+         * @brief Get the maximum number of texture units
+         * @return the texture unit count
          */
-        virtual bool InitializeShader(ShaderStage shader_stage) = 0;
+        virtual uint8 GetTextureUnitCount() const = 0;
 
         /**
-         * @brief Create a graphics program given a Material component
-         * @param material The material component
-         * @return a graphics program
+         * @brief Initialize an image
+         * @param filename the image file name
+         * @return True if the image was initialized successfully. Otherwise false.
          */
-        virtual std::unique_ptr<IProgram> CreateProgram(Material material) = 0;
+        virtual bool InitializeImage(const std::string& filename) = 0;
+
+        /**
+         * @brief Create a graphics texture given a Material component
+         * @param filename the image file name
+         * @param index the texture index. Range from [0, GetTextureUnitCount).
+         * @return a graphics texture. nullptr if the image has not been initialized.
+         */
+        std::shared_ptr<ITexture> CreateTexture(const std::string& filename, uint8 index)
+        { return std::shared_ptr<ITexture>(CreateRawTexture(filename, index)); }
+
+    protected:
+
+        /**
+         * @brief Create a graphics texture given a Material component
+         * @param filename the image file name
+         * @param index the texture index. Range from [0, GetTextureUnitCount).
+         * @return a graphics texture. nullptr if the image has not been initialized.
+         */
+        virtual ITexture* CreateRawTexture(const std::string& filename, uint8 index) = 0;
 
     }; // class ITextureManager
 

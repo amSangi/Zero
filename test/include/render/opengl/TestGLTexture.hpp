@@ -1,30 +1,24 @@
 #pragma once
 
-#include "TestWindow.hpp"
+#include "TestGLShader.hpp"
 #include "render/opengl/GLTexture.hpp"
 
-class TestGLTexture : public TestWindow {
+class TestGLTexture : public TestGLShader {
 protected:
 
     void SetUp() override {
-        TestWindow::SetUp();
+        zero::render::WindowConfig window_config{zero::render::WindowFlags::WINDOW_NO_FLAGS,
+                                                 800,
+                                                 600,
+                                                 zero::render::WindowMode::WINDOW_WINDOWED,
+                                                 zero::render::GraphicsAPI::GRAPHICS_OPENGL,
+                                                 zero::render::RefreshRate::REFRESH_IMMEDIATE,
+                                                 "Test Window"};
+        TestWindow::SetUp(window_config);
     }
 
-private:
-    const char* TEST_VERTEX_SOURCE = "in vec2 position;"
-                                     "in vec2 in_texture_coordinate;"
-                                     "out vec2 texture_coordinate;"
-                                     "void main()"
-                                     "{"
-                                     "    texture_coordinate = in_texture_coordinate;"
-                                     "    gl_Position = vec4(position, 0.0, 1.0);"
-                                     "}";
+protected:
 
-    const char* TEST_FRAGMENT_SOURCE = "uniform sampler2D texture;"
-                                       "in vec2 texture_coordinate;"
-                                       "void main()"
-                                       "{"
-                                       "    gl_FragColor = texture(texture, texture_coordinate);"
-                                       "}";
+    std::string TEST_IMAGE_FILE = "../resources/textures/test.png";
 
 }; // class TestGLTexture

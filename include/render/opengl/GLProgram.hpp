@@ -45,7 +45,7 @@ namespace zero::render {
 
         void FlushUniforms() override ;
 
-        GLuint GetNativeIdentifier();
+        GLuint GetNativeIdentifier() const;
 
     protected:
         void Cleanup() override;

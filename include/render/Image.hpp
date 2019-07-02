@@ -36,6 +36,11 @@ namespace zero::render {
         explicit Image(std::string filename);
 
         /**
+         * @brief Destructor
+         */
+        ~Image();
+
+        /**
          * @brief Load the image into memory.
          * @return True if the image was successfully loaded. Otherwise false.
          */

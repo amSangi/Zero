@@ -16,9 +16,9 @@ namespace zero::render {
         IShader::Type type_;
 
         /**
-         * @brief The Shader name
+         * @brief The Shader filename
          */
-        std::string name_;
+        std::string filename_;
 
         /**
          * @brief The Shader source code

@@ -35,6 +35,7 @@ namespace zero::render {
      * @brief Additional window flags
      */
     enum WindowFlags {
+        WINDOW_NO_FLAGS          = 0u,        ///< No window flags
         WINDOW_HIDE              = 1u << 0u,  ///< Hide the window
         WINDOW_MAXIMIZED         = 1u << 1u,  ///< Maximize the window
         WINDOW_MINIMIZED         = 1u << 2u,  ///< Minimize the window

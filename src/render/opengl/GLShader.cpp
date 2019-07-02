@@ -55,7 +55,7 @@ IShader::Type GLShader::GetType() const {
     return type_;
 }
 
-GLuint GLShader::GetNativeIdentifier() {
+GLuint GLShader::GetNativeIdentifier() const {
     return id_;
 }
 

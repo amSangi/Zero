@@ -18,8 +18,10 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/Image.cpp
                              render/opengl/GLCompiler.cpp
                              render/opengl/GLProgram.cpp
+                             render/opengl/GLSampler.cpp
                              render/opengl/GLShader.cpp
-                             render/opengl/GLTexture.cpp)
+                             render/opengl/GLTexture.cpp
+                             render/opengl/GLTextureManager.cpp)
 
 
 ## Link Libraries ##

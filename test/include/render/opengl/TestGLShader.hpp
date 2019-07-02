@@ -31,8 +31,30 @@ protected:
 
 protected:
     const char* TEST_INVALID_SOURCE = "void main() {  ";
-    const char* TEST_VERTEX_SOURCE = "void main() { gl_Position = gl_Vertex; }";
-    const char* TEST_FRAGMENT_SOURCE = "void main() { gl_FragColor = vec4(1,1,0,1); }";
+
+    const char* TEST_VERTEX_SOURCE = "#version 460\n"
+                                     "layout (location = 0) in vec2 in_position;\n"
+                                     "layout (location = 1) in vec3 in_colour;\n"
+                                     "layout (location = 2) in vec2 in_texture_coordinate;\n"
+                                     "layout (location = 0) out vec3 colour;\n"
+                                     "layout (location = 1) out vec2 texture_coordinate;\n"
+                                     "void main()\n"
+                                     "{\n"
+                                     "    colour = in_colour;\n"
+                                     "    texture_coordinate = in_texture_coordinate;\n"
+                                     "    gl_Position = vec4(in_position, 1.0, 1.0);\n"
+                                     "}\n";
+
+    const char* TEST_FRAGMENT_SOURCE = "#version 460\n"
+                                       "uniform sampler2D tex_sampler;\n"
+                                       "layout (location = 0) in vec2 colour;\n"
+                                       "layout (location = 1) in vec2 texture_coordinate;\n"
+                                       "layout(location = 0) out vec4 out_colour;\n"
+                                       "void main()\n"
+                                       "{\n"
+                                       "    out_colour = texture2D(tex_sampler, texture_coordinate);\n"
+                                       "}\n";
+
     const char* TEST_GEOMETRY_SOURCE = "void main()"
                                           "{"
                                           "gl_Position = gl_in[0].gl_Position;"
