@@ -43,7 +43,48 @@ TEST_F(TestGLTexture, LoadImage) {
     EXPECT_EQ(image.GetPixelFormat(), Image::PixelFormat::PIXEL_FORMAT_UNDEFINED);
 }
 
-TEST_F(TestGLTexture, TestGLTextureManager) {
+TEST_F(TestGLTexture, LoadInvalidImage) {
+    Image image("");
+    EXPECT_FALSE(image.Load());
+    EXPECT_FALSE(image.IsLoaded());
+    EXPECT_EQ(image.GetData(), nullptr);
+}
+
+TEST_F(TestGLTexture, CreateInvalidTexture) {
+    GLTextureManager manager;
+    EXPECT_FALSE(manager.InitializeImage(""));
+    EXPECT_EQ(manager.CreateTexture("", 0), nullptr);
+}
+
+TEST_F(TestGLTexture, CreateTextureLargeIndex) {
+    GLTextureManager manager;
+    EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
+    EXPECT_EQ(manager.CreateTexture(TEST_IMAGE_FILE, manager.GetTextureUnitCount()), nullptr);
+}
+
+TEST_F(TestGLTexture, SetSamplerLargeIndex) {
+    GLTextureManager manager;
+    auto sampler = std::make_shared<GLSampler>();
+    sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
+    sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
+    sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
+    sampler->SetWrappingT(ISampler::Wrapping::REPEAT);
+    manager.SetSampler(sampler, manager.GetTextureUnitCount());
+    EXPECT_EQ(glGetError(), 0);
+}
+
+TEST_F(TestGLTexture, SetValidSampler) {
+    GLTextureManager manager;
+    auto sampler = std::make_shared<GLSampler>();
+    sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
+    sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
+    sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
+    sampler->SetWrappingT(ISampler::Wrapping::REPEAT);
+    manager.SetSampler(sampler, 0);
+    EXPECT_EQ(glGetError(), 0);
+}
+
+TEST_F(TestGLTexture, CreateValidTexture) {
     GLTextureManager manager;
     EXPECT_GT(manager.GetTextureUnitCount(), 0);
     EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
@@ -51,7 +92,7 @@ TEST_F(TestGLTexture, TestGLTextureManager) {
     EXPECT_NE(texture, nullptr);
 }
 
-TEST_F(TestGLTexture, TestGLTextureWithShader) {
+TEST_F(TestGLTexture, TextureWithShader) {
     // Create Shaders
     std::vector<std::shared_ptr<GLShader>> shaders;
     auto vertex_shader = std::make_shared<GLShader>(TEST_VERTEX_SOURCE, IShader::Type::TYPE_VERTEX_SHADER);
@@ -127,6 +168,8 @@ TEST_F(TestGLTexture, TestGLTextureWithShader) {
 
     program->SetUniform("tex_sampler", index);
     program->FlushUniforms();
+
+    EXPECT_EQ(glGetError(), 0);
 
     // Clear the screen to black
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
