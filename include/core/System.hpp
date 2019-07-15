@@ -29,15 +29,26 @@ namespace zero {
         virtual ~System() = 0;
 
         /**
-         * @brief Initialize the system. Called after construction.
+         * @brief Initialize the system. Called once before any updates have been performed.
          */
         virtual void Initialize() = 0;
 
         /**
+         * @brief Perform pre-update operations. Called before all systems are updated.
+         */
+        virtual void PreUpdate() = 0;
+
+        /**
          * @brief Update the system. Called during game loop.
-         * @param dt Time between current and last frame.
+         * @param dt time between current and last frame.
          */
         virtual void Update(float dt) = 0;
+
+
+        /**
+         * @brief Perform post update operations. Called after all systems have been updated.
+         */
+        virtual void PostUpdate() = 0;
 
         /**
          * @brief Perform all shutdown operations. Called just before destruction.
@@ -48,7 +59,7 @@ namespace zero {
          * @brief Get the game engine entity-component registry
          * @return the registry
          */
-        entt::registry<>& GetRegistry();
+        entt::registry& GetRegistry();
 
         /**
          * @brief Get the game engine event bus

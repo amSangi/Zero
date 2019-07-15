@@ -10,15 +10,16 @@ Window::Window(WindowConfig config)
 : config_(std::move(config))
 , sdl_window_(nullptr)
 , sdl_gl_context_(nullptr)
-{
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
-}
+{}
 
 Window::~Window() {
     Cleanup();
 }
 
 void Window::Initialize() {
+
+    // Initialize SDL
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 
     // Get SDL window flags
     uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;

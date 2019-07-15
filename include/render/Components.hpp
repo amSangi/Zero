@@ -11,14 +11,9 @@
 namespace zero::render {
 
     /**
-     * @brief A triangular mesh mesh component
+     * @brief A triangular mesh component
      */
     struct Mesh : public Component {
-        /**
-         * @brief The bounding sphere of the mesh
-         */
-        math::Sphere bounding_volume_;
-
         /**
          * @brief The index data for the vertices
          */
@@ -40,6 +35,15 @@ namespace zero::render {
         std::vector<math::Vec2f> texture_coordinates_;
     }; // struct Mesh
 
+    /**
+     * @brief A volume component encapsulating an entity
+     */
+    struct Volume : public ParentComponent {
+        /**
+         * @brief The bounding sphere of the entity
+         */
+        math::Sphere bounding_volume_;
+    }; // struct Volume
 
     /**
      * @brief A material component for rendering

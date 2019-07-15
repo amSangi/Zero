@@ -3,7 +3,9 @@
 
 using namespace zero::math;
 
-Matrix3x3::Matrix3x3(float m[3][3]) {
+Matrix3x3::Matrix3x3(float m[3][3])
+: matrix_()
+{
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             matrix_[i][j] = m[i][j];
@@ -11,7 +13,9 @@ Matrix3x3::Matrix3x3(float m[3][3]) {
     }
 }
 
-Matrix3x3::Matrix3x3(float value) {
+Matrix3x3::Matrix3x3(float value)
+: matrix_()
+{
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             matrix_[i][j] = value;
@@ -21,8 +25,9 @@ Matrix3x3::Matrix3x3(float value) {
 
 Matrix3x3::Matrix3x3(float e00, float e01, float e02,
                      float e10, float e11, float e12,
-                     float e20, float e21, float e22) {
-
+                     float e20, float e21, float e22)
+: matrix_()
+{
     matrix_[0][0] = e00; matrix_[0][1] = e01; matrix_[0][2] = e02;
     matrix_[1][0] = e10; matrix_[1][1] = e11; matrix_[1][2] = e12;
     matrix_[2][0] = e20; matrix_[2][1] = e21; matrix_[2][2] = e22;

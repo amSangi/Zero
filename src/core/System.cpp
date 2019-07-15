@@ -10,6 +10,6 @@ event::EventBus& System::GetEventBus() {
 	return engine_->GetEventBus();
 }
 
-entt::registry<>& System::GetRegistry() {
+entt::registry& System::GetRegistry() {
 	return engine_->GetRegistry();
 }

@@ -2,6 +2,7 @@
 
 #include "Angle.hpp"
 #include "ZMath.hpp"
+#include "Matrix3x3.hpp"
 
 namespace zero::math {
 
@@ -202,6 +203,48 @@ namespace zero::math {
          * @return the resulting matrix4x4
          */
         Matrix4x4 operator*(const Matrix4x4& rhs) const;
+
+        /**
+         * @brief Apply a translation to the matrix
+         * @param translation the translation
+         */
+        Matrix4x4& Translate(const Vec3f& translation);
+
+        /**
+         * @brief Apply a rotation to the matrix
+         * @param rotation the rotation
+         */
+        Matrix4x4& Rotate(const Quaternion& rotation);
+
+        /**
+         * @brief Apply a scale to the matrix
+         * @param scale the scale
+         */
+        Matrix4x4& Scale(const Vec3f& scale);
+
+        /**
+         * @brief Get the translation component of the matrix
+         * @return the translation in 3D space
+         */
+        Vec3f GetTranslation() const;
+
+        /**
+         * @brief Get the rotation component of the matrix
+         * @return the rotation
+         */
+        Quaternion GetRotation() const;
+
+        /**
+         * @brief Get the scale component of the matrix
+         * @return the scale
+         */
+        Vec3f GetScale() const;
+
+        /**
+         * @brief Get the Matrix3x3 containing the scale and orientation components
+         * @return a matrix3x3
+         */
+        Matrix3x3 GetMatrix3x3() const;
 
         /**
          * @return the identity matrix

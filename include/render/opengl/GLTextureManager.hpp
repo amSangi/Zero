@@ -10,7 +10,6 @@ namespace zero::render {
     class GLTextureManager : public ITextureManager {
     public:
 
-
         GLTextureManager();
 
         ~GLTextureManager() override = default;

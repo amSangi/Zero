@@ -1,10 +1,14 @@
 #include "math/Matrix4x4.hpp"
 #include "math/Matrix3x3.hpp"
 #include "math/Vector4.hpp"
+#include "math/Vector3.hpp"
+#include "math/Quaternion.hpp"
 
 using namespace zero::math;
 
-Matrix4x4::Matrix4x4(float m[4][4]) {
+Matrix4x4::Matrix4x4(float m[4][4])
+: matrix_()
+{
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             matrix_[i][j] = m[i][j];
@@ -12,7 +16,9 @@ Matrix4x4::Matrix4x4(float m[4][4]) {
     }
 }
 
-Matrix4x4::Matrix4x4(float value) {
+Matrix4x4::Matrix4x4(float value)
+: matrix_()
+{
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             matrix_[i][j] = value;
@@ -20,7 +26,9 @@ Matrix4x4::Matrix4x4(float value) {
     }
 }
 
-Matrix4x4::Matrix4x4(const Matrix3x3& m3) {
+Matrix4x4::Matrix4x4(const Matrix3x3& m3)
+: matrix_()
+{
     matrix_[0][0] = m3(0, 0);
     matrix_[0][1] = m3(0, 1);
     matrix_[0][2] = m3(0, 2);
@@ -45,7 +53,9 @@ Matrix4x4::Matrix4x4(const Matrix3x3& m3) {
 Matrix4x4::Matrix4x4(float e00, float e01, float e02, float e03,
                      float e10, float e11, float e12, float e13,
                      float e20, float e21, float e22, float e23,
-                     float e30, float e31, float e32, float e33) {
+                     float e30, float e31, float e32, float e33)
+: matrix_()
+{
 
     matrix_[0][0] = e00; matrix_[0][1] = e01; matrix_[0][2] = e02; matrix_[0][3] = e03;
     matrix_[1][0] = e10; matrix_[1][1] = e11; matrix_[1][2] = e12; matrix_[1][3] = e13;
@@ -276,6 +286,53 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& rhs) const {
     }
 
     return m;
+}
+
+Matrix4x4& Matrix4x4::Translate(const Vec3f& translation) {
+    for (int i = 0; i < 3; ++i) {
+        matrix_[i][3] += translation[i];
+    }
+    return *this;
+}
+
+Matrix4x4& Matrix4x4::Rotate(const Quaternion& rotation) {
+    auto result = rotation.GetRotationMatrix() * GetMatrix3x3();
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            matrix_[i][j] = result[i][j];
+        }
+    }
+    return *this;
+}
+
+Matrix4x4& Matrix4x4::Scale(const Vec3f& scale) {
+    for (int i = 0; i < 3; ++i) {
+        matrix_[i][i] *= scale[i];
+    }
+    return *this;
+}
+
+Vec3f Matrix4x4::GetTranslation() const {
+    return Vec3f(matrix_[0][3],
+                 matrix_[1][3],
+                 matrix_[2][3]);
+}
+
+Quaternion Matrix4x4::GetRotation() const {
+    return Quaternion::FromMatrix3(GetMatrix3x3());
+}
+
+Vec3f Matrix4x4::GetScale() const {
+    auto sx = Vec3f(matrix_[0][0], matrix_[1][0], matrix_[2][0]).Magnitude();
+    auto sy = Vec3f(matrix_[0][1], matrix_[1][1], matrix_[2][1]).Magnitude();
+    auto sz = Vec3f(matrix_[0][2], matrix_[1][2], matrix_[2][2]).Magnitude();
+    return Vec3f(sx, sy, sz);
+}
+
+Matrix3x3 Matrix4x4::GetMatrix3x3() const {
+    return Matrix3x3(matrix_[0][0], matrix_[0][1], matrix_[0][2],
+                     matrix_[1][0], matrix_[1][1], matrix_[1][2],
+                     matrix_[2][0], matrix_[2][1], matrix_[2][2]);
 }
 
 Matrix4x4 Matrix4x4::Identity() {

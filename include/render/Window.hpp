@@ -39,12 +39,12 @@ namespace zero::render {
          */
         void SwapBuffers();
 
-    private:
-
         /**
          * @brief Clean up the Window and GL Context
          */
         void Cleanup();
+
+    private:
 
         /**
          * @brief The Window configuration

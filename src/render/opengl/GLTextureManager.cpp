@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "render/opengl/GLTextureManager.hpp"
 
 using namespace zero::render;

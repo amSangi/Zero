@@ -14,8 +14,10 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
                              math/Sphere.cpp
-                             render/Window.cpp
                              render/Image.cpp
+                             render/Propagator.cpp
+                             render/RenderSystem.cpp
+                             render/Window.cpp
                              render/opengl/GLCompiler.cpp
                              render/opengl/GLProgram.cpp
                              render/opengl/GLSampler.cpp

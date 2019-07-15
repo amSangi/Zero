@@ -62,7 +62,7 @@ namespace zero {
          * @brief Get the game registry
          * @return the registry
          */
-        inline entt::registry<>& GetRegistry()        { return registry_; }
+        inline entt::registry& GetRegistry()        { return registry_; }
 
     protected:
 
@@ -75,7 +75,7 @@ namespace zero {
          * @brief The registry containing the entities and their components
          * @see https://github.com/skypjack/entt
          */
-        entt::registry<> registry_;
+        entt::registry registry_;
 
         /**
          * @brief The game systems

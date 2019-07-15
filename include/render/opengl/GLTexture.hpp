@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <memory>
 #include <SDL_opengl.h>
 #include "render/Image.hpp"
