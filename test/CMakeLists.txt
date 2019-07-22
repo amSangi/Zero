@@ -6,6 +6,7 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest-src/goo
 include_directories(include)
 
 add_executable(${PROJECT_NAME} TestMain.cpp
+                               src/TestRegistry.cpp
                                src/math/AngleTests.cpp
                                src/math/BoxTests.cpp
                                src/math/IntersectionTests.cpp
@@ -15,6 +16,7 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/math/QuaternionTests.cpp
                                src/math/SphereTests.cpp
                                src/math/VectorTests.cpp
+                               src/render/PropagatorTests.cpp
                                src/render/opengl/GLCompilerTests.cpp
                                src/render/opengl/GLProgramTests.cpp
                                src/render/opengl/GLShaderTests.cpp

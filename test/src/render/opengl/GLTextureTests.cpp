@@ -2,7 +2,6 @@
 #include <chrono>
 #include <memory>
 #include <thread>
-#include "gtest/gtest.h"
 #include "render/Image.hpp"
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"

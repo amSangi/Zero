@@ -99,21 +99,21 @@ namespace zero::math {
 		 * @param rhs The right quaternion
 		 * @return A new Quaternion containing the component-wise sums
 		 */
-		Quaternion operator+(const Quaternion& rhs);
+		Quaternion operator+(const Quaternion& rhs) const;
 
 		/**
 		 * @brief Subtract the components of this by the components of rhs
 		 * @param rhs The right quaternion
 		 * @return A new Quaternion containing the component-wise differences
 		 */
-		Quaternion operator-(const Quaternion& rhs);
+		Quaternion operator-(const Quaternion& rhs) const;
 
 		/**
 		 * @brief Perform Quaternion-Quaternion multiplication
 		 * @param rhs The right quaternion
 		 * @return A new resulting Quaternion
 		 */
-		Quaternion operator*(const Quaternion& rhs);
+		Quaternion operator*(const Quaternion& rhs) const;
 
 		/**
 		 * @brief Add the components of the two quaternions together

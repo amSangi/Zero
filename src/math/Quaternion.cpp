@@ -67,15 +67,15 @@ Quaternion& Quaternion::operator/=(float scalar) {
 }
 
 /* ********** Quaternion/Quaternion Operations ********** */
-Quaternion Quaternion::operator+(const Quaternion& rhs) {
+Quaternion Quaternion::operator+(const Quaternion& rhs)  const {
 	return Quaternion(w_ + rhs.w_, x_ + rhs.x_, y_ + rhs.y_, z_ + rhs.z_);
 }
 
-Quaternion Quaternion::operator-(const Quaternion& rhs) {
+Quaternion Quaternion::operator-(const Quaternion& rhs)  const {
 	return Quaternion(w_ - rhs.w_, x_ - rhs.x_, y_ - rhs.y_, z_ - rhs.z_);
 }
 
-Quaternion Quaternion::operator*(const Quaternion& rhs) {
+Quaternion Quaternion::operator*(const Quaternion& rhs)  const {
 	return Quaternion(
 		(w_ * rhs.w_) - (x_ * rhs.x_) - (y_ * rhs.y_) - (z_ * rhs.z_),
 		(w_ * rhs.x_) + (x_ * rhs.w_) + (y_ * rhs.z_) - (z_ * rhs.y_),

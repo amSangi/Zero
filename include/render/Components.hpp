@@ -39,6 +39,37 @@ namespace zero::render {
      * @brief A volume component encapsulating an entity
      */
     struct Volume : public ParentComponent {
+
+        /**
+         * @brief Default constructor
+         */
+        Volume()
+        : ParentComponent()
+        , bounding_volume_()
+        {}
+
+        /**
+         * @brief Construct a root volume with a given position and radius
+         * @param position the position of the volume
+         * @param radius the radius of the volume
+         */
+        Volume(const math::Vec3f& position, float radius)
+        : ParentComponent()
+        , bounding_volume_(position, radius)
+        {}
+
+        /**
+         * @brief Construct a Volume with a given position, radius, and parent entity
+         * @param parent the parent entity
+         * @param position the position of the volume
+         * @param radius the radius of the volume
+         */
+        Volume(Entity parent, const math::Vec3f& position, float radius)
+        : ParentComponent(parent)
+        , bounding_volume_(position, radius)
+        {}
+
+
         /**
          * @brief The bounding sphere of the entity
          */

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include <memory>
 #include "TestWindow.hpp"
 #include "render/opengl/GLShader.hpp"

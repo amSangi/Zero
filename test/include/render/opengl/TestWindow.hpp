@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "render/Window.hpp"
 
 class TestWindow : public ::testing::Test {

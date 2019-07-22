@@ -1,4 +1,3 @@
-#include "gtest/gtest.h"
 #include "render/opengl/TestGLShader.hpp"
 
 using namespace zero::render;

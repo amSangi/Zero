@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "math/Matrix4x4.hpp"
 #include "math/Vector4.hpp"
+#include "math/Quaternion.hpp"
 
 using namespace zero::math;
 
@@ -163,4 +164,114 @@ TEST(TestMatrix4, MatrixMatrixMultiply) {
 	                             257.0f, 645.0f, 340.0f, 119.0f,
 	                             424.0f, 1037.0f, 554.0f, 196.0f,
 	                             624.0f, 1541.0f, 822.0f, 292.0f));
+}
+
+TEST(TestMatrix4, Translate) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    EXPECT_EQ(matrix.Translate(Vec3f::One()), Matrix4x4(1.0f, 0.0f, 0.0f, 1.0f,
+                                                        0.0f, 1.0f, 0.0f, 1.0f,
+                                                        0.0f, 0.0f, 1.0f, 1.0f,
+                                                        0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(matrix.Translate(Vec3f::One()), Matrix4x4(1.0f, 0.0f, 0.0f, 2.0f,
+                                                        0.0f, 1.0f, 0.0f, 2.0f,
+                                                        0.0f, 0.0f, 1.0f, 2.0f,
+                                                        0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(matrix.Translate(Vec3f(3.3f, -2.5f, -1.0f)), Matrix4x4(1.0f, 0.0f, 0.0f, 5.3f,
+                                                                     0.0f, 1.0f, 0.0f, -0.5f,
+                                                                     0.0f, 0.0f, 1.0f, 1.0f,
+                                                                     0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+TEST(TestMatrix4, Rotate) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f),
+                                                Radian(0.0f),
+                                                Degree(90.0f).ToRadian());
+    Quaternion rotation2 = Quaternion::FromEuler(Radian(0.0f),
+                                                 Radian(0.0f),
+                                                 Degree(180.0f).ToRadian());
+    EXPECT_EQ(matrix.Rotate(rotation),
+              Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, -1.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, 0.0f, 1.0f));
+
+    EXPECT_EQ(matrix.Rotate(rotation),
+              Matrix4x4::Identity().Rotate(rotation2));
+}
+
+TEST(TestMatrix4, Scale) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    EXPECT_EQ(matrix.Scale(Vec3f::One()), Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
+                                                    0.0f, 1.0f, 0.0f, 0.0f,
+                                                    0.0f, 0.0f, 1.0f, 0.0f,
+                                                    0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(matrix.Scale(Vec3f(2.0, 3.0f, -4.5f)), Matrix4x4(2.0f, 0.0f, 0.0f, 0.0f,
+                                                               0.0f, 3.0f, 0.0f, 0.0f,
+                                                               0.0f, 0.0f, -4.5f, 0.0f,
+                                                               0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(matrix.Scale(Vec3f(2.0f)), Matrix4x4(4.0f, 0.0f, 0.0f, 0.0f,
+                                                   0.0f, 6.0f, 0.0f, 0.0f,
+                                                   0.0f, 0.0f, -9.0f, 0.0f,
+                                                   0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+TEST(TestMatrix4, TranslateRotateScale) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());
+    Vec3f translation(2.5f, 2.5f, -10.0f);
+    Vec3f scale(2.0f, 2.0f, 2.0f);
+    matrix.Scale(scale)
+          .Rotate(rotation)
+          .Translate(translation);
+    EXPECT_EQ(matrix, Matrix4x4(2.0f, 0.0f, 0.0f, 2.5f,
+                                0.0f, 0.0f, -2.0f, 2.5f,
+                                0.0f, 2.0f, 0.0f, -10.0f,
+                                0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+TEST(TestMatrix4, GetTranslate) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());
+    Vec3f translation(2.5f, 2.5f, -10.0f);
+    Vec3f scale(2.0f, 2.0f, 2.0f);
+    matrix.Scale(scale)
+          .Rotate(rotation)
+          .Translate(translation);
+    EXPECT_EQ(matrix.GetTranslation(), translation);
+}
+
+TEST(TestMatrix4, GetRotation) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());
+    Vec3f translation(2.5f, 2.5f, -10.0f);
+    Vec3f scale(2.0f, 2.0f, 2.0f);
+    matrix.Scale(scale)
+          .Rotate(rotation)
+          .Translate(translation);
+    EXPECT_EQ(matrix.GetRotation(), rotation);
+}
+
+TEST(TestMatrix4, GetScale) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());
+    Vec3f translation(2.5f, 2.5f, -10.0f);
+    Vec3f scale(2.0f, 2.0f, 2.0f);
+    matrix.Scale(scale)
+          .Rotate(rotation)
+          .Translate(translation);
+    EXPECT_EQ(matrix.GetScale(), scale);
+}
+
+TEST(TestMatrix4, GetMatrix3x3) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());
+    Vec3f translation(2.5f, 2.5f, -10.0f);
+    Vec3f scale(2.0f, 2.0f, 2.0f);
+    matrix.Scale(scale)
+          .Rotate(rotation)
+          .Translate(translation);
+    EXPECT_EQ(matrix.GetMatrix3x3(), Matrix3x3(2.0f, 0.0f, 0.0f,
+                                               0.0f, 0.0f, -2.0f,
+                                               0.0f, 2.0f, 0.0f));
 }
