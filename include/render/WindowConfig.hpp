@@ -90,4 +90,3 @@ namespace zero::render {
     }; // struct WindowConfig
 
 } // namespace zero::render
-#pragma clang diagnostic pop
