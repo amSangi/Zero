@@ -38,37 +38,37 @@ namespace zero::render {
     /**
      * @brief A volume component encapsulating an entity
      */
-    struct Volume : public ParentComponent {
+    struct Volume : public Component {
 
         /**
          * @brief Default constructor
          */
         Volume()
-        : ParentComponent()
+        : Component()
         , bounding_volume_()
         {}
 
         /**
-         * @brief Construct a root volume with a given position and radius
+         * @brief Construct a volume with a given position and radius
          * @param position the position of the volume
          * @param radius the radius of the volume
          */
         Volume(const math::Vec3f& position, float radius)
-        : ParentComponent()
+        : Component()
         , bounding_volume_(position, radius)
         {}
 
         /**
-         * @brief Construct a Volume with a given position, radius, and parent entity
-         * @param parent the parent entity
-         * @param position the position of the volume
-         * @param radius the radius of the volume
+         * @brief Engulf the other volume so that the other volume is inside
+         * @param other the other volume
          */
-        Volume(Entity parent, const math::Vec3f& position, float radius)
-        : ParentComponent(parent)
-        , bounding_volume_(position, radius)
-        {}
+        void Engulf(const Volume& other);
 
+        /**
+         * @brief Apply a matrix transformation to the volume
+         * @param transformation the transformation matrix to apply
+         */
+        void Transform(const math::Matrix4x4& transformation);
 
         /**
          * @brief The bounding sphere of the entity

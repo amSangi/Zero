@@ -21,8 +21,15 @@ public:
      */
     zero::Component::Entity GenerateHumanoid(zero::math::Vec3f position, float parent_radius = 6.0f);
 
+    /**
+     * @brief Does the parent volume contain all of its child volumes?
+     * @param parent the parent entity
+     * @return True if the parent entity encapsulates all child volumes
+     */
+    bool ParentContainsChildVolumes(zero::Component::Entity parent) const;
+
 protected:
-    static constexpr zero::uint32 kEntityCount = 1000;
+    static constexpr zero::uint32 kEntityCount = 100;
     static constexpr float kMinPositionRange = -500.0f;
     static constexpr float kMaxPositionRange = 500.0f;
     std::vector<zero::Component::Entity> humanoids_;

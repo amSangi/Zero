@@ -6,6 +6,7 @@ set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
 ## Create Library ##
 add_library(${PROJECT_NAME}  event/EventBus.cpp
                              core/System.cpp
+                             core/Transform.cpp
                              math/Box.cpp
                              math/Intersection.cpp
                              math/Matrix3x3.cpp
@@ -14,6 +15,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
                              math/Sphere.cpp
+                             render/Components.cpp
                              render/Image.cpp
                              render/Propagator.cpp
                              render/RenderSystem.cpp

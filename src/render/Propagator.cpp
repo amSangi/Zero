@@ -1,6 +1,7 @@
 #include <set>
 #include <stack>
 #include <queue>
+#include "core/Transform.hpp"
 #include "render/Propagator.hpp"
 #include "math/Vector3.hpp"
 #include "math/Vector4.hpp"
@@ -34,75 +35,53 @@ void Propagator::PropagateTransform(entt::registry& registry) const {
             auto& child_volume = view.get<Volume>(child_entity);
 
             // Compute new world transform for the child entity
-            const auto parent_matrix = Matrix4x4::Identity()
-                                       .Scale(transform.scale_)
-                                       .Rotate(transform.orientation_)
-                                       .Translate(transform.position_);
-            const auto child_matrix = Matrix4x4::Identity()
-                                     .Scale(child_transform.scale_)
-                                     .Rotate(child_transform.orientation_)
-                                     .Translate(child_transform.position_);
+            const auto parent_matrix = transform.GetLocalToWorldMatrix();
+            const auto child_matrix = child_transform.GetLocalToWorldMatrix();
             Matrix4x4 result = parent_matrix * child_matrix;
 
-            // Set the world transform
+            // Set the world transform by decomposing the resulting matrix
             child_transform.position_ = result.GetTranslation();
             child_transform.scale_ = result.GetScale();
             child_transform.orientation_ = result.GetRotation();
 
             // Transform bounding volume using new world transform
-            TransformVolume(child_volume, result);
+            child_volume.Transform(result);
         }
     }
 }
 
 void Propagator::PropagateVolume(entt::registry& registry) const {
-    auto view = registry.view<Volume>();
+    auto view = registry.view<Volume, Transform>();
     std::queue<Component::Entity> update_queue;
     // Use to prevent duplicate operations
     std::set<Component::Entity> parents_to_visit;
 
     // Retrieve leaf entities - entities that have a parent but 0 children
     for (auto entity : view) {
-        auto& volume = view.get(entity);
-        if (volume.children_.empty() && volume.parent_ != entt::null) {
+        auto& volume = view.get<Volume>(entity);
+        auto& transform = view.get<Transform>(entity);
+        if (transform.children_.empty() && transform.parent_ != entt::null) {
             update_queue.push(entity);
         }
     }
 
     // Begin upward propagation
     while (!update_queue.empty()) {
-        auto& volume = view.get(update_queue.front());
+        auto entity = update_queue.front();
+        auto& volume = view.get<Volume>(entity);
+        auto& transform = view.get<Transform>(entity);
         update_queue.pop();
 
-        if (volume.parent_ == entt::null) continue;
+        if (transform.parent_ == entt::null) continue;
 
         // Enlarge parent volume
-        auto& parent_volume = view.get(volume.parent_);
-        parent_volume.bounding_volume_.Merge(volume.bounding_volume_);
+        auto& parent_volume = view.get<Volume>(transform.parent_);
+        parent_volume.Engulf(volume);
 
         // Add parent to queue if it hasn't already been added
-        if (parents_to_visit.find(volume.parent_) == parents_to_visit.end()) {
-            parents_to_visit.insert(volume.parent_);
-            update_queue.push(volume.parent_);
+        if (parents_to_visit.find(transform.parent_) == parents_to_visit.end()) {
+            parents_to_visit.insert(transform.parent_);
+            update_queue.push(transform.parent_);
         }
     }
-}
-
-void Propagator::TransformVolume(Volume& volume, const Matrix4x4& transformation) const {
-    Vec3f center = volume.bounding_volume_.center_;
-
-    // Apply transformation
-    Vec4f transformed_center = transformation * Vec4f(center.x_, center.y_, center.z_, 1.0f);
-
-    // Get the largest scale component
-    const float sx = Vec3f(transformation[0][0], transformation[1][0], transformation[2][0]).SquareMagnitude();
-    const float sy = Vec3f(transformation[0][1], transformation[1][1], transformation[2][1]).SquareMagnitude();
-    const float sz = Vec3f(transformation[0][2], transformation[1][2], transformation[2][2]).SquareMagnitude();
-    const float scale = zero::math::Sqrt(std::max({sx, sy, sz}));
-
-    // Update volume
-    volume.bounding_volume_.center_.x_ = transformed_center.x_;
-    volume.bounding_volume_.center_.y_ = transformed_center.y_;
-    volume.bounding_volume_.center_.z_ = transformed_center.z_;
-    volume.bounding_volume_.radius_ *= scale;
 }
