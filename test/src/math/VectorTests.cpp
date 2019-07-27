@@ -271,3 +271,27 @@ TEST(TestVector, Angle) {
 	actual = Vec3f::Angle(Vec3f(5.0f, 13.3f, -13.32f), Vec3f(5.0f, 13.3f, -13.32f));
     EXPECT_EQ(actual, expected);
 }
+
+TEST(TestVector, XY) {
+    Vector<1, float> single_dimension(1.0f);
+    Vec2f two_dimension(1.0f, 2.0f);
+    Vec3f three_dimension(1.0f, 2.0f, 3.0f);
+    Vec4f four_dimension(1.0f, 2.0f, 3.0f, 4.0f);
+
+    EXPECT_EQ(single_dimension.XY(), Vec2f(1.0f, 0.0f));
+    EXPECT_EQ(two_dimension.XY(), two_dimension);
+    EXPECT_EQ(three_dimension.XY(), Vec2f(1.0f, 2.0f));
+    EXPECT_EQ(four_dimension.XY(), Vec2f(1.0f, 2.0f));
+}
+
+TEST(TestVector, XYZ) {
+    Vector<1, float> single_dimension(1.0f);
+    Vec2f two_dimension(1.0f, 2.0f);
+    Vec3f three_dimension(1.0f, 2.0f, 3.0f);
+    Vec4f four_dimension(1.0f, 2.0f, 3.0f, 4.0f);
+
+    EXPECT_EQ(single_dimension.XYZ(), Vec3f(1.0f, 0.0f, 0.0f));
+    EXPECT_EQ(two_dimension.XYZ(), Vec3f(1.0f, 2.0f, 0.0f));
+    EXPECT_EQ(three_dimension.XYZ(), three_dimension);
+    EXPECT_EQ(four_dimension.XYZ(), Vec3f(1.0f, 2.0f, 3.0f));
+}

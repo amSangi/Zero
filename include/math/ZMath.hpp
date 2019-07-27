@@ -14,7 +14,7 @@ namespace zero::math {
     class Quaternion;
     class Radian;
     class Sphere;
-    template<int dims, class T> class Vector;
+    template<uint16 dims, class T> class Vector;
     using Vec2f = Vector<2, float>;
     using Vec3f = Vector<3, float>;
     using Vec4f = Vector<4, float>;

@@ -19,8 +19,6 @@ void Volume::Transform(const zero::math::Matrix4x4& transformation) {
     const float scale = zero::math::Sqrt(std::max({sx, sy, sz}));
 
     // Update volume
-    bounding_volume_.center_.x_ = transformed_center.x_;
-    bounding_volume_.center_.y_ = transformed_center.y_;
-    bounding_volume_.center_.z_ = transformed_center.z_;
+    bounding_volume_.center_ = transformed_center.XYZ();
     bounding_volume_.radius_ *= scale;
 }

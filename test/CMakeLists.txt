@@ -7,6 +7,7 @@ include_directories(include)
 
 add_executable(${PROJECT_NAME} TestMain.cpp
                                src/TestRegistry.cpp
+                               src/core/TransformTests.cpp
                                src/math/AngleTests.cpp
                                src/math/BoxTests.cpp
                                src/math/IntersectionTests.cpp

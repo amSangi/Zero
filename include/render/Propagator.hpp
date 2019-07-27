@@ -29,15 +29,6 @@ namespace zero::render {
          */
         void PropagateVolume(entt::registry& registry) const;
 
-    private:
-
-        /**
-         * @brief Apply the affine transformation to the bounding volume
-         * @param volume the volume to transform
-         * @param transformation the affine transformation
-         */
-        void TransformVolume(Volume& volume, const zero::math::Matrix4x4& transformation) const;
-
     }; // class Propagator
 
 } // namespace zero::render

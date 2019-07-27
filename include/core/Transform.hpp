@@ -82,18 +82,11 @@ namespace zero {
         void Translate(const math::Vec3f& translation);
 
         /**
-         * @brief Rotate the transform relative to the world
-         * @param euler the euler angles in radians
+         * @brief Translate the position relative to the parent entity
+         * @param parent the parent transform
+         * @param translation the translation vector
          */
-        void Rotate(const math::Vec3f& euler);
-
-        /**
-         * @brief Rotate the transform in the x, y, and z axes relative to the world
-         * @param x the angle in the x axis
-         * @param y the angle in the y axis
-         * @param z the angle in the z axis
-         */
-        void Rotate(math::Radian x, math::Radian y, math::Radian z);
+        void LocalTranslate(const Transform& parent, const math::Vec3f& translation);
 
         /**
          * @brief Rotate the transform using the quaternion relative to the world
@@ -102,11 +95,24 @@ namespace zero {
         void Rotate(const math::Quaternion& rotation);
 
         /**
-         * @brief Rotate the transform around an axis by the given angle relative to the world
-         * @param axis the axis to rotate around
-         * @param angle the angle of the rotation
+         * @brief Rotate the transform using the quaternion relative to the parent entity
+         * @param parent the parent transform
+         * @param rotation the rotation quaternion
          */
-        void Rotate(const math::Vec3f& axis, math::Radian angle);
+        void LocalRotate(const Transform& parent, const math::Quaternion& rotation);
+
+        /**
+         * @brief Scale the entity
+         * @param scale the scale
+         */
+        void Scale(const math::Vec3f& scale);
+
+        /**
+         * @brief Scale the transform using the scale relative to the parent entity
+         * @param parent the parent transform
+         * @param scale the scale
+         */
+        void LocalScale(const Transform& parent, const math::Vec3f& scale);
 
         /**
          * @brief The position in the world
