@@ -263,6 +263,17 @@ TEST(TestMatrix4, GetScale) {
     EXPECT_EQ(matrix.GetScale(), scale);
 }
 
+TEST(TestMatrix4, GetNegativeScale) {
+    Matrix4x4 matrix = Matrix4x4::Identity();
+    Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());
+    Vec3f translation(2.5f, 2.5f, -10.0f);
+    Vec3f scale(2.0f, -2.0f, 2.0f);
+    matrix.Scale(scale)
+            .Rotate(rotation)
+            .Translate(translation);
+    EXPECT_NE(matrix.GetScale(), scale);
+}
+
 TEST(TestMatrix4, GetMatrix3x3) {
     Matrix4x4 matrix = Matrix4x4::Identity();
     Quaternion rotation = Quaternion::FromEuler(Radian(0.0f), Radian(0.0f), Degree(90.0f).ToRadian());

@@ -76,43 +76,55 @@ namespace zero {
         math::Matrix4x4 GetLocalToWorldMatrix() const;
 
         /**
+         * @brief Matrix that represents local coordinates relative to the parent matrix
+         * @return the transformation matrix
+         */
+        math::Matrix4x4 GetLocalToParentMatrix() const;
+
+        /**
          * @brief Translate the position relative to the world
          * @param translation the translation vector
+         * @return the caller
          */
-        void Translate(const math::Vec3f& translation);
+        Transform& Translate(const math::Vec3f& translation);
 
         /**
          * @brief Translate the position relative to the parent entity
          * @param parent the parent transform
          * @param translation the translation vector
+         * @return the caller
          */
-        void LocalTranslate(const Transform& parent, const math::Vec3f& translation);
+        Transform& LocalTranslate(const Transform& parent, const math::Vec3f& translation);
 
         /**
          * @brief Rotate the transform using the quaternion relative to the world
          * @param rotation the rotation quaternion
+         * @return the caller
          */
-        void Rotate(const math::Quaternion& rotation);
+        Transform& Rotate(const math::Quaternion& rotation);
 
         /**
          * @brief Rotate the transform using the quaternion relative to the parent entity
          * @param parent the parent transform
          * @param rotation the rotation quaternion
+         * @return the caller
          */
-        void LocalRotate(const Transform& parent, const math::Quaternion& rotation);
+        Transform& LocalRotate(const Transform& parent, const math::Quaternion& rotation);
 
         /**
          * @brief Scale the entity
          * @param scale the scale
+         * @return the caller
          */
-        void Scale(const math::Vec3f& scale);
+        Transform& Scale(const math::Vec3f& scale);
 
         /**
          * @brief Scale the transform using the scale relative to the parent entity
          * @param parent the parent transform
          * @param scale the scale
+         * @return the caller
          */
-        void LocalScale(const Transform& parent, const math::Vec3f& scale);
+        Transform& LocalScale(const Transform& parent, const math::Vec3f& scale);
 
         /**
          * @brief The position in the world

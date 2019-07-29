@@ -235,7 +235,7 @@ namespace zero::math {
         Quaternion GetRotation() const;
 
         /**
-         * @brief Get the scale component of the matrix
+         * @brief Get the scale component of the matrix. Does not support negative scaling. 
          * @return the scale
          */
         Vec3f GetScale() const;

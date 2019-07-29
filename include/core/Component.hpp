@@ -13,6 +13,7 @@ namespace zero {
      */
     struct Component {
         using Entity = entt::entity;
+        static constexpr auto NullEntity = entt::null;
     }; // struct Component
 
     /**
@@ -25,7 +26,7 @@ namespace zero {
          */
         ParentComponent()
         : Component()
-        , parent_(entt::null)
+        , parent_(NullEntity)
         , children_()
         {}
 

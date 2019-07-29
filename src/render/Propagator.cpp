@@ -16,7 +16,7 @@ void Propagator::PropagateTransform(entt::registry& registry) const {
     // Retrieve root parents with children
     for (auto entity : view) {
         auto& transform = view.get<Transform>(entity);
-        if (transform.parent_ == entt::null && !transform.children_.empty()) {
+        if (transform.parent_ == Component::NullEntity && !transform.children_.empty()) {
             update_stack.push(entity);
         }
     }
@@ -36,7 +36,7 @@ void Propagator::PropagateTransform(entt::registry& registry) const {
 
             // Compute new world transform for the child entity
             const auto parent_matrix = transform.GetLocalToWorldMatrix();
-            const auto child_matrix = child_transform.GetLocalToWorldMatrix();
+            const auto child_matrix = child_transform.GetLocalToParentMatrix();
             Matrix4x4 result = parent_matrix * child_matrix;
 
             // Set the world transform by decomposing the resulting matrix
@@ -60,7 +60,7 @@ void Propagator::PropagateVolume(entt::registry& registry) const {
     for (auto entity : view) {
         auto& volume = view.get<Volume>(entity);
         auto& transform = view.get<Transform>(entity);
-        if (transform.children_.empty() && transform.parent_ != entt::null) {
+        if (transform.children_.empty() && transform.parent_ != Component::NullEntity) {
             update_queue.push(entity);
         }
     }
@@ -72,7 +72,7 @@ void Propagator::PropagateVolume(entt::registry& registry) const {
         auto& transform = view.get<Transform>(entity);
         update_queue.pop();
 
-        if (transform.parent_ == entt::null) continue;
+        if (transform.parent_ == Component::NullEntity) continue;
 
         // Enlarge parent volume
         auto& parent_volume = view.get<Volume>(transform.parent_);
