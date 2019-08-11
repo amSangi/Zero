@@ -1,4 +1,3 @@
-#include <random>
 #include "core/Transform.hpp"
 #include "TestRegistry.hpp"
 
@@ -7,12 +6,14 @@ using namespace entt;
 
 void TestRegistry::SetUp() {
     std::random_device device;
-    std::mt19937 generator(device());
-    std::uniform_real_distribution<float> distribution(kMinPositionRange, kMaxPositionRange);
-    for (int i = 0; i < kEntityCount; ++i) {
-        math::Vec3f position(distribution(generator), distribution(generator), distribution(generator));
-        humanoids_.push_back(GenerateHumanoid(position));
-    }
+    random_generator_ = std::mt19937(device());
+}
+
+math::Vec3f TestRegistry::GenerateRandomPosition(math::Vec3f min, math::Vec3f max) {
+    std::uniform_real_distribution<float> x_distribution(min.x_, max.x_);
+    std::uniform_real_distribution<float> y_distribution(min.y_, max.y_);
+    std::uniform_real_distribution<float> z_distribution(min.z_, max.z_);
+    return math::Vec3f(x_distribution(random_generator_), y_distribution(random_generator_), z_distribution(random_generator_));
 }
 
 Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius) {

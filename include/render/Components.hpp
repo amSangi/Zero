@@ -5,8 +5,9 @@
 #include "core/ZBase.hpp"
 #include "core/Component.hpp"
 #include "math/Sphere.hpp"
-#include "math/Vector3.hpp"
 #include "math/Vector2.hpp"
+#include "math/Vector3.hpp"
+#include "math/Quaternion.hpp"
 
 namespace zero::render {
 

@@ -2,6 +2,19 @@
 
 using namespace zero;
 
+bool Transform::operator==(const Transform& other) const {
+    return (position_ == other.position_)
+        && (local_position_ == other.local_position_)
+        && (scale_ == other.scale_)
+        && (local_scale_ == other.scale_)
+        && (orientation_ == other.orientation_)
+        && (local_orientation_ == other.local_orientation_);
+}
+
+bool Transform::operator!=(const Transform& other) const {
+    return !(operator==(other));
+}
+
 math::Matrix4x4 Transform::GetWorldToLocalMatrix() const {
     return GetLocalToWorldMatrix().Inverse();
 }

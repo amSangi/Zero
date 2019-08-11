@@ -2,9 +2,6 @@
 
 #include <vector>
 #include <entt.hpp>
-#include "math/Matrix4x4.hpp"
-#include "math/Quaternion.hpp"
-#include "math/Vector3.hpp"
 
 namespace zero {
 
@@ -19,25 +16,37 @@ namespace zero {
     /**
      * @brief A general hierarchical component
      */
-    struct ParentComponent : public Component {
+    struct HierarchyComponent : public Component {
+
+        /**
+         * @brief The state of the entity
+         */
+        enum class State {
+            IDLE,                ///< Default entity state
+            MARKED_FOR_DELETE,   ///< The entity has been marked for delete
+        }; // enum class State
 
         /**
          * @brief Default constructor
          */
-        ParentComponent()
+        HierarchyComponent()
         : Component()
         , parent_(NullEntity)
         , children_()
+        , state_(State::IDLE)
+        , keep_children_alive_(false)
         {}
 
         /**
          * @brief Construct with a given parent entity
          * @param parent the parent of this component
          */
-        explicit ParentComponent(Entity parent)
+        explicit HierarchyComponent(Entity parent)
         : Component()
         , parent_(parent)
         , children_()
+        , state_(State::IDLE)
+        , keep_children_alive_(false)
         {}
 
         /**
@@ -49,6 +58,17 @@ namespace zero {
          * @brief The list of child entities
          */
         std::vector<Entity> children_;
+
+        /**
+         * @brief The entity state
+         */
+        State state_;
+
+        /**
+         * @brief Specifies if the children should be kept alive if the entity is destroyed
+         */
+        bool keep_children_alive_;
+
     }; // struct ParentComponent
 
 } // namespace zero

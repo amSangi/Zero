@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 #include <entt.hpp>
+#include <random>
 #include <vector>
 #include "core/Component.hpp"
 #include "render/Components.hpp"
@@ -10,6 +11,14 @@ class TestRegistry : public ::testing::Test {
 public:
 
     void SetUp() override;
+
+    /**
+     * @brief Generate a random position in 3D space given a range
+     * @param min the min vector range
+     * @param max the max vector range
+     * @return a random vector within the specified range
+     */
+    zero::math::Vec3f GenerateRandomPosition(zero::math::Vec3f min, zero::math::Vec3f max);
 
     /**
      * @brief Create a humanoid entity at the given position facing forward (+z).
@@ -29,10 +38,7 @@ public:
     bool ParentContainsChildVolumes(zero::Component::Entity parent) const;
 
 protected:
-    static constexpr zero::uint32 kEntityCount = 100;
-    static constexpr float kMinPositionRange = -500.0f;
-    static constexpr float kMaxPositionRange = 500.0f;
-    std::vector<zero::Component::Entity> humanoids_;
+    std::mt19937 random_generator_;
     entt::registry registry_;
 
 }; // class TestRegistry

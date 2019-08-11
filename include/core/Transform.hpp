@@ -1,19 +1,22 @@
 #pragma once
 
 #include "Component.hpp"
+#include "math/Matrix4x4.hpp"
+#include "math/Quaternion.hpp"
+#include "math/Vector3.hpp"
 
 namespace zero {
 
     /**
      * @brief The transform component containing position, orientation, and scale information
      */
-    struct Transform : public ParentComponent {
+    struct Transform : public HierarchyComponent {
 
         /**
          * @brief Default constructor
          */
         Transform()
-                : ParentComponent()
+                : HierarchyComponent()
                 , position_(0.0f)
                 , local_position_(0.0f)
                 , scale_(1.0f)
@@ -31,7 +34,7 @@ namespace zero {
         Transform(const math::Vec3f& position,
                   const math::Vec3f& scale,
                   const math::Quaternion& orientation)
-                : ParentComponent()
+                : HierarchyComponent()
                 , position_(position)
                 , local_position_(0.0f)
                 , scale_(scale)
@@ -53,7 +56,7 @@ namespace zero {
                   const math::Vec3f& local_position,
                   const math::Vec3f& local_scale,
                   const math::Quaternion& local_orientation)
-                : ParentComponent(parent)
+                : HierarchyComponent(parent)
                 , position_(parent_transform.position_ + local_position)
                 , local_position_(local_position)
                 , scale_(parent_transform.scale_ * local_scale)
@@ -62,6 +65,19 @@ namespace zero {
                 , local_orientation_(local_orientation.UnitCopy())
         {}
 
+        /**
+         * @brief Check if the transform is equal to another transform
+         * @param other the other transform
+         * @return True if the global and local components are equal. Otherwise false.
+         */
+        bool operator==(const Transform& other) const;
+
+        /**
+         * @brief Check if the transform is not equal to another transform
+         * @param other the other transform
+         * @return True if the transforms are not equal. Otherwise false.
+         */
+        bool operator!=(const Transform& other) const;
 
         /**
          * @brief Matrix that transforms world coordinates to local coordinates

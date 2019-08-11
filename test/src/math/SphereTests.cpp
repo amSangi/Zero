@@ -1,3 +1,4 @@
+#include <random>
 #include "gtest/gtest.h"
 #include "math/Sphere.hpp"
 #include "math/Box.hpp"
@@ -126,4 +127,58 @@ TEST(TestSphere, MergeInsideSphere) {
     s2.Merge(s1);
     EXPECT_TRUE(s2.Contains(s1));
     EXPECT_EQ(s2, s1);
+}
+
+TEST(TestSphere, MergeLargerSphere) {
+    Sphere s1(Vec3f::Zero(), 2.0f);
+    Sphere s2(Vec3f(-1.0f, -2.0f, 0.0f), 2.0f);
+
+    EXPECT_FALSE(s1.Contains(s2));
+    EXPECT_FALSE(s2.Contains(s1));
+
+    s1.Merge(s2);
+    EXPECT_TRUE(s1.Contains(s2));
+}
+
+TEST(TestSphere, MergeSeveralSpheres) {
+    std::vector<Sphere> spheres;
+    std::random_device device;
+    std::mt19937 generator(device());
+
+    // Random radius generator
+    float min_radius = 0.0f;
+    float max_radius = 350.0f;
+    std::uniform_real_distribution<float> radius_distribution(min_radius, max_radius);
+
+    // Random 3D position generator
+    float min_pos = -500.0f;
+    float max_pos = 500.0f;
+    std::uniform_real_distribution<float> pos_distribution(min_pos, max_pos);
+    auto generate_random_pos = [&pos_distribution, &generator]() {
+        return Vec3f(pos_distribution(generator),
+                     pos_distribution(generator),
+                     pos_distribution(generator));
+    };
+
+    // Generate random spheres
+    int sphere_count = 500;
+    for (int i = 0; i < sphere_count; ++i) {
+        spheres.emplace_back(generate_random_pos(), radius_distribution(generator));
+    }
+
+    // Main sphere to encapsulate all the spheres
+    Sphere main_sphere(Vec3f::Zero(), 1.0f);
+
+    // Merge all the spheres with the main sphere
+    for (int i = 0; i < sphere_count; ++i) {
+        auto merged_sphere = Sphere::Merge(main_sphere, spheres[i]);
+        EXPECT_TRUE(merged_sphere.Contains(main_sphere));
+        EXPECT_TRUE(merged_sphere.Contains(spheres[i]));
+        main_sphere = merged_sphere;
+    }
+
+    // Main sphere should contain all of the spheres
+    for (int i = 0; i < sphere_count; ++i) {
+        EXPECT_TRUE(main_sphere.Contains(spheres[i]));
+    }
 }
