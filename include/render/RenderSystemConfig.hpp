@@ -31,6 +31,11 @@ namespace zero::render {
          */
         std::vector<std::string> texture_files_;
 
+        /**
+         * @brief The fully qualified 3D model files to use
+         */
+        std::vector<std::string> model_files_;
+
     }; // struct RenderSystemConfig
 
 } // namespace zero::render

@@ -1,12 +1,19 @@
 #pragma once
 
-#include "render/Image.hpp"
-#include "render/opengl/GLSampler.hpp"
-#include "render/opengl/GLTexture.hpp"
+#include <memory>
+#include <unordered_map>
 #include "render/ITextureManager.hpp"
+#include "render/Image.hpp"
 
 namespace zero::render {
 
+    // Forward Declarations
+    class GLTexture;
+    class GLSampler;
+
+    /**
+     * @brief Create OpenGL texture objects and manage image lifetime
+     */
     class GLTextureManager : public ITextureManager {
     public:
 
@@ -14,6 +21,9 @@ namespace zero::render {
 
         ~GLTextureManager() override = default;
 
+        /**
+         * @see ITextureManager::GetTextureUnitCount
+         */
         uint8 GetTextureUnitCount() const override;
 
         /**
@@ -23,14 +33,34 @@ namespace zero::render {
          */
         void SetSampler(const std::shared_ptr<GLSampler>& sampler, uint8 texture_unit);
 
+        /**
+         * @brief Create a graphics texture object
+         * @param filename the filename of the image to use for the graphics texture
+         * @param index the texture unit to use (0 based)
+         * @return an OpenGL graphics texture object
+         */
+        std::shared_ptr<GLTexture> CreateTexture(const std::string& filename, uint8 index);
+
+        /**
+         * @see ITextureManager::InitializeImage
+         */
         bool InitializeImage(const std::string& filename) override;
 
-        std::shared_ptr<GLTexture> CreateTexture(const std::string& filename, uint8 index); 
+        /**
+         * @brief Clear the image map
+         */
+        void ClearImages();
 
-    protected:
-        GLTexture* CreateRawTexture(const std::string& filename, uint8 index) override;
+        /**
+         * @brief Release the images from main memory
+         */
+        void UnloadImages();
 
     private:
+
+        /**
+         * @brief Filename to Image container
+         */
         std::unordered_map<std::string, std::shared_ptr<Image>> image_map_;
 
     }; // class GLTextureManager

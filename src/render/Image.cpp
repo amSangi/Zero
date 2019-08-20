@@ -1,5 +1,5 @@
-#include <SDL2/SDL_image.h>
 #include "render/Image.hpp"
+#include <SDL2/SDL_image.h>
 
 using namespace zero::render;
 
@@ -54,7 +54,7 @@ zero::uint8 Image::BytesPerPixel() const {
 }
 
 Image::PixelFormat Image::GetPixelFormat() const {
-    if (!surface_) return PixelFormat::PIXEL_FORMAT_UNDEFINED;
+    if (!surface_) return PixelFormat::UNDEFINED;
 
     switch (surface_->format->format)
     {
@@ -62,25 +62,25 @@ Image::PixelFormat Image::GetPixelFormat() const {
         case SDL_PIXELFORMAT_BGR565:
         case SDL_PIXELFORMAT_BGR24:
         case SDL_PIXELFORMAT_BGR888:
-            return PixelFormat::PIXEL_FORMAT_BGR;
+            return PixelFormat::BGR;
         case SDL_PIXELFORMAT_RGB332:
         case SDL_PIXELFORMAT_RGB444:
         case SDL_PIXELFORMAT_RGB555:
         case SDL_PIXELFORMAT_RGB565:
         case SDL_PIXELFORMAT_RGB24:
         case SDL_PIXELFORMAT_RGB888:
-            return PixelFormat::PIXEL_FORMAT_RGB;
+            return PixelFormat::RGB;
         case SDL_PIXELFORMAT_RGBA4444:
         case SDL_PIXELFORMAT_RGBA5551:
         case SDL_PIXELFORMAT_RGBA8888:
         case SDL_PIXELFORMAT_RGBA32:
-            return PixelFormat::PIXEL_FORMAT_RGBA;
+            return PixelFormat::RGBA;
         case SDL_PIXELFORMAT_BGRA4444:
         case SDL_PIXELFORMAT_BGRA5551:
         case SDL_PIXELFORMAT_BGRA8888:
         case SDL_PIXELFORMAT_BGRA32:
-            return PixelFormat::PIXEL_FORMAT_BGRA;
+            return PixelFormat::BGRA;
         default:
-            return PixelFormat::PIXEL_FORMAT_UNDEFINED;
+            return PixelFormat::UNDEFINED;
     }
 }

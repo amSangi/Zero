@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include "render/opengl/GLProgram.hpp"
 
 using namespace zero::render;
@@ -8,8 +7,8 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
 
     if (shaders.empty()) return nullptr;
 
-    std::shared_ptr<GLProgram> program = std::make_shared<GLProgram>();
-    GLuint program_identifier = program->GetNativeIdentifier();
+    GLuint program_identifier = glCreateProgram();
+    std::shared_ptr<GLProgram> program = std::make_shared<GLProgram>(program_identifier);
 
     for (auto& shader : shaders) {
         if (!shader->IsCompiled()) return nullptr;
@@ -25,7 +24,7 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
     return program;
 }
 
-GLProgram::GLProgram() : id_(glCreateProgram()) {}
+GLProgram::GLProgram(GLuint id) : id_(id) {}
 
 GLProgram::~GLProgram() {
     Cleanup();
@@ -116,8 +115,8 @@ void GLProgram::FlushUniforms() {
     }
 }
 
-GLuint GLProgram::GetNativeIdentifier() const {
-    return id_;
+GLint GLProgram::GetAttribLocation(const std::string& name) const {
+    return glGetAttribLocation(id_, name.c_str());
 }
 
 void GLProgram::Cleanup() {

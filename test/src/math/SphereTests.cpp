@@ -1,5 +1,5 @@
 #include <random>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "math/Sphere.hpp"
 #include "math/Box.hpp"
 

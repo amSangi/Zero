@@ -2,13 +2,10 @@
 
 #include <memory>
 #include <string>
-#include <SDL2/SDL_surface.h>
+#include <SDL_surface.h>
 #include "core/ZBase.hpp"
 
 namespace zero::render {
-
-    // Forward Declarations
-    //class SDL_Surface;
 
     /**
      * @brief Stores and Removes Images from memory.
@@ -22,11 +19,11 @@ namespace zero::render {
          */
         enum class PixelFormat
         {
-            PIXEL_FORMAT_UNDEFINED,  ///< Undefined pixel format
-            PIXEL_FORMAT_BGR,        ///< BGR pixel format
-            PIXEL_FORMAT_RGB,        ///< RGB pixel format
-            PIXEL_FORMAT_RGBA,       ///< RGBA pixel format
-            PIXEL_FORMAT_BGRA,       ///< BGRA pixel format
+            UNDEFINED,  ///< Undefined pixel format
+            BGR,        ///< BGR pixel format
+            RGB,        ///< RGB pixel format
+            RGBA,       ///< RGBA pixel format
+            BGRA,       ///< BGRA pixel format
         }; // enum class PixelFormat
 
         /**
@@ -35,9 +32,6 @@ namespace zero::render {
          */
         explicit Image(std::string filename);
 
-        /**
-         * @brief Destructor
-         */
         ~Image();
 
         /**

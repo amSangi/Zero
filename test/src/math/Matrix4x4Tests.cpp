@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "math/Matrix4x4.hpp"
 #include "math/Vector4.hpp"
 #include "math/Quaternion.hpp"

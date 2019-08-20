@@ -8,12 +8,12 @@ class TestWindow : public ::testing::Test {
 protected:
 
     void SetUp() override {
-        zero::render::WindowConfig window_config{zero::render::WindowFlags::WINDOW_HIDE,
+        zero::render::WindowConfig window_config{zero::render::WindowFlags::HIDE,
                                                  0,
                                                  0,
-                                                 zero::render::WindowMode::WINDOW_WINDOWED,
-                                                 zero::render::GraphicsAPI::GRAPHICS_OPENGL,
-                                                 zero::render::RefreshRate::REFRESH_IMMEDIATE,
+                                                 zero::render::WindowMode::WINDOWED,
+                                                 zero::render::GraphicsAPI::OPENGL,
+                                                 zero::render::RefreshRate::IMMEDIATE,
                                                  "Test Window"};
         SetUp(window_config);
     }

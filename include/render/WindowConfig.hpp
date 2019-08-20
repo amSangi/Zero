@@ -9,25 +9,25 @@ namespace zero::render {
      * @brief Window mode to display as
      */
     enum class WindowMode {
-        WINDOW_FULLSCREEN,            ///< Display the window in full screen mode
-        WINDOW_WINDOWED,              ///< Display the window in bordered window mode
-        WINDOW_BORDERLESS_WINDOWED    ///< Display the window in borderless windowed mode
+        FULLSCREEN,            ///< Display the window in full screen mode
+        WINDOWED,              ///< Display the window in bordered window mode
+        BORDERLESS_WINDOWED    ///< Display the window in borderless windowed mode
     }; // enum class WindowMode
 
     /**
      * @brief Low Level Graphics API Types
      */
     enum class GraphicsAPI {
-        GRAPHICS_OPENGL,    ///< Use the OpenGL Graphics API
+        OPENGL,    ///< Use the OpenGL Graphics API
     }; // enum class GraphicsAPI
 
     /**
      * @brief The window refresh rate
      */
     enum class RefreshRate {
-        REFRESH_IMMEDIATE,         ///< Immediate updates
-        REFRESH_SYNCHRONIZED,      ///< Updates synchronized with the vertical retrace
-        REFRESH_ADAPTIVE_VSYNC,    ///< Swap buffers immediately if vertical retrace was missed for a given frame
+        IMMEDIATE,         ///< Immediate updates
+        SYNCHRONIZED,      ///< Updates synchronized with the vertical retrace
+        ADAPTIVE_VSYNC,    ///< Swap buffers immediately if vertical retrace was missed for a given frame
     }; // enum class RefreshRate
 
 
@@ -35,10 +35,10 @@ namespace zero::render {
      * @brief Additional window flags
      */
     enum WindowFlags {
-        WINDOW_NO_FLAGS          = 0u,        ///< No window flags
-        WINDOW_HIDE              = 1u << 0u,  ///< Hide the window
-        WINDOW_MAXIMIZED         = 1u << 1u,  ///< Maximize the window
-        WINDOW_MINIMIZED         = 1u << 2u,  ///< Minimize the window
+        NO_FLAGS          = 0u,        ///< No window flags
+        HIDE              = 1u << 0u,  ///< Hide the window
+        WINDOW_MAXIMIZED  = 1u << 1u,  ///< Maximize the window
+        WINDOW_MINIMIZED  = 1u << 2u,  ///< Minimize the window
     }; // enum WindowFlags
 
 

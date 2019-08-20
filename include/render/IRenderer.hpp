@@ -1,6 +1,7 @@
 #pragma once
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
+#include "render/RenderSystemConfig.hpp"
 
 namespace zero::render {
 
@@ -9,20 +10,16 @@ namespace zero::render {
      */
     class IRenderer {
     public:
-        /**
-         * @brief Constructor
-         */
+
         IRenderer() = default;
 
-        /**
-         * @brief Destructor
-         */
         virtual ~IRenderer() = default;
 
         /**
-         * @brief Initialize the renderer and all sub systems
+         * @brief Initialize all the texture images, shaders, and models
+         * @param config the render system configuration details
          */
-        virtual void Initialize() = 0;
+        virtual void Initialize(const RenderSystemConfig& config) = 0;
 
         /**
          * @brief Render all entities in the registry with Transform, Volume, and Material components using the
@@ -39,7 +36,7 @@ namespace zero::render {
         virtual void PostRender(entt::registry& registry) = 0;
 
         /**
-         * @brief Shutdown the renderer and all of its sub-systems
+         * @brief Clear all texture images, shaders, and models
          */
         virtual void ShutDown() = 0;
         

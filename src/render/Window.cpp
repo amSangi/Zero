@@ -1,8 +1,8 @@
-#include <GL/glew.h>
+#include "render/Window.hpp"
 #include <utility>
+#include "render/opengl/OpenGL.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
-#include "render/Window.hpp"
 
 using namespace zero::render;
 
@@ -24,10 +24,10 @@ void Window::Initialize() {
     // Get SDL window flags
     uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
     switch (config_.window_mode_) {
-        case WindowMode::WINDOW_FULLSCREEN:
+        case WindowMode::FULLSCREEN:
             window_flags |= SDL_WINDOW_FULLSCREEN;
             break;
-        case WindowMode::WINDOW_BORDERLESS_WINDOWED:
+        case WindowMode::BORDERLESS_WINDOWED:
             window_flags |= SDL_WINDOW_BORDERLESS;
             break;
         default:
@@ -38,7 +38,7 @@ void Window::Initialize() {
     // Set additional window flags
     if (config_.window_flags_ & WindowFlags::WINDOW_MAXIMIZED) window_flags |= SDL_WINDOW_MAXIMIZED;
     if (config_.window_flags_ & WindowFlags::WINDOW_MINIMIZED) window_flags |= SDL_WINDOW_MINIMIZED;
-    if (config_.window_flags_ & WindowFlags::WINDOW_HIDE) window_flags |= SDL_WINDOW_HIDDEN;
+    if (config_.window_flags_ & WindowFlags::HIDE) window_flags |= SDL_WINDOW_HIDDEN;
 
     if (sdl_window_ == nullptr) {
         // Create Window and OpenGL Context
@@ -75,10 +75,10 @@ void Window::Initialize() {
     // Set the window refresh rate
     int error_code = 0;
     switch (config_.refresh_rate_) {
-        case RefreshRate::REFRESH_SYNCHRONIZED:
+        case RefreshRate::SYNCHRONIZED:
             error_code = SDL_GL_SetSwapInterval(1);
             break;
-        case RefreshRate::REFRESH_ADAPTIVE_VSYNC:
+        case RefreshRate::ADAPTIVE_VSYNC:
             error_code = SDL_GL_SetSwapInterval(-1);
             break;
         default:

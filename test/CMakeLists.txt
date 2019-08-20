@@ -2,8 +2,8 @@ project(ZeroTest)
 
 set(EXECUTABLE_OUTPUT_PATH ${ZERO_TEST_OUT_PATH})
 
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest-src/googletest/include)
 include_directories(include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest/include)
 
 add_executable(${PROJECT_NAME} TestMain.cpp
                                src/TestRegistry.cpp
@@ -23,5 +23,6 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/render/opengl/GLShaderTests.cpp
                                src/render/opengl/GLTextureTests.cpp)
 
-target_link_libraries(${PROJECT_NAME} ZeroCore)
-target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+target_link_libraries(${PROJECT_NAME} ZeroCore
+                                      gtest
+                                      gtest_main)

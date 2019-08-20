@@ -16,14 +16,8 @@ namespace zero::render {
     class IProgram : public IRenderResource{
     public:
 
-        /**
-         * @brief Default Constructor
-         */
         IProgram() = default;
 
-        /**
-         * @brief Virtual Destructor
-         */
         ~IProgram() override = default;
 
         /**

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include <random>
 #include <vector>
 #include "core/Component.hpp"

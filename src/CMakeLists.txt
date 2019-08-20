@@ -21,6 +21,8 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/RenderSystem.cpp
                              render/Window.cpp
                              render/opengl/GLCompiler.cpp
+                             render/opengl/GLModel.cpp
+                             render/opengl/GLModelManager.cpp
                              render/opengl/GLProgram.cpp
                              render/opengl/GLSampler.cpp
                              render/opengl/GLShader.cpp
@@ -30,6 +32,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
 
 ## Link Libraries ##
 target_link_libraries(${PROJECT_NAME} EnTT
+                                      assimp
                                       ${OPENGL_gl_LIBRARY}
                                       ${GLEW_LIBRARIES}
                                       ${SDL2_LIBRARY}

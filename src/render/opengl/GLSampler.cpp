@@ -1,4 +1,3 @@
-#include "GL/glew.h"
 #include "render/opengl/GLSampler.hpp"
 
 using namespace zero::render;

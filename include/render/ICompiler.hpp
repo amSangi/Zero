@@ -9,19 +9,14 @@
 namespace zero::render {
 
     /**
-     * @brief Stores Graphics Shaders and creates Graphics Programs
+     * @brief Stores Graphics Shaders and creates Graphics Programs. The Material component dictates the
+     * shaders used during the rendering of an entity.
      */
     class ICompiler {
     public:
 
-        /**
-         * @brief Default Constructor
-         */
         ICompiler() = default;
 
-        /**
-         * @brief Virtual Destructor
-         */
         virtual ~ICompiler() = default;
 
         /**

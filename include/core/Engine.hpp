@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "event/EventBus.hpp"
 #include "NonCopyable.hpp"
 #include "ZBase.hpp"
@@ -56,7 +56,7 @@ namespace zero {
          * @brief Get the event bus
          * @return the event bus
          */
-        inline event::EventBus& GetEventBus()         { return event_bus_; }
+        inline event::EventBus& GetEventBus()       { return event_bus_; }
 
         /**
          * @brief Get the game registry

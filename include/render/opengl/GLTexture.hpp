@@ -1,39 +1,61 @@
 #pragma once
 
 #include <memory>
-#include <SDL_opengl.h>
-#include "render/Image.hpp"
-#include "render/ITexture.hpp"
+#include "OpenGL.hpp"
+#include "render/IRenderResource.hpp"
 
 namespace zero::render {
 
-    class GLTexture : public ITexture {
+    /**
+     * @brief OpenGL graphics texture wrapper
+     */
+    class GLTexture : public IRenderResource {
     public:
 
-        GLTexture(GLuint id, GLenum target, GLenum texture_unit);
+        /**
+         * @brief Constructor
+         * @param id the texture object identifier
+         * @param target the texture target
+         */
+        GLTexture(GLuint id, GLenum target);
 
         ~GLTexture() override;
 
-        void Use() const;
+        /**
+         * @brief Bind the texture object to the given texture unit
+         * @param texture_unit the texture unit to bind to
+         */
+        void Bind(GLenum texture_unit) const;
 
-        void GenerateMipMap() const;
+        /**
+         * @brief Generate mipmaps for the texture
+         * @param texture_unit the texture unit to use
+         */
+        void GenerateMipMap(GLenum texture_unit) const;
 
-        void SetTextureUnit(GLenum texture_unit);
-
-        GLuint GetNativeIdentifier() const;
-
+        /**
+         * @brief Get the texture target type
+         * @return the texture target
+         */
         GLenum GetTarget() const;
 
-        GLenum GetTextureUnit() const;
-
-
     protected:
+        /**
+         * @brief Destroy the texture resources
+         */
         void Cleanup() override;
 
     private:
+
+        /**
+         * @brief OpenGL texture identifier
+         */
         GLuint id_;
+
+        /**
+         * @brief The OpenGL texture target
+         */
         GLenum target_;
-        GLenum texture_unit_;
 
     }; // class GLTexture
 

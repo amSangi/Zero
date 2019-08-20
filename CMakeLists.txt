@@ -18,7 +18,7 @@ find_package(SDL2_image REQUIRED)
 
 ## Header Includes ##
 include_directories(include)
-include_directories(thirdparty/entt/src/entt)
+include_directories(thirdparty/entt/src)
 include_directories(${GLEW_INCLUDE_DIRS})
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_IMAGE_INCLUDE_DIRS})

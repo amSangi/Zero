@@ -17,9 +17,6 @@ namespace zero::render {
          */
         explicit Window(WindowConfig config);
 
-        /**
-         * @brief Destructor
-         */
         ~Window();
 
         /**

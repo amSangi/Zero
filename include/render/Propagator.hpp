@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entt.hpp>
+#include <entt/entt.hpp>
 #include "core/Transform.hpp"
 #include "math/Matrix4x4.hpp"
 #include "render/Components.hpp"
@@ -13,9 +13,6 @@ namespace zero::render {
     class Propagator {
     public:
 
-        /**
-         * @brief Constructor
-         */
         Propagator() = default;
 
         /**

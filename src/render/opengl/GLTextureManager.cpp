@@ -1,5 +1,6 @@
-#include "GL/glew.h"
 #include "render/opengl/GLTextureManager.hpp"
+#include "render/opengl/GLTexture.hpp"
+#include "render/opengl/GLSampler.hpp"
 
 using namespace zero::render;
 
@@ -20,23 +21,7 @@ void GLTextureManager::SetSampler(const std::shared_ptr<GLSampler>& sampler, uin
     glBindSampler(index, sampler->GetNativeIdentifier());
 }
 
-bool GLTextureManager::InitializeImage(const std::string& filename) {
-    auto image = std::make_shared<Image>(filename);
-
-    if (!image->Load()) {
-        return false;
-    }
-
-    image->Release();
-    image_map_[filename] = image;
-    return true;
-}
-
 std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& filename, zero::uint8 index) {
-    return std::shared_ptr<GLTexture>(CreateRawTexture(filename, index));
-}
-
-GLTexture* GLTextureManager::CreateRawTexture(const std::string& filename, zero::uint8 index) {
     if (index >= GetTextureUnitCount()) {
         return nullptr;
     }
@@ -65,16 +50,16 @@ GLTexture* GLTextureManager::CreateRawTexture(const std::string& filename, zero:
     GLenum data_format;
     switch (image->GetPixelFormat())
     {
-        case Image::PixelFormat::PIXEL_FORMAT_BGR:
+        case Image::PixelFormat::BGR:
             data_format = GL_BGR;
             break;
-        case Image::PixelFormat::PIXEL_FORMAT_RGB:
+        case Image::PixelFormat::RGB:
             data_format = GL_RGB;
             break;
-        case Image::PixelFormat::PIXEL_FORMAT_RGBA:
+        case Image::PixelFormat::RGBA:
             data_format = GL_RGBA;
             break;
-        case Image::PixelFormat::PIXEL_FORMAT_BGRA:
+        case Image::PixelFormat::BGRA:
             data_format = GL_BGRA;
             break;
         default:
@@ -91,5 +76,27 @@ GLTexture* GLTextureManager::CreateRawTexture(const std::string& filename, zero:
                  GL_UNSIGNED_BYTE,    // Data type of the pixel data.
                  image->GetData());   // Pointer to the image data in memory.
 
-    return new GLTexture(texture_id, target, texture_unit);
+    return std::make_shared<GLTexture>(texture_id, target);
+}
+
+bool GLTextureManager::InitializeImage(const std::string& filename) {
+    auto image = std::make_unique<Image>(filename);
+
+    if (!image->Load()) {
+        return false;
+    }
+
+    image->Release();
+    image_map_[filename] = std::move(image);
+    return true;
+}
+
+void GLTextureManager::ClearImages() {
+    image_map_.clear();
+}
+
+void GLTextureManager::UnloadImages(){
+    for (auto& image : image_map_) {
+        image.second->Release();
+    }
 }

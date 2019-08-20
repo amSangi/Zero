@@ -7,12 +7,12 @@ class TestGLTexture : public TestGLShader {
 protected:
 
     void SetUp() override {
-        zero::render::WindowConfig window_config{zero::render::WindowFlags::WINDOW_NO_FLAGS,
+        zero::render::WindowConfig window_config{zero::render::WindowFlags::NO_FLAGS,
                                                  800,
                                                  600,
-                                                 zero::render::WindowMode::WINDOW_WINDOWED,
-                                                 zero::render::GraphicsAPI::GRAPHICS_OPENGL,
-                                                 zero::render::RefreshRate::REFRESH_IMMEDIATE,
+                                                 zero::render::WindowMode::WINDOWED,
+                                                 zero::render::GraphicsAPI::OPENGL,
+                                                 zero::render::RefreshRate::IMMEDIATE,
                                                  "Test Window"};
         TestWindow::SetUp(window_config);
     }

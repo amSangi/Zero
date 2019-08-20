@@ -1,9 +1,9 @@
+#include "render/Propagator.hpp"
 #include <algorithm>
 #include <set>
 #include <stack>
 #include <queue>
 #include "core/Transform.hpp"
-#include "render/Propagator.hpp"
 #include "math/Vector3.hpp"
 #include "math/Vector4.hpp"
 

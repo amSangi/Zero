@@ -1,17 +1,8 @@
+#include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
-#include "render/opengl/GLCompiler.hpp"
 
 using namespace zero::render;
-
-bool GLCompiler::InitializeShader(const ShaderStage& stage) {
-    std::shared_ptr<GLShader> shader = std::make_shared<GLShader>(stage.source_, stage.type_);
-
-    if (!shader->Compile()) return false;
-
-    shader_map_[stage.filename_] = shader;
-    return true;
-}
 
 std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
     std::vector<std::shared_ptr<GLShader>> shaders;
@@ -41,4 +32,17 @@ std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
     if (search != shader_map_.end()) shaders.push_back(search->second);
 
     return GLProgram::CreateGLProgram(shaders);
+}
+
+bool GLCompiler::InitializeShader(const ShaderStage& stage) {
+    std::shared_ptr<GLShader> shader = std::make_shared<GLShader>(stage.source_, stage.type_);
+
+    if (!shader->Compile()) return false;
+
+    shader_map_[stage.filename_] = shader;
+    return true;
+}
+
+void GLCompiler::ClearShaders() {
+    shader_map_.clear();
 }

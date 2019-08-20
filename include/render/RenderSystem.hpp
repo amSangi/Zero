@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "core/System.hpp"
+#include "IAnimator.hpp"
 #include "IRenderer.hpp"
 #include "Propagator.hpp"
 #include "RenderSystemConfig.hpp"
@@ -11,7 +12,7 @@ namespace zero::render {
 
     /**
      * @brief The RenderingSystem uses transform, mesh, material, scene, and camera components
-     *   to render a scene. It is responsible for all windowing/rendering tasks.
+     * to render a scene. It is responsible for all windowing/rendering tasks.
      */
     class RenderSystem : public System {
     public:
@@ -21,11 +22,8 @@ namespace zero::render {
          * @param engine the engine this system belongs to
          * @param config the RenderSystem configuration
          */
-        RenderSystem(std::shared_ptr<Engine> engine, RenderSystemConfig config);
+        RenderSystem(std::shared_ptr<Engine> engine, const RenderSystemConfig& config);
 
-        /**
-         * @brief Destructor
-         */
         ~RenderSystem() override = default;
 
         /**
@@ -65,6 +63,11 @@ namespace zero::render {
          * @brief The window to manage the actual window and graphics api context
          */
         std::unique_ptr<Window> window_;
+
+        /**
+         * @brief The animator used to animate all dynamic models
+         */
+        std::unique_ptr<IAnimator> animator_;
 
         /**
          * @brief The renderer used to call to the graphics API

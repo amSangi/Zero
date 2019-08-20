@@ -10,14 +10,8 @@ namespace zero::render {
     class IRenderResource : public NonCopyable {
     public:
 
-        /**
-         * @brief Default Constructor
-         */
         IRenderResource() = default;
 
-        /**
-         * @brief Virtual destructor
-         */
         virtual ~IRenderResource() = default;
 
     protected:

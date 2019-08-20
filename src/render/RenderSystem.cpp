@@ -1,30 +1,23 @@
+#include "render/RenderSystem.hpp"
 #include "render/Components.hpp"
 #include "render/opengl/GLRenderer.hpp"
-#include "render/RenderSystem.hpp"
 
 using namespace zero::render;
 
-RenderSystem::RenderSystem(std::shared_ptr<Engine> engine, RenderSystemConfig config)
+RenderSystem::RenderSystem(std::shared_ptr<Engine> engine, const RenderSystemConfig& config)
 : zero::System(std::move(engine))
-, config_(std::move(config))
-, window_(nullptr)
-, renderer_(nullptr)
-, propagator_(nullptr)
+, config_(config)
+, animator_(nullptr)
+, window_(std::make_unique<Window>(config.window_config_))
+, renderer_(std::make_unique<GLRenderer>())
+, propagator_(std::make_unique<Propagator>())
 {
 }
 
 void RenderSystem::Initialize() {
-    window_ = std::make_unique<Window>(config_.window_config_);
+    ShutDown();
     window_->Initialize();
-    switch (config_.window_config_.api_)
-    {
-        case GraphicsAPI::GRAPHICS_OPENGL:
-        default:
-            renderer_ = std::make_unique<GLRenderer>();
-            break;
-    }
-    renderer_->Initialize();
-    propagator_ = std::make_unique<Propagator>();
+    renderer_->Initialize(config_);
 }
 
 void RenderSystem::PreUpdate() {
@@ -35,7 +28,6 @@ void RenderSystem::PreUpdate() {
 }
 
 void RenderSystem::Update(float dt) {
-    // Render entities
     renderer_->Render(GetRegistry(), dt);
     window_->SwapBuffers();
 }

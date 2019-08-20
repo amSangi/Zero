@@ -5,6 +5,7 @@
 #include "render/Image.hpp"
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
+#include "render/opengl/GLSampler.hpp"
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/TestGLTexture.hpp"
 
@@ -27,7 +28,7 @@ TEST_F(TestGLTexture, LoadImage) {
     EXPECT_NE(image.GetPitch(), 0);
     EXPECT_NE(image.BitsPerPixel(), 0);
     EXPECT_NE(image.BytesPerPixel(), 0);
-    EXPECT_NE(image.GetPixelFormat(), Image::PixelFormat::PIXEL_FORMAT_UNDEFINED);
+    EXPECT_NE(image.GetPixelFormat(), Image::PixelFormat::UNDEFINED);
 
     // Release
     EXPECT_TRUE(image.Release());
@@ -39,7 +40,7 @@ TEST_F(TestGLTexture, LoadImage) {
     EXPECT_EQ(image.GetPitch(), 0);
     EXPECT_EQ(image.BitsPerPixel(), 0);
     EXPECT_EQ(image.BytesPerPixel(), 0);
-    EXPECT_EQ(image.GetPixelFormat(), Image::PixelFormat::PIXEL_FORMAT_UNDEFINED);
+    EXPECT_EQ(image.GetPixelFormat(), Image::PixelFormat::UNDEFINED);
 }
 
 TEST_F(TestGLTexture, LoadInvalidImage) {
@@ -94,9 +95,9 @@ TEST_F(TestGLTexture, CreateValidTexture) {
 TEST_F(TestGLTexture, TextureWithShader) {
     // Create Shaders
     std::vector<std::shared_ptr<GLShader>> shaders;
-    auto vertex_shader = std::make_shared<GLShader>(TEST_VERTEX_SOURCE, IShader::Type::TYPE_VERTEX_SHADER);
+    auto vertex_shader = std::make_shared<GLShader>(TEST_VERTEX_SOURCE, IShader::Type::VERTEX_SHADER);
     EXPECT_TRUE(vertex_shader->Compile());
-    auto fragment_shader = std::make_shared<GLShader>(TEST_FRAGMENT_SOURCE, IShader::Type::TYPE_FRAGMENT_SHADER);
+    auto fragment_shader = std::make_shared<GLShader>(TEST_FRAGMENT_SOURCE, IShader::Type::FRAGMENT_SHADER);
     EXPECT_TRUE(fragment_shader->Compile());
 
     shaders.push_back(vertex_shader);
@@ -134,16 +135,16 @@ TEST_F(TestGLTexture, TextureWithShader) {
     program->Use();
 
     // Set layout
-    GLint pos_attrib = glGetAttribLocation(program->GetNativeIdentifier(), "in_position");
+    GLint pos_attrib = program->GetAttribLocation("in_position");
     glEnableVertexAttribArray(pos_attrib);
     glVertexAttribPointer(pos_attrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
 
-    GLint col_attrib = glGetAttribLocation(program->GetNativeIdentifier(), "in_colour");
+    GLint col_attrib = program->GetAttribLocation("in_colour");
     glEnableVertexAttribArray(col_attrib);
     glVertexAttribPointer(col_attrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
 
-    GLint tex_attrib = glGetAttribLocation(program->GetNativeIdentifier(), "in_texture_coordinate");
+    GLint tex_attrib = program->GetAttribLocation("in_texture_coordinate");
     glEnableVertexAttribArray(tex_attrib);
     glVertexAttribPointer(tex_attrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
 
@@ -161,9 +162,8 @@ TEST_F(TestGLTexture, TextureWithShader) {
     EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
     auto texture = manager.CreateTexture(TEST_IMAGE_FILE, index);
     ASSERT_NE(texture, nullptr);
-    EXPECT_NE(texture->GetNativeIdentifier(), 0);
-    texture->GenerateMipMap();
-    texture->Use();
+    texture->GenerateMipMap(GL_TEXTURE0 + index);
+    texture->Bind(GL_TEXTURE0 + index);
 
     program->SetUniform("tex_sampler", index);
     program->FlushUniforms();

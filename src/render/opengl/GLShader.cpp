@@ -1,4 +1,3 @@
-#include <GL/glew.h>
 #include "render/opengl/GLShader.hpp"
 
 using namespace zero::render;
@@ -6,22 +5,22 @@ using namespace zero::render;
 GLShader::GLShader(const std::string& source, IShader::Type type) : type_(type) {
     switch (type_)
     {
-        case IShader::Type::TYPE_VERTEX_SHADER:
+        case IShader::Type::VERTEX_SHADER:
             id_ = glCreateShader(GL_VERTEX_SHADER);
             break;
-        case IShader::Type::TYPE_FRAGMENT_SHADER:
+        case IShader::Type::FRAGMENT_SHADER:
             id_ = glCreateShader(GL_FRAGMENT_SHADER);
             break;
-        case IShader::Type::TYPE_GEOMETRY_SHADER:
+        case IShader::Type::GEOMETRY_SHADER:
             id_ = glCreateShader(GL_GEOMETRY_SHADER);
             break;
-        case IShader::Type::TYPE_TESSELLATION_CTRL_SHADER:
+        case IShader::Type::TESSELLATION_CTRL_SHADER:
             id_ = glCreateShader(GL_TESS_CONTROL_SHADER);
             break;
-        case IShader::Type::TYPE_TESSELLATION_EVAL_SHADER:
+        case IShader::Type::TESSELLATION_EVAL_SHADER:
             id_ = glCreateShader(GL_TESS_EVALUATION_SHADER);
             break;
-        case IShader::Type::TYPE_COMPUTE_SHADER:
+        case IShader::Type::COMPUTE_SHADER:
             id_ = glCreateShader(GL_COMPUTE_SHADER);
             break;
         default:

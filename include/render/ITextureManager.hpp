@@ -1,23 +1,19 @@
 #pragma once
 
-#include <memory>
 #include <string>
-#include "ITexture.hpp"
-#include "Components.hpp"
+#include "core/ZBase.hpp"
 
 namespace zero::render {
 
+    /**
+     * @brief Stores Image objects that can be loaded into Main Memory to be used to create graphics Texture objects.
+     * The Material component dictates the textures used during the rendering of an entity.
+     */
     class ITextureManager {
     public:
 
-        /**
-         * @brief Default constructor
-         */
         ITextureManager() = default;
 
-        /**
-         * @brief Default virtual destructor
-         */
         virtual ~ITextureManager() = default;
 
         /**
@@ -32,25 +28,6 @@ namespace zero::render {
          * @return True if the image was initialized successfully. Otherwise false.
          */
         virtual bool InitializeImage(const std::string& filename) = 0;
-
-        /**
-         * @brief Create a graphics texture given a Material component
-         * @param filename the image file name
-         * @param index the texture index. Range from [0, GetTextureUnitCount).
-         * @return a graphics texture. nullptr if the image has not been initialized.
-         */
-        std::shared_ptr<ITexture> CreateTexture(const std::string& filename, uint8 index)
-        { return std::shared_ptr<ITexture>(CreateRawTexture(filename, index)); }
-
-    protected:
-
-        /**
-         * @brief Create a graphics texture given a Material component
-         * @param filename the image file name
-         * @param index the texture index. Range from [0, GetTextureUnitCount).
-         * @return a graphics texture. nullptr if the image has not been initialized.
-         */
-        virtual ITexture* CreateRawTexture(const std::string& filename, uint8 index) = 0;
 
     }; // class ITextureManager
 

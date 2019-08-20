@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "math/Angle.hpp"
 #include "math/Quaternion.hpp"
 

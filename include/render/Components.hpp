@@ -163,8 +163,8 @@ namespace zero::render {
          * @brief The projection type of the camera
          */
         enum class ProjectionType {
-            PROJECTION_PERSPECTIVE,     ///< Perspective Projection
-            PROJECTION_ORTHOGRAPHIC     ///< Orthographic Projection
+            PERSPECTIVE,     ///< Perspective Projection
+            ORTHOGRAPHIC     ///< Orthographic Projection
         }; // enum class ProjectionType
 
         /**

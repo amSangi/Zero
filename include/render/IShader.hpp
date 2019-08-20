@@ -14,23 +14,18 @@ namespace zero::render {
          * @brief The Shader type
          */
         enum class Type {
-            TYPE_UNKNOWN,                   ///< Unknown Shader
-            TYPE_VERTEX_SHADER,             ///< Vertex Shader
-            TYPE_FRAGMENT_SHADER,           ///< Fragment/Pixel Shader
-            TYPE_GEOMETRY_SHADER,           ///< Geometry Shader
-            TYPE_TESSELLATION_CTRL_SHADER,  ///< Tessellation Control Shader
-            TYPE_TESSELLATION_EVAL_SHADER,  ///< Tessellation Evaluation Shader
-            TYPE_COMPUTE_SHADER             ///< Compute Shader
+            UNKNOWN,                   ///< Unknown Shader
+            VERTEX_SHADER,             ///< Vertex Shader
+            FRAGMENT_SHADER,           ///< Fragment/Pixel Shader
+            GEOMETRY_SHADER,           ///< Geometry Shader
+            TESSELLATION_CTRL_SHADER,  ///< Tessellation Control Shader
+            TESSELLATION_EVAL_SHADER,  ///< Tessellation Evaluation Shader
+            COMPUTE_SHADER             ///< Compute Shader
         }; // enum class Type
 
-        /**
-         * @brief Default Constructor
-         */
+
         IShader() = default;
 
-        /**
-         * @brief Virtual Destructor
-         */
         ~IShader() override = default;
 
         /**
