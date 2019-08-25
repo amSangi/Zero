@@ -37,7 +37,7 @@ namespace zero::render {
          * @brief Get the texture target type
          * @return the texture target
          */
-        GLenum GetTarget() const;
+        [[nodiscard]] GLenum GetTarget() const;
 
     protected:
         /**

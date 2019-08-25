@@ -30,7 +30,7 @@ namespace zero::render {
          * @brief Is the Program linked?
          * @return True if the program is linked. Otherwise false.
          */
-        virtual bool IsLinked() const = 0;
+        [[nodiscard]] virtual bool IsLinked() const = 0;
 
         /**
          * @brief Set the graphics program as active on the current rendering state

@@ -50,49 +50,49 @@ namespace zero::render {
          * @brief Has the image been loaded into memory?
          * @return True if the image has been loaded. Otherwise false.
          */
-        bool IsLoaded() const;
+        [[nodiscard]] bool IsLoaded() const;
 
         /**
          * @brief Get the image data.
          * @return the image data. nullptr if not loaded.
          */
-        char* GetData() const;
+        [[nodiscard]] char* GetData() const;
 
         /**
          * @brief Get the image width.
          * @return the image width. 0 if not loaded.
          */
-        uint32 GetWidth() const;
+        [[nodiscard]] uint32 GetWidth() const;
 
         /**
          * @brief Get the image height.
          * @return the image height. 0 if not loaded.
          */
-        uint32 GetHeight() const;
+        [[nodiscard]] uint32 GetHeight() const;
 
         /**
          * @brief Get the image pitch.
          * @return the image pitch. 0 if not loaded.
          */
-        uint32 GetPitch() const;
+        [[nodiscard]] uint32 GetPitch() const;
 
         /**
          * @brief Get the number of bits per pixel.
          * @return the bits per pixel. 0 if not loaded.
          */
-        uint8 BitsPerPixel() const;
+        [[nodiscard]] uint8 BitsPerPixel() const;
 
         /**
          * @brief Get the number of bytes per pixel.
          * @return the bytes per pixel. 0 if not loaded.
          */
-        uint8 BytesPerPixel() const;
+        [[nodiscard]] uint8 BytesPerPixel() const;
 
         /**
          * @brief Get the pixel format.
          * @return the pixel format. PIXEL_FORMAT_UNDEFINED if not loaded.
          */
-        PixelFormat GetPixelFormat() const;
+        [[nodiscard]] PixelFormat GetPixelFormat() const;
 
     private:
         /**

@@ -29,18 +29,18 @@ namespace zero::render {
         /**
          * @see IShader::IsCompiled
          */
-        bool IsCompiled() const override;
+        [[nodiscard]] bool IsCompiled() const override;
 
         /**
          * @see IShader::GetType
          */
-        IShader::Type GetType() const override;
+        [[nodiscard]] IShader::Type GetType() const override;
 
         /**
          * @brief Get the native OpenGL identifier
          * @return the identifier
          */
-        GLuint GetNativeIdentifier() const;
+        [[nodiscard]] GLuint GetNativeIdentifier() const;
 
     protected:
         /**

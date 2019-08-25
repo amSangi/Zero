@@ -95,7 +95,7 @@ namespace zero::render {
          * @param name the variable name
          * @return the attribute location
          */
-        GLint GetAttribLocation(const std::string& name) const;
+        [[nodiscard]] GLint GetAttribLocation(const std::string& name) const;
 
     protected:
         /**

@@ -20,7 +20,7 @@ namespace zero::render {
          * @brief Get the maximum number of texture units
          * @return the texture unit count
          */
-        virtual uint8 GetTextureUnitCount() const = 0;
+        [[nodiscard]] virtual uint8 GetTextureUnitCount() const = 0;
 
         /**
          * @brief Initialize an image

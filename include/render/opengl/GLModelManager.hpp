@@ -4,6 +4,10 @@
 #include <string>
 #include <unordered_map>
 
+// Forward Declarations
+class aiScene;
+class aiNode;
+
 namespace zero::render {
 
     // Forward Declaration
@@ -26,7 +30,7 @@ namespace zero::render {
         virtual ~GLModelManager() = default;
 
         /**
-         * @brief Load a model from a 3D file
+         * @brief Load a model from a 3D file. A single 3D file may contain multiple sub models.
          * @param filename the fully qualified filename of the 3D model
          * @return true if the model was loaded successfully. Otherwise false.
          */
@@ -39,7 +43,7 @@ namespace zero::render {
 
         /**
          * @brief Get the GLModel associated with the given filename
-         * @param filename the filename
+         * @param filename the fully qualified filename
          * @return the GLModel. Nullptr if the model does not exist.
          */
         std::shared_ptr<GLModel> GetModel(const std::string& filename);

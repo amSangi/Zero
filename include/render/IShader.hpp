@@ -38,13 +38,13 @@ namespace zero::render {
          * @brief Check the compilation status of the shader
          * @return True if the shader is compiled. Otherwise false.
          */
-        virtual bool IsCompiled() const = 0;
+        [[nodiscard]] virtual bool IsCompiled() const = 0;
 
         /**
          * @brief The Shader type
          * @return the Type
          */
-        virtual Type GetType() const = 0;
+        [[nodiscard]] virtual Type GetType() const = 0;
 
     }; // class IShader
 

@@ -44,7 +44,7 @@ namespace zero::render {
          * @brief Get the native OpenGL identifier
          * @return the identifier
          */
-        GLuint GetNativeIdentifier() const;
+        [[nodiscard]] GLuint GetNativeIdentifier() const;
 
     protected:
         /**

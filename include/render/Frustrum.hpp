@@ -21,28 +21,28 @@ namespace zero::render {
          * @param sphere the sphere
          * @return true if the sphere is inside the frustrum. Otherwise false.
          */
-        bool Contains(const math::Sphere& sphere) const;
+        [[nodiscard]] bool Contains(const math::Sphere& sphere) const;
 
         /**
          * @brief Is the box inside the frustrum?
          * @param box the box
          * @return true if the box is inside the frustrum. Otherwise false.
          */
-        bool Contains(const math::Box& box) const;
+        [[nodiscard]] bool Contains(const math::Box& box) const;
 
         /**
          * @brief Is the plane inside the frustrum?
          * @param plane the plane
          * @return true if the plane is inside the frustrum. Otherwise false.
          */
-        bool Contains(const math::Plane& plane) const;
+        [[nodiscard]] bool Contains(const math::Plane& plane) const;
 
         /**
          * @brief Is the point inside the frustrum?
          * @param point the point
          * @return true if the point is inside the frustrum. Otherwise false. 
          */
-        bool Contains(const math::Vec3f& point) const;
+        [[nodiscard]] bool Contains(const math::Vec3f& point) const;
 
     private:
         /**
