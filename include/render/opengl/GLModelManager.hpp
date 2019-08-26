@@ -14,7 +14,7 @@ namespace zero::render {
     class GLModel;
 
     /**
-     * @brief Manage
+     * @brief Manage the loading and lifetime of GLModels
      */
     class GLModelManager {
     public:
@@ -53,7 +53,7 @@ namespace zero::render {
         /**
          * @brief Filename to GLModel map
          */
-        std::unordered_map<std::string, std::shared_ptr<GLModel>> models_;
+        std::unordered_map<std::string, std::shared_ptr<GLModel>> model_map_;
 
     }; // class GLModelManager
 

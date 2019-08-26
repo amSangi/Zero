@@ -12,31 +12,6 @@
 namespace zero::render {
 
     /**
-     * @brief A triangular mesh component
-     */
-    struct Mesh : public Component {
-        /**
-         * @brief The index data for the vertices
-         */
-        std::vector<uint32> indices_;
-
-        /**
-         * @brief The vertices of the entity
-         */
-        std::vector<math::Vec3f> vertices_;
-
-        /**
-         * @brief The vertex normals
-         */
-        std::vector<math::Vec3f> normals_;
-
-        /**
-         * @brief The UV texture coordinates of the vertices
-         */
-        std::vector<math::Vec2f> texture_coordinates_;
-    }; // struct Mesh
-
-    /**
      * @brief A volume component encapsulating an entity
      */
     struct Volume : public Component {
@@ -153,6 +128,17 @@ namespace zero::render {
          Shaders shaders_;
 
     }; // struct Material
+
+    /**
+     * @brief An instance of a Mesh. Simply
+     */
+    struct MeshInstance : public Component {
+        /**
+         * @brief The associated 3D model
+         */
+        std::string model_file_;
+
+    }; // struct MeshInstance
 
     /**
      * @brief Captures and displays the world

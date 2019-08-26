@@ -2,49 +2,49 @@
 
 #include <memory>
 #include <vector>
-#include "OpenGL.hpp"
-#include "render/IModel.hpp"
+#include "GLMesh.hpp"
 #include "math/Matrix4x4.hpp"
+#include "render/IModel.hpp"
 
 // Forward Declarations
 class aiNode;
 class aiScene;
+class aiMesh;
 
 namespace zero::render {
 
     /**
-     * @brief OpenGL model wrapper
+     * @brief Model containing OpenGL objects
      */
     class GLModel : public IModel {
     public:
 
         /**
-         * @brief Create a GLModel for an associated AssImporter aiNode and aiScene
+         * @brief Create a GLModel for an associated AssImp aiNode and aiScene
+         * @param filename the filename the model is associated with
          * @param node the aiNode the model will be associated with
          * @param scene the aiScene the node is associated with
          * @return a GLModel instance
          */
-        static std::shared_ptr<GLModel> CreateGLModel(const aiNode* node, const aiScene* scene);
+        static std::shared_ptr<GLModel> CreateGLModel(const std::string& filename,
+                                                      const aiNode* node,
+                                                      const aiScene* scene);
 
         /**
          * @brief Constructor. GLModels should be created through CreateGLModel.
-         * @param vao the vertex array object identifier
-         * @param vbo the interleaved vertex buffer object identifier
+         * @param meshes the different meshes that make up the model
          * @param transformation the transformation of the model relative to the parent
          * @param material the material component prototype
          * @param volume the volume component prototype
-         * @param parent the parent model
-         * @param children the child models
+         * @param mesh_instance the mesh instance component prototype
          */
-        GLModel(GLuint vao,
-                GLuint vbo,
+        GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,
                 math::Matrix4x4 transformation,
                 Material material,
                 Volume volume,
-                std::shared_ptr<GLModel> parent,
-                std::vector<std::shared_ptr<GLModel>> children);
+                MeshInstance mesh_instance);
 
-        ~GLModel() override;
+        ~GLModel() override = default;
 
         /**
          * @see IModel::GetTransformation
@@ -62,6 +62,11 @@ namespace zero::render {
         [[nodiscard]] Volume GetVolume() const override;
 
         /**
+         * @see IModel::GetMeshInstance
+         */
+        [[nodiscard]] MeshInstance GetMeshInstance() const override;
+
+        /**
          * @brief Get the parent model
          * @return the parent GLModel. Nullptr if there is no parent.
          */
@@ -73,31 +78,26 @@ namespace zero::render {
          */
         [[nodiscard]] const std::vector<std::shared_ptr<GLModel>>& GetChildren() const;
 
-    protected:
-        /**
-         * @brief Cleanup rendering resources
-         */
-        void Cleanup() override;
-
     private:
-
         /**
-         * @brief Vertex Array Object identifier
+         * @brief Load a mesh from an aiMesh
+         * @param mesh the aiMesh
+         * @return a GLMesh instance
          */
-        GLuint vao_;
+        static std::shared_ptr<GLMesh> LoadMesh(const aiMesh* mesh);
 
         /**
-         * @brief Interleaved Vertex Buffer Identifier
+         * @brief The different meshes that make up the model
          */
-        GLuint vbo_;
+        std::vector<std::shared_ptr<GLMesh>> meshes_;
 
         /**
-         * @brief The Parent model
+         * @brief The parent model
          */
         std::shared_ptr<GLModel> parent_model_;
 
         /**
-         * @brief Child models
+         * @brief The child models
          */
         std::vector<std::shared_ptr<GLModel>> child_models_;
 
@@ -115,6 +115,11 @@ namespace zero::render {
          * @brief Volume prototype encapsulating the model
          */
         Volume volume_;
+
+        /**
+         * @brief MeshInstance prototype for describing the entire model
+         */
+        MeshInstance mesh_instance_;
 
     }; // class GLModel
 

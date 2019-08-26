@@ -21,7 +21,7 @@ namespace zero::render {
 
         /**
          * @brief Perform an animation tick
-         * @param registry the registry containing all of the entities
+         * @param registry the registry containing all of the entities and their components
          * @param dt the time between the current and last frame
          */
         virtual void Animate(entt::registry& registry, float dt) = 0;

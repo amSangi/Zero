@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "core/System.hpp"
+#include "Components.hpp"
 #include "IAnimator.hpp"
 #include "IRenderer.hpp"
 #include "Propagator.hpp"
@@ -52,6 +53,16 @@ namespace zero::render {
          */
         void ShutDown() override;
 
+        /**
+         * @brief Create a new entity based on a 3D model.
+         *
+         * Constructs an entity with a Transform, Volume, Material, and MeshInstance components.
+         *
+         * @param model the fully qualified 3D filename
+         * @return the root entity associated with the 3D model. NullEntity if an error occurred.
+         */
+        Component::Entity CreateModelInstance(const std::string& model);
+
     private:
 
         /**
@@ -70,7 +81,7 @@ namespace zero::render {
         std::unique_ptr<IAnimator> animator_;
 
         /**
-         * @brief The renderer used to call to the graphics API
+         * @brief The renderer used to draw and cull entities onto the window
          */
         std::unique_ptr<IRenderer> renderer_;
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "IRenderResource.hpp"
 #include "Components.hpp"
 #include "math/Matrix4x4.hpp"
 
@@ -9,7 +8,7 @@ namespace zero::render {
     /**
      * @brief Base class for 3D render models
      */
-    class IModel : public IRenderResource {
+    class IModel {
     public:
 
         IModel() = default;
@@ -33,6 +32,12 @@ namespace zero::render {
          * @return a volume component prototype instance
          */
         [[nodiscard]] virtual Volume GetVolume() const = 0;
+
+        /**
+         * @brief Get a mesh instance associated with the model
+         * @return a mesh instance component prototype instance
+         */
+        [[nodiscard]] virtual MeshInstance GetMeshInstance() const = 0;
 
     }; // class IModel
 

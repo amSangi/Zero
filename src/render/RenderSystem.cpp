@@ -41,3 +41,7 @@ void RenderSystem::ShutDown() {
     renderer_->ShutDown();
     window_->Cleanup();
 }
+
+zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model) {
+    return renderer_->InstantiateModel(GetRegistry(), model);
+}

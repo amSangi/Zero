@@ -17,10 +17,12 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              math/Sphere.cpp
                              render/Components.cpp
                              render/Image.cpp
+                             render/Mesh.cpp
                              render/Propagator.cpp
                              render/RenderSystem.cpp
                              render/Window.cpp
                              render/opengl/GLCompiler.cpp
+                             render/opengl/GLMesh.cpp
                              render/opengl/GLModel.cpp
                              render/opengl/GLModelManager.cpp
                              render/opengl/GLProgram.cpp

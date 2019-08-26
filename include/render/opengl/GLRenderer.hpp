@@ -28,22 +28,29 @@ namespace zero::render {
         void Initialize(const RenderSystemConfig& config) override;
 
         /**
-         * @brief Render all drawable entities using Camera entities
-         * @param registry the registry containing the entities and their components
+         * @brief Render all drawable entities in the game world
+         * @param registry the registry containing all the entities and their components
          * @param dt time between the current and last frame
          */
         void Render(const entt::registry& registry, float dt) override;
 
         /**
-         * @brief Cleanup all resources used for a render call
-         * @param registry the registry containing the entities and their components
+         * @brief Release the images in the TextureManager from main memory
+         * @param registry the registry containing all the entities and their components
          */
         void PostRender(entt::registry& registry) override;
 
         /**
-         * @brief Shut down and clean up all rendering resources
+         * @brief Clear the Compiler of shaders, the ModelManager of models, and TextureManager of textures
          */
         void ShutDown() override;
+
+        /**
+         * @brief Create an entity instance based on a 3D model
+         * @param registry the registry containing all the entities and their components
+         * @param model the fully qualified 3D model file to instantiate
+         */
+        Component::Entity InstantiateModel(entt::registry& registry, const std::string& model) override;
 
     private:
 

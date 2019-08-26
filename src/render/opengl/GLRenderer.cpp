@@ -90,3 +90,13 @@ void GLRenderer::ShutDown() {
     model_manager_->ClearModels();
     texture_manager_->ClearImages();
 }
+
+zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, const std::string& model) {
+    auto gl_model = model_manager_->GetModel(model);
+    if (!gl_model) return Component::NullEntity;
+
+    auto entity = registry.create();
+    // TODO: Finish Implementation
+
+    return entity;
+}

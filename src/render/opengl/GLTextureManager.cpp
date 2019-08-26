@@ -80,11 +80,10 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& fi
 }
 
 bool GLTextureManager::InitializeImage(const std::string& filename) {
-    auto image = std::make_unique<Image>(filename);
+    if (image_map_.find(filename) != image_map_.end()) return true;
 
-    if (!image->Load()) {
-        return false;
-    }
+    auto image = std::make_unique<Image>(filename);
+    if (!image->Load()) return false;
 
     image->Release();
     image_map_[filename] = std::move(image);

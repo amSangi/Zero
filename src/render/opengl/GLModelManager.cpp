@@ -7,6 +7,8 @@
 using namespace zero::render;
 
 bool GLModelManager::LoadModel(const std::string& filename) {
+    if (model_map_.find(filename) != model_map_.end()) return true;
+
     Assimp::Importer importer;
 
     auto flags = aiProcess_Triangulate
@@ -23,16 +25,16 @@ bool GLModelManager::LoadModel(const std::string& filename) {
         return false;
     }
 
-    models_.emplace(filename, GLModel::CreateGLModel(scene->mRootNode, scene));
+    model_map_.emplace(filename, GLModel::CreateGLModel(filename, scene->mRootNode, scene));
     return true;
 }
 
 void GLModelManager::ClearModels() {
-    models_.clear();
+    model_map_.clear();
 }
 
 std::shared_ptr<GLModel> GLModelManager::GetModel(const std::string& filename) {
-    auto model_search = models_.find(filename);
-    if (model_search == models_.end()) return nullptr;
+    auto model_search = model_map_.find(filename);
+    if (model_search == model_map_.end()) return nullptr;
     return model_search->second;
 }
