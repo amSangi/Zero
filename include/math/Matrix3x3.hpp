@@ -40,7 +40,7 @@ namespace zero::math {
          * @param col The 0-indexed column
          * @return The element at the given row and column
          */
-        const float operator()(size_t row, size_t col) const;
+        float operator()(size_t row, size_t col) const;
 
         /**
          * @brief Retrieve the element at the given row and column

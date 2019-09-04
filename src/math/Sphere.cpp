@@ -1,19 +1,21 @@
 #include "math/Sphere.hpp"
 #include "math/Box.hpp"
-#include <assert.h>
 
 using namespace zero::math;
 
-constexpr float kMergeExpansionEpsilon = 1.0f;
+constexpr float kMergeExpansionEpsilon = 1.0F;
+
+Sphere::Sphere()
+: Sphere(1.0F) {}
 
 Sphere::Sphere(float r)
-   : center_(Vec3f::Zero()), radius_(r) {}
+: center_(Vec3f::Zero()), radius_(r) {}
 
 Sphere::Sphere(const Vec3f& c)
-   : center_(c), radius_(0.0f) {}
+: center_(c), radius_(0.0F) {}
 
 Sphere::Sphere(const Vec3f& c, float r)
-   : center_(c), radius_(r) {}
+: center_(c), radius_(r) {}
 
 bool Sphere::operator==(const Sphere& other) const {
 	return (center_ == other.center_) && Equal(radius_, other.radius_);
@@ -45,7 +47,7 @@ bool Sphere::Contains(const Vec3f& point) const {
 }
 
 bool Sphere::Intersects(const Sphere& other) const {
-    auto max = Max(0.0f, radius_ + other.radius_);
+    auto max = Max(0.0F, radius_ + other.radius_);
 	return Vec3f::SquareDistance(center_, other.center_) <= (max * max);
 }
 
@@ -66,14 +68,14 @@ void Sphere::Merge(const Sphere& other) {
 		if (distance > SMALL_EPSILON) direction /= distance;
 
 		// Half of diameter of enclosing circle
-		float merged_radius = (distance + radius_ + other.radius_) * 0.5f;
+		float merged_radius = (distance + radius_ + other.radius_) * 0.5F;
 
 		// Compute sphere end points
 		Vec3f sphere_end_point = center_ + (radius_ * direction);
 		Vec3f other_end_point = other.center_ - (other.radius_ * direction);
 
 		// Linearly interpolate half-way between the end points
-        center_ = (sphere_end_point + other_end_point) * 0.5f;
+        center_ = (sphere_end_point + other_end_point) * 0.5F;
         // Increase actual radius by kMergeExpansionEpsilon to guard against floating point precision loss
 		radius_ = merged_radius + kMergeExpansionEpsilon;
 	}
@@ -88,5 +90,5 @@ Sphere Sphere::Merge(const Sphere& lhs, const Sphere& rhs) {
 }
 
 Sphere Sphere::Zero() {
-	return Sphere(Vec3f::Zero(), 0.0f);
+	return Sphere(Vec3f::Zero(), 0.0F);
 }

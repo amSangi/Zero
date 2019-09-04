@@ -9,7 +9,7 @@ namespace zero::math {
 	 */
 	class Radian {
 	public:
-		Radian() : rad_(0.0f) {}
+		Radian() : rad_(0.0F) {}
 		explicit Radian(float r) : rad_(r) {}
 		Radian(const Radian& other) = default;
 		~Radian() = default;

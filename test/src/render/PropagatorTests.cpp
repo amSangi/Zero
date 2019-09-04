@@ -344,7 +344,7 @@ TEST_F(TestPropagator, PropagateTransform_RootParentDeleted) {
 }
 
 TEST_F(TestPropagator, PropagateTransform_ChildDeleted) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0f);
+    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0F);
     auto& transform = registry_.get<Transform>(body_entity);
     auto& child_transform = registry_.get<Transform>(transform.children_[1]);
     const math::Vec3f prev_child_position = child_transform.position_;
@@ -357,7 +357,7 @@ TEST_F(TestPropagator, PropagateTransform_ChildDeleted) {
 }
 
 TEST_F(TestPropagator, PropagateTransform_ParentVolume_SmallerThanChild) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0f);
+    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0F);
     auto& body_transform = registry_.get<Transform>(body_entity);
 
     // Copy previous child transforms
@@ -409,7 +409,7 @@ TEST_F(TestPropagator, PropagateTransform_ChangeParent_WorldPosition) {
     }
 
     // Apply translation to parent entity and propagate
-    math::Vec3f translation(1.0f, 2.0f, 3.0f);
+    math::Vec3f translation(1.0F, 2.0F, 3.0F);
     body_transform.Translate(translation);
     propagator_.PropagateTransform(registry_);
 
@@ -432,7 +432,7 @@ TEST_F(TestPropagator, PropagateTransform_ChangeParent_WorldScale) {
     }
 
     // Apply scale to parent entity and propagate
-    math::Vec3f scale(1.0f, 2.0f, 3.0f);
+    math::Vec3f scale(1.0F, 2.0F, 3.0F);
     body_transform.Scale(scale);
     propagator_.PropagateTransform(registry_);
 
@@ -455,9 +455,9 @@ TEST_F(TestPropagator, PropagateTransform_ChangeParent_WorldOrientation) {
     }
 
     // Apply rotation to parent entity and propagate
-    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                            math::Radian(0.0f),
-                                                            math::Degree(90.0f).ToRadian());
+    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                            math::Radian(0.0F),
+                                                            math::Degree(90.0F).ToRadian());
     body_transform.Rotate(rotation);
     propagator_.PropagateTransform(registry_);
 
@@ -480,11 +480,11 @@ TEST_F(TestPropagator, PropagateTransform_ChangeParent_WorldTRS) {
     }
 
     // Apply TRS to parent entity and propagate
-    math::Vec3f translation(1.0f, 2.0f, 3.0f);
-    math::Vec3f scale(1.0f, 2.0f, 3.0f);
-    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                            math::Radian(0.0f),
-                                                            math::Degree(195.0f).ToRadian());
+    math::Vec3f translation(1.0F, 2.0F, 3.0F);
+    math::Vec3f scale(1.0F, 2.0F, 3.0F);
+    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                            math::Radian(0.0F),
+                                                            math::Degree(195.0F).ToRadian());
     body_transform.Scale(scale)
                   .Rotate(rotation)
                   .Translate(translation);
@@ -525,24 +525,24 @@ TEST_F(TestPropagator, PropagateVolume_RootParentDeleted) {
 }
 
 TEST_F(TestPropagator, PropagateVolume_ChildDeleted) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0f);
+    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0F);
     auto& transform = registry_.get<Transform>(body_entity);
     auto& volume = registry_.get<render::Volume>(body_entity);
     registry_.destroy(transform.children_[0]);
     propagator_.PropagateVolume(registry_);
 
-    EXPECT_GT(volume.bounding_volume_.radius_, 2.0f);
+    EXPECT_GT(volume.bounding_volume_.radius_, 2.0F);
 }
 
 TEST_F(TestPropagator, PropagateVolume_ParentVolume_SmallerThanChild) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0f);
+    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0F);
     EXPECT_FALSE(ParentContainsChildVolumes(body_entity));
     propagator_.PropagateVolume(registry_);
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
 }
 
 TEST_F(TestPropagator, PropagateVolume_ParentVolume_ContainsChildren) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 6.0f);
+    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 6.0F);
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
     propagator_.PropagateVolume(registry_);
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
@@ -554,7 +554,7 @@ TEST_F(TestPropagator, PropagateVolume_ChangeParent_WorldPosition) {
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
 
     // Apply translation to parent entity and propagate
-    math::Vec3f translation(1.0f, 2.0f, 3.0f);
+    math::Vec3f translation(1.0F, 2.0F, 3.0F);
     body_transform.Translate(translation);
     propagator_.PropagateTransform(registry_);
     propagator_.PropagateVolume(registry_);
@@ -568,7 +568,7 @@ TEST_F(TestPropagator, PropagateVolume_ChangeParent_WorldScale) {
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
 
     // Apply scale to parent entity and propagate
-    math::Vec3f scale(1.0f, 2.0f, 3.0f);
+    math::Vec3f scale(1.0F, 2.0F, 3.0F);
     body_transform.Scale(scale);
     propagator_.PropagateTransform(registry_);
     propagator_.PropagateVolume(registry_);
@@ -582,9 +582,9 @@ TEST_F(TestPropagator, PropagateVolume_ChangeParent_WorldOrientation) {
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
 
     // Apply rotation to parent entity and propagate
-    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                            math::Radian(0.0f),
-                                                            math::Degree(90.0f).ToRadian());
+    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                            math::Radian(0.0F),
+                                                            math::Degree(90.0F).ToRadian());
     body_transform.Rotate(rotation);
     propagator_.PropagateTransform(registry_);
     propagator_.PropagateVolume(registry_);
@@ -598,11 +598,11 @@ TEST_F(TestPropagator, PropagateVolume_ChangeParent_WorldTRS) {
     EXPECT_TRUE(ParentContainsChildVolumes(body_entity));
 
     // Apply TRS to parent entity and propagate
-    math::Vec3f translation(1.0f, 2.0f, 3.0f);
-    math::Vec3f scale(1.0f, 2.0f, 3.0f);
-    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                            math::Radian(0.0f),
-                                                            math::Degree(195.0f).ToRadian());
+    math::Vec3f translation(1.0F, 2.0F, 3.0F);
+    math::Vec3f scale(1.0F, 2.0F, 3.0F);
+    math::Quaternion rotation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                            math::Radian(0.0F),
+                                                            math::Degree(195.0F).ToRadian());
     body_transform.Scale(scale)
                   .Rotate(rotation)
                   .Translate(translation);

@@ -53,7 +53,7 @@ Vec3f Box::Size() const {
 }
 
 Vec3f Box::Center() const {
-	return (min_ + max_) * 0.5f;
+	return (min_ + max_) * 0.5F;
 }
 
 

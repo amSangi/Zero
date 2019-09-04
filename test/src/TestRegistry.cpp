@@ -25,7 +25,7 @@ Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float par
 
     // Head - 4 units above body
     auto head_entity = registry_.create();
-    math::Vec3f head_offset(0.0f, 4.0f, 0.0f);
+    math::Vec3f head_offset(0.0F, 4.0F, 0.0F);
     registry_.assign<Transform>(head_entity,
                                 body_entity,
                                 body_transform,
@@ -34,11 +34,11 @@ Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float par
                                 math::Quaternion());
     registry_.assign<render::Volume>(head_entity,
                                      position + head_offset,
-                                     2.0f);
+                                     2.0F);
 
     // Left Arm
     auto left_arm_entity = registry_.create();
-    math::Vec3f left_arm_offset(2.0f, 1.0f, 0.0f);
+    math::Vec3f left_arm_offset(2.0F, 1.0F, 0.0F);
     registry_.assign<Transform>(left_arm_entity,
                                 body_entity,
                                 body_transform,
@@ -47,11 +47,11 @@ Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float par
                                 math::Quaternion());
     registry_.assign<render::Volume>(left_arm_entity,
                                      position + left_arm_offset,
-                                     2.0f);
+                                     2.0F);
 
     // Right Arm
     auto right_arm_entity = registry_.create();
-    math::Vec3f right_arm_offset(-2.0f, 1.0f, 0.0f);
+    math::Vec3f right_arm_offset(-2.0F, 1.0F, 0.0F);
     registry_.assign<Transform>(right_arm_entity,
                                 body_entity,
                                 body_transform,
@@ -60,11 +60,11 @@ Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float par
                                 math::Quaternion());
     registry_.assign<render::Volume>(right_arm_entity,
                                      position + right_arm_offset,
-                                     2.0f);
+                                     2.0F);
 
     // Left Leg
     auto left_leg_entity = registry_.create();
-    math::Vec3f left_leg_offset(1.0f, -2.0f, 0.0f);
+    math::Vec3f left_leg_offset(1.0F, -2.0F, 0.0F);
     registry_.assign<Transform>(left_leg_entity,
                                 body_entity,
                                 body_transform,
@@ -73,11 +73,11 @@ Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float par
                                 math::Quaternion());
     registry_.assign<render::Volume>(left_leg_entity,
                                      position + left_leg_offset,
-                                     2.0f);
+                                     2.0F);
 
     // Right Leg
     auto right_leg_entity = registry_.create();
-    math::Vec3f right_leg_offset(-1.0f, -2.0f, 0.0f);
+    math::Vec3f right_leg_offset(-1.0F, -2.0F, 0.0F);
     registry_.assign<Transform>(right_leg_entity,
                                 body_entity,
                                 body_transform,
@@ -86,7 +86,7 @@ Component::Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float par
                                 math::Quaternion());
     registry_.assign<render::Volume>(right_leg_entity,
                                      position + right_leg_offset,
-                                     2.0f);
+                                     2.0F);
 
     // Add child entities
     auto& parent_transform = registry_.get<Transform>(body_entity);

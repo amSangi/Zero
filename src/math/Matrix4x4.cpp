@@ -32,22 +32,22 @@ Matrix4x4::Matrix4x4(const Matrix3x3& m3)
     matrix_[0][0] = m3(0, 0);
     matrix_[0][1] = m3(0, 1);
     matrix_[0][2] = m3(0, 2);
-    matrix_[0][3] = 0.0f;
+    matrix_[0][3] = 0.0F;
 
     matrix_[1][0] = m3(1, 0);
     matrix_[1][1] = m3(1, 1);
     matrix_[1][2] = m3(1, 2);
-    matrix_[1][3] = 0.0f;
+    matrix_[1][3] = 0.0F;
 
     matrix_[2][0] = m3(2, 0);
     matrix_[2][1] = m3(2, 1);
     matrix_[2][2] = m3(2, 2);
-    matrix_[2][3] = 0.0f;
+    matrix_[2][3] = 0.0F;
 
-    matrix_[3][0] = 0.0f;
-    matrix_[3][1] = 0.0f;
-    matrix_[3][2] = 0.0f;
-    matrix_[3][3] = 1.0f;
+    matrix_[3][0] = 0.0F;
+    matrix_[3][1] = 0.0F;
+    matrix_[3][2] = 0.0F;
+    matrix_[3][3] = 1.0F;
 }
 
 Matrix4x4::Matrix4x4(float e00, float e01, float e02, float e03,
@@ -79,7 +79,7 @@ bool Matrix4x4::operator!=(const Matrix4x4& o) const {
     return !(operator==(o));
 }
 
-const float Matrix4x4::operator()(size_t row, size_t col) const {
+float Matrix4x4::operator()(size_t row, size_t col) const {
     return matrix_[row][col];
 }
 
@@ -139,7 +139,7 @@ Matrix4x4& Matrix4x4::operator*=(float scalar) {
 }
 
 Matrix4x4& Matrix4x4::operator/=(float scalar) {
-    float inv_scalar = 1.0f / scalar;
+    float inv_scalar = 1.0F / scalar;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             matrix_[i][j] *= inv_scalar;
@@ -224,7 +224,7 @@ bool Matrix4x4::InverseUtil(Matrix4x4& out, float epsilon) const {
 
     if (Abs(det) <= epsilon) return false;
 
-    float inv_det = 1.0f / det;
+    float inv_det = 1.0F / det;
 
     out.matrix_[0][0] = inv_det *   ( matrix_[1][1] * A2323 - matrix_[1][2] * A1323 + matrix_[1][3] * A1223 );
     out.matrix_[0][1] = inv_det * - ( matrix_[0][1] * A2323 - matrix_[0][2] * A1323 + matrix_[0][3] * A1223 );
@@ -336,8 +336,8 @@ Matrix3x3 Matrix4x4::GetMatrix3x3() const {
 }
 
 Matrix4x4 Matrix4x4::Identity() {
-    return Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
-                     0.0f, 1.0f, 0.0f, 0.0f,
-                     0.0f, 0.0f, 1.0f, 0.0f,
-                     0.0f, 0.0f, 0.0f, 1.0f);
+    return Matrix4x4(1.0F, 0.0F, 0.0F, 0.0F,
+                     0.0F, 1.0F, 0.0F, 0.0F,
+                     0.0F, 0.0F, 1.0F, 0.0F,
+                     0.0F, 0.0F, 0.0F, 1.0F);
 }

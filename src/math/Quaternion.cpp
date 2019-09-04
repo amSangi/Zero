@@ -29,7 +29,7 @@ Quaternion Quaternion::operator*(float scalar) {
 }
 
 Quaternion Quaternion::operator/(float scalar) {
-	float inv_scalar = 1.0f / scalar;
+	float inv_scalar = 1.0F / scalar;
 	return Quaternion(w_ * inv_scalar, x_ * inv_scalar, y_ * inv_scalar, z_ * inv_scalar);
 }
 
@@ -58,7 +58,7 @@ Quaternion& Quaternion::operator*=(float scalar) {
 }
 
 Quaternion& Quaternion::operator/=(float scalar) {
-	float inv_scalar = 1.0f / scalar;
+	float inv_scalar = 1.0F / scalar;
 	w_ *= inv_scalar;
 	x_ *= inv_scalar;
 	y_ *= inv_scalar;
@@ -116,7 +116,7 @@ Vec3f Quaternion::operator*(const Vec3f& v) const {
 	Vec3f u = XYZ();
 	Vec3f c1 = Vec3f::Cross(u, v);
 	Vec3f c2 = Vec3f::Cross(u, c1);
-	return v + 2.0f * ((c1 * w_) + c2);
+	return v + 2.0F * ((c1 * w_) + c2);
 }
 
 /* ********** Quaternion Operations ********** */
@@ -126,16 +126,16 @@ float Quaternion::Norm() const {
 
 Quaternion& Quaternion::Unit() {
 	float norm = Norm();
-	if (norm > 0.0f) {
-		float inv_norm = 1.0f / norm;
+	if (norm > 0.0F) {
+		float inv_norm = 1.0F / norm;
 		w_ *= inv_norm;
 		x_ *= inv_norm;
 		y_ *= inv_norm;
 		z_ *= inv_norm;
 	}
 	else {
-		w_ = 1.0f;
-		x_ = y_ = z_ = 0.0f;
+		w_ = 1.0F;
+		x_ = y_ = z_ = 0.0F;
 	}
 	return *this;
 }
@@ -149,16 +149,16 @@ Quaternion& Quaternion::Conjugate() {
 
 Quaternion& Quaternion::Inverse() {
 	float norm = Norm();
-	if (norm > 0.0f) {
-		float inv_norm = 1.0f / norm;
+	if (norm > 0.0F) {
+		float inv_norm = 1.0F / norm;
 		w_ *= inv_norm;
 		x_ *= -inv_norm;
 		y_ *= -inv_norm;
 		z_ *= -inv_norm;
 	}
 	else {
-		w_ = 1.0f;
-		x_ = y_ = z_ = 0.0f;
+		w_ = 1.0F;
+		x_ = y_ = z_ = 0.0F;
 	}
 	return *this;
 }
@@ -192,17 +192,17 @@ Vec3f Quaternion::GetEulerAngles() const {
 	float unit = xx + yy + zz + ww;
 	float test = x_ * y_ + z_ * w_;
 
-	if (test > 0.499f * unit) {
-		return Vec3f(2.0f * Atan2(x_, w_), PI_2, 0.0f);
+	if (test > 0.499F * unit) {
+		return Vec3f(2.0F * Atan2(x_, w_), PI_2, 0.0F);
 	}
 
-	if (test < -0.499f * unit) {
-		return Vec3f(-2.0f * Atan2(x_, w_), -PI_2, 0.0f);
+	if (test < -0.499F * unit) {
+		return Vec3f(-2.0F * Atan2(x_, w_), -PI_2, 0.0F);
 	}
 
-	float heading = Atan2(2.0f * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
-	float attitude = Asin(2.0f * test / unit);
-	float bank = Atan2(2.0f * (x_ * w_ - y_ * z_), -xx + yy - zz + ww);
+	float heading = Atan2(2.0F * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
+	float attitude = Asin(2.0F * test / unit);
+	float bank = Atan2(2.0F * (x_ * w_ - y_ * z_), -xx + yy - zz + ww);
 
 	return Vec3f(bank, heading, attitude);
 }
@@ -229,17 +229,17 @@ Matrix3x3 Quaternion::GetRotationMatrix() const {
 	float wy = q.w_ * q.y_;
 	float wz = q.w_ * q.z_;
 
-	float e00 = 1.0f - (2.0f * (yy + zz));
-	float e01 = 2.0f * (xy - wz);
-	float e02 = 2.0f * (wy + xz);
+	float e00 = 1.0F - (2.0F * (yy + zz));
+	float e01 = 2.0F * (xy - wz);
+	float e02 = 2.0F * (wy + xz);
 
-	float e10 = 2.0f * (xy + wz);
-	float e11 = 1.0f - (2.0f * (xx + zz));
-	float e12 = 2.0f * (yz - wx);
+	float e10 = 2.0F * (xy + wz);
+	float e11 = 1.0F - (2.0F * (xx + zz));
+	float e12 = 2.0F * (yz - wx);
 
-	float e20 = 2.0f * (xz - wy);
-	float e21 = 2.0f * (wx + yz);
-	float e22 = 1.0f - (2.0f * (xx + yy));
+	float e20 = 2.0F * (xz - wy);
+	float e21 = 2.0F * (wx + yz);
+	float e22 = 1.0F - (2.0F * (xx + yy));
 
 	return Matrix3x3(e00, e01, e02,
                      e10, e11, e12,
@@ -253,7 +253,7 @@ float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 
 Quaternion Quaternion::FromAngleAxis(const Vec3f& axis, Radian angle) {
 	Vec3f normalized = Vec3f::Normalize(axis);
-	float half_angle_rad = angle.rad_ * 0.5f;
+	float half_angle_rad = angle.rad_ * 0.5F;
 	float sin_half_angle_rad = Sin(half_angle_rad);
 
 	// Assume axis is normalized
@@ -276,9 +276,9 @@ Quaternion Quaternion::FromAxes(const Vec3f& xAxis, const Vec3f& yAxis, const Ve
 }
 
 Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
-	float rx = 0.5f * x.rad_;
-	float ry = 0.5f * y.rad_;
-	float rz = 0.5f * z.rad_;
+	float rx = 0.5F * x.rad_;
+	float ry = 0.5F * y.rad_;
+	float rz = 0.5F * z.rad_;
 
 	float cx = Cos(rx);
 	float sx = Sin(rx);
@@ -297,10 +297,10 @@ Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z) {
 }
 
 Quaternion Quaternion::FromMatrix3(const Matrix3x3& matrix) {
-	float w = Sqrt(Max(0.0f, 1.0f + matrix(0, 0) + matrix(1, 1) + matrix(2, 2))) * 0.5f;
-	float x = Sqrt(Max(0.0f, 1.0f + matrix(0, 0) - matrix(1, 1) - matrix(2, 2))) * 0.5f;
-	float y = Sqrt(Max(0.0f, 1.0f - matrix(0, 0) + matrix(1, 1) - matrix(2, 2))) * 0.5f;
-	float z = Sqrt(Max(0.0f, 1.0f - matrix(0, 0) - matrix(1, 1) + matrix(2, 2))) * 0.5f;
+	float w = Sqrt(Max(0.0F, 1.0F + matrix(0, 0) + matrix(1, 1) + matrix(2, 2))) * 0.5F;
+	float x = Sqrt(Max(0.0F, 1.0F + matrix(0, 0) - matrix(1, 1) - matrix(2, 2))) * 0.5F;
+	float y = Sqrt(Max(0.0F, 1.0F - matrix(0, 0) + matrix(1, 1) - matrix(2, 2))) * 0.5F;
+	float z = Sqrt(Max(0.0F, 1.0F - matrix(0, 0) - matrix(1, 1) + matrix(2, 2))) * 0.5F;
 
 	x = Copysign(x, matrix(2, 1) - matrix(1, 2));
 	y = Copysign(y, matrix(0, 2) - matrix(2, 0));
@@ -332,7 +332,7 @@ Quaternion Quaternion::FromToRotation(const Vec3f& from, const Vec3f& to) {
 	float theta = Vec3f::Dot(from_N, to_N);
 	Vec3f rotation_axis;
 
-	if (theta < -1.0f + EPSILON) {
+	if (theta < -1.0F + EPSILON) {
 		rotation_axis = Vec3f::Cross(Vec3f::Forward(), from_N);
 
 		if (rotation_axis.SquareMagnitude() < EPSILON) {
@@ -340,14 +340,14 @@ Quaternion Quaternion::FromToRotation(const Vec3f& from, const Vec3f& to) {
 		}
 
 		rotation_axis.Normalize();
-		return FromAngleAxis(rotation_axis, Degree(180.0f));
+		return FromAngleAxis(rotation_axis, Degree(180.0F));
 	}
 
 	rotation_axis = Vec3f::Cross(from_N, to_N);
-	float s = Sqrt((1.0f + theta) * 2.0f);
-	float inv_s = 1.0f / s;
+	float s = Sqrt((1.0F + theta) * 2.0F);
+	float inv_s = 1.0F / s;
 
-	return Quaternion(s * 0.5f,
+	return Quaternion(s * 0.5F,
                       rotation_axis.x_ * inv_s,
                       rotation_axis.y_ * inv_s,
                       rotation_axis.z_ * inv_s);
@@ -355,11 +355,11 @@ Quaternion Quaternion::FromToRotation(const Vec3f& from, const Vec3f& to) {
 
 /* ********** Useful Quaternions ********** */
 Quaternion Quaternion::Identity() {
-	return Quaternion(1.0f, 0.0f, 0.0f, 0.0f);
+	return Quaternion(1.0F, 0.0F, 0.0F, 0.0F);
 }
 
 Quaternion Quaternion::Zero() {
-	return Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
+	return Quaternion(0.0F, 0.0F, 0.0F, 0.0F);
 }
 
 

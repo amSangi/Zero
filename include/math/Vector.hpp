@@ -76,7 +76,7 @@ namespace detail {
     public:
         VectorBase() = default;
 
-        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f) {}
+        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0F) {}
 
         VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z) {}
 
@@ -97,9 +97,9 @@ namespace detail {
     public:
         VectorBase() = default;
 
-        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0f), w_(0.0f) {}
+        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0F), w_(0.0F) {}
 
-        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0f) {}
+        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0F) {}
 
         VectorBase(T x, T y, T z, T w) : x_(x), y_(y), z_(z), w_(w) {}
 
@@ -467,48 +467,48 @@ namespace detail {
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Zero() {
-		return Vector<dims, T>(0.0f);
+		return Vector<dims, T>(0.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::One() {
-		return Vector<dims, T>(1.0f);
+		return Vector<dims, T>(1.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Up() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims, T>(0.0f, 1.0f);
+		return Vector<dims, T>(0.0F, 1.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Down() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims, T>(0.0f, -1.0f);
+		return Vector<dims, T>(0.0F, -1.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Right() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims, T>(1.0f, 0.0f);
+		return Vector<dims, T>(1.0F, 0.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Left() {
 		static_assert(dims > 1, "Require at least 2 dimensions");
-		return Vector<dims, T>(-1.0f, 0.0f);
+		return Vector<dims, T>(-1.0F, 0.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Forward() {
 		static_assert(dims > 2, "Require at least 3 dimensions");
-		return Vector<dims, T>(0.0f, 0.0f, 1.0f);
+		return Vector<dims, T>(0.0F, 0.0F, 1.0F);
 	}
 
 	template<uint16 dims, class T>
 	Vector<dims, T> Vector<dims, T>::Back() {
 		static_assert(dims > 2, "Require at least 3 dimensions");
-		return Vector<dims, T>(0.0f, 0.0f, -1.0f);
+		return Vector<dims, T>(0.0F, 0.0F, -1.0F);
 	}
 
 
@@ -521,7 +521,7 @@ namespace detail {
 
 	template<uint16 dims, class T>
 	float Vector<dims, T>::SquareMagnitude() const {
-		float square_mag = 0.0f;
+		float square_mag = 0.0F;
 		const T* data = Data();
 		for (int i = 0; i < dims; ++i) {
 			square_mag += (data[i] * data[i]);
@@ -542,7 +542,7 @@ namespace detail {
 	bool Vector<dims, T>::Normalize() {
 		float magnitude = Magnitude();
 
-		float inv_magnitude = 1.0f / magnitude;
+		float inv_magnitude = 1.0F / magnitude;
 		if (magnitude > SMALL_EPSILON) {
 			operator*=(inv_magnitude);
 			return true;
@@ -598,7 +598,7 @@ namespace detail {
 
 	template<uint16 dims, class T>
 	float Vector<dims, T>::Dot(const Vector<dims, T>& lhs, const Vector<dims, T>& rhs) {
-		float result = 0.0f;
+		float result = 0.0F;
 		const T* lhs_data = lhs.Data();
 		const T* rhs_data = rhs.Data();
 		for (int i = 0; i < dims; ++i) {
@@ -632,7 +632,7 @@ namespace detail {
 
 	template<uint16 dims, class T>
 	Vector<dims, T>Vector<dims, T>::Lerp(const Vector<dims, T>& start, const Vector<dims, T>& end, float t) {
-		return (start * (1.0f - t)) + (end * t);
+		return (start * (1.0F - t)) + (end * t);
 	}
 
 	template<uint16 dims, class T>
@@ -640,7 +640,7 @@ namespace detail {
 		float dot = Dot(from, to);
 		float square_mag_from = from.SquareMagnitude();
 		float square_mag_to = to.SquareMagnitude();
-		float inv_sqrt = 1.0f / Sqrt(square_mag_from * square_mag_to);
+		float inv_sqrt = 1.0F / Sqrt(square_mag_from * square_mag_to);
 		float angle = Acos(dot * inv_sqrt);
 		return Radian(angle);
 	}
@@ -724,7 +724,7 @@ namespace detail {
 	template<uint16 dims, class T>
 	Vector<dims, T>& Vector<dims, T>::operator/=(T scalar) {
 		T* data = Data();
-		float inv_scalar = 1.0f / scalar;
+		float inv_scalar = 1.0F / scalar;
 		for (int i = 0; i < dims; ++i) {
 			data[i] *= inv_scalar;
 		}

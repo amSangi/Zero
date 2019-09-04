@@ -9,7 +9,7 @@ namespace zero::math {
 	 */
 	class Sphere {
 	public:
-		Sphere() = default;
+		Sphere();
 		explicit Sphere(float radius);
 		explicit Sphere(const Vec3f& center);
 		Sphere(const Vec3f& center, float radius);

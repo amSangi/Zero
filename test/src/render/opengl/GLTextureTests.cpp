@@ -110,10 +110,10 @@ TEST_F(TestGLTexture, TextureWithShader) {
     // Test vertices
     GLfloat vertices[] = {
             //  Position      Color             Texcoords
-           -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
-            0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
-            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
-           -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+           -0.5F,  0.5F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, // Top-left
+            0.5F,  0.5F, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F, // Top-right
+            0.5F, -0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, // Bottom-right
+           -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, 0.0F, 1.0F  // Bottom-left
     };
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -171,7 +171,7 @@ TEST_F(TestGLTexture, TextureWithShader) {
     EXPECT_EQ(glGetError(), 0);
 
     // Clear the screen to black
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw a rectangle from the 2 triangles using 6 indices

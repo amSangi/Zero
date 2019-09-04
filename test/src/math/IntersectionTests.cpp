@@ -6,12 +6,12 @@
 using namespace zero::math;
 
 TEST(TestIntersection, BoxSphereIntersect) {
-	Sphere sphere(Vec3f::Zero(), 100.0f);
-	Box box(Vec3f::Zero(), Vec3f(25.0f));
+	Sphere sphere(Vec3f::Zero(), 100.0F);
+	Box box(Vec3f::Zero(), Vec3f(25.0F));
 
 	EXPECT_TRUE(Intersection::BoxSphereIntersect(box, sphere));
-	box = Box(Vec3f(0.0f, 0.0f, 99.9f), Vec3f(125.0f));
+	box = Box(Vec3f(0.0F, 0.0F, 99.9F), Vec3f(125.0F));
 	EXPECT_TRUE(Intersection::BoxSphereIntersect(box, sphere));
-	box = Box(Vec3f(-25.0f), Vec3f(-0.001f, 0.001f, -0.001f));
+	box = Box(Vec3f(-25.0F), Vec3f(-0.001F, 0.001F, -0.001F));
 	EXPECT_TRUE(Intersection::BoxSphereIntersect(box, sphere));
 }

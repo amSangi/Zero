@@ -18,11 +18,11 @@ TEST(TestTransform, DefaultConstructor) {
 }
 
 TEST(TestTransform, RootTransformConstructor) {
-    math::Vec3f position(1.0f, 2.0f, 3.0f);
-    math::Vec3f scale(1.0f, 2.0f, 1.0f);
-    math::Quaternion orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                               math::Radian(0.0f),
-                                                               math::Degree(90.0f).ToRadian());
+    math::Vec3f position(1.0F, 2.0F, 3.0F);
+    math::Vec3f scale(1.0F, 2.0F, 1.0F);
+    math::Quaternion orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                               math::Radian(0.0F),
+                                                               math::Degree(90.0F).ToRadian());
     Transform transform(position, scale, orientation);
     EXPECT_EQ(transform.position_, position);
     EXPECT_EQ(transform.local_position_, math::Vec3f::Zero());
@@ -35,16 +35,16 @@ TEST(TestTransform, RootTransformConstructor) {
 }
 
 TEST(TestTransform, ChildTransformConstructor) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f parent_scale(1.0f, 2.0f, 1.0f);
-    math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                      math::Radian(0.0f),
-                                                                      math::Degree(90.0f).ToRadian());
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 1.0f);
-    math::Quaternion local_child_orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                           math::Radian(0.0f),
-                                                                           math::Degree(90.0f).ToRadian());
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
+    math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                      math::Radian(0.0F),
+                                                                      math::Degree(90.0F).ToRadian());
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 1.0F);
+    math::Quaternion local_child_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                           math::Radian(0.0F),
+                                                                           math::Degree(90.0F).ToRadian());
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
@@ -64,12 +64,12 @@ TEST(TestTransform, ChildTransformConstructor) {
 }
 
 TEST(TestTransform, WorldToLocalMatrix) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f parent_scale(1.0f, 2.0f, 1.0f);
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation;
 
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 1.0f);
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion local_child_orientation;
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
@@ -81,23 +81,23 @@ TEST(TestTransform, WorldToLocalMatrix) {
                               local_child_scale,
                               local_child_orientation);
 
-    EXPECT_EQ(parent_transform.GetWorldToLocalMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, 1.0f,
-                                                                        0.0f, 2.0f, 0.0f, 2.0f,
-                                                                        0.0f, 0.0f, 1.0f, 3.0f,
-                                                                        0.0f, 0.0f, 0.0f, 1.0f).Inverse());
-    EXPECT_EQ(child_transform.GetWorldToLocalMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, 2.0f,
-                                                                       0.0f, 4.0f, 0.0f, 4.0f,
-                                                                       0.0f, 0.0f, 1.0f, 6.0f,
-                                                                       0.0f, 0.0f, 0.0f, 1.0f).Inverse());
+    EXPECT_EQ(parent_transform.GetWorldToLocalMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, 1.0F,
+                                                                        0.0F, 2.0F, 0.0F, 2.0F,
+                                                                        0.0F, 0.0F, 1.0F, 3.0F,
+                                                                        0.0F, 0.0F, 0.0F, 1.0F).Inverse());
+    EXPECT_EQ(child_transform.GetWorldToLocalMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, 2.0F,
+                                                                       0.0F, 4.0F, 0.0F, 4.0F,
+                                                                       0.0F, 0.0F, 1.0F, 6.0F,
+                                                                       0.0F, 0.0F, 0.0F, 1.0F).Inverse());
 }
 
 TEST(TestTransform, LocalToWorldMatrix) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f parent_scale(1.0f, 2.0f, 1.0f);
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation;
 
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 1.0f);
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion local_child_orientation;
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
@@ -109,23 +109,23 @@ TEST(TestTransform, LocalToWorldMatrix) {
                               local_child_scale,
                               local_child_orientation);
 
-    EXPECT_EQ(parent_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, 1.0f,
-                                                                        0.0f, 2.0f, 0.0f, 2.0f,
-                                                                        0.0f, 0.0f, 1.0f, 3.0f,
-                                                                        0.0f, 0.0f, 0.0f, 1.0f));
-    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, 2.0f,
-                                                                       0.0f, 4.0f, 0.0f, 4.0f,
-                                                                       0.0f, 0.0f, 1.0f, 6.0f,
-                                                                       0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(parent_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, 1.0F,
+                                                                        0.0F, 2.0F, 0.0F, 2.0F,
+                                                                        0.0F, 0.0F, 1.0F, 3.0F,
+                                                                        0.0F, 0.0F, 0.0F, 1.0F));
+    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, 2.0F,
+                                                                       0.0F, 4.0F, 0.0F, 4.0F,
+                                                                       0.0F, 0.0F, 1.0F, 6.0F,
+                                                                       0.0F, 0.0F, 0.0F, 1.0F));
 }
 
 TEST(TestTransform, LocalToParentMatrix) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f parent_scale(1.0f, 2.0f, 1.0f);
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation;
 
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 1.0f);
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion local_child_orientation;
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
@@ -137,20 +137,20 @@ TEST(TestTransform, LocalToParentMatrix) {
                               local_child_scale,
                               local_child_orientation);
 
-    EXPECT_EQ(parent_transform.GetLocalToParentMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
-                                                                         0.0f, 1.0f, 0.0f, 0.0f,
-                                                                         0.0f, 0.0f, 1.0f, 0.0f,
-                                                                         0.0f, 0.0f, 0.0f, 1.0f));
-    EXPECT_EQ(child_transform.GetLocalToParentMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, 1.0f,
-                                                                        0.0f, 2.0f, 0.0f, 2.0f,
-                                                                        0.0f, 0.0f, 1.0f, 3.0f,
-                                                                        0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(parent_transform.GetLocalToParentMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, 0.0F,
+                                                                         0.0F, 1.0F, 0.0F, 0.0F,
+                                                                         0.0F, 0.0F, 1.0F, 0.0F,
+                                                                         0.0F, 0.0F, 0.0F, 1.0F));
+    EXPECT_EQ(child_transform.GetLocalToParentMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, 1.0F,
+                                                                        0.0F, 2.0F, 0.0F, 2.0F,
+                                                                        0.0F, 0.0F, 1.0F, 3.0F,
+                                                                        0.0F, 0.0F, 0.0F, 1.0F));
 }
 
 TEST(TestTransform, Translate) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f translation(10.0f, -15.0f, 5.0f);
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f translation(10.0F, -15.0F, 5.0F);
 
     Transform parent_transform(parent_position, math::Vec3f::One(), math::Quaternion());
 
@@ -167,16 +167,16 @@ TEST(TestTransform, Translate) {
 
     EXPECT_EQ(child_transform.position_, expected_child_world_pos);
     EXPECT_EQ(child_transform.local_position_, local_child_position);
-    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, expected_child_world_pos.x_,
-                                                                       0.0f, 1.0f, 0.0f, expected_child_world_pos.y_,
-                                                                       0.0f, 0.0f, 1.0f, expected_child_world_pos.z_,
-                                                                       0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, expected_child_world_pos.x_,
+                                                                       0.0F, 1.0F, 0.0F, expected_child_world_pos.y_,
+                                                                       0.0F, 0.0F, 1.0F, expected_child_world_pos.z_,
+                                                                       0.0F, 0.0F, 0.0F, 1.0F));
 }
 
 TEST(TestTransform, LocalTranslate) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f translation(10.0f, -15.0f, 5.0f);
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f translation(10.0F, -15.0F, 5.0F);
 
     Transform parent_transform(parent_position, math::Vec3f::One(), math::Quaternion());
 
@@ -194,22 +194,22 @@ TEST(TestTransform, LocalTranslate) {
 
     EXPECT_EQ(child_transform.position_, expected_child_world_pos);
     EXPECT_EQ(child_transform.local_position_, expected_child_local_pos);
-    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0f, 0.0f, 0.0f, expected_child_world_pos.x_,
-                                                                       0.0f, 1.0f, 0.0f, expected_child_world_pos.y_,
-                                                                       0.0f, 0.0f, 1.0f, expected_child_world_pos.z_,
-                                                                       0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, expected_child_world_pos.x_,
+                                                                       0.0F, 1.0F, 0.0F, expected_child_world_pos.y_,
+                                                                       0.0F, 0.0F, 1.0F, expected_child_world_pos.z_,
+                                                                       0.0F, 0.0F, 0.0F, 1.0F));
 }
 
 TEST(TestTransform, Rotate) {
-    math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                      math::Radian(0.0f),
-                                                                      math::Radian::FromDegree(60.0f));
-    math::Quaternion local_child_orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                           math::Radian(0.0f),
-                                                                           math::Radian::FromDegree(60.0f));
-    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                             math::Radian(0.0f),
-                                                             math::Radian::FromDegree(-60.0f));
+    math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                      math::Radian(0.0F),
+                                                                      math::Radian::FromDegree(60.0F));
+    math::Quaternion local_child_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                           math::Radian(0.0F),
+                                                                           math::Radian::FromDegree(60.0F));
+    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                             math::Radian(0.0F),
+                                                             math::Radian::FromDegree(-60.0F));
 
     Transform parent_transform(math::Vec3f::Zero(), math::Vec3f::One(), parent_orientation);
 
@@ -231,15 +231,15 @@ TEST(TestTransform, Rotate) {
 }
 
 TEST(TestTransform, LocalRotate) {
-    math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                      math::Radian(0.0f),
-                                                                      math::Radian::FromDegree(60.0f));
-    math::Quaternion local_child_orientation = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                           math::Radian(0.0f),
-                                                                           math::Radian::FromDegree(60.0f));
-    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                             math::Radian(0.0f),
-                                                             math::Radian::FromDegree(-60.0f));
+    math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                      math::Radian(0.0F),
+                                                                      math::Radian::FromDegree(60.0F));
+    math::Quaternion local_child_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                           math::Radian(0.0F),
+                                                                           math::Radian::FromDegree(60.0F));
+    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                             math::Radian(0.0F),
+                                                             math::Radian::FromDegree(-60.0F));
 
     Transform parent_transform(math::Vec3f::Zero(), math::Vec3f::One(), parent_orientation);
 
@@ -262,9 +262,9 @@ TEST(TestTransform, LocalRotate) {
 }
 
 TEST(TestTransform, Scale) {
-    math::Vec3f parent_scale(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 3.0f);
-    math::Vec3f scale(10.0f, 15.0f, 5.0f);
+    math::Vec3f parent_scale(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 3.0F);
+    math::Vec3f scale(10.0F, 15.0F, 5.0F);
 
     Transform parent_transform(math::Vec3f::Zero(), parent_scale, math::Quaternion());
 
@@ -281,16 +281,16 @@ TEST(TestTransform, Scale) {
 
     EXPECT_EQ(child_transform.scale_, expected_child_world_scale);
     EXPECT_EQ(child_transform.local_scale_, local_child_scale);
-    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(expected_child_world_scale.x_, 0.0f, 0.0f, 0.0f,
-                                                                       0.0f, expected_child_world_scale.y_, 0.0f, 0.0f,
-                                                                       0.0f, 0.0f, expected_child_world_scale.z_, 0.0f,
-                                                                       0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(expected_child_world_scale.x_, 0.0F, 0.0F, 0.0F,
+                                                                       0.0F, expected_child_world_scale.y_, 0.0F, 0.0F,
+                                                                       0.0F, 0.0F, expected_child_world_scale.z_, 0.0F,
+                                                                       0.0F, 0.0F, 0.0F, 1.0F));
 }
 
 TEST(TestTransform, LocalScale) {
-    math::Vec3f parent_scale(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 3.0f);
-    math::Vec3f scale(10.0f, 15.0f, 5.0f);
+    math::Vec3f parent_scale(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 3.0F);
+    math::Vec3f scale(10.0F, 15.0F, 5.0F);
 
     Transform parent_transform(math::Vec3f::Zero(), parent_scale, math::Quaternion());
 
@@ -308,25 +308,25 @@ TEST(TestTransform, LocalScale) {
 
     EXPECT_EQ(child_transform.scale_, expected_child_world_scale);
     EXPECT_EQ(child_transform.local_scale_, expected_child_local_scale);
-    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(expected_child_world_scale.x_, 0.0f, 0.0f, 0.0f,
-                                                                       0.0f, expected_child_world_scale.y_, 0.0f, 0.0f,
-                                                                       0.0f, 0.0f, expected_child_world_scale.z_, 0.0f,
-                                                                       0.0f, 0.0f, 0.0f, 1.0f));
+    EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(expected_child_world_scale.x_, 0.0F, 0.0F, 0.0F,
+                                                                       0.0F, expected_child_world_scale.y_, 0.0F, 0.0F,
+                                                                       0.0F, 0.0F, expected_child_world_scale.z_, 0.0F,
+                                                                       0.0F, 0.0F, 0.0F, 1.0F));
 }
 
 TEST(TestTransform, World_TRS_Transformation) {
-    math::Vec3f parent_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f parent_scale(1.0f, 2.0f, 3.0f);
-    math::Quaternion parent_orientation  = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                                       math::Radian(0.0f),
-                                                                       math::Radian::FromDegree(60.0f));
+    math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f parent_scale(1.0F, 2.0F, 3.0F);
+    math::Quaternion parent_orientation  = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                                       math::Radian(0.0F),
+                                                                       math::Radian::FromDegree(60.0F));
 
     // Transformations
-    math::Vec3f translation(10.0f, -15.0f, 5.0f);
-    math::Vec3f scale(10.0f, 15.0f, 5.0f);
-    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                             math::Radian(0.0f),
-                                                             math::Radian::FromDegree(-60.0f));
+    math::Vec3f translation(10.0F, -15.0F, 5.0F);
+    math::Vec3f scale(10.0F, 15.0F, 5.0F);
+    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                             math::Radian(0.0F),
+                                                             math::Radian::FromDegree(-60.0F));
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
@@ -367,16 +367,16 @@ TEST(TestTransform, Local_TRS_Transformation) {
     math::Vec3f parent_scale = math::Vec3f::One();
     math::Quaternion parent_orientation;
 
-    math::Vec3f local_child_position(1.0f, 2.0f, 3.0f);
-    math::Vec3f local_child_scale(1.0f, 2.0f, 3.0f);
+    math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
+    math::Vec3f local_child_scale(1.0F, 2.0F, 3.0F);
     math::Quaternion local_child_orientation;
 
     // Transformations
-    math::Vec3f translation(10.0f, -15.0f, 5.0f);
-    math::Vec3f scale(1.0f, 2.0f, 3.0f);
-    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0f),
-                                                             math::Radian(0.0f),
-                                                             math::Radian::FromDegree(-60.0f));
+    math::Vec3f translation(10.0F, -15.0F, 5.0F);
+    math::Vec3f scale(1.0F, 2.0F, 3.0F);
+    math::Quaternion rotation  = math::Quaternion::FromEuler(math::Radian(0.0F),
+                                                             math::Radian(0.0F),
+                                                             math::Radian::FromDegree(-60.0F));
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 

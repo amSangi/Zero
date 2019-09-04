@@ -56,26 +56,26 @@ TEST(TestPlane, Intersects) {
 
 TEST(TestPlane, Reflect) {
 	Plane plane = Plane::Up();
-	EXPECT_EQ(plane.Reflect(Vec3f(1.0f, 1.0f)), Vec3f(1.0f, -1.0f));
-	EXPECT_EQ(plane.Reflect(Vec3f(-1.0f, 1.0f)), Vec3f(-1.0f, -1.0f));
+	EXPECT_EQ(plane.Reflect(Vec3f(1.0F, 1.0F)), Vec3f(1.0F, -1.0F));
+	EXPECT_EQ(plane.Reflect(Vec3f(-1.0F, 1.0F)), Vec3f(-1.0F, -1.0F));
 
 	plane = Plane::Right();
-	EXPECT_EQ(plane.Reflect(Vec3f(-1.0f, -1.0f)), Vec3f(1.0f, -1.0f));
-	EXPECT_EQ(plane.Reflect(Vec3f(1.0f, 1.0f)), Vec3f(-1.0f, 1.0f));
+	EXPECT_EQ(plane.Reflect(Vec3f(-1.0F, -1.0F)), Vec3f(1.0F, -1.0F));
+	EXPECT_EQ(plane.Reflect(Vec3f(1.0F, 1.0F)), Vec3f(-1.0F, 1.0F));
 
 	plane = Plane::Forward();
-	EXPECT_EQ(plane.Reflect(Vec3f(0.0f, -1.0f, -1.0f)), Vec3f(0.0f, -1.0f, 1.0f));
-	EXPECT_EQ(plane.Reflect(Vec3f(0.0f, 1.0f, -1.0f)), Vec3f(0.0f, 1.0f, 1.0f));
+	EXPECT_EQ(plane.Reflect(Vec3f(0.0F, -1.0F, -1.0F)), Vec3f(0.0F, -1.0F, 1.0F));
+	EXPECT_EQ(plane.Reflect(Vec3f(0.0F, 1.0F, -1.0F)), Vec3f(0.0F, 1.0F, 1.0F));
 }
 
 TEST(TestPlane, Distance) {
 	Plane plane = Plane::Up();
 
-	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 0.0f);
-	EXPECT_EQ(plane.Distance(Vec3f(1.0f, 0.0f)), 0.0f);
-	EXPECT_EQ(plane.Distance(Vec3f::One()), 1.0f);
-	EXPECT_EQ(plane.Distance(Vec3f(25.0f, 50.0f, 75.0f)), 50.0f);
+	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 0.0F);
+	EXPECT_EQ(plane.Distance(Vec3f(1.0F, 0.0F)), 0.0F);
+	EXPECT_EQ(plane.Distance(Vec3f::One()), 1.0F);
+	EXPECT_EQ(plane.Distance(Vec3f(25.0F, 50.0F, 75.0F)), 50.0F);
 
-	plane = Plane(Vec3f::One(), 15.0f);
-	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 15.0f);
+	plane = Plane(Vec3f::One(), 15.0F);
+	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 15.0F);
 }

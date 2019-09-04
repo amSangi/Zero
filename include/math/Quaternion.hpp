@@ -11,7 +11,7 @@ namespace zero::math {
 	 */
 	class Quaternion {
 	public:
-		Quaternion() : w_(1.0f), x_(0.0f), y_(0.0f), z_(0.0f) {}
+		Quaternion() : w_(1.0F), x_(0.0F), y_(0.0F), z_(0.0F) {}
 		Quaternion(float w, float x, float y, float z) : w_(w), x_(x), y_(y), z_(z) {}
 		Quaternion(const Quaternion& other) = default;
 		~Quaternion() = default;

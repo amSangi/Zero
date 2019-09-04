@@ -17,10 +17,10 @@ namespace zero {
          */
         Transform()
                 : HierarchyComponent()
-                , position_(0.0f)
-                , local_position_(0.0f)
-                , scale_(1.0f)
-                , local_scale_(1.0f)
+                , position_(0.0F)
+                , local_position_(0.0F)
+                , scale_(1.0F)
+                , local_scale_(1.0F)
                 , orientation_()
                 , local_orientation_()
         {}
@@ -36,9 +36,9 @@ namespace zero {
                   const math::Quaternion& orientation)
                 : HierarchyComponent()
                 , position_(position)
-                , local_position_(0.0f)
+                , local_position_(0.0F)
                 , scale_(scale)
-                , local_scale_(1.0f)
+                , local_scale_(1.0F)
                 , orientation_(orientation.UnitCopy())
                 , local_orientation_()
         {}

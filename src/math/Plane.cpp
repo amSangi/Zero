@@ -15,10 +15,10 @@ Plane::Plane(const Vec3f& normal, const Vec3f& point)
    : normal_(normal), d_(Vec3f::Dot(normal, point)) {}
 
 Plane::Plane(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
-   : normal_(Vec3f::Normalize(Vec3f::Cross(p2 - p1, p3 - p1))), d_(-1.0f * Vec3f::Dot(normal_, p1)) {}
+   : normal_(Vec3f::Normalize(Vec3f::Cross(p2 - p1, p3 - p1))), d_(-1.0F * Vec3f::Dot(normal_, p1)) {}
 
 Plane::Plane(const Vec3f& normal)
-   : normal_(normal), d_(0.0f) {}
+   : normal_(normal), d_(0.0F) {}
 
 bool Plane::operator==(const Plane& other) const {
 	return (normal_ == other.normal_) && Equal(d_, other.d_);
@@ -67,7 +67,7 @@ bool Plane::Normalize() {
 }
 
 Plane Plane::Flip() const {
-	return Plane(normal_ * -1.0f, -d_);
+	return Plane(normal_ * -1.0F, -d_);
 }
 
 /* ********** Static Operations ********** */

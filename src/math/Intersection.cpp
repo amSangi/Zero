@@ -8,7 +8,7 @@ using namespace zero::math;
 bool Intersection::BoxSphereIntersect(const Box& box, const Sphere& sphere) {
 	// Arvo's Box/Sphere Intersection Test
 
-	float square_distance = 0.0f;
+	float square_distance = 0.0F;
 	float difference;
 
 	// Get square x distance

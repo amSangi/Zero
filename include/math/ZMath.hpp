@@ -23,12 +23,12 @@ namespace zero::math {
     using Vec4i = Vector<4, int32>;
 
     /* ********** Constants ********** */
-    static constexpr float PI = 3.14159265359f;
-    static constexpr float PI_2 = PI * 0.5f;
-    static constexpr float DEGREE_TO_RADIAN = PI / 180.0f;
-    static constexpr float RADIAN_TO_DEGREE = 180.0f / PI;
+    static constexpr float PI = 3.14159265359F;
+    static constexpr float PI_2 = PI * 0.5F;
+    static constexpr float DEGREE_TO_RADIAN = PI / 180.0F;
+    static constexpr float RADIAN_TO_DEGREE = 180.0F / PI;
     static constexpr float SMALL_EPSILON = 1.19209290E-07F;
-    static constexpr float EPSILON = 1e-06f;
+    static constexpr float EPSILON = 1e-06F;
 
     /* ********** Basic Math Functions ********** */
     inline float Sqrt(float value)                            { return sqrtf(value);          }

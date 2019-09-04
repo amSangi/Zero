@@ -48,7 +48,7 @@ bool Matrix3x3::operator!=(const Matrix3x3& other) const {
     return !(operator==(other));
 }
 
-const float Matrix3x3::operator()(size_t row, size_t col) const {
+float Matrix3x3::operator()(size_t row, size_t col) const {
     return matrix_[row][col];
 }
 
@@ -105,7 +105,7 @@ Matrix3x3& Matrix3x3::operator*=(float scalar) {
 }
 
 Matrix3x3& Matrix3x3::operator/=(float scalar) {
-    float inv_scalar = 1.0f / scalar;
+    float inv_scalar = 1.0F / scalar;
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j)
             matrix_[i][j] *= inv_scalar;
@@ -167,7 +167,7 @@ bool Matrix3x3::InverseUtil(Matrix3x3& out, float epsilon) const {
 
     if (Abs(det) <= epsilon) return false;
 
-    float inv_det = 1.0f / det;
+    float inv_det = 1.0F / det;
 
     out.matrix_[0][0] = (t1 - matrix_[2][1] * matrix_[1][2]) * inv_det;
     out.matrix_[0][1] = (matrix_[0][2] * matrix_[2][1] - matrix_[0][1] * matrix_[2][2]) * inv_det;
@@ -183,7 +183,7 @@ bool Matrix3x3::InverseUtil(Matrix3x3& out, float epsilon) const {
 }
 
 Matrix3x3 Matrix3x3::Inverse(float epsilon) const {
-    Matrix3x3 m(0.0f);
+    Matrix3x3 m(0.0F);
     InverseUtil(m, epsilon);
     return m;
 }
@@ -221,7 +221,7 @@ Matrix3x3 Matrix3x3::operator*(const Matrix3x3& rhs) const {
 }
 
 Matrix3x3 Matrix3x3::Identity() {
-    return Matrix3x3(1.0f, 0.0f, 0.0f,
-                     0.0f, 1.0f, 0.0f,
-                     0.0f, 0.0f, 1.0f);
+    return Matrix3x3(1.0F, 0.0F, 0.0F,
+                     0.0F, 1.0F, 0.0F,
+                     0.0F, 0.0F, 1.0F);
 }

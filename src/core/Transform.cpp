@@ -44,7 +44,7 @@ Transform& Transform::LocalTranslate(const Transform& parent, const math::Vec3f&
 
     // Update world position using parent transform
     auto parent_matrix = parent.GetLocalToWorldMatrix();
-    math::Vec4f homogeneous_local_pos = math::Vec4f(local_position_.x_, local_position_.y_, local_position_.z_, 1.0f);
+    math::Vec4f homogeneous_local_pos = math::Vec4f(local_position_.x_, local_position_.y_, local_position_.z_, 1.0F);
     position_ = (parent_matrix * homogeneous_local_pos).XYZ();
 
     return *this;

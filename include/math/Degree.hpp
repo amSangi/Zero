@@ -10,7 +10,7 @@ namespace zero::math {
 	 */
 	class Degree {
 	public:
-		Degree() : deg_(0.0f) {}
+		Degree() : deg_(0.0F) {}
 		explicit Degree(float d) : deg_(d) {}
 		Degree(const Degree& other) = default;
 		~Degree() = default;
