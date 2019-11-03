@@ -1,37 +1,43 @@
 #include "render/opengl/GLModel.hpp"
+#include "render/opengl/GLAssetImportWrapper.hpp"
+#include <math/Box.hpp>
 #include <assimp/scene.h>
-#include <queue>
 
 using namespace zero::render;
 
 std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename, const aiNode* node, const aiScene* scene) {
-    // Construct meshes
     std::vector<std::shared_ptr<GLMesh>> meshes;
     meshes.reserve(node->mNumMeshes);
-    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
-        meshes.push_back(LoadMesh(scene->mMeshes[node->mMeshes[i]]));
+
+    Volume volume;
+
+    Material material;
+    // Use the first material for the entire model
+    if (scene->mNumMaterials > 0) {
+        material = GLAssetImportWrapper::LoadMaterial(scene->mMaterials[0]);
     }
 
-    // Construct Transformation
+    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        meshes.push_back(GLAssetImportWrapper::LoadMesh(mesh));
+
+        // The volume prototype enlarges to contain all the meshes
+        aiAABB& aabb = mesh->mAABB;
+        math::Vec3f min{aabb.mMin.x, aabb.mMin.y, aabb.mMin.z};
+        math::Vec3f max{aabb.mMax.x, aabb.mMax.y, aabb.mMax.z};
+        volume.Engulf(Volume(min, max));
+    }
+
     const aiMatrix4x4& mat = node->mTransformation;
     math::Matrix4x4 transformation(mat.a1, mat.a2, mat.a3, mat.a4,
                                    mat.b1, mat.b2, mat.b3, mat.b4,
                                    mat.c1, mat.c2, mat.c3, mat.c4,
                                    mat.d1, mat.d2, mat.d3, mat.d4);
 
-    // Material Prototype
-    Material material;
-    // TODO: Finish Implementation
-
-    // Volume Prototype
-    Volume volume;
-    // TODO: Finish Implementation
-
-    // MeshInstance Prototype
     MeshInstance mesh_instance;
     mesh_instance.model_file_ = filename;
 
-    // Root GLModel
+
     auto root_model = std::make_shared<GLModel>(meshes,                // Mesh data
                                                 transformation,        // Transformation matrix relative to parent
                                                 material,              // Material Prototype
@@ -47,40 +53,6 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename, con
     }
 
     return root_model;
-}
-
-std::shared_ptr<GLMesh> GLModel::LoadMesh(const aiMesh* mesh) {
-    std::vector<Vertex> vertices;
-    std::vector<uint32> indices;
-    vertices.reserve(mesh->mNumVertices);
-    indices.reserve(mesh->mNumFaces * 3);
-
-    // Vertices
-    for (uint32 i = 0; i < mesh->mNumVertices; ++i) {
-        vertices.push_back({
-                // Position
-                math::Vec3f(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z),
-                // Normal
-                math::Vec3f(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z),
-                // Texture Coordinate
-                mesh->mTextureCoords[0] ? math::Vec2f(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y)
-                                        : math::Vec2f(),
-                // Tangent
-                math::Vec3f(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z),
-                // Bitangent
-                math::Vec3f(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)
-        });
-    }
-
-    // Indices
-    for (uint32 i = 0; i < mesh->mNumFaces; ++i) {
-        const aiFace& face = mesh->mFaces[i];
-        for (uint32 j = 0; j < face.mNumIndices; ++j) {
-            indices.push_back(face.mIndices[j]);
-        }
-    }
-
-    return std::make_shared<GLMesh>(std::move(vertices), std::move(indices));
 }
 
 GLModel::GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,

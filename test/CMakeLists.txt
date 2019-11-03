@@ -17,6 +17,7 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/math/QuaternionTests.cpp
                                src/math/SphereTests.cpp
                                src/math/VectorTests.cpp
+                               src/render/CameraTests.cpp
                                src/render/PropagatorTests.cpp
                                src/render/opengl/GLCompilerTests.cpp
                                src/render/opengl/GLProgramTests.cpp

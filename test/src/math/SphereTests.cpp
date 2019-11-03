@@ -182,3 +182,18 @@ TEST(TestSphere, MergeSeveralSpheres) {
         EXPECT_TRUE(main_sphere.Contains(spheres[i]));
     }
 }
+
+TEST(TestSphere, AABB) {
+    Vec3f min{};
+    Vec3f max{10.0F, 15.0F, 25.0F};
+
+    Box box(min, max);
+    Sphere sphere(min, max);
+
+    EXPECT_EQ(sphere.center_, Vec3f(5.0F, 7.5F, 12.5F));
+    EXPECT_GE(sphere.radius_, max.Magnitude() * 0.5F);
+    EXPECT_TRUE(sphere.Contains(min));
+    EXPECT_TRUE(sphere.Contains(max));
+    EXPECT_TRUE(sphere.Contains(box));
+    EXPECT_TRUE(sphere.Contains(sphere));
+}

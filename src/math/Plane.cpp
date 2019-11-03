@@ -32,14 +32,10 @@ Vec4f Plane::ToVector4() const {
 	return Vec4f(normal_.x_, normal_.y_, normal_.z_, d_);
 }
 
-
-/* ********** Intersection Tests ********** */
 bool Plane::Intersects(const Plane& other, float epsilon) const {
 	return !( Vec3f::Cross(normal_, other.normal_).IsEpsilon(epsilon) );
 }
 
-
-/* ********** Transform Operations ********** */
 void Plane::Transform(const Matrix3x3& matrix) {
 	Transform(Matrix4x4(matrix));
 }
@@ -48,8 +44,6 @@ void Plane::Transform(const Matrix4x4& matrix) {
 	*this = Plane(matrix.Inverse().Transpose() * ToVector4());
 }
 
-
-/* ********** Plane Operations ********** */
 Vec3f Plane::Project(const Vec3f& point) const {
 	return point - (Distance(point) * normal_);
 }
@@ -70,7 +64,6 @@ Plane Plane::Flip() const {
 	return Plane(normal_ * -1.0F, -d_);
 }
 
-/* ********** Static Operations ********** */
 Plane Plane::Transform(const Plane& plane, const Matrix3x3& matrix) {
 	Plane plane_copy(plane);
 	plane_copy.Transform(matrix);

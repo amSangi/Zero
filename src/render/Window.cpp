@@ -18,7 +18,6 @@ Window::~Window() {
 
 void Window::Initialize() {
 
-    // Initialize SDL
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 
     // Get SDL window flags
@@ -35,7 +34,6 @@ void Window::Initialize() {
             break;
     }
 
-    // Set additional window flags
     if (config_.window_flags_ & WindowFlags::WINDOW_MAXIMIZED) window_flags |= SDL_WINDOW_MAXIMIZED;
     if (config_.window_flags_ & WindowFlags::WINDOW_MINIMIZED) window_flags |= SDL_WINDOW_MINIMIZED;
     if (config_.window_flags_ & WindowFlags::HIDE) window_flags |= SDL_WINDOW_HIDDEN;
@@ -58,7 +56,7 @@ void Window::Initialize() {
         sdl_gl_context_ = SDL_GL_CreateContext(sdl_window_);
         SDL_GL_MakeCurrent(sdl_window_, sdl_gl_context_);
 
-        // Initialize GLEW
+        // Initialize glew after window/context creation
         glewInit();
     }
     else {
@@ -67,12 +65,12 @@ void Window::Initialize() {
         SDL_SetWindowFullscreen(sdl_window_, window_flags);
     }
 
-    // Set the window icon
+    // Window icon
     if (!config_.window_icon_image_file_.empty()) {
         SDL_SetWindowIcon(sdl_window_, IMG_Load(config_.window_icon_image_file_.c_str()));
     }
 
-    // Set the window refresh rate
+    // Refresh rate
     int error_code = 0;
     switch (config_.refresh_rate_) {
         case RefreshRate::SYNCHRONIZED:
@@ -87,6 +85,7 @@ void Window::Initialize() {
             break;
     }
 
+    // Default refresh rate during error
     if (error_code) SDL_GL_SetSwapInterval(0);
 }
 

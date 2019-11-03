@@ -58,7 +58,7 @@ namespace zero::math {
 		 * @brief Convert this Degree object into a Radian object
 		 * @return The Radian object
 		 */
-		Radian ToRadian() const                            { return Radian(deg_ * DEGREE_TO_RADIAN); }
+        [[nodiscard]] Radian ToRadian() const              { return Radian(deg_ * DEGREE_TO_RADIAN); }
 
 		/**
 		 * @brief Create a Degree from a radian value

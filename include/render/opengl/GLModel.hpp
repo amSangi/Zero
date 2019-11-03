@@ -79,12 +79,6 @@ namespace zero::render {
         [[nodiscard]] const std::vector<std::shared_ptr<GLModel>>& GetChildren() const;
 
     private:
-        /**
-         * @brief Load a mesh from an aiMesh
-         * @param mesh the aiMesh
-         * @return a GLMesh instance
-         */
-        static std::shared_ptr<GLMesh> LoadMesh(const aiMesh* mesh);
 
         /**
          * @brief The different meshes that make up the model

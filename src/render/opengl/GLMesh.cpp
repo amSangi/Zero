@@ -2,7 +2,7 @@
 
 using namespace zero::render;
 
-GLMesh::GLMesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices)
+GLMesh::GLMesh(std::vector<Vertex>&& vertices, std::vector<uint16>&& indices)
 : Mesh(std::move(vertices), std::move(indices))
 , vao_(0)
 , vbo_(0)

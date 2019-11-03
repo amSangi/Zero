@@ -35,6 +35,16 @@ namespace zero::render {
         {}
 
         /**
+         * @brief Construct a volume from a Axis-Aligned Bounding Box
+         * @param min the minimum point of the box
+         * @param max the maximum point of the box
+         */
+        Volume(const math::Vec3f& min, const math::Vec3f& max)
+        : Component()
+        , bounding_volume_(min, max)
+        {}
+
+        /**
          * @brief Engulf the other volume so that the other volume is inside
          * @param other the other volume
          */
@@ -83,65 +93,86 @@ namespace zero::render {
              * @brief The fully qualified texture map file name
              */
             ///@{
+            std::string alpha_map_;
             std::string ambient_map_;
             std::string diffuse_map_;
-            std::string specular_map_;
-            std::string alpha_map_;
-            std::string bump_map_;
+            std::string displacement_map_;
+            std::string normal_map_;
             ///@}
 
         }; // struct TextureMap
 
         /**
-         * @brief The name of the material
+         * @brief The name of the material.
          */
         std::string name_;
 
         /**
-         * @brief The ambient colour
+         * @brief The ambient color. The color an object reflects when illuminated by ambient light.
          */
-        math::Vec3f ambient_;
+        math::Vec3f ambient_color_;
 
         /**
-         * @brief The diffuse colour
+         * @brief The diffuse color. Essential color of an object under direct white light.
          */
-        math::Vec3f diffuse_;
+        math::Vec3f diffuse_color_;
 
         /**
-         * @brief The specular colour
+         * @brief The emissive color. This is the self-illumination color of an object.
          */
-        math::Vec3f specular;
+        math::Vec3f emissive_color_;
 
         /**
-         * @brief The shininess
+         * @brief The specular color. The color of the light of a specular reflection.
+         */
+        math::Vec3f specular_color_;
+
+        /**
+         * @brief The transparent color. The color to be scaled with the color of translucent light.
+         */
+        math::Vec3f transparent_color_;
+
+        /**
+         * @brief The shininess of a phong-shaded entity.
          */
         float specular_exponent_;
 
         /**
-         * @brief The texture map
+         * @brief The opacity of the entity in the range [0, 1].
+         */
+        float opacity_;
+
+        /**
+         * @brief The texture map.
          */
         TextureMap texture_map_;
 
         /**
-         * @brief The shaders to use
+         * @brief The shaders to use.
          */
          Shaders shaders_;
+
+         /**
+          * @brief Is the entity in wireframe mode?
+          */
+         bool wireframe_enabled_;
 
     }; // struct Material
 
     /**
-     * @brief An instance of a Mesh. Simply
+     * @brief An instance of a Mesh. Refers to a 3D file.
      */
     struct MeshInstance : public Component {
         /**
-         * @brief The associated 3D model
+         * @brief The fully qualified filename of the 3D model
          */
         std::string model_file_;
 
     }; // struct MeshInstance
 
     /**
-     * @brief Captures and displays the world
+     * @brief Camera component that manages properties used for displaying the world on a viewport
+     * A camera can not change projection types.
      */
     struct Camera : public Component {
 
@@ -154,9 +185,15 @@ namespace zero::render {
         }; // enum class ProjectionType
 
         /**
-         * @brief The viewport of the camera
+         * @brief The display area of the camera
          */
         struct Viewport {
+
+            /**
+             * @brief Get the aspect ratio of the view port
+             * @return the aspect ratio
+             */
+            [[nodiscard]] float GetAspectRatio() const;
 
             /**
              * @brief The x position of the view in pixels from the left of the screen
@@ -181,25 +218,133 @@ namespace zero::render {
         }; // struct Viewport
 
         /**
-         * @brief The horizontal field of view in degrees
+         * @brief Default constructs a perspective camera
          */
-        uint8 field_of_view_;
+        Camera();
+
         /**
-         * @brief The camera position in 3D space
+         * @brief Default constructs a camera of a given type
+         * @param projection_type the projection type of the camera
+         */
+        explicit Camera(ProjectionType projection_type);
+
+        void LookAt(const math::Vec3f& target);
+
+        void SetNearClip(float near_clip);
+        [[nodiscard]] float GetNearClip() const;
+
+        void SetFarClip(float far_clip);
+        [[nodiscard]] float GetFarClip() const;
+
+        void GetNearClipCoordinates(math::Vec3f& top_left,
+                                    math::Vec3f& top_right,
+                                    math::Vec3f& bottom_left,
+                                    math::Vec3f& bottom_right) const;
+
+        void GetFarClipCoordinates(math::Vec3f& top_left,
+                                   math::Vec3f& top_right,
+                                   math::Vec3f& bottom_left,
+                                   math::Vec3f& bottom_right) const;
+
+        [[nodiscard]] math::Degree GetVerticalFieldOfView() const;
+
+        /**
+         * @brief Get the projection matrix based on the projection type.
+         *
+         * @return the projection matrix
+         */
+        [[nodiscard]] math::Matrix4x4 GetProjectionMatrix() const;
+
+        /**
+         * @brief Get the view matrix. Converts world-space coordinates to view-space
+         * coordinates.
+         *
+         * @return the view matrix
+         */
+        [[nodiscard]] math::Matrix4x4 GetViewMatrix() const;
+
+        /**
+         * @brief Get the inverse view matrix. Converts view-space coordinates to
+         * world-space coordinates.
+         *
+         * @return the inverse view matrix
+         */
+        [[nodiscard]] math::Matrix4x4 GetCameraToWorldMatrix() const;
+
+        /**
+         * @brief The camera projection type. Set once during construction.
+         */
+        const ProjectionType projection_;
+        /**
+         * @brief The z-distance to the near clipping plane from the eye
+         */
+        float near_clip_;
+        /**
+         * @brief The z-distance to the far clipping plane from the eye
+         */
+        float far_clip_;
+        /**
+         * @brief The horizontal field of view
+         */
+        math::Degree horizontal_field_of_view_;
+        /**
+         * @brief The up vector of the camera in 3D space
+         */
+        math::Vec3f up_;
+        /**
+         * @brief The camera position in 3D space.
+         *
+         * Also known as the "eye" position.
          */
         math::Vec3f position_;
+        /**
+         * @brief The point the camera is looking at
+         */
+        math::Vec3f target_;
         /**
          * @brief The camera orientation in 3D space
          */
         math::Quaternion orientation_;
         /**
-         * @brief The camera projection type
-         */
-        ProjectionType projection_;
-        /**
          * @brief The camera viewport
          */
         Viewport viewport_;
+
+    private:
+
+        /**
+         * @brief Create a perspective projection matrix
+         *
+         * @param vertical_fov the vertical field of view
+         * @param aspect_ratio the aspect ratio of the camera viewport
+         * @param near the z-distance to the near clipping plane
+         * @param far the z-distance to the far clipping plane
+         *
+         * @return a perspective projection matrix
+         */
+        static math::Matrix4x4 Perspective(math::Degree vertical_fov,
+                                           float aspect_ratio,
+                                           float near,
+                                           float far);
+
+        /**
+         * @brief Create a orthographic projection matrix
+         *
+         * @param left the left boundary (x)
+         * @param right the right boundary (x)
+         * @param bottom the bottom boundary (y)
+         * @param top the top boundary (y)
+         * @param near the near boundary (z)
+         * @param far the far boundary (z)
+         *
+         * @return a orthographic projection matrix
+         */
+        static math::Matrix4x4 Orthographic(float left,
+                                            float right,
+                                            float bottom,
+                                            float top,
+                                            float near,
+                                            float far);
 
     }; // struct Camera
 

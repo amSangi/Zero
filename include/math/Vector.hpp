@@ -288,13 +288,13 @@ namespace detail {
 		 * @brief Get the magnitude
 		 * @return the magnitude
 		 */
-		float Magnitude() const;
+        [[nodiscard]] float Magnitude() const;
 
 		/**
 		 * @brief Get the squared magnitude
 		 * @return the square magnitude
 		 */
-		float SquareMagnitude() const;
+        [[nodiscard]] float SquareMagnitude() const;
 
 		/**
 		 * @brief Take the absolute value of all the components
@@ -313,7 +313,7 @@ namespace detail {
 		 * @param epsilon the epsilon value (very small)
 		 * @return True if the components are <= epsilon. False otherwise.
 		 */
-		bool IsEpsilon(float epsilon = EPSILON) const;
+        [[nodiscard]] bool IsEpsilon(float epsilon = EPSILON) const;
 
 		/**
 		 * @brief Helper to convert to a 3D Vector of the same type

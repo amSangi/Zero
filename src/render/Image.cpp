@@ -1,5 +1,5 @@
 #include "render/Image.hpp"
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 using namespace zero::render;
 

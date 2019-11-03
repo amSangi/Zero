@@ -14,6 +14,13 @@ namespace zero::math {
 		explicit Sphere(const Vec3f& center);
 		Sphere(const Vec3f& center, float radius);
 
+        /**
+         * @brief Construct a sphere from a Axis-Aligned Bounding Box
+         * @param min the minimum point of the box
+         * @param max the maximum point of the box
+         */
+		Sphere(const Vec3f& min, const Vec3f& max);
+
 		~Sphere() = default;
 		Sphere& operator=(const Sphere& other) = default;
 
@@ -37,21 +44,21 @@ namespace zero::math {
 		 * @param box The box
 		 * @return True if box is inside this. Otherwise false.
 		 */
-		bool Contains(const Box& box) const;
+        [[nodiscard]] bool Contains(const Box& box) const;
 
 		/**
 		 * @brief Check if another sphere is inside the sphere
 		 * @param other The other sphere
 		 * @return True if the other sphere is inside this. Otherwise false.
 		 */
-		bool Contains(const Sphere& other) const;
+        [[nodiscard]] bool Contains(const Sphere& other) const;
 
 		/**
 		 * @brief Check if a point is inside the sphere
 		 * @param point The point
 		 * @return True if the point is inside this. Otherwise false.
 		 */
-		bool Contains(const Vec3f& point) const;
+        [[nodiscard]] bool Contains(const Vec3f& point) const;
 
 
 		/**
@@ -59,7 +66,7 @@ namespace zero::math {
 		 * @param other The other sphere
 		 * @return True if the other sphere intersects this. Otherwise false.
 		 */
-		bool Intersects(const Sphere& other) const;
+        [[nodiscard]] bool Intersects(const Sphere& other) const;
 
 		/* ********** Merge ********** */
 		/**

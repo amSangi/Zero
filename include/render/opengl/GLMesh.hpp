@@ -17,7 +17,7 @@ namespace zero::render {
          * @param vertices the interleaved vertex data
          * @param indices the vertex indices
          */
-        GLMesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
+        GLMesh(std::vector<Vertex>&& vertices, std::vector<uint16>&& indices);
 
         ~GLMesh() override;
 

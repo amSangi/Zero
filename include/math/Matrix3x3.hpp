@@ -165,7 +165,7 @@ namespace zero::math {
         /**
          * @return the determinant of the matrix
          */
-        float Det() const;
+        [[nodiscard]] float Det() const;
 
         /**
          * @brief Computes the inverse of the matrix and stores it in out.
@@ -173,20 +173,20 @@ namespace zero::math {
          * @param epsilon the tolerance
          * @return True if the det is not 0. Otherwise false.
          */
-        bool InverseUtil(Matrix3x3& out, float epsilon=1e-05f) const;
+        bool InverseUtil(Matrix3x3& out, float epsilon=1e-05F) const;
 
         /**
          * @brief Computes the inverse matrix
          * @param epsilon the tolerance
          * @return the inverse matrix of this
          */
-        Matrix3x3 Inverse(float epsilon=1e-05f) const;
+        [[nodiscard]] Matrix3x3 Inverse(float epsilon=1e-05F) const;
 
         /**
          * @brief Computes the transpose matrix
          * @return the transpose matrix of this
          */
-        Matrix3x3 Transpose() const;
+        [[nodiscard]] Matrix3x3 Transpose() const;
 
         /**
          * @brief Computes the result of a matrix3x3 - vec3f multiplication
@@ -200,7 +200,7 @@ namespace zero::math {
          * @param rhs the right matrix3x3
          * @return the resulting matrix3x3
          */
-        Matrix3x3 operator*(const Matrix3x3& rhs) const;
+        [[nodiscard]] Matrix3x3 operator*(const Matrix3x3& rhs) const;
 
         /**
          * @return the identity matrix

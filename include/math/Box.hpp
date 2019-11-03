@@ -37,21 +37,21 @@ namespace zero::math {
          * @param other The other box
          * @return True if the other box is inside this. Otherwise false.
          */
-        bool Contains(const Box& other) const;
+        [[nodiscard]] bool Contains(const Box& other) const;
 
         /**
          * @brief Check if a point is inside the box
          * @param point The point
          * @return True if the point is inside this. Otherwise false.
          */
-        bool Contains(const Vec3f& point) const;
+        [[nodiscard]] bool Contains(const Vec3f& point) const;
 
         /**
          * @brief Check if another box intersects this box
          * @param other The other box
          * @return True if the other box intersects this. Otherwise false.
          */
-        bool Intersects(const Box& other) const;
+        [[nodiscard]] bool Intersects(const Box& other) const;
 
         /* ********** Merge ********** */
 
@@ -66,12 +66,12 @@ namespace zero::math {
         /**
          * @return the size of this box
          */
-        Vec3f Size() const;
+        [[nodiscard]] Vec3f Size() const;
 
         /**
          * @return the center position of this box
          */
-        Vec3f Center() const;
+        [[nodiscard]] Vec3f Center() const;
 
         /* ********** Static Methods ********** */
 

@@ -15,7 +15,7 @@ bool Quaternion::operator!=(const Quaternion& other) const {
 	return !operator==(other);
 }
 
-/* ********** Scalar Operations ********** */
+// ---------- Scalar Operations ---------- //
 Quaternion Quaternion::operator+(float scalar) {
 	return Quaternion(w_ + scalar, x_ + scalar, y_ + scalar, z_ + scalar);
 }
@@ -66,7 +66,6 @@ Quaternion& Quaternion::operator/=(float scalar) {
 	return *this;
 }
 
-/* ********** Quaternion/Quaternion Operations ********** */
 Quaternion Quaternion::operator+(const Quaternion& rhs)  const {
 	return Quaternion(w_ + rhs.w_, x_ + rhs.x_, y_ + rhs.y_, z_ + rhs.z_);
 }
@@ -119,7 +118,6 @@ Vec3f Quaternion::operator*(const Vec3f& v) const {
 	return v + 2.0F * ((c1 * w_) + c2);
 }
 
-/* ********** Quaternion Operations ********** */
 float Quaternion::Norm() const {
 	return Sqrt((w_ * w_) + (x_ * x_) + (y_ * y_) + (z_ * z_));
 }
@@ -246,7 +244,6 @@ Matrix3x3 Quaternion::GetRotationMatrix() const {
                      e20, e21, e22);
 }
 
-/* ********** Static Operations ********** */
 float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs) {
 	return (lhs.w_ * rhs.w_) + (lhs.x_ * rhs.x_) + (lhs.y_ * rhs.y_) + (lhs.z_ * rhs.z_);
 }
@@ -353,7 +350,6 @@ Quaternion Quaternion::FromToRotation(const Vec3f& from, const Vec3f& to) {
                       rotation_axis.z_ * inv_s);
 }
 
-/* ********** Useful Quaternions ********** */
 Quaternion Quaternion::Identity() {
 	return Quaternion(1.0F, 0.0F, 0.0F, 0.0F);
 }

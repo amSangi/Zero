@@ -68,21 +68,21 @@ namespace zero::math {
 		 * @param point the given point
 		 * @return the projected point
 		 */
-		Vec3f Project(const Vec3f& point) const;
+        [[nodiscard]] Vec3f Project(const Vec3f& point) const;
 
 		/**
 		 * @brief Compute the reflection ray of a given incident ray
 		 * @param incident the incident ray
 		 * @return the reflection ray
 		 */
-		Vec3f Reflect(const Vec3f& incident) const;
+        [[nodiscard]] Vec3f Reflect(const Vec3f& incident) const;
 
 		/**
 		 * @brief Compute the distance from the plant to a point
 		 * @param point the point
 		 * @return the distance from this to the given point
 		 */
-		float Distance(const Vec3f& point) const;
+        [[nodiscard]] float Distance(const Vec3f& point) const;
 
 		/**
 		 * @brief Normalize the plane
@@ -94,7 +94,7 @@ namespace zero::math {
 		 * @brief Flip the plane to face the opposite direction
 		 * @return a new Plane that has been flipped
 		 */
-		Plane Flip() const;
+        [[nodiscard]] Plane Flip() const;
 
 		/* ********** Static Operations ********** */
 

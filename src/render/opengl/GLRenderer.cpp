@@ -67,12 +67,13 @@ void GLRenderer::Render(const entt::registry& registry, float dt) {
      * 1. Get all entities with the Camera component
      * 2. Get all entities with the Volume component
      * 3. Get all entities that are viewable (within Camera Frustrum) using Volumes
-     * 4. Get the Transform, Material, and Mesh components of viewable entities
+     * 4. Get the Transform, Material, and MeshInstance components of viewable entities
      * 5. Begin naive rendering:
      *      5a. Create GraphicsProgram using Material component
      *      5b. Create GLTexture using Material component
      *      5c. Retrieve GLModel using Mesh component
-     *      5d. Render our GLDrawable
+     *      5d. Set GLProgram uniforms/attributes
+     *      5e. Render our GLDrawable
      *
      * Possible Optimizations:
      *       - Mesh storage

@@ -4,8 +4,6 @@
 #include <stack>
 #include <queue>
 #include "core/Transform.hpp"
-#include "math/Vector3.hpp"
-#include "math/Vector4.hpp"
 
 using namespace zero::math;
 using namespace zero::render;

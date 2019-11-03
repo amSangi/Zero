@@ -1,5 +1,4 @@
 #include "math/Box.hpp"
-#include "math/Sphere.hpp"
 
 using namespace zero::math;
 
@@ -14,7 +13,6 @@ bool Box::operator!=(const Box& other) const {
     return !operator==(other);
 }
 
-/* ********** Intersection Tests ********** */
 bool Box::Contains(const Box& other) const {
 	return Contains(other.min_) && Contains(other.max_);
 }
@@ -35,7 +33,6 @@ bool Box::Intersects(const Box& other) const {
 }
 
 
-/* ********** Merge ********** */
 void Box::Merge(const Box& other) {
 	min_.x_ = Min(min_.x_, other.min_.x_);
 	min_.y_ = Min(min_.y_, other.min_.y_);
@@ -47,7 +44,6 @@ void Box::Merge(const Box& other) {
 }
 
 
-/* ********** Box Operations ********** */
 Vec3f Box::Size() const {
 	return max_ - min_;
 }
@@ -56,8 +52,6 @@ Vec3f Box::Center() const {
 	return (min_ + max_) * 0.5F;
 }
 
-
-/* ********** Static Methods ********** */
 Box Box::Merge(const Box& lhs, const Box& rhs) {
     Box lhs_copy(lhs);
     lhs_copy.Merge(rhs);

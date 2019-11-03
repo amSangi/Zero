@@ -3,6 +3,18 @@
 
 using namespace zero::math;
 
+/**
+ * The radius of a sphere is increased by an additional epsilon value when
+ * converting from an Axis-Aligned Bounding Box (AABB) to make up for floating point precision errors.
+ * This will ensure the resulting sphere contains the original AABB.
+ */
+constexpr float kAABBConversionEpsilon = 1.0F;
+
+/**
+ * The radius of a merged sphere is increased by an additional epsilon value when
+ * merging two spheres to make up for floating point precision errors. This will ensure the
+ * merged sphere contains both spheres when performing multiple merges.
+ */
 constexpr float kMergeExpansionEpsilon = 1.0F;
 
 Sphere::Sphere()
@@ -17,6 +29,11 @@ Sphere::Sphere(const Vec3f& c)
 Sphere::Sphere(const Vec3f& c, float r)
 : center_(c), radius_(r) {}
 
+Sphere::Sphere(const Vec3f& min, const Vec3f& max)
+: center_((min + max) * 0.5F)
+, radius_(((max - min).Magnitude() * 0.5F) + kAABBConversionEpsilon)
+{}
+
 bool Sphere::operator==(const Sphere& other) const {
 	return (center_ == other.center_) && Equal(radius_, other.radius_);
 }
@@ -25,8 +42,6 @@ bool Sphere::operator!=(const Sphere& other) const {
 	return !operator==(other);
 }
 
-
-/* ********** Intersection Tests ********** */
 bool Sphere::Contains(const Box& box) const {
 	return Contains(box.min_) && Contains(box.max_);
 }
@@ -51,8 +66,6 @@ bool Sphere::Intersects(const Sphere& other) const {
 	return Vec3f::SquareDistance(center_, other.center_) <= (max * max);
 }
 
-
-/* ********** Merge ********** */
 void Sphere::Merge(const Sphere& other) {
 	if (radius_ <= EPSILON || other.Contains(*this)) {
 		*this = other;
@@ -81,8 +94,6 @@ void Sphere::Merge(const Sphere& other) {
 	}
 }
 
-
-/* ********** Static Operations ********** */
 Sphere Sphere::Merge(const Sphere& lhs, const Sphere& rhs) {
 	Sphere lhs_copy = lhs;
 	lhs_copy.Merge(rhs);

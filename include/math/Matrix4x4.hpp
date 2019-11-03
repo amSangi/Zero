@@ -167,7 +167,7 @@ namespace zero::math {
         /**
          * @return the determinant of the matrix
          */
-        float Det() const;
+        [[nodiscard]] float Det() const;
 
         /**
          * @brief Computes the inverse of the matrix and stores it in out.
@@ -182,13 +182,13 @@ namespace zero::math {
          * @param epsilon the tolerance
          * @return the inverse matrix of this
          */
-        Matrix4x4 Inverse(float epsilon=1e-05f) const;
+        [[nodiscard]] Matrix4x4 Inverse(float epsilon=1e-05f) const;
 
         /**
          * @brief Computes the transpose matrix
          * @return the transpose matrix of this
          */
-        Matrix4x4 Transpose() const;
+        [[nodiscard]] Matrix4x4 Transpose() const;
 
         /**
          * @brief Computes the result of a matrix4x4 - vec4f multiplication
@@ -226,25 +226,25 @@ namespace zero::math {
          * @brief Get the translation component of the matrix
          * @return the translation in 3D space
          */
-        Vec3f GetTranslation() const;
+        [[nodiscard]] Vec3f GetTranslation() const;
 
         /**
          * @brief Get the rotation component of the matrix
          * @return the rotation
          */
-        Quaternion GetRotation() const;
+        [[nodiscard]] Quaternion GetRotation() const;
 
         /**
          * @brief Get the scale component of the matrix. Does not support negative scaling. 
          * @return the scale
          */
-        Vec3f GetScale() const;
+        [[nodiscard]] Vec3f GetScale() const;
 
         /**
          * @brief Get the Matrix3x3 containing the scale and orientation components
          * @return a matrix3x3
          */
-        Matrix3x3 GetMatrix3x3() const;
+        [[nodiscard]] Matrix3x3 GetMatrix3x3() const;
 
         /**
          * @return the identity matrix

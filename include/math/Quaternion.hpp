@@ -151,7 +151,7 @@ namespace zero::math {
 		 * @brief Compute the norm of this Quaternion
 		 * @return The norm
 		 */
-		float Norm() const;
+        [[nodiscard]] float Norm() const;
 
 		/**
 		 * @brief Convert to a Quaternion of Unit size
@@ -181,37 +181,37 @@ namespace zero::math {
 		 * @brief Create the Unit Quaternion of this
 		 * @return a copy of this of Unit size
 		 */
-		Quaternion UnitCopy() const;
+        [[nodiscard]] Quaternion UnitCopy() const;
 
 		/**
 		 * @brief Create the Conjugate Quaternion of this
 		 * @return a copy the conjugate of this
 		 */
-		Quaternion ConjugateCopy() const;
+        [[nodiscard]] Quaternion ConjugateCopy() const;
 
 		/**
 		 * @brief Create the Inverse Quaternion of this
 		 * @return a copy of the inverse of this
 		 */
-		Quaternion InverseCopy() const;
+        [[nodiscard]] Quaternion InverseCopy() const;
 
 		/**
 		 * @brief Get the Euler representation of this
 		 * @return A Vec3f containing the Euler angles
 		 */
-		Vec3f GetEulerAngles() const;
+        [[nodiscard]] Vec3f GetEulerAngles() const;
 
 		/**
 		 * @brief Get the x, y, z components of this
 		 * @return A Vec3f containing only the x, y, z components
 		 */
-		Vec3f XYZ() const;
+        [[nodiscard]] Vec3f XYZ() const;
 
 		/**
 		 * @brief Get the Rotation Matrix3 representation of this
 		 * @return A Matrix3 rotation
 		 */
-		Matrix3x3 GetRotationMatrix() const;
+        [[nodiscard]] Matrix3x3 GetRotationMatrix() const;
 
 
 		/* ********** Static Operations ********** */
