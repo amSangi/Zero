@@ -17,33 +17,6 @@ namespace detail {
     public:
         VectorBase() = default;
 
-        explicit VectorBase(T value) {
-            for (int i = 0; i < dims; ++i) {
-                data_[i] = value;
-            }
-        }
-
-        VectorBase(T x, T y) {
-            static_assert(dims > 1, "Require at least 2 dimensions");
-            data_[0] = x;
-            data_[1] = y;
-        }
-
-        VectorBase(T x, T y, T z) {
-            static_assert(dims > 2, "Require at least 3 dimensions");
-            data_[0] = x;
-            data_[1] = y;
-            data_[2] = z;
-        }
-
-        VectorBase(T x, T y, T z, T w) {
-            static_assert(dims > 3, "Require at least 4 dimensions");
-            data_[0] = x;
-            data_[1] = y;
-            data_[2] = z;
-            data_[3] = w;
-        }
-
         inline T* Data() { return data_; }
 
         inline const T* Data() const { return data_; }
@@ -56,11 +29,6 @@ namespace detail {
     class VectorBase<2, T> {
     public:
         VectorBase() = default;
-
-        VectorBase(T x, T y) : x_(x), y_(y) {}
-
-        explicit VectorBase(T value) : x_(value), y_(value) {}
-
 
         inline T* Data() { return &x_; }
 
@@ -76,13 +44,6 @@ namespace detail {
     public:
         VectorBase() = default;
 
-        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0F) {}
-
-        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z) {}
-
-        explicit VectorBase(T value) : x_(value), y_(value), z_(value) {}
-
-
         inline T* Data() { return &x_; }
 
         inline const T* Data() const { return &x_; }
@@ -96,14 +57,6 @@ namespace detail {
     class VectorBase<4, T> {
     public:
         VectorBase() = default;
-
-        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0F), w_(0.0F) {}
-
-        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0F) {}
-
-        VectorBase(T x, T y, T z, T w) : x_(x), y_(y), z_(z), w_(w) {}
-
-        explicit VectorBase(T value) : x_(value), y_(value), z_(value), w_(value) {}
 
         inline T* Data() { return &x_; }
 
@@ -150,7 +103,7 @@ namespace detail {
 		 * @param index The index
 		 * @return the component
 		 */
-		const T operator[](size_t index) const;
+		T operator[](size_t index) const;
 
 		/**
 		 * @brief Check if the two given vectors are equal
@@ -665,7 +618,7 @@ namespace detail {
 	}
 
 	template<uint16 dims, class T>
-	const T Vector<dims, T>::operator[](size_t index) const {
+	T Vector<dims, T>::operator[](size_t index) const {
 		return Data()[index];
 	}
 

@@ -11,18 +11,14 @@ namespace zero::render {
     class OrthographicViewVolume : public IViewVolume {
     public:
 
-        OrthographicViewVolume();
+        OrthographicViewVolume(const math::Vec3f& min, const math::Vec3f& max);
+        ~OrthographicViewVolume() override = default;
 
-        ~OrthographicViewVolume();
+        [[nodiscard]] bool IsCulled(const math::Vec3f& point) const override;
+        [[nodiscard]] bool IsCulled(const math::Sphere& sphere) const override;
+        [[nodiscard]] bool IsCulled(const math::Box& box) const override;
 
-        bool Contains(const math::Sphere& sphere) const override;
-        bool Contains(const math::Box& box) const override;
-        bool Contains(const math::Plane& plane) const override;
-        bool Contains(const math::Vec3f& point) const override;
-
-        bool Intersects(const math::Sphere& sphere) const override;
-        bool Intersects(const math::Box& box) const override;
-        bool Intersects(const math::Plane& plane) const override;
+        [[nodiscard]] const math::Box& GetViewBox() const;
 
     private:
         math::Box view_box_;

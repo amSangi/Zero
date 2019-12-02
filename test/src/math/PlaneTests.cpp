@@ -4,20 +4,30 @@
 
 using namespace zero::math;
 
-TEST(TestPlane, Constructor) {
+TEST(TestPlane, PlaneFromThreePoints) {
+    Vec3f origin = Vec3f::Zero();
 	Vec3f left = Vec3f::Left();
 	Vec3f right = Vec3f::Right();
 	Vec3f forward = Vec3f::Forward();
+	Vec3f back = Vec3f::Back();
 	Vec3f up = Vec3f::Up();
 	Vec3f down = Vec3f::Down();
 
-	Plane plane(right, left, forward);
-	EXPECT_EQ(plane, Plane::Up());
-	EXPECT_EQ(Plane(left, right, forward), Plane::Up().Flip());
+	// Points are in counter clockwise order around the normal
+	EXPECT_EQ(Plane(origin, forward, right).normal_, up);
+	EXPECT_EQ(Plane(origin, right, forward).normal_, down);
+    EXPECT_EQ(Plane(origin, forward, left).normal_, down);
+    EXPECT_EQ(Plane(origin, left, forward).normal_, up);
 
+	EXPECT_EQ(Plane(origin, forward, up).normal_, left);
+	EXPECT_EQ(Plane(origin, up, forward).normal_, right);
+    EXPECT_EQ(Plane(origin, back, up).normal_, right);
+    EXPECT_EQ(Plane(origin, up, back).normal_, left);
 
-	EXPECT_EQ(Plane(forward, down, up), Plane::Right());
-	EXPECT_EQ(Plane(forward, up, down), Plane::Right().Flip());
+	EXPECT_EQ(Plane(origin, right, up).normal_, forward);
+	EXPECT_EQ(Plane(origin, up, right).normal_, back);
+	EXPECT_EQ(Plane(origin, left, up).normal_, back);
+	EXPECT_EQ(Plane(origin, up, left).normal_, forward);
 }
 
 TEST(TestPlane, Intersects) {
@@ -33,7 +43,6 @@ TEST(TestPlane, Intersects) {
 
 	EXPECT_FALSE(up_plane.Intersects(up_plane));
 	EXPECT_FALSE(up_plane.Intersects(up_plane.Flip()));
-
 
 	// Right plane
 	EXPECT_TRUE(right_plane.Intersects(up_plane));

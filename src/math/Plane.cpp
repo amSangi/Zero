@@ -6,19 +6,29 @@
 using namespace zero::math;
 
 Plane::Plane(const Vec4f& plane)
-   : normal_(Vec3f::Normalize(Vec3f(plane.x_, plane.y_, plane.z_))), d_(plane.w_) {}
+: normal_(Vec3f::Normalize(Vec3f(plane.x_, plane.y_, plane.z_)))
+, d_(plane.w_)
+{}
 
 Plane::Plane(const Vec3f& normal, float d)
-   : normal_(normal), d_(d) {}
+: normal_(normal)
+, d_(d)
+{}
 
 Plane::Plane(const Vec3f& normal, const Vec3f& point)
-   : normal_(normal), d_(Vec3f::Dot(normal, point)) {}
+: normal_(normal)
+, d_(Vec3f::Dot(normal, point))
+{}
 
 Plane::Plane(const Vec3f& p1, const Vec3f& p2, const Vec3f& p3)
-   : normal_(Vec3f::Normalize(Vec3f::Cross(p2 - p1, p3 - p1))), d_(-1.0F * Vec3f::Dot(normal_, p1)) {}
+: normal_(Vec3f::Normalize(Vec3f::Cross(p2 - p1, p3 - p1)))
+, d_(-1.0F * Vec3f::Dot(normal_, p1))
+{}
 
 Plane::Plane(const Vec3f& normal)
-   : normal_(normal), d_(0.0F) {}
+: normal_(normal)
+, d_(0.0F)
+{}
 
 bool Plane::operator==(const Plane& other) const {
 	return (normal_ == other.normal_) && Equal(d_, other.d_);

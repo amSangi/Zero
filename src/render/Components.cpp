@@ -7,6 +7,8 @@ using namespace zero::render;
 constexpr float kDefaultNearClip = 1.0F;
 constexpr float kDefaultFarClip = 1000.0F;
 constexpr float kDefaultHorizontalFOVDegrees = 65.0F;
+constexpr zero::uint32 kDefaultViewportWidth = 800;
+constexpr zero::uint32 kDefaultViewportHeight = 600;
 
 ////////////////////////////////////////////////////////////
 ///// Volume
@@ -36,6 +38,13 @@ void Volume::Transform(const zero::math::Matrix4x4& transformation) {
 ////////////////////////////////////////////////////////////
 ///// Camera
 ////////////////////////////////////////////////////////////
+
+Camera::Viewport::Viewport()
+: x_(0)
+, y_(0)
+, width_(kDefaultViewportWidth)
+, height_(kDefaultViewportHeight)
+{}
 
 float Camera::Viewport::GetAspectRatio() const {
     return (static_cast<float>(width_) / static_cast<float>(height_));
@@ -75,50 +84,25 @@ void Camera::LookAt(const math::Vec3f& target) {
     target_ = target;
 }
 
-void Camera::SetNearClip(float near_clip) {
-    near_clip_ = near_clip;
-}
-
-float Camera::GetNearClip() const {
-    return near_clip_;
-}
-
-void Camera::SetFarClip(float far_clip) {
-    far_clip_ = far_clip;
-}
-
-float Camera::GetFarClip() const {
-    return far_clip_;
-}
-
-void Camera::GetNearClipCoordinates(math::Vec3f& top_left,
-                                    math::Vec3f& top_right,
-                                    math::Vec3f& bottom_left,
-                                    math::Vec3f& bottom_right) const {
-
+void Camera::GetNearClipCoordinates(math::Vec3f& bottom_left,
+                                    math::Vec3f& top_right) const {
     // half_near_height = tan(vertical_fov / 2) * near_clip_
     float half_near_height = math::Tan(GetVerticalFieldOfView().ToRadian().rad_ / 2.0F) * near_clip_;
     float half_near_width = half_near_height * viewport_.GetAspectRatio();
 
-    top_left = math::Vec3f(position_.x_ - half_near_width, position_.y_ + half_near_height, position_.z_);
-    top_right = math::Vec3f(position_.x_ + half_near_width, position_.y_ + half_near_height, position_.z_);
-    bottom_left = math::Vec3f(position_.x_ - half_near_width, position_.y_ - half_near_height, position_.z_);
-    bottom_right = math::Vec3f(position_.x_ + half_near_width, position_.y_ - half_near_height, position_.z_);
+    bottom_left = math::Vec3f(position_.x_ - half_near_width, position_.y_ - half_near_height, near_clip_);
+    top_right = math::Vec3f(position_.x_ + half_near_width, position_.y_ + half_near_height, near_clip_);
 }
 
-void Camera::GetFarClipCoordinates(math::Vec3f& top_left,
-                                   math::Vec3f& top_right,
-                                   math::Vec3f& bottom_left,
-                                   math::Vec3f& bottom_right) const {
+void Camera::GetFarClipCoordinates(math::Vec3f& bottom_left,
+                                   math::Vec3f& top_right) const {
 
     // half_far_height = 2 * tan(vertical_fov / 2) * far_clip_
     float half_far_height = math::Tan(GetVerticalFieldOfView().ToRadian().rad_ / 2.0F) * far_clip_;
     float half_far_width = half_far_height * viewport_.GetAspectRatio();
 
-    top_left = math::Vec3f(position_.x_ - half_far_width, position_.y_ + half_far_height, position_.z_);
-    top_right = math::Vec3f(position_.x_ + half_far_width, position_.y_ + half_far_height, position_.z_);
-    bottom_left = math::Vec3f(position_.x_ - half_far_width, position_.y_ - half_far_height, position_.z_);
-    bottom_right = math::Vec3f(position_.x_ + half_far_width, position_.y_ - half_far_height, position_.z_);
+    bottom_left = math::Vec3f(position_.x_ - half_far_width, position_.y_ - half_far_height, far_clip_);
+    top_right = math::Vec3f(position_.x_ + half_far_width, position_.y_ + half_far_height, far_clip_);
 }
 
 zero::math::Degree Camera::GetVerticalFieldOfView() const {
@@ -175,8 +159,8 @@ zero::math::Matrix4x4 Camera::Perspective(math::Degree vertical_fov,
     perspective_matrix[0][0] = 1.0F / (aspect_ratio * tan_half_vertical_fov);
     perspective_matrix[1][1] = 1.0F / (tan_half_vertical_fov);
     perspective_matrix[2][2] = -(far + near) / (far - near);
-    perspective_matrix[2][3] = -1.0F;
-    perspective_matrix[3][2] = -(2.0F * far * near) / (far - near);
+    perspective_matrix[2][3] = -(2.0F * far * near) / (far - near);
+    perspective_matrix[3][2] = -1.0F;
 
     return perspective_matrix;
 }

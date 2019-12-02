@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <tuple>
 #include "core/Transform.hpp"
 #include "render/Components.hpp"
 #include "TestPropagator.hpp"

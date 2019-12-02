@@ -7,6 +7,7 @@
 #include "math/Sphere.hpp"
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
+#include "math/Matrix4x4.hpp"
 #include "math/Quaternion.hpp"
 
 namespace zero::render {
@@ -189,8 +190,10 @@ namespace zero::render {
          */
         struct Viewport {
 
+            Viewport();
+
             /**
-             * @brief Get the aspect ratio of the view port
+             * @brief Get the aspect ratio of the view port (Width / Height)
              * @return the aspect ratio
              */
             [[nodiscard]] float GetAspectRatio() const;
@@ -230,21 +233,11 @@ namespace zero::render {
 
         void LookAt(const math::Vec3f& target);
 
-        void SetNearClip(float near_clip);
-        [[nodiscard]] float GetNearClip() const;
+        void GetNearClipCoordinates(math::Vec3f& bottom_left,
+                                    math::Vec3f& top_right) const;
 
-        void SetFarClip(float far_clip);
-        [[nodiscard]] float GetFarClip() const;
-
-        void GetNearClipCoordinates(math::Vec3f& top_left,
-                                    math::Vec3f& top_right,
-                                    math::Vec3f& bottom_left,
-                                    math::Vec3f& bottom_right) const;
-
-        void GetFarClipCoordinates(math::Vec3f& top_left,
-                                   math::Vec3f& top_right,
-                                   math::Vec3f& bottom_left,
-                                   math::Vec3f& bottom_right) const;
+        void GetFarClipCoordinates(math::Vec3f& bottom_left,
+                                   math::Vec3f& top_right) const;
 
         [[nodiscard]] math::Degree GetVerticalFieldOfView() const;
 

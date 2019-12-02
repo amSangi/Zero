@@ -1,4 +1,5 @@
 #include "render/opengl/GLRenderer.hpp"
+#include "render/ViewVolumeBuilder.hpp"
 #include <fstream>
 
 using namespace zero::render;
