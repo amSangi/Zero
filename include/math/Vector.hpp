@@ -2,6 +2,8 @@
 
 #include "Angle.hpp"
 #include "ZMath.hpp"
+#include <string>
+#include <sstream>
 
 namespace zero::math {
 
@@ -16,9 +18,13 @@ namespace detail {
     class VectorBase {
     public:
         VectorBase() = default;
+        explicit VectorBase(T value) {
+            for (int i = 0; i < dims; ++i) {
+                data_[i] = value;
+            }
+        }
 
         inline T* Data() { return data_; }
-
         inline const T* Data() const { return data_; }
 
         T data_[dims];
@@ -29,9 +35,10 @@ namespace detail {
     class VectorBase<2, T> {
     public:
         VectorBase() = default;
+        VectorBase(T x, T y) : x_(x), y_(y) {}
+        explicit VectorBase(T value) : x_(value), y_(value) {}
 
         inline T* Data() { return &x_; }
-
         inline const T* Data() const { return &x_; }
 
         T x_, y_;
@@ -43,9 +50,11 @@ namespace detail {
     class VectorBase<3, T> {
     public:
         VectorBase() = default;
+        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0F) {}
+        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z) {}
+        explicit VectorBase(T value) : x_(value), y_(value), z_(value) {}
 
         inline T* Data() { return &x_; }
-
         inline const T* Data() const { return &x_; }
 
         T x_, y_, z_;
@@ -57,9 +66,12 @@ namespace detail {
     class VectorBase<4, T> {
     public:
         VectorBase() = default;
+        VectorBase(T x, T y) : x_(x), y_(y), z_(0.0F), w_(0.0F) {}
+        VectorBase(T x, T y, T z) : x_(x), y_(y), z_(z), w_(0.0F) {}
+        VectorBase(T x, T y, T z, T w) : x_(x), y_(y), z_(z), w_(w) {}
+        explicit VectorBase(T value) : x_(value), y_(value), z_(value), w_(value) {}
 
         inline T* Data() { return &x_; }
-
         inline const T* Data() const { return &x_; }
 
         T x_, y_, z_, w_;
@@ -281,6 +293,12 @@ namespace detail {
 		 *     If the calling vector has less dimensions, the extra coordinates will default to 0.
 		 */
 		Vector<2, T> XY() const;
+
+		/**
+		 * @brief Convert the vector into the string form: <x, y, ...>
+		 * @return a string representation of the vector.
+		 */
+		[[nodiscard]] std::string ToString() const;
 
 		/* ********** Static Operations ********** */
 
@@ -532,6 +550,27 @@ namespace detail {
         const T* data = Data();
         if constexpr(dims == 1) return Vector<2, T>(data[0], 0);
         else return Vector<2, T>(data[0], data[1]);
+    }
+
+    template<uint16 dims, class T>
+    std::string Vector<dims, T>::ToString() const {
+        std::stringstream result;
+        result << "<";
+        if constexpr (dims == 0) {
+            result << ">";
+            return result.str();
+        }
+        auto data = Data();
+        for (int i = 0; i < dims - 1; ++i) {
+            result << data[i] << ", ";
+        }
+        result << data[dims - 1] <<  ">";
+        return result.str();
+    }
+
+    template<uint16 dims, class T>
+    std::ostream& operator<<(std::ostream& os, const Vector<dims, T>& vector) {
+        return os << vector.ToString();
     }
 
 	/* ********** Static Operations Implementation ********** */
