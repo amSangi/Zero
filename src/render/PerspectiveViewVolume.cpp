@@ -16,7 +16,8 @@ PerspectiveViewVolume::PerspectiveViewVolume(const math::Plane& left,
 bool PerspectiveViewVolume::IsCulled(const math::Vec3f& point) const {
     // Is the point on the wrong side of a plane?
     for (const auto& plane : planes_) {
-        if (plane.Distance(point) < 0) {
+        auto dist = plane.Distance(point);
+        if (dist < -math::EPSILON) {
             return true;
         }
     }
@@ -37,8 +38,8 @@ bool PerspectiveViewVolume::IsCulled(const math::Sphere& sphere) const {
 bool PerspectiveViewVolume::IsCulled(const math::Box& box) const {
     // Are the min/max points on the wrong side of a plane?
     for (const auto& plane : planes_) {
-        if (plane.Distance(box.min_) < 0
-         && plane.Distance(box.max_) < 0) {
+        if (plane.Distance(box.min_) < -math::EPSILON
+         && plane.Distance(box.max_) < -math::EPSILON) {
             return true;
         }
     }

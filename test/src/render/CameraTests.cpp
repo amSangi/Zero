@@ -24,6 +24,6 @@ TEST(TestCamera, GetVerticalFieldOfView) {
     camera.viewport_.width_ = 1920;
     camera.viewport_.height_ = 1080;
     camera.horizontal_field_of_view_ = math::Degree(90.0F);
-    auto degrees = camera.GetVerticalFieldOfView().deg_;
+    auto degrees = camera.GetVerticalFieldOfView().ToDegree().deg_;
     EXPECT_TRUE(math::Equal(degrees, 59.0F, 0.5F));
 }

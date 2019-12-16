@@ -7,12 +7,13 @@ std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camer
     {
         case Camera::ProjectionType::ORTHOGRAPHIC:
         {
-            math::Vec3f bottom_left;
-            math::Vec3f top_right;
-            camera.GetFarClipCoordinates(bottom_left, top_right);
-            math::Vec3f min = math::Vec3f(bottom_left.x_, bottom_left.y_, camera.near_clip_);
-            math::Vec3f max = math::Vec3f(top_right.x_,   top_right.y_,   camera.far_clip_);
-            return std::make_unique<OrthographicViewVolume>(min, max);
+            math::Vec3f near_bottom_left;
+            math::Vec3f near_top_right;
+            camera.GetNearClipCoordinates(near_bottom_left, near_top_right);
+            math::Vec3f far_bottom_left;
+            math::Vec3f far_top_right;
+            camera.GetFarClipCoordinates(far_bottom_left, far_top_right);
+            return std::make_unique<OrthographicViewVolume>(near_bottom_left, far_top_right);
         }
         default:
         {
@@ -25,10 +26,10 @@ std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camer
             camera.GetFarClipCoordinates(far_bottom_left, far_top_right);
 
             // Construct the other four corners of the near/far planes
-            math::Vec3f near_bottom_right{near_top_right.x_,   near_bottom_left.y_, camera.near_clip_};
-            math::Vec3f near_top_left    {near_bottom_left.x_, near_top_right.y_,   camera.near_clip_};
-            math::Vec3f far_bottom_right {far_top_right.x_,    far_bottom_left.y_,  camera.far_clip_};
-            math::Vec3f far_top_left     {far_bottom_left.x_,  far_top_right.y_,    camera.far_clip_};
+            math::Vec3f near_bottom_right{near_top_right.x_,   near_bottom_left.y_, near_bottom_left.z_};
+            math::Vec3f near_top_left    {near_bottom_left.x_, near_top_right.y_,   near_bottom_left.z_};
+            math::Vec3f far_bottom_right {far_top_right.x_,    far_bottom_left.y_,  far_bottom_left.z_};
+            math::Vec3f far_top_left     {far_bottom_left.x_,  far_top_right.y_,    far_bottom_left.z_};
 
             // Construct the bounding planes of the Frustrum
             // The normal of each plane must point towards the inside of the Frustrum

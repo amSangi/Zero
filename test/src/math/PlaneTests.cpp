@@ -30,6 +30,36 @@ TEST(TestPlane, PlaneFromThreePoints) {
 	EXPECT_EQ(Plane(origin, up, left).normal_, forward);
 }
 
+TEST(TestPlane, PlaneFromThreePoints_Distance) {
+    Vec3f origin = Vec3f::Zero();
+    Vec3f left = Vec3f::Left();
+    Vec3f right = Vec3f::Right();
+    Vec3f forward = Vec3f::Forward();
+    Vec3f back = Vec3f::Back();
+    Vec3f up = Vec3f::Up();
+    Vec3f down = Vec3f::Down();
+
+    Plane plane(origin, forward, right);
+    EXPECT_EQ(plane.Distance(origin), 0.0F);
+    EXPECT_EQ(plane.Distance(forward), 0.0F);
+    EXPECT_EQ(plane.Distance(right), 0.0F);
+
+    plane = Plane(origin, forward, up);
+    EXPECT_EQ(plane.Distance(origin), 0.0F);
+    EXPECT_EQ(plane.Distance(forward), 0.0F);
+    EXPECT_EQ(plane.Distance(up), 0.0F);
+
+    plane = Plane(origin, right, up);
+    EXPECT_EQ(plane.Distance(origin), 0.0F);
+    EXPECT_EQ(plane.Distance(right), 0.0F);
+    EXPECT_EQ(plane.Distance(up), 0.0F);
+
+    plane = Plane(left, back, down);
+    EXPECT_EQ(plane.Distance(left), 0.0F);
+    EXPECT_EQ(plane.Distance(back), 0.0F);
+    EXPECT_EQ(plane.Distance(down), 0.0F);
+}
+
 TEST(TestPlane, Intersects) {
 	Plane up_plane = Plane::Up();
 	Plane right_plane = Plane::Right();

@@ -4,8 +4,8 @@
 
 using namespace zero::render;
 
-constexpr float kDefaultNearClip = 1.0F;
-constexpr float kDefaultFarClip = 1000.0F;
+constexpr float kDefaultNearClip = 20.0F;
+constexpr float kDefaultFarClip = 500.0F;
 constexpr float kDefaultHorizontalFOVDegrees = 65.0F;
 constexpr zero::uint32 kDefaultViewportWidth = 800;
 constexpr zero::uint32 kDefaultViewportHeight = 600;
@@ -56,8 +56,8 @@ Camera::Camera()
 , far_clip_(kDefaultFarClip)
 , horizontal_field_of_view_(kDefaultHorizontalFOVDegrees)
 , up_(math::Vec3f::Up())
-, position_()
-, target_()
+, position_(math::Vec3f::Zero())
+, target_(math::Vec3f::Back())
 , orientation_()
 , viewport_()
 {
@@ -69,8 +69,8 @@ Camera::Camera(Camera::ProjectionType projection_type)
 , far_clip_(kDefaultFarClip)
 , horizontal_field_of_view_(kDefaultHorizontalFOVDegrees)
 , up_(math::Vec3f::Up())
-, position_()
-, target_()
+, position_(math::Vec3f::Zero())
+, target_(math::Vec3f::Back())
 , orientation_()
 , viewport_()
 {
@@ -87,25 +87,37 @@ void Camera::LookAt(const math::Vec3f& target) {
 void Camera::GetNearClipCoordinates(math::Vec3f& bottom_left,
                                     math::Vec3f& top_right) const {
     // half_near_height = tan(vertical_fov / 2) * near_clip_
-    float half_near_height = math::Tan(GetVerticalFieldOfView().ToRadian().rad_ / 2.0F) * near_clip_;
+    float half_near_height = math::Tan(GetVerticalFieldOfView().rad_ / 2.0F) * near_clip_;
     float half_near_width = half_near_height * viewport_.GetAspectRatio();
 
-    bottom_left = math::Vec3f(position_.x_ - half_near_width, position_.y_ - half_near_height, near_clip_);
-    top_right = math::Vec3f(position_.x_ + half_near_width, position_.y_ + half_near_height, near_clip_);
+    math::Vec3f view_direction = math::Vec3f::Normalize(target_ - position_);
+    math::Vec3f center = position_ + (view_direction * near_clip_);
+    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up_));
+
+    math::Vec3f vertical = (up_ * half_near_height);
+    math::Vec3f horizontal = (right_vector * half_near_width);
+    bottom_left = center - vertical - horizontal;
+    top_right = center + vertical + horizontal;
 }
 
 void Camera::GetFarClipCoordinates(math::Vec3f& bottom_left,
                                    math::Vec3f& top_right) const {
 
     // half_far_height = 2 * tan(vertical_fov / 2) * far_clip_
-    float half_far_height = math::Tan(GetVerticalFieldOfView().ToRadian().rad_ / 2.0F) * far_clip_;
+    float half_far_height = math::Tan(GetVerticalFieldOfView().rad_ / 2.0F) * far_clip_;
     float half_far_width = half_far_height * viewport_.GetAspectRatio();
 
-    bottom_left = math::Vec3f(position_.x_ - half_far_width, position_.y_ - half_far_height, far_clip_);
-    top_right = math::Vec3f(position_.x_ + half_far_width, position_.y_ + half_far_height, far_clip_);
+    math::Vec3f view_direction = math::Vec3f::Normalize(target_ - position_);
+    math::Vec3f center = position_ + (view_direction * far_clip_);
+    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up_));
+
+    math::Vec3f vertical = (up_ * half_far_height);
+    math::Vec3f horizontal = (right_vector * half_far_width);
+    bottom_left = center - vertical - horizontal;
+    top_right = center + vertical + horizontal;
 }
 
-zero::math::Degree Camera::GetVerticalFieldOfView() const {
+zero::math::Radian Camera::GetVerticalFieldOfView() const {
     // V = 2 * arctan( tan (H/2) * h/w )
     // H is the horizontal field of view in radians
     // h is the height of the viewport
@@ -113,14 +125,14 @@ zero::math::Degree Camera::GetVerticalFieldOfView() const {
     float height_over_width = static_cast<float>(viewport_.height_) / static_cast<float>(viewport_.width_);
     float tan_half_h_fov = math::Tan(horizontal_field_of_view_.ToRadian().rad_ * 0.5F);
     float vertical_fov_in_radians = 2.0F * math::Atan(tan_half_h_fov * height_over_width);
-    return math::Degree::FromRadian(vertical_fov_in_radians);
+    return math::Radian(vertical_fov_in_radians);
 }
 
 zero::math::Matrix4x4 Camera::GetProjectionMatrix() const {
     switch (projection_)
     {
         case ProjectionType::ORTHOGRAPHIC: {
-            float top = near_clip_ * math::Tan(GetVerticalFieldOfView().ToRadian().rad_ * 0.5F);
+            float top = near_clip_ * math::Tan(GetVerticalFieldOfView().rad_ * 0.5F);
             float bottom = -top;
             float right = top * viewport_.GetAspectRatio();
             float left = -right;
@@ -148,14 +160,14 @@ zero::math::Matrix4x4 Camera::GetCameraToWorldMatrix() const {
                            0.0F, 0.0F, 0.0F, 1.0F);
 }
 
-zero::math::Matrix4x4 Camera::Perspective(math::Degree vertical_fov,
+zero::math::Matrix4x4 Camera::Perspective(math::Radian vertical_fov,
                                           float aspect_ratio,
                                           float near,
                                           float far) {
 
     math::Matrix4x4 perspective_matrix(0.0F);
 
-    float tan_half_vertical_fov = math::Tan(vertical_fov.ToRadian().rad_ / 2.0F);
+    float tan_half_vertical_fov = math::Tan(vertical_fov.rad_ / 2.0F);
     perspective_matrix[0][0] = 1.0F / (aspect_ratio * tan_half_vertical_fov);
     perspective_matrix[1][1] = 1.0F / (tan_half_vertical_fov);
     perspective_matrix[2][2] = -(far + near) / (far - near);

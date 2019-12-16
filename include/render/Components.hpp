@@ -239,7 +239,7 @@ namespace zero::render {
         void GetFarClipCoordinates(math::Vec3f& bottom_left,
                                    math::Vec3f& top_right) const;
 
-        [[nodiscard]] math::Degree GetVerticalFieldOfView() const;
+        [[nodiscard]] math::Radian GetVerticalFieldOfView() const;
 
         /**
          * @brief Get the projection matrix based on the projection type.
@@ -315,7 +315,7 @@ namespace zero::render {
          *
          * @return a perspective projection matrix
          */
-        static math::Matrix4x4 Perspective(math::Degree vertical_fov,
+        static math::Matrix4x4 Perspective(math::Radian vertical_fov,
                                            float aspect_ratio,
                                            float near,
                                            float far);
