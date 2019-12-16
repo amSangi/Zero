@@ -413,13 +413,13 @@ namespace detail {
 		static Vec Left();
 
 		/**
-		 * @brief Create the forward vector (+z is forward)
+		 * @brief Create the forward vector (+z is forward and out of the screen)
 		 * @return the Forward vector
 		 */
 		static Vec Forward();
 
 		/**
-		 * @brief Create the back vector (-z is back)
+		 * @brief Create the back vector (-z is back and into the screen)
 		 * @return the Back vector
 		 */
 		static Vec Back();
