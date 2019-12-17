@@ -6,7 +6,7 @@ using namespace zero::render;
 
 TEST(TestCamera, LookAt) {
     Camera camera;
-    EXPECT_EQ(camera.target_, math::Vec3f::Zero());
+    EXPECT_EQ(camera.target_, math::Vec3f::Back());
     camera.LookAt(math::Vec3f::Up());
     EXPECT_EQ(camera.target_, math::Vec3f::Up());
 }

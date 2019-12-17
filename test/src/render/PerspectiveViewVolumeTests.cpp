@@ -111,28 +111,19 @@ TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_InFrustrum) {
 }
 
 TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_OutOfFrustrum) {
-    math::Sphere sphere;
-    sphere.radius_ = 0.75F;
+    math::Sphere sphere(0.75F);
+    math::Vec3f offset(0.0F, 0.0F,1.0F);
 
-    math::Vec3f offset(1.0F);
-    sphere.center_ = near_bottom_left_ - offset;
-    EXPECT_TRUE(volume_->IsCulled(sphere));
     sphere.center_ = near_bottom_left_ + offset;
     EXPECT_TRUE(volume_->IsCulled(sphere));
 
-    sphere.center_ = near_top_right_ - offset;
-    EXPECT_TRUE(volume_->IsCulled(sphere));
     sphere.center_ = near_top_right_ + offset;
     EXPECT_TRUE(volume_->IsCulled(sphere));
 
     sphere.center_ = far_bottom_left_ - offset;
     EXPECT_TRUE(volume_->IsCulled(sphere));
-    sphere.center_ = far_bottom_left_ + offset;
-    EXPECT_TRUE(volume_->IsCulled(sphere));
 
     sphere.center_ = far_top_right_ - offset;
-    EXPECT_TRUE(volume_->IsCulled(sphere));
-    sphere.center_ = far_top_right_ + offset;
     EXPECT_TRUE(volume_->IsCulled(sphere));
 }
 
