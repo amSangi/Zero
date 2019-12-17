@@ -13,6 +13,10 @@ TEST(TestBox, ContainsBox) {
 	EXPECT_FALSE(box.Contains(Box(Vec3f(-100.0F), Vec3f(100.0F))));
 	EXPECT_FALSE(box.Contains(Box(Vec3f(0.0F, 0.0F, -1.0F), Vec3f(100.0F))));
 	EXPECT_FALSE(box.Contains(Box(Vec3f::Zero(), Vec3f(100.1F))));
+
+    box.min_ = Vec3f(-50.0F, -50.0F, -500.0F);
+    box.max_ = Vec3f(50.0F, 50.0F, -50.0F);
+    EXPECT_TRUE(box.Contains(box));
 }
 
 TEST(TestBox, ContainsPoint) {
@@ -23,6 +27,11 @@ TEST(TestBox, ContainsPoint) {
 
 	EXPECT_FALSE(box.Contains(Vec3f(100.0F, 100.0F, 100.0001F)));
 	EXPECT_FALSE(box.Contains(Vec3f(0.0F, 0.0F, -0.0001F)));
+
+	box.min_ = Vec3f(-50.0F, -50.0F, -500.0F);
+	box.max_ = Vec3f(50.0F, 50.0F, -50.0F);
+	EXPECT_TRUE(box.Contains(box.min_));
+	EXPECT_TRUE(box.Contains(box.max_));
 }
 
 TEST(TestBox, IntersectsBox) {

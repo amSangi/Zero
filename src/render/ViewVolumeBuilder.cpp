@@ -13,7 +13,10 @@ std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camer
             math::Vec3f far_bottom_left;
             math::Vec3f far_top_right;
             camera.GetFarClipCoordinates(far_bottom_left, far_top_right);
-            return std::make_unique<OrthographicViewVolume>(near_bottom_left, far_top_right);
+            return std::make_unique<OrthographicViewVolume>(math::Vec3f(near_bottom_left.x_,
+                                                                        near_bottom_left.y_,
+                                                                        far_bottom_left.z_),
+                                                            near_top_right);
         }
         default:
         {

@@ -37,12 +37,12 @@ protected:
 TEST_F(TestOrthographicViewVolume, IsCulled_Point_InVolume) {
     EXPECT_FALSE(volume_->IsCulled(near_bottom_left_));
     EXPECT_FALSE(volume_->IsCulled(near_top_right_));
-    EXPECT_FALSE(volume_->IsCulled(far_bottom_left_));
-    EXPECT_FALSE(volume_->IsCulled(far_top_right_));
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Point_OutOfVolume) {
-    FAIL();
+    EXPECT_TRUE(volume_->IsCulled(camera_.position_));
+    EXPECT_TRUE(volume_->IsCulled(far_bottom_left_));
+    EXPECT_TRUE(volume_->IsCulled(far_top_right_));
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_InVolume) {
