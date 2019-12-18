@@ -37,6 +37,8 @@ protected:
 TEST_F(TestOrthographicViewVolume, IsCulled_Point_InVolume) {
     EXPECT_FALSE(volume_->IsCulled(near_bottom_left_));
     EXPECT_FALSE(volume_->IsCulled(near_top_right_));
+    EXPECT_FALSE(volume_->IsCulled(volume_->GetViewBox().Center()));
+    EXPECT_FALSE(volume_->IsCulled(math::Vec3f(0.0F, 0.0F, (far_top_right_.z_ - near_top_right_.z_) * 0.5F)));
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Point_OutOfVolume) {
@@ -46,17 +48,60 @@ TEST_F(TestOrthographicViewVolume, IsCulled_Point_OutOfVolume) {
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_InVolume) {
-    FAIL();
+    math::Sphere sphere(1000.0F);
+    EXPECT_FALSE(volume_->IsCulled(sphere));
+
+    sphere.radius_ = 10.0F;
+    sphere.center_ = volume_->GetViewBox().Center();
+    EXPECT_FALSE(volume_->IsCulled(sphere));
+
+    sphere.center_ = near_bottom_left_;
+    EXPECT_FALSE(volume_->IsCulled(sphere));
+
+    sphere.center_ = near_top_right_;
+    EXPECT_FALSE(volume_->IsCulled(sphere));
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_OutOfVolume) {
-    FAIL();
+    math::Sphere sphere(1.0F);
+    EXPECT_TRUE(volume_->IsCulled(sphere));
+
+    sphere.center_ = camera_.position_;
+    EXPECT_TRUE(volume_->IsCulled(sphere));
+
+    sphere.center_ = near_bottom_left_ + math::Vec3f(0.0F, 0.0F, 1.0F);
+    EXPECT_TRUE(volume_->IsCulled(sphere));
+
+    sphere.center_ = near_top_right_ + math::Vec3f(0.0F, 0.0F, 1.0F);
+    EXPECT_TRUE(volume_->IsCulled(sphere));
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Box_InVolume) {
-    FAIL();
+    math::Box box = volume_->GetViewBox();
+    EXPECT_FALSE(volume_->IsCulled(box));
+
+    box.min_ = volume_->GetViewBox().Center();
+    box.max_ = math::Vec3f(1000.0F, 1000.0F, 1000.0F);
+    EXPECT_FALSE(volume_->IsCulled(box));
+
+    box.min_ = near_bottom_left_;
+    EXPECT_FALSE(volume_->IsCulled(box));
+
+    box.min_ = near_top_right_;
+    EXPECT_FALSE(volume_->IsCulled(box));
 }
 
 TEST_F(TestOrthographicViewVolume, IsCulled_Box_OutOfVolume) {
-    FAIL();
+    math::Box box = math::Box::Unit();
+    EXPECT_TRUE(volume_->IsCulled(box));
+
+    box.min_ = camera_.position_;
+    box.max_ = math::Vec3f(100.0F, 100.0F, 100.0F);
+    EXPECT_TRUE(volume_->IsCulled(box));
+
+    box.min_ = near_bottom_left_ + math::Vec3f(0.0F, 0.0F, 1.0F);
+    EXPECT_TRUE(volume_->IsCulled(box));
+
+    box.min_ = near_top_right_ + math::Vec3f(0.0F, 0.0F, 1.0F);
+    EXPECT_TRUE(volume_->IsCulled(box));
 }
