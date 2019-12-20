@@ -12,7 +12,7 @@ namespace zero::render {
     /**
      * @brief Create OpenGL graphics programs and manage GLShaders
      */
-    class GLCompiler : public ICompiler {
+    class GLCompiler final : public ICompiler {
     public:
 
         GLCompiler() = default;

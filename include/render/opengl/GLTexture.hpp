@@ -9,7 +9,7 @@ namespace zero::render {
     /**
      * @brief OpenGL graphics texture wrapper
      */
-    class GLTexture : public IRenderResource {
+    class GLTexture final : public IRenderResource {
     public:
 
         /**

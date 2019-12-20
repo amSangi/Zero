@@ -16,7 +16,7 @@ namespace zero::render {
     /**
      * @brief Model containing OpenGL objects
      */
-    class GLModel : public IModel {
+    class GLModel final : public IModel {
     public:
 
         /**

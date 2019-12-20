@@ -14,7 +14,7 @@ namespace zero::render {
     /**
      * @brief Create OpenGL texture objects and manage image lifetime
      */
-    class GLTextureManager : public ITextureManager {
+    class GLTextureManager final : public ITextureManager {
     public:
 
         GLTextureManager();

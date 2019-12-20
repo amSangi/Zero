@@ -9,7 +9,7 @@ namespace zero::render {
     /**
      * @brief OpenGL mesh container. Stores the mesh data in main memory as well.
      */
-    class GLMesh : public Mesh, public IRenderResource {
+    class GLMesh final : public Mesh, public IRenderResource {
     public:
 
         /**

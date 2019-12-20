@@ -13,7 +13,7 @@ namespace zero::render {
     /**
      * @brief OpenGL graphics program wrapper
      */
-    class GLProgram : public IProgram {
+    class GLProgram final : public IProgram {
         template<class T>
         using UniformMap = std::unordered_map<std::string, T> ;
     public:

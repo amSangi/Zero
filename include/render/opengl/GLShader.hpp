@@ -9,7 +9,7 @@ namespace zero::render {
     /**
      * @brief OpenGL graphics shader wrapper
      */
-    class GLShader : public IShader {
+    class GLShader final : public IShader {
     public:
 
         /**

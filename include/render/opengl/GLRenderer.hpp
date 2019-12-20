@@ -15,7 +15,7 @@ namespace zero::render {
      * An entity is considered drawable if it contains Transform, Material, Volume, and Mesh components.
      * Entities with the Camera component are used to perform the rendering.
      */
-    class GLRenderer : public IRenderer {
+    class GLRenderer final : public IRenderer {
     public:
 
         GLRenderer();

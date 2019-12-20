@@ -8,7 +8,7 @@ namespace zero::render {
     /**
      * @brief OpenGL texture sampler wrapper
      */
-    class GLSampler : public ISampler {
+    class GLSampler final : public ISampler {
     public:
 
         GLSampler();
