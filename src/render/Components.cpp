@@ -76,6 +76,10 @@ Camera::Camera(Camera::ProjectionType projection_type)
 {
 }
 
+Camera::ProjectionType Camera::GetProjectionType() const {
+    return projection_;
+}
+
 void Camera::LookAt(const math::Vec3f& target) {
     math::Vec3f direction = target - position_;
     math::Quaternion rotation = math::Quaternion::LookRotation(direction, up_);

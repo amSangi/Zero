@@ -26,7 +26,7 @@ namespace zero {
         /**
          * @brief Default Virtual Destructor
          */
-        virtual ~System() = 0;
+        virtual ~System() = default;
 
         /**
          * @brief Initialize the system. Called once before any updates have been performed.

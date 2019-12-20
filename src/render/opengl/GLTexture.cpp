@@ -29,3 +29,7 @@ void GLTexture::GenerateMipMap(GLenum texture_unit) const {
 GLenum GLTexture::GetTarget() const {
     return target_;
 }
+
+GLuint GLTexture::GetIdentifier() const {
+    return id_;
+}

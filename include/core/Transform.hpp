@@ -16,13 +16,13 @@ namespace zero {
          * @brief Default constructor
          */
         Transform()
-                : HierarchyComponent()
-                , position_(0.0F)
-                , local_position_(0.0F)
-                , scale_(1.0F)
-                , local_scale_(1.0F)
-                , orientation_()
-                , local_orientation_()
+        : HierarchyComponent()
+        , position_(0.0F)
+        , local_position_(0.0F)
+        , scale_(1.0F)
+        , local_scale_(1.0F)
+        , orientation_()
+        , local_orientation_()
         {}
 
         /**
@@ -34,13 +34,13 @@ namespace zero {
         Transform(const math::Vec3f& position,
                   const math::Vec3f& scale,
                   const math::Quaternion& orientation)
-                : HierarchyComponent()
-                , position_(position)
-                , local_position_(0.0F)
-                , scale_(scale)
-                , local_scale_(1.0F)
-                , orientation_(orientation.UnitCopy())
-                , local_orientation_()
+        : HierarchyComponent()
+        , position_(position)
+        , local_position_(0.0F)
+        , scale_(scale)
+        , local_scale_(1.0F)
+        , orientation_(orientation.UnitCopy())
+        , local_orientation_()
         {}
 
         /**
@@ -56,13 +56,13 @@ namespace zero {
                   const math::Vec3f& local_position,
                   const math::Vec3f& local_scale,
                   const math::Quaternion& local_orientation)
-                : HierarchyComponent(parent)
-                , position_(parent_transform.position_ + local_position)
-                , local_position_(local_position)
-                , scale_(parent_transform.scale_ * local_scale)
-                , local_scale_(local_scale)
-                , orientation_((parent_transform.orientation_ * local_orientation).Unit())
-                , local_orientation_(local_orientation.UnitCopy())
+        : HierarchyComponent(parent)
+        , position_(parent_transform.position_ + local_position)
+        , local_position_(local_position)
+        , scale_(parent_transform.scale_ * local_scale)
+        , local_scale_(local_scale)
+        , orientation_((parent_transform.orientation_ * local_orientation).Unit())
+        , local_orientation_(local_orientation.UnitCopy())
         {}
 
         /**

@@ -231,6 +231,8 @@ namespace zero::render {
          */
         explicit Camera(ProjectionType projection_type);
 
+        [[nodiscard]] ProjectionType GetProjectionType() const;
+
         void LookAt(const math::Vec3f& target);
 
         void GetNearClipCoordinates(math::Vec3f& bottom_left,
@@ -264,10 +266,6 @@ namespace zero::render {
          */
         [[nodiscard]] math::Matrix4x4 GetCameraToWorldMatrix() const;
 
-        /**
-         * @brief The camera projection type. Set once during construction.
-         */
-        const ProjectionType projection_;
         /**
          * @brief The z-distance to the near clipping plane from the eye
          */
@@ -338,6 +336,11 @@ namespace zero::render {
                                             float top,
                                             float near,
                                             float far);
+
+        /**
+         * @brief The camera projection type. Set once during construction.
+         */
+        ProjectionType projection_;
 
     }; // struct Camera
 

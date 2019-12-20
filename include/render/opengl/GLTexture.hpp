@@ -39,6 +39,12 @@ namespace zero::render {
          */
         [[nodiscard]] GLenum GetTarget() const;
 
+        /**
+         * @brief Get the identifier for the texture
+         * @return the id
+         */
+        [[nodiscard]] GLuint GetIdentifier() const;
+
     protected:
         /**
          * @brief Destroy the texture resources

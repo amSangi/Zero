@@ -43,7 +43,7 @@ namespace zero::render {
         virtual void Finish() = 0;
 
         /**
-         * @brief Set a Uniform variable
+         * @brief Set a Uniform variable. The program needs to be in use.
          * @param name The variable name
          * @param value The variable value
          */

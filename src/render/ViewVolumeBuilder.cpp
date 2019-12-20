@@ -3,7 +3,7 @@
 using namespace zero::render;
 
 std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camera& camera) {
-    switch (camera.projection_)
+    switch (camera.GetProjectionType() )
     {
         case Camera::ProjectionType::ORTHOGRAPHIC:
         {

@@ -30,6 +30,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/opengl/GLModel.cpp
                              render/opengl/GLModelManager.cpp
                              render/opengl/GLProgram.cpp
+                             render/opengl/GLRenderer.cpp
                              render/opengl/GLSampler.cpp
                              render/opengl/GLShader.cpp
                              render/opengl/GLTexture.cpp

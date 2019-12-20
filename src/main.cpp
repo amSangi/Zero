@@ -1,10 +1,6 @@
-#include <GL/glew.h>
-#include "render/Window.hpp"
-#include "render/opengl/GLCompiler.hpp"
-#include "render/opengl/GLProgram.hpp"
-#include <SDL.h>
-#include <SDL_opengl.h>
+#include "render/RenderSystem.hpp"
 
 int main(int argc, char *argv[]) {
+    zero::render::RenderSystem render_system{nullptr, zero::render::RenderSystemConfig()};
     return 0;
 }
