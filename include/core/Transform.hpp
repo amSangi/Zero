@@ -15,15 +15,7 @@ namespace zero {
         /**
          * @brief Default constructor
          */
-        Transform()
-        : HierarchyComponent()
-        , position_(0.0F)
-        , local_position_(0.0F)
-        , scale_(1.0F)
-        , local_scale_(1.0F)
-        , orientation_()
-        , local_orientation_()
-        {}
+        Transform();
 
         /**
          * @brief Constructor for root transform entities
@@ -33,15 +25,7 @@ namespace zero {
          */
         Transform(const math::Vec3f& position,
                   const math::Vec3f& scale,
-                  const math::Quaternion& orientation)
-        : HierarchyComponent()
-        , position_(position)
-        , local_position_(0.0F)
-        , scale_(scale)
-        , local_scale_(1.0F)
-        , orientation_(orientation.UnitCopy())
-        , local_orientation_()
-        {}
+                  const math::Quaternion& orientation);
 
         /**
          * @brief Constructor for child transform entities
@@ -55,15 +39,9 @@ namespace zero {
                   const Transform& parent_transform,
                   const math::Vec3f& local_position,
                   const math::Vec3f& local_scale,
-                  const math::Quaternion& local_orientation)
-        : HierarchyComponent(parent)
-        , position_(parent_transform.position_ + local_position)
-        , local_position_(local_position)
-        , scale_(parent_transform.scale_ * local_scale)
-        , local_scale_(local_scale)
-        , orientation_((parent_transform.orientation_ * local_orientation).Unit())
-        , local_orientation_(local_orientation.UnitCopy())
-        {}
+                  const math::Quaternion& local_orientation);
+
+        static Transform FromMatrix4x4(const math::Matrix4x4& transformation);
 
         /**
          * @brief Check if the transform is equal to another transform
@@ -83,19 +61,19 @@ namespace zero {
          * @brief Matrix that transforms world coordinates to local coordinates
          * @return the transformation matrix
          */
-        math::Matrix4x4 GetWorldToLocalMatrix() const;
+        [[nodiscard]] math::Matrix4x4 GetWorldToLocalMatrix() const;
 
         /**
          * @brief Matrix that transforms local coordinates to world coordinates
          * @return the transformation matrix
          */
-        math::Matrix4x4 GetLocalToWorldMatrix() const;
+        [[nodiscard]] math::Matrix4x4 GetLocalToWorldMatrix() const;
 
         /**
          * @brief Matrix that represents local coordinates relative to the parent matrix
          * @return the transformation matrix
          */
-        math::Matrix4x4 GetLocalToParentMatrix() const;
+        [[nodiscard]] math::Matrix4x4 GetLocalToParentMatrix() const;
 
         /**
          * @brief Translate the position relative to the world

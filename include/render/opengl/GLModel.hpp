@@ -78,6 +78,12 @@ namespace zero::render {
          */
         [[nodiscard]] const std::vector<std::shared_ptr<GLModel>>& GetChildren() const;
 
+        /**
+         * @brief Get the meshes that make up the model
+         * @return the meshes of the model
+         */
+        [[nodiscard]] const std::vector<std::shared_ptr<GLMesh>>& GetMeshes() const;
+
     private:
 
         /**

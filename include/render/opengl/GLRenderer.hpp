@@ -7,6 +7,7 @@
 #include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLTextureManager.hpp"
+#include "render/opengl/GLMesh.hpp"
 
 namespace zero::render {
 
@@ -61,14 +62,26 @@ namespace zero::render {
         /**
          * @brief Render an entity using the given camera
          * @param camera the camera to use for the render
+         * @param view_matrix the camera's view matrix
+         * @param projection_matrix the camera's projection matrix
+         * @param view_direction the camera's normalized viewing direction
          * @param transform the transform of the entity
          * @param material the material of the entity
          * @param mesh_instance the mesh instance of the entity
          */
-         void RenderEntity(const Camera& camera,
-                           const Transform& transform,
-                           const Material& material,
-                           const MeshInstance& mesh_instance);
+        void RenderEntity(const Camera& camera,
+                          const math::Matrix4x4& view_matrix,
+                          const math::Matrix4x4& projection_matrix,
+                          const math::Vec3f& view_direction,
+                          const Transform& transform,
+                          const Material& material,
+                          const MeshInstance& mesh_instance);
+
+        /**
+         * @brief Draw the GLMeshes
+         * @param gl_meshes the list of GLMeshes to draw
+         */
+        void DrawMeshes(const std::vector<std::shared_ptr<GLMesh>>& gl_meshes) const;
 
         /**
          * @brief Manage shader and graphics program usage

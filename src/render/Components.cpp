@@ -121,6 +121,10 @@ void Camera::GetFarClipCoordinates(math::Vec3f& bottom_left,
     top_right = center + vertical + horizontal;
 }
 
+zero::math::Vec3f Camera::GetViewDirection() const {
+    return math::Vec3f::Normalize(target_ - position_);
+}
+
 zero::math::Radian Camera::GetVerticalFieldOfView() const {
     // V = 2 * arctan( tan (H/2) * h/w )
     // H is the horizontal field of view in radians

@@ -92,3 +92,7 @@ std::shared_ptr<GLModel> GLModel::GetParent() const {
 const std::vector<std::shared_ptr<GLModel>>& GLModel::GetChildren() const {
     return child_models_;
 }
+
+const std::vector<std::shared_ptr<GLMesh>>& GLModel::GetMeshes() const {
+    return meshes_;
+}

@@ -85,6 +85,9 @@ void GLRenderer::Render(const entt::registry& registry, float dt) {
 
     for (auto camera_entity : camera_view) {
         const auto& camera = camera_view.get(camera_entity);
+        const auto projection_matrix = camera.GetProjectionMatrix();
+        const auto view_matrix = camera.GetViewMatrix();
+        const auto view_direction = camera.GetViewDirection();
 
         // Do not render culled entities
         auto culler = ViewVolumeBuilder::create(camera);
@@ -95,12 +98,21 @@ void GLRenderer::Render(const entt::registry& registry, float dt) {
             viewable_entities.push_back(renderable_entity);
         }
 
+        glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
+        glClear(GL_COLOR_BUFFER_BIT);
         for (auto viewable_entity : viewable_entities) {
             const auto& transform = renderable_view.get<const Transform>(viewable_entity);
             const auto& material = renderable_view.get<const Material>(viewable_entity);
             const auto& mesh_instance = renderable_view.get<const MeshInstance>(viewable_entity);
-            RenderEntity(camera, transform, material, mesh_instance);
+            RenderEntity(camera,
+                         view_matrix,
+                         projection_matrix,
+                         view_direction,
+                         transform,
+                         material,
+                         mesh_instance);
         }
+
     }
 }
 
@@ -121,17 +133,21 @@ zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, c
     }
 
     auto entity = registry.create();
-    registry.assign<Transform>(entity);
+    registry.assign<Transform>(entity, Transform::FromMatrix4x4(gl_model->GetTransformation()));
     registry.assign<render::Volume>(entity, gl_model->GetVolume());
     registry.assign<render::Material>(entity, gl_model->GetMaterial());
-    MeshInstance mesh_instance;
-    mesh_instance.model_file_ = model;
-    registry.assign<render::MeshInstance>(entity, mesh_instance);
+    registry.assign<render::MeshInstance>(entity, gl_model->GetMeshInstance());
+
+    // TODO: Instantiate child entities
+    // How do we associate a child mesh instance with the correct gl_model index?
 
     return entity;
 }
 
 void GLRenderer::RenderEntity(const Camera& camera,
+                              const math::Matrix4x4& view_matrix,
+                              const math::Matrix4x4& projection_matrix,
+                              const math::Vec3f& view_direction,
                               const Transform& transform,
                               const Material& material,
                               const MeshInstance& mesh_instance) {
@@ -150,7 +166,6 @@ void GLRenderer::RenderEntity(const Camera& camera,
     auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, diffuse_index);
     auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, displacement_index);
     auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, normal_index);
-
     if (gl_alpha_texture) gl_alpha_texture->Bind(GL_TEXTURE0 + alpha_index);
     if (gl_ambient_texture) gl_ambient_texture->Bind(GL_TEXTURE0 + ambient_index);
     if (gl_diffuse_texture) gl_diffuse_texture->Bind(GL_TEXTURE0 + diffuse_index);
@@ -163,10 +178,19 @@ void GLRenderer::RenderEntity(const Camera& camera,
     gl_program->SetUniform("diffuse_texture", diffuse_index);
     gl_program->SetUniform("displacement_texture", displacement_index);
     gl_program->SetUniform("normal_texture", normal_index);
+    gl_program->SetUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
+    gl_program->SetUniform("projection_matrix", projection_matrix);
+    gl_program->SetUniform("camera_position", camera.position_);
+    gl_program->SetUniform("camera_view_direction", view_direction);
+    gl_program->FlushUniforms();
 
     // 3D Model
     auto gl_model = model_manager_->GetModel(mesh_instance.model_file_);
-    // TODO: Implement model rendering
+    DrawMeshes(gl_model->GetMeshes());
 
     gl_program->Finish();
+}
+
+void GLRenderer::DrawMeshes(const std::vector<std::shared_ptr<GLMesh>>& gl_meshes) const {
+    // TODO: Draw a model
 }

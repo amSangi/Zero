@@ -241,6 +241,12 @@ namespace zero::render {
         void GetFarClipCoordinates(math::Vec3f& bottom_left,
                                    math::Vec3f& top_right) const;
 
+        /**
+         * @brief Get the direction the camera is looking at
+         * @return the normalized viewing direction
+         */
+        [[nodiscard]] math::Vec3f GetViewDirection() const;
+
         [[nodiscard]] math::Radian GetVerticalFieldOfView() const;
 
         /**
