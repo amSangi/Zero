@@ -16,8 +16,6 @@ namespace zero::render {
     class IProgram : public IRenderResource{
     public:
 
-        IProgram() = default;
-
         ~IProgram() override = default;
 
         /**

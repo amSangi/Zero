@@ -16,6 +16,11 @@ namespace zero::render {
         ~GLSampler() override;
 
         /**
+         * @see ISampler::Initialize
+         */
+        void Initialize() override;
+
+        /**
          * @see ISampler::SetWrappingS
          */
         void SetWrappingS(Wrapping s) override;

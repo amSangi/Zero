@@ -65,6 +65,7 @@ TEST_F(TestGLTexture, CreateTextureLargeIndex) {
 TEST_F(TestGLTexture, SetSamplerLargeIndex) {
     GLTextureManager manager;
     auto sampler = std::make_shared<GLSampler>();
+    sampler->Initialize();
     sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
     sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
     sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
@@ -76,6 +77,7 @@ TEST_F(TestGLTexture, SetSamplerLargeIndex) {
 TEST_F(TestGLTexture, SetValidSampler) {
     GLTextureManager manager;
     auto sampler = std::make_shared<GLSampler>();
+    sampler->Initialize();
     sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
     sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
     sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
@@ -152,6 +154,7 @@ TEST_F(TestGLTexture, TextureWithShader) {
     GLTextureManager manager;
     zero::uint8 index = 0;
     auto sampler = std::make_shared<GLSampler>();
+    sampler->Initialize();
     sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
     sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
     sampler->SetWrappingS(ISampler::Wrapping::REPEAT);

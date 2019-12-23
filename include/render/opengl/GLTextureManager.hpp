@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <string>
 #include "render/ITextureManager.hpp"
 #include "render/Image.hpp"
 

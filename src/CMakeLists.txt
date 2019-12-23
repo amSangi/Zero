@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/Window.cpp
                              render/opengl/GLAssetImportWrapper.cpp
                              render/opengl/GLCompiler.cpp
+                             render/opengl/GLInstantiator.cpp
                              render/opengl/GLMesh.cpp
                              render/opengl/GLModel.cpp
                              render/opengl/GLModelManager.cpp

@@ -15,8 +15,6 @@ namespace zero::render {
     class ICompiler {
     public:
 
-        ICompiler() = default;
-
         virtual ~ICompiler() = default;
 
         /**

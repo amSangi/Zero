@@ -4,6 +4,10 @@
 
 using namespace zero::render;
 
+GLCompiler::GLCompiler()
+: shader_map_()
+{}
+
 std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
     std::vector<std::shared_ptr<GLShader>> shaders;
 

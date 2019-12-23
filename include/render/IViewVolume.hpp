@@ -11,7 +11,6 @@ namespace zero::render {
     class IViewVolume {
     public:
 
-        IViewVolume() = default;
         virtual ~IViewVolume() = default;
 
         /**

@@ -19,14 +19,8 @@ namespace zero::render {
     class GLModelManager {
     public:
 
-        /**
-         * @brief Default constructor
-         */
-        GLModelManager() = default;
+        GLModelManager();
 
-        /**
-         * @brief Default virtual destructor
-         */
         virtual ~GLModelManager() = default;
 
         /**

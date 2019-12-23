@@ -31,15 +31,16 @@ namespace zero::render {
             MIRRORED_REPEAT,   ///< Coordinates will repeat in a repeating mirror pattern
         }; // enum class Wrapping
 
-        /**
-         * @brief Default Constructor
-         */
-        ISampler() = default;
 
         /**
          * @brief Default destructor.
          */
         ~ISampler() override = default;
+
+        /**
+         * @brief Initialize the sampler
+         */
+        virtual void Initialize() = 0;
 
         /**
          * @brief Set the wrapping technique for the s texture coordinate axis.

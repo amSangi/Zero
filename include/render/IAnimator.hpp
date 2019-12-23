@@ -10,8 +10,6 @@ namespace zero::render {
     class IAnimator {
     public:
 
-        IAnimator() = default;
-
         virtual ~IAnimator() = default;
 
         /**

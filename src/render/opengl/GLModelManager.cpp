@@ -6,6 +6,10 @@
 
 using namespace zero::render;
 
+GLModelManager::GLModelManager()
+: model_map_()
+{}
+
 bool GLModelManager::LoadModel(const std::string& filename) {
     if (model_map_.find(filename) != model_map_.end()) return true;
 

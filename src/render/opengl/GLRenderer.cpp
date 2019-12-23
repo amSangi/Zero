@@ -13,7 +13,7 @@ GLRenderer::GLRenderer()
 : graphics_compiler_(std::make_unique<GLCompiler>())
 , model_manager_(std::make_unique<GLModelManager>())
 , texture_manager_(std::make_unique<GLTextureManager>())
-, texture_sampler_(std::make_shared<GLSampler>())
+, instantiator_(std::make_unique<GLInstantiator>())
 {}
 
 GLRenderer::~GLRenderer() {
@@ -67,12 +67,14 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
         texture_manager_->InitializeImage(texture_file);
     }
 
-    texture_sampler_->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
-    texture_sampler_->SetMagnificationFilter(ISampler::Filter::LINEAR);
-    texture_sampler_->SetWrappingS(ISampler::Wrapping::REPEAT);
-    texture_sampler_->SetWrappingT(ISampler::Wrapping::REPEAT);
-    for (int i = 0; i < 5; ++i) {
-        texture_manager_->SetSampler(texture_sampler_, i);
+    auto texture_sampler = std::make_shared<GLSampler>();
+    texture_sampler->Initialize();
+    texture_sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
+    texture_sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
+    texture_sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
+    texture_sampler->SetWrappingT(ISampler::Wrapping::REPEAT);
+    for (int i = 0; i < texture_manager_->GetTextureUnitCount(); ++i) {
+        texture_manager_->SetSampler(texture_sampler, i);
     }
 }
 
@@ -132,16 +134,7 @@ zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, c
         return Component::NullEntity;
     }
 
-    auto entity = registry.create();
-    registry.assign<Transform>(entity, Transform::FromMatrix4x4(gl_model->GetTransformation()));
-    registry.assign<render::Volume>(entity, gl_model->GetVolume());
-    registry.assign<render::Material>(entity, gl_model->GetMaterial());
-    registry.assign<render::MeshInstance>(entity, gl_model->GetMeshInstance());
-
-    // TODO: Instantiate child entities
-    // How do we associate a child mesh instance with the correct gl_model index?
-
-    return entity;
+    return instantiator_->InstantiateModel(registry, gl_model);
 }
 
 void GLRenderer::RenderEntity(const Camera& camera,
@@ -151,6 +144,11 @@ void GLRenderer::RenderEntity(const Camera& camera,
                               const Transform& transform,
                               const Material& material,
                               const MeshInstance& mesh_instance) {
+    if (mesh_instance.model_file_.empty()) {
+        // Entity is a child entity. Already rendered.
+        return;
+    }
+
     // Shader Program
     auto gl_program = graphics_compiler_->CreateProgram(material);
     gl_program->Use();
@@ -192,5 +190,7 @@ void GLRenderer::RenderEntity(const Camera& camera,
 }
 
 void GLRenderer::DrawMeshes(const std::vector<std::shared_ptr<GLMesh>>& gl_meshes) const {
-    // TODO: Draw a model
+    for (const auto& gl_mesh : gl_meshes) {
+        // TODO: Render GLMesh
+    }
 }

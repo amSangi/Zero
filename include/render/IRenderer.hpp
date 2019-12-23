@@ -12,8 +12,6 @@ namespace zero::render {
     class IRenderer {
     public:
 
-        IRenderer() = default;
-
         virtual ~IRenderer() = default;
 
         /**

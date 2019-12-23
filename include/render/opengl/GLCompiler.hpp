@@ -15,7 +15,7 @@ namespace zero::render {
     class GLCompiler final : public ICompiler {
     public:
 
-        GLCompiler() = default;
+        GLCompiler();
 
         ~GLCompiler() override = default;
 

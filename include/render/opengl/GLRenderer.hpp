@@ -5,9 +5,10 @@
 #include "core/Transform.hpp"
 #include "render/IRenderer.hpp"
 #include "render/opengl/GLCompiler.hpp"
+#include "render/opengl/GLInstantiator.hpp"
+#include "render/opengl/GLMesh.hpp"
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLTextureManager.hpp"
-#include "render/opengl/GLMesh.hpp"
 
 namespace zero::render {
 
@@ -99,9 +100,9 @@ namespace zero::render {
         std::unique_ptr<GLTextureManager> texture_manager_;
 
         /**
-         * @brief Texture sampler used for all textures
+         * @brief Instantiate game entities from GLModels
          */
-        std::shared_ptr<GLSampler> texture_sampler_;
+        std::unique_ptr<GLInstantiator> instantiator_;
 
     }; // class GLRenderer
 

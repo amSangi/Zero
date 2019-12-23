@@ -82,7 +82,7 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& fi
 bool GLTextureManager::InitializeImage(const std::string& filename) {
     if (image_map_.find(filename) != image_map_.end()) return true;
 
-    auto image = std::make_unique<Image>(filename);
+    auto image = std::make_shared<Image>(filename);
     if (!image->Load()) return false;
 
     image->Release();

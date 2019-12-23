@@ -23,9 +23,6 @@ namespace zero::render {
             COMPUTE_SHADER             ///< Compute Shader
         }; // enum class Type
 
-
-        IShader() = default;
-
         ~IShader() override = default;
 
         /**

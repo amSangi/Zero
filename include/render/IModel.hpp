@@ -11,8 +11,6 @@ namespace zero::render {
     class IModel {
     public:
 
-        IModel() = default;
-
         virtual ~IModel() = default;
 
         /**

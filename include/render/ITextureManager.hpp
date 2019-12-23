@@ -12,8 +12,6 @@ namespace zero::render {
     class ITextureManager {
     public:
 
-        ITextureManager() = default;
-
         virtual ~ITextureManager() = default;
 
         /**
