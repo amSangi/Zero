@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <random>
 #include <vector>
 #include "GLMesh.hpp"
 #include "math/Matrix4x4.hpp"
@@ -21,35 +22,38 @@ namespace zero::render {
 
         /**
          * @brief Create a GLModel for an associated AssImp aiNode and aiScene
-         * @param filename the filename the model is associated with
+         * @param root_filename the filename associated with the root model. Empty for child models.
+         * @param rng the random number generator used to generate identifiers for child models
          * @param node the aiNode the model will be associated with
          * @param scene the aiScene the node is associated with
          * @return a GLModel instance
          */
-        static std::shared_ptr<GLModel> CreateGLModel(const std::string& filename,
+        static std::shared_ptr<GLModel> CreateGLModel(const std::string& root_filename,
+                                                      std::minstd_rand0 rng,
+                                                      uint32 identifier,
                                                       const aiNode* node,
                                                       const aiScene* scene);
 
         /**
          * @brief Constructor. GLModels should be created through CreateGLModel.
          * @param meshes the different meshes that make up the model
-         * @param transformation the transformation of the model relative to the parent
+         * @param transform the transform component prototype
          * @param material the material component prototype
          * @param volume the volume component prototype
-         * @param mesh_instance the mesh instance component prototype
+         * @param model_instance the model instance component prototype
          */
         GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,
-                math::Matrix4x4 transformation,
+                Transform transform,
                 Material material,
                 Volume volume,
-                MeshInstance mesh_instance);
+                ModelInstance mesh_instance);
 
         ~GLModel() override = default;
 
         /**
-         * @see IModel::GetTransformation
+         * @see IModel::GetTransform
          */
-        [[nodiscard]] math::Matrix4x4 GetTransformation() const override;
+        [[nodiscard]] Transform GetTransform() const override;
 
         /**
          * @see IModel::GetMaterial
@@ -62,9 +66,9 @@ namespace zero::render {
         [[nodiscard]] Volume GetVolume() const override;
 
         /**
-         * @see IModel::GetMeshInstance
+         * @see IModel::GetModelInstance
          */
-        [[nodiscard]] MeshInstance GetMeshInstance() const override;
+        [[nodiscard]] ModelInstance GetModelInstance() const override;
 
         /**
          * @brief Get the parent model
@@ -102,9 +106,9 @@ namespace zero::render {
         std::vector<std::shared_ptr<GLModel>> child_models_;
 
         /**
-         * @brief Transformation relative to the parent model
+         * @brief Transform prototype associated with the model
          */
-        math::Matrix4x4 transformation_;
+        Transform transform_;
 
         /**
          * @brief Material prototype associated with this model
@@ -117,9 +121,9 @@ namespace zero::render {
         Volume volume_;
 
         /**
-         * @brief MeshInstance prototype for describing the entire model
+         * @brief ModelInstance prototype for describing the entire model
          */
-        MeshInstance mesh_instance_;
+        ModelInstance model_instance_;
 
     }; // class GLModel
 

@@ -51,44 +51,35 @@ namespace zero::render {
         void Finish() override;
 
         /**
-         * @see IProgram::SetUniform(std::string, math::Matrix4x4)
+         * @see IProgram::SetUniform
          */
+        ///@{
         void SetUniform(const std::string& name, math::Matrix4x4 value) override;
-
-        /**
-         * @see IProgram::SetUniform(std::string, math::Matrix3x3)
-         */
         void SetUniform(const std::string& name, math::Matrix3x3 value) override;
-
-        /**
-         * @see IProgram::SetUniform(std::string, math::Vec4f)
-         */
         void SetUniform(const std::string& name, math::Vec4f value) override;
-
-        /**
-         * @see IProgram::SetUniform(std::string, math::Vec3f)
-         */
         void SetUniform(const std::string& name, math::Vec3f value) override;
-
-        /**
-         * @see IProgram::SetUniform(std::string, uint32)
-         */
         void SetUniform(const std::string& name, uint32 value) override;
-
-        /**
-         * @see IProgram::SetUniform(std::string, int32)
-         */
         void SetUniform(const std::string& name, int32 value) override;
+        void SetUniform(const std::string& name, float value) override;
+        ///@}
 
         /**
-         * @see IProgram::SetUniform(std::string, float)
+         * @see IProgram::FlushUniform
          */
-        void SetUniform(const std::string& name, float value) override;
+        ///@{
+        void FlushUniform(const std::string& name, math::Matrix4x4 value) override;
+        void FlushUniform(const std::string& name, math::Matrix3x3 value) override;
+        void FlushUniform(const std::string& name, math::Vec4f value) override;
+        void FlushUniform(const std::string& name, math::Vec3f value) override;
+        void FlushUniform(const std::string& name, uint32 value) override;
+        void FlushUniform(const std::string& name, int32 value) override;
+        void FlushUniform(const std::string& name, float value) override;
+        ///@}
 
         /**
          * @see IProgram::IsLinked
          */
-        void FlushUniforms() override ;
+        void FlushUniforms() override;
 
         /**
          * @brief Get the attribute location of a given variable

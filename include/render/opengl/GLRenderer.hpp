@@ -3,10 +3,10 @@
 #include <memory>
 #include <entt/entt.hpp>
 #include "core/Transform.hpp"
+#include "render/IProgram.hpp"
 #include "render/IRenderer.hpp"
 #include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLInstantiator.hpp"
-#include "render/opengl/GLMesh.hpp"
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLTextureManager.hpp"
 
@@ -61,28 +61,22 @@ namespace zero::render {
     private:
 
         /**
-         * @brief Render an entity using the given camera
-         * @param camera the camera to use for the render
+         * @brief Render an entity
+         * @param registry the registry containing all the entities and their components
+         * @param viewable_entities the list of all non-culled entities
+         * @param graphics_program the graphics program used for the rendering of the entity
          * @param view_matrix the camera's view matrix
-         * @param projection_matrix the camera's projection matrix
-         * @param view_direction the camera's normalized viewing direction
          * @param transform the transform of the entity
          * @param material the material of the entity
-         * @param mesh_instance the mesh instance of the entity
+         * @param model_instance the model instance of the entity
          */
-        void RenderEntity(const Camera& camera,
+        void RenderEntity(const entt::registry& registry,
+                          const std::vector<Component::Entity>& viewable_entities,
+                          const std::shared_ptr<IProgram>& graphics_program,
                           const math::Matrix4x4& view_matrix,
-                          const math::Matrix4x4& projection_matrix,
-                          const math::Vec3f& view_direction,
                           const Transform& transform,
                           const Material& material,
-                          const MeshInstance& mesh_instance);
-
-        /**
-         * @brief Draw the GLMeshes
-         * @param gl_meshes the list of GLMeshes to draw
-         */
-        void DrawMeshes(const std::vector<std::shared_ptr<GLMesh>>& gl_meshes) const;
+                          const ModelInstance& model_instance);
 
         /**
          * @brief Manage shader and graphics program usage

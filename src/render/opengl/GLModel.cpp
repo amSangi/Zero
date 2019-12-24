@@ -5,7 +5,11 @@
 
 using namespace zero::render;
 
-std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename, const aiNode* node, const aiScene* scene) {
+std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& root_filename,
+                                                std::minstd_rand0 rng,
+                                                uint32 identifier,
+                                                const aiNode* node,
+                                                const aiScene* scene) {
     std::vector<std::shared_ptr<GLMesh>> meshes;
     meshes.reserve(node->mNumMeshes);
 
@@ -34,20 +38,22 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename, con
                                    mat.c1, mat.c2, mat.c3, mat.c4,
                                    mat.d1, mat.d2, mat.d3, mat.d4);
 
-    MeshInstance mesh_instance;
-    mesh_instance.model_file_ = filename;
+    Transform transform = Transform::FromMatrix4x4(transformation);
 
+    ModelInstance model_instance{};
+    model_instance.filename_ = root_filename;
+    model_instance.identifier_ = identifier;
 
-    auto root_model = std::make_shared<GLModel>(meshes,                // Mesh data
-                                                transformation,        // Transformation matrix relative to parent
-                                                material,              // Material Prototype
-                                                volume,                // Volume Prototype
-                                                mesh_instance);        // MeshInstance Prototype
+    auto root_model = std::make_shared<GLModel>(meshes,          // Mesh data
+                                                transform,       // Transform prototype
+                                                material,        // Material Prototype
+                                                volume,          // Volume Prototype
+                                                model_instance); // ModelInstance Prototype
 
     // Create Child GLModels
     std::vector<std::shared_ptr<GLModel>> children;
     for (uint32 i = 0; i < node->mNumChildren; ++i) {
-        auto child_model = GLModel::CreateGLModel("", node->mChildren[i], scene);
+        auto child_model = GLModel::CreateGLModel("", rng, rng(), node->mChildren[i], scene);
         child_model->parent_model_ = root_model;
         root_model->child_models_.push_back(std::move(child_model));
     }
@@ -56,21 +62,21 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename, con
 }
 
 GLModel::GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,
-                 math::Matrix4x4 transformation,
+                 Transform transform,
                  Material material,
                  Volume volume,
-                 MeshInstance mesh_instance)
+                 ModelInstance model_instance)
 : meshes_(std::move(meshes))
 , parent_model_(nullptr)
 , child_models_()
-, transformation_(transformation)
+, transform_(std::move(transform))
 , material_(std::move(material))
 , volume_(volume)
-, mesh_instance_(std::move(mesh_instance))
+, model_instance_(std::move(model_instance))
 {}
 
-zero::math::Matrix4x4 GLModel::GetTransformation() const {
-    return transformation_;
+zero::Transform GLModel::GetTransform() const {
+    return transform_;
 }
 
 Material GLModel::GetMaterial() const {
@@ -81,8 +87,8 @@ Volume GLModel::GetVolume() const {
     return volume_;
 }
 
-MeshInstance GLModel::GetMeshInstance() const {
-    return mesh_instance_;
+ModelInstance GLModel::GetModelInstance() const {
+    return model_instance_;
 }
 
 std::shared_ptr<GLModel> GLModel::GetParent() const {

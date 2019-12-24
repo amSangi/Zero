@@ -26,13 +26,17 @@ namespace zero::render {
          */
         void Initialize();
 
-    protected:
+        /**
+         * @brief Render the mesh
+         */
+        void Draw();
+
+    private:
+
         /**
          * @brief Cleanup all of the rendering resources
          */
         void Cleanup() override;
-
-    private:
 
         /**
          * @brief Vertex Array Object identifier

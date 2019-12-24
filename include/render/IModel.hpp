@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Components.hpp"
-#include "math/Matrix4x4.hpp"
+#include "core/Transform.hpp"
 
 namespace zero::render {
 
@@ -14,28 +14,28 @@ namespace zero::render {
         virtual ~IModel() = default;
 
         /**
-         * @brief Get the transformation matrix relative to the parent
-         * @return the transformation matrix
+         * @brief Get a transform associated with the model
+         * @return a prototype of a transform component
          */
-        [[nodiscard]] virtual math::Matrix4x4 GetTransformation() const = 0;
+        [[nodiscard]] virtual Transform GetTransform() const = 0;
 
         /**
          * @brief Get a material associated with the model
-         * @return a material component prototype instance
+         * @return a prototype of a material component
          */
         [[nodiscard]] virtual Material GetMaterial() const = 0;
 
         /**
          * @brief Get a volume associated with the model
-         * @return a volume component prototype instance
+         * @return a prototype of a volume component
          */
         [[nodiscard]] virtual Volume GetVolume() const = 0;
 
         /**
-         * @brief Get a mesh instance associated with the model
-         * @return a mesh instance component prototype instance
+         * @brief Get a model instance associated with the model
+         * @return a prototype of a model instance component
          */
-        [[nodiscard]] virtual MeshInstance GetMeshInstance() const = 0;
+        [[nodiscard]] virtual ModelInstance GetModelInstance() const = 0;
 
     }; // class IModel
 

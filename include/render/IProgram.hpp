@@ -56,6 +56,22 @@ namespace zero::render {
         ///@}
 
         /**
+         * @brief Set a Uniform variable in the graphics program. The program needs to be in use.
+         * The value is flushed automatically.
+         * @param name The variable name
+         * @param value The variable value
+         */
+        ///@{
+        virtual void FlushUniform(const std::string& name, math::Matrix4x4 value) = 0;
+        virtual void FlushUniform(const std::string& name, math::Matrix3x3 value) = 0;
+        virtual void FlushUniform(const std::string& name, math::Vec4f value) = 0;
+        virtual void FlushUniform(const std::string& name, math::Vec3f value) = 0;
+        virtual void FlushUniform(const std::string& name, uint32 value) = 0;
+        virtual void FlushUniform(const std::string& name, int32 value) = 0;
+        virtual void FlushUniform(const std::string& name, float value) = 0;
+        ///@}
+
+        /**
          * @brief Set the uniform variables in the graphics program
          *   The graphics program must be active.
          */

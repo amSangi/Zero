@@ -1,8 +1,10 @@
 #pragma once
 
 #include <memory>
+#include <random>
 #include <string>
 #include <unordered_map>
+#include <core/ZBase.hpp>
 
 // Forward Declarations
 class aiScene;
@@ -42,12 +44,28 @@ namespace zero::render {
          */
         std::shared_ptr<GLModel> GetModel(const std::string& filename);
 
+        /**
+         * @brief Get the GLModel associated with the given id
+         * @param id the model identifier
+         * @return the GLModel. Nullptr if the model does not exist.
+         */
+        std::shared_ptr<GLModel> GetModel(uint32 id);
+
     private:
+        /**
+         * @brief Filename to Identifier map
+         */
+        std::unordered_map<std::string, uint32> file_map_;
 
         /**
-         * @brief Filename to GLModel map
+         * @brief Identifier to GLModel map
          */
-        std::unordered_map<std::string, std::shared_ptr<GLModel>> model_map_;
+        std::unordered_map<uint32, std::shared_ptr<GLModel>> model_map_;
+
+        /**
+         * @brief Random Number Generator used to create model identifiers
+         */
+        std::minstd_rand0 random_generator_;
 
     }; // class GLModelManager
 

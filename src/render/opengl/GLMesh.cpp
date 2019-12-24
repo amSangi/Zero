@@ -59,4 +59,10 @@ void GLMesh::Initialize() {
     glBindVertexArray(0);
 }
 
+void GLMesh::Draw() {
+    Initialize();
+    glDrawArrays(GL_TRIANGLES, 0, indices_.size());
+    Cleanup();
+}
+
 

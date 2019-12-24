@@ -7,11 +7,13 @@
 using namespace zero::render;
 
 GLModelManager::GLModelManager()
-: model_map_()
+: file_map_()
+, model_map_()
+, random_generator_(std::random_device()())
 {}
 
 bool GLModelManager::LoadModel(const std::string& filename) {
-    if (model_map_.find(filename) != model_map_.end()) return true;
+    if (file_map_.find(filename) != file_map_.end()) return true;
 
     Assimp::Importer importer;
 
@@ -29,16 +31,25 @@ bool GLModelManager::LoadModel(const std::string& filename) {
         return false;
     }
 
-    model_map_.emplace(filename, GLModel::CreateGLModel(filename, scene->mRootNode, scene));
+    uint32 identifier = random_generator_();
+    file_map_.emplace(filename, identifier);
+    model_map_.emplace(identifier, GLModel::CreateGLModel(filename, random_generator_, identifier, scene->mRootNode, scene));
     return true;
 }
 
 void GLModelManager::ClearModels() {
+    file_map_.clear();
     model_map_.clear();
 }
 
 std::shared_ptr<GLModel> GLModelManager::GetModel(const std::string& filename) {
-    auto model_search = model_map_.find(filename);
+    auto model_search = file_map_.find(filename);
+    if (model_search == file_map_.end()) return nullptr;
+    return GetModel(model_search->second);
+}
+
+std::shared_ptr<GLModel> GLModelManager::GetModel(uint32 id) {
+    auto model_search = model_map_.find(id);
     if (model_search == model_map_.end()) return nullptr;
     return model_search->second;
 }

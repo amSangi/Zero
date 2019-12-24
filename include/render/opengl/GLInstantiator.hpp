@@ -8,8 +8,6 @@ namespace zero::render {
     class GLInstantiator {
     public:
 
-        GLInstantiator() = default;
-
         /**
          * @brief Create a new entity based on a GLModel.
          *
@@ -18,10 +16,12 @@ namespace zero::render {
          *
          * @param registry the registry containing all of the entities and their components
          * @param gl_model the GLModel to instantiate
+         * @param parent the parent of the entity that is instantiated
          * @return the root entity associated with the 3D GLModel. NullEntity if an error occurred.
          */
-        [[nodiscard]] Component::Entity InstantiateModel(entt::registry& registry,
-                                                         std::shared_ptr<GLModel> gl_model);
+        [[nodiscard]] static Component::Entity InstantiateModel(entt::registry& registry,
+                                                                const std::shared_ptr<GLModel>& gl_model,
+                                                                Component::Entity parent = Component::NullEntity);
 
     }; // class GLInstantiator
 

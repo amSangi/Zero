@@ -161,15 +161,21 @@ namespace zero::render {
     }; // struct Material
 
     /**
-     * @brief An instance of a Mesh. Refers to a 3D file.
+     * @brief An instance of a 3D model.
      */
-    struct MeshInstance : public Component {
+    struct ModelInstance : public Component {
+
         /**
          * @brief The fully qualified filename of the 3D model
          */
-        std::string model_file_;
+        std::string filename_;
 
-    }; // struct MeshInstance
+        /**
+         * @brief Identifier for a 3D model
+         */
+        uint32 identifier_;
+
+    }; // struct ModelInstance
 
     /**
      * @brief Camera component that manages properties used for displaying the world on a viewport

@@ -5,15 +5,20 @@
 
 using namespace zero::render;
 
-zero::Component::Entity GLInstantiator::InstantiateModel(entt::registry& registry, std::shared_ptr<GLModel> gl_model) {
+zero::Component::Entity GLInstantiator::InstantiateModel(entt::registry& registry,
+                                                         const std::shared_ptr<GLModel>& gl_model,
+                                                         Component::Entity parent) {
     auto entity = registry.create();
     registry.assign<render::Volume>(entity, gl_model->GetVolume());
     registry.assign<render::Material>(entity, gl_model->GetMaterial());
-    registry.assign<render::MeshInstance>(entity, gl_model->GetMeshInstance());
+    registry.assign<render::ModelInstance>(entity, gl_model->GetModelInstance());
 
-    Transform transform = Transform::FromMatrix4x4(gl_model->GetTransformation());
-    transform.parent_ = Component::NullEntity;
-    // TODO: Instantiate children recursively
+    Transform transform = gl_model->GetTransform();
+    transform.parent_ = parent;
+    for (const auto& child_gl_model : gl_model->GetChildren()) {
+        auto child_entity = InstantiateModel(registry, child_gl_model, entity);
+        transform.children_.push_back(child_entity);
+    }
 
     registry.assign<Transform>(entity, transform);
     return entity;
