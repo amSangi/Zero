@@ -33,5 +33,5 @@ add_subdirectory(test)
 ## Create Zero EXE ##
 set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/Main.cpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)

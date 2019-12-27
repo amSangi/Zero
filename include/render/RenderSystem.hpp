@@ -2,11 +2,11 @@
 
 #include <memory>
 #include "core/System.hpp"
+#include "core/RenderSystemConfig.hpp"
 #include "Components.hpp"
 #include "IAnimator.hpp"
 #include "IRenderer.hpp"
 #include "Propagator.hpp"
-#include "RenderSystemConfig.hpp"
 #include "Window.hpp"
 
 namespace zero::render {
@@ -20,10 +20,10 @@ namespace zero::render {
 
         /**
          * @brief Create a RenderSystem
-         * @param engine the engine this system belongs to
+         * @param core_engine the engine core containing shared system objects
          * @param config the RenderSystem configuration
          */
-        RenderSystem(std::shared_ptr<Engine> engine, const RenderSystemConfig& config);
+        RenderSystem(CoreEngine* core_engine, const RenderSystemConfig& config);
 
         ~RenderSystem() override = default;
 
@@ -39,9 +39,9 @@ namespace zero::render {
 
         /**
          * @brief Cull and render all entities with a material component in the active scene using the given cameras
-         * @param dt time between the current and last frame
+         * @param time_delta updated timing information since the last engine tick
          */
-        void Update(float dt) override;
+        void Update(const TimeDelta& time_delta) override;
 
         /**
          * @brief Cleanup rendering tasks

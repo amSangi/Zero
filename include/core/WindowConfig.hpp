@@ -1,9 +1,9 @@
 #pragma once
 
 #include <string>
-#include "core/ZBase.hpp"
+#include "ZBase.hpp"
 
-namespace zero::render {
+namespace zero {
 
     /**
      * @brief Window mode to display as
@@ -89,4 +89,4 @@ namespace zero::render {
 
     }; // struct WindowConfig
 
-} // namespace zero::render
+} // namespace zero

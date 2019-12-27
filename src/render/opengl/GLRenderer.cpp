@@ -79,7 +79,7 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
     }
 }
 
-void GLRenderer::Render(const entt::registry& registry, float dt) {
+void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_delta) {
     auto camera_view = registry.view<const Camera>();
     auto renderable_view = registry.view<const Transform,
                                          const Volume,

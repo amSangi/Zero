@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <entt/entt.hpp>
+#include "core/TimeDelta.hpp"
 #include "core/Transform.hpp"
 #include "render/IProgram.hpp"
 #include "render/IRenderer.hpp"
@@ -33,9 +34,9 @@ namespace zero::render {
         /**
          * @brief Render all drawable entities in the game world
          * @param registry the registry containing all the entities and their components
-         * @param dt time between the current and last frame
+         * @param time_delta updated timing information since the last engine tick
          */
-        void Render(const entt::registry& registry, float dt) override;
+        void Render(const entt::registry& registry, const TimeDelta& time_delta) override;
 
         /**
          * @brief Release the images in the TextureManager from main memory

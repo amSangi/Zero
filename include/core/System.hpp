@@ -1,7 +1,8 @@
 #pragma once
 
-#include <memory>
 #include <entt/entt.hpp>
+#include "CoreEngine.hpp"
+#include "TimeDelta.hpp"
 
 namespace zero {
 
@@ -19,9 +20,9 @@ namespace zero {
 
         /**
          * @brief System Constructor
-         * @param engine the engine this system belongs to
+         * @param core_engine the core game objects shared between different systems
          */
-        explicit System(std::shared_ptr<Engine> engine);
+        explicit System(CoreEngine* core_engine);
 
         /**
          * @brief Default Virtual Destructor
@@ -40,10 +41,9 @@ namespace zero {
 
         /**
          * @brief Update the system. Called during game loop.
-         * @param dt time between current and last frame.
+         * @param time_delta updated timing information since the last engine tick
          */
-        virtual void Update(float dt) = 0;
-
+        virtual void Update(const TimeDelta& time_delta) = 0;
 
         /**
          * @brief Perform post update operations. Called after all systems have been updated.
@@ -59,20 +59,20 @@ namespace zero {
          * @brief Get the game engine entity-component registry
          * @return the registry
          */
-        entt::registry& GetRegistry();
+        [[nodiscard]] entt::registry& GetRegistry();
 
         /**
          * @brief Get the game engine event bus
          * @return the event bus
          */
-        event::EventBus& GetEventBus();
+        [[nodiscard]] event::EventBus& GetEventBus();
 
     protected:
 
         /**
-         * @brief The Game Engine this system belongs to
+         * @brief The core game engine data shared between systems
          */
-        std::shared_ptr<Engine> engine_{nullptr};
+        CoreEngine* core_engine_;
 
     }; // abstract class System
 

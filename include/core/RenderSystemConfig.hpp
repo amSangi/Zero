@@ -4,7 +4,7 @@
 #include <vector>
 #include "WindowConfig.hpp"
 
-namespace zero::render {
+namespace zero {
 
     /**
      * @brief RenderSystem Configuration Parameters
@@ -38,4 +38,4 @@ namespace zero::render {
 
     }; // struct RenderSystemConfig
 
-} // namespace zero::render
+} // namespace zero

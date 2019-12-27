@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL_video.h>
-#include "WindowConfig.hpp"
+#include "core/WindowConfig.hpp"
 
 namespace zero::render {
 

@@ -3,13 +3,13 @@
 
 using namespace zero;
 
-System::System(std::shared_ptr<Engine> engine_)
-: engine_(std::move(engine_)) {}
+System::System(CoreEngine* core_engine)
+: core_engine_(core_engine) {}
 
 event::EventBus& System::GetEventBus() {
-	return engine_->GetEventBus();
+	return core_engine_->GetEventBus();
 }
 
 entt::registry& System::GetRegistry() {
-	return engine_->GetRegistry();
+	return core_engine_->GetRegistry();
 }

@@ -5,6 +5,7 @@ set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
 
 ## Create Library ##
 add_library(${PROJECT_NAME}  event/EventBus.cpp
+                             core/Engine.cpp
                              core/System.cpp
                              core/Transform.cpp
                              math/Box.cpp

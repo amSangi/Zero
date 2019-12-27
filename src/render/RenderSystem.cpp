@@ -4,8 +4,8 @@
 
 using namespace zero::render;
 
-RenderSystem::RenderSystem(std::shared_ptr<Engine> engine, const RenderSystemConfig& config)
-: zero::System(std::move(engine))
+RenderSystem::RenderSystem(CoreEngine* core_engine, const RenderSystemConfig& config)
+: zero::System(core_engine)
 , config_(config)
 , animator_(nullptr)
 , window_(std::make_unique<Window>(config.window_config_))
@@ -27,8 +27,8 @@ void RenderSystem::PreUpdate() {
     propagator_->PropagateVolume(registry);
 }
 
-void RenderSystem::Update(float dt) {
-    renderer_->Render(GetRegistry(), dt);
+void RenderSystem::Update(const TimeDelta& time_delta) {
+    renderer_->Render(GetRegistry(), time_delta);
     window_->SwapBuffers();
 }
 

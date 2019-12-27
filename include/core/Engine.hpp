@@ -2,18 +2,14 @@
 
 #include <memory>
 #include <vector>
-#include <entt/entt.hpp>
-#include "event/EventBus.hpp"
+#include "CoreEngine.hpp"
+#include "EngineConfig.hpp"
 #include "NonCopyable.hpp"
+#include "System.hpp"
+#include "TimeDelta.hpp"
 #include "ZBase.hpp"
 
 namespace zero {
-
-    /* ********** Forward Declarations ********** */
-    class EngineConfig;
-    class System;
-
-    /* ********** Engine ********** */
 
     /**
      * @brief The Game Engine
@@ -24,9 +20,8 @@ namespace zero {
         /**
          * @brief Create an Engine using the given configuration
          * @param config the Engine configuration
-         * @return an Engine
          */
-        static std::shared_ptr<Engine> Create(const EngineConfig& config) { return nullptr; }
+        explicit Engine(EngineConfig engine_config);
 
         /**
          * @brief Engine destructor
@@ -36,56 +31,45 @@ namespace zero {
         /**
          * @brief Initialize the engine
          */
-        void Initialize() {}
+        void Initialize();
 
         /**
-         * @brief Run the engine
-         * @return the error code
+         * @brief Tick the engine
          */
-        uint32 Run() { return 0; }
+        void Tick();
 
         /**
          * @brief Shutdown the engine
          */
-        void ShutDown() {}
-
-
-        /* ********** Accessors ********** */
+        void ShutDown();
 
         /**
-         * @brief Get the event bus
-         * @return the event bus
+         * @brief Get a reference to the core engine
+         * @return the CoreEngine
          */
-        inline event::EventBus& GetEventBus()       { return event_bus_; }
-
-        /**
-         * @brief Get the game registry
-         * @return the registry
-         */
-        inline entt::registry& GetRegistry()        { return registry_; }
+        [[nodiscard]] CoreEngine* GetCoreEngine() const;
 
     protected:
 
         /**
-         * @brief The event bus
+         * @brief The engine configuration.
          */
-        event::EventBus event_bus_;
+        EngineConfig engine_config_;
 
         /**
-         * @brief The registry containing the entities and their components
-         * @see https://github.com/skypjack/entt
+         * @brief Container for all time related data (e.g. time since last frame, physics tick time, etc)
          */
-        entt::registry registry_;
+        TimeDelta time_delta_;
 
         /**
-         * @brief The game systems
+         * @brief The engine core. Contains game data and objects that are used by many different Systems.
+         */
+        std::unique_ptr<CoreEngine> core_engine_;
+
+        /**
+         * @brief The systems that use the game data and objects to progress the game.
          */
         std::vector<std::unique_ptr<System>> game_systems_;
-
-        /**
-         * @brief Construct using Engine::Create
-         */
-        Engine() = default;
 
     }; // class Engine
 

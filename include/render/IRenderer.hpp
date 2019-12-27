@@ -2,7 +2,7 @@
 
 #include <entt/entt.hpp>
 #include "render/Components.hpp"
-#include "render/RenderSystemConfig.hpp"
+#include "core/RenderSystemConfig.hpp"
 
 namespace zero::render {
 
@@ -24,9 +24,9 @@ namespace zero::render {
          * @brief Render all entities in the registry with Transform, Volume, Material, and MeshInstance components
          * using the active cameras in the world.
          * @param registry the registry containing all of the entities and their components
-         * @param dt the time between the current and last frame
+         * @param time_delta updated timing information since the last engine tick
          */
-        virtual void Render(const entt::registry& registry, float dt) = 0;
+        virtual void Render(const entt::registry& registry, const TimeDelta& time_delta) = 0;
 
         /**
          * @brief Perform post-rendering cleanup
