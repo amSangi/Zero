@@ -4,6 +4,7 @@
 #include "render/opengl/GLSampler.hpp"
 #include "render/ViewVolumeBuilder.hpp"
 #include "core/Transform.hpp"
+#include <algorithm>
 #include <fstream>
 #include <vector>
 
@@ -105,12 +106,17 @@ void GLRenderer::Render(const entt::registry& registry, float dt) {
         
         for (auto viewable_entity : viewable_entities) {
             const auto& model_instance = renderable_view.get<const ModelInstance>(viewable_entity);
-            if (model_instance.filename_.empty()) {
+            if (model_instance.child_identifier_ != 0) {
                 // Entity is a child entity. Already rendered.
                 continue;
             }
             const auto& transform = renderable_view.get<const Transform>(viewable_entity);
             const auto& material = renderable_view.get<const Material>(viewable_entity);
+
+            auto model = model_manager_->GetModel(model_instance.filename_);
+            if (!model) {
+                continue;
+            }
 
             // Shader Program
             auto graphics_program = graphics_compiler_->CreateProgram(material);
@@ -149,8 +155,7 @@ void GLRenderer::Render(const entt::registry& registry, float dt) {
                          graphics_program,
                          view_matrix,
                          transform,
-                         material,
-                         model_instance);
+                         model);
 
             graphics_program->Finish();
         }
@@ -182,14 +187,39 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
                               const std::shared_ptr<IProgram>& graphics_program,
                               const math::Matrix4x4& view_matrix,
                               const Transform& transform,
-                              const Material& material,
-                              const ModelInstance& model_instance) {
+                              const std::shared_ptr<GLModel>& model) {
 
+    // Render model
     graphics_program->FlushUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
-    auto gl_model = model_manager_->GetModel(model_instance.identifier_);
+    RenderGLModel(model);
+
+    // Render child models
+    for (auto child_entity : transform.children_) {
+        // Skip culled children
+        auto search = std::find(viewable_entities.begin(), viewable_entities.end(), child_entity);
+        if (search == viewable_entities.end()) {
+            continue;
+        }
+
+        // Skip entities if the child model does not exist
+        const auto& child_model_instance = registry.get<const ModelInstance>(child_entity);
+        auto child_gl_model = model->FindChild(child_model_instance.child_identifier_);
+        if (!child_gl_model) {
+            continue;
+        }
+
+        const auto& child_transform = registry.get<const Transform>(child_entity);
+        RenderEntity(registry,
+                     viewable_entities,
+                     graphics_program,
+                     view_matrix,
+                     child_transform,
+                     child_gl_model);
+    }
+}
+
+void GLRenderer::RenderGLModel(const std::shared_ptr<GLModel>& gl_model) {
     for (const auto& gl_mesh : gl_model->GetMeshes()) {
         gl_mesh->Draw();
     }
-
-    // TODO: Render non-culled child entities
 }

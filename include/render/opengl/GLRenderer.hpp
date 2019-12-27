@@ -67,16 +67,20 @@ namespace zero::render {
          * @param graphics_program the graphics program used for the rendering of the entity
          * @param view_matrix the camera's view matrix
          * @param transform the transform of the entity
-         * @param material the material of the entity
-         * @param model_instance the model instance of the entity
+         * @param model the 3D model associated with the entity
          */
-        void RenderEntity(const entt::registry& registry,
-                          const std::vector<Component::Entity>& viewable_entities,
-                          const std::shared_ptr<IProgram>& graphics_program,
-                          const math::Matrix4x4& view_matrix,
-                          const Transform& transform,
-                          const Material& material,
-                          const ModelInstance& model_instance);
+        static void RenderEntity(const entt::registry& registry,
+                                 const std::vector<Component::Entity>& viewable_entities,
+                                 const std::shared_ptr<IProgram>& graphics_program,
+                                 const math::Matrix4x4& view_matrix,
+                                 const Transform& transform,
+                                 const std::shared_ptr<GLModel>& model);
+
+        /**
+         * @brief Render a GL Model
+         * @param gl_model the GL Model.
+         */
+        static void RenderGLModel(const std::shared_ptr<GLModel>& gl_model);
 
         /**
          * @brief Manage shader and graphics program usage

@@ -77,6 +77,13 @@ namespace zero::render {
         [[nodiscard]] std::shared_ptr<GLModel> GetParent() const;
 
         /**
+         * @brief Find a child model with the given identifier.
+         * @param identifier the identifier
+         * @return the child gl model. Nullptr if no child exists with the identifier.
+         */
+        [[nodiscard]] std::shared_ptr<GLModel> FindChild(uint32 identifier) const;
+
+        /**
          * @brief Get the child models
          * @return the child GLModels. An empty vector if there are no children.
          */

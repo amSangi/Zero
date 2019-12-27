@@ -42,7 +42,7 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& root_filename
 
     ModelInstance model_instance{};
     model_instance.filename_ = root_filename;
-    model_instance.identifier_ = identifier;
+    model_instance.child_identifier_ = identifier;
 
     auto root_model = std::make_shared<GLModel>(meshes,          // Mesh data
                                                 transform,       // Transform prototype
@@ -94,6 +94,23 @@ ModelInstance GLModel::GetModelInstance() const {
 std::shared_ptr<GLModel> GLModel::GetParent() const {
     return parent_model_;
 }
+
+std::shared_ptr<GLModel> GLModel::FindChild(uint32 identifier) const {
+    for (auto& model : child_models_) {
+        if (model->GetModelInstance().child_identifier_ == identifier) {
+            return model;
+        }
+    }
+    for (auto& model : child_models_) {
+        auto search = model->FindChild(identifier);
+        if (search) {
+            return search;
+        }
+    }
+
+    return nullptr;
+}
+
 
 const std::vector<std::shared_ptr<GLModel>>& GLModel::GetChildren() const {
     return child_models_;
