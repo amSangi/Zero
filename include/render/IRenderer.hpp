@@ -21,7 +21,7 @@ namespace zero::render {
         virtual void Initialize(const RenderSystemConfig& config) = 0;
 
         /**
-         * @brief Render all entities in the registry with Transform, Volume, Material, and MeshInstance components
+         * @brief Render all entities in the registry with Transform, Volume, Material, and ModelInstance components
          * using the active cameras in the world.
          * @param registry the registry containing all of the entities and their components
          * @param time_delta updated timing information since the last engine tick
@@ -42,7 +42,7 @@ namespace zero::render {
         /**
          * @brief Create a new entity based on a 3D model.
          *
-         * Constructs an entity with a Transform, Volume, Material, and MeshInstance components.
+         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
          *
          * @param registry the registry containing all of the entities and their components
          * @param model the fully qualified 3D filename

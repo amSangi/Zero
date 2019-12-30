@@ -52,7 +52,7 @@ namespace zero::render {
         /**
          * @brief Create an entity instance based on a 3D model
          *
-         * Constructs an entity with a Transform, Volume, Material, and MeshInstance components.
+         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
          *
          * @param registry the registry containing all the entities and their components
          * @param model the fully qualified 3D model file to instantiate

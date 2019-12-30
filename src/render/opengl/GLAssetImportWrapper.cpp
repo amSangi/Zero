@@ -12,19 +12,11 @@ std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh) {
 
     // Interleave the vertex data
     for (uint32 i = 0; i < mesh->mNumVertices; ++i) {
-        Vertex vertex{
-                // Position
-                math::Vec3f(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z),
-                // Normal
-                math::Vec3f(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z),
-                // Texture Coordinate
-                mesh->mTextureCoords[0] ? math::Vec2f(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y)
-                                        : math::Vec2f(),
-                // Tangent
-                math::Vec3f(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z),
-                // Bitangent
-                math::Vec3f(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z)
-        };
+        Vertex vertex{};
+        vertex.position_ = math::Vec3f(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+        vertex.normal_ = math::Vec3f(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+        vertex.texture_coordinate_ = mesh->mTextureCoords[0] ? math::Vec2f(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y)
+                                                             : math::Vec2f();
         vertices.push_back(vertex);
     }
 

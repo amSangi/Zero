@@ -1,3 +1,4 @@
+#include "event/EventBus.hpp"
 #include "render/Window.hpp"
 #include <utility>
 #include "render/opengl/OpenGL.hpp"
@@ -96,6 +97,13 @@ void Window::Reinitialize(WindowConfig config) {
 
 void Window::SwapBuffers() {
     SDL_GL_SwapWindow(sdl_window_);
+}
+
+void Window::PollEvents(event::EventBus& event_bus) {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        // TODO: Post events onto the event bus
+    }
 }
 
 void Window::Cleanup() {

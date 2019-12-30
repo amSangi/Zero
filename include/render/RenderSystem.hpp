@@ -54,9 +54,14 @@ namespace zero::render {
         void ShutDown() override;
 
         /**
+         * @brief Poll all the events on the rendering window and post them onto the EventBus for processing
+         */
+        void PollWindowEvents();
+
+        /**
          * @brief Create a new entity based on a 3D model.
          *
-         * Constructs an entity with a Transform, Volume, Material, and MeshInstance components.
+         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
          *
          * @param model the fully qualified 3D filename
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.

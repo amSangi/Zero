@@ -11,7 +11,7 @@ namespace zero::render {
         /**
          * @brief Create a new entity based on a GLModel.
          *
-         * Constructs an entity with a Transform, Volume, Material, and MeshInstance components.
+         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
          * If the model contains sub-children, they are created and added to the transform component.
          *
          * @param registry the registry containing all of the entities and their components

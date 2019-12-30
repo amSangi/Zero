@@ -101,6 +101,7 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
             viewable_entities.push_back(renderable_entity);
         }
 
+        glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
         glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
         glClear(GL_COLOR_BUFFER_BIT);
         

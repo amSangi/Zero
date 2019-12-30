@@ -3,7 +3,13 @@
 #include <SDL_video.h>
 #include "core/WindowConfig.hpp"
 
-namespace zero::render {
+namespace zero {
+namespace event {
+    // Forward declaration
+    class EventBus;
+} // namespace event
+
+namespace render {
 
     /**
      * @brief SDL Window and SDL GL Context Wrapper
@@ -37,6 +43,11 @@ namespace zero::render {
         void SwapBuffers();
 
         /**
+         * @brief Poll all the window events and post them onto the EventBus
+         */
+        void PollEvents(event::EventBus& event_bus);
+
+        /**
          * @brief Clean up the Window and GL Context
          */
         void Cleanup();
@@ -60,4 +71,5 @@ namespace zero::render {
 
     }; // class Window
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

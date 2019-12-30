@@ -13,8 +13,6 @@ namespace zero::render {
         math::Vec3f position_;
         math::Vec3f normal_;
         math::Vec2f texture_coordinate_;
-        math::Vec3f tangent_;
-        math::Vec3f bitangent_;
     }; // struct Vertex
 
     /**

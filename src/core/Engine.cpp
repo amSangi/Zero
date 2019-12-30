@@ -22,11 +22,11 @@ void Engine::Initialize() {
 }
 
 void Engine::Tick() {
+    // TODO: Call RenderSystem::PollWindowEvents
     for (const auto& system : game_systems_) {
         system->PreUpdate();
     }
     for (const auto& system : game_systems_) {
-        // TODO: Create TimeDelta class to maintain timing data between ticks
         system->Update(time_delta_);
     }
     for (const auto& system : game_systems_) {

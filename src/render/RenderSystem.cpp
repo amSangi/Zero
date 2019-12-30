@@ -42,6 +42,10 @@ void RenderSystem::ShutDown() {
     window_->Cleanup();
 }
 
+void RenderSystem::PollWindowEvents() {
+    window_->PollEvents(GetEventBus());
+}
+
 zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model) {
     return renderer_->InstantiateModel(GetRegistry(), model);
 }
