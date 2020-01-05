@@ -4,8 +4,7 @@ using namespace zero::render;
 
 GLSampler::GLSampler()
 : id_(0)
-{
-}
+{}
 
 GLSampler::~GLSampler() {
     Cleanup();

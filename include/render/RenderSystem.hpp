@@ -20,10 +20,10 @@ namespace zero::render {
 
         /**
          * @brief Create a RenderSystem
-         * @param core_engine the engine core containing shared system objects
+         * @param engine_core the engine core containing shared system objects
          * @param config the RenderSystem configuration
          */
-        RenderSystem(CoreEngine* core_engine, const RenderSystemConfig& config);
+        RenderSystem(EngineCore* engine_core, const RenderSystemConfig& config);
 
         ~RenderSystem() override = default;
 

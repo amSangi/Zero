@@ -8,7 +8,7 @@ namespace zero {
     /**
      * @brief Container for shared data and objects between different systems. Owned by the Engine.
      */
-    class CoreEngine {
+    class EngineCore {
     public:
 
         /**
@@ -35,6 +35,6 @@ namespace zero {
          */
         entt::registry registry_;
 
-    }; // class CoreEngine
+    }; // class EngineCore
 
 } // namespace zero::render

@@ -100,10 +100,7 @@ void Window::SwapBuffers() {
 }
 
 void Window::PollEvents(event::EventBus& event_bus) {
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-        // TODO: Post events onto the event bus
-    }
+    // TODO: Post events onto the event bus
 }
 
 void Window::Cleanup() {

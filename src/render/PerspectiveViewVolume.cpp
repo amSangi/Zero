@@ -10,8 +10,7 @@ PerspectiveViewVolume::PerspectiveViewVolume(const math::Plane& left,
                                              const math::Plane& near,
                                              const math::Plane& far)
 : planes_{left, right, bottom, top, near, far}
-{
-}
+{}
 
 bool PerspectiveViewVolume::IsCulled(const math::Vec3f& point) const {
     // Is the point on the wrong side of a plane?

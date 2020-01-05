@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
+#include "render/opengl/OpenGL.hpp"
 
 using namespace zero;
 
@@ -62,30 +63,38 @@ int main(int argc, char *argv[]) {
     ///// Engine Configuration
     //////////////////////////////////////////////////
     EngineConfig engine_config;
-    engine_config.render_system_config_ = std::move(render_system_config);
+    engine_config.render_system_config_ = render_system_config;
     std::shared_ptr<zero::Engine> engine = std::make_shared<Engine>(engine_config);
+    engine->Initialize();
 
     //////////////////////////////////////////////////
     ///// Game Object Instantiation
     //////////////////////////////////////////////////
-    auto& registry = engine->GetCoreEngine()->GetRegistry();
+    auto& registry = engine->GetEngineCore()->GetRegistry();
 
     // Instantiate the camera
-    render::Camera camera{render::Camera::ProjectionType::PERSPECTIVE};
-    camera.position_ = math::Vec3f(0.0F, 0.0F, 50.0F);
+    auto camera_entity = registry.create();
+    registry.assign<render::Camera>(camera_entity, render::Camera{render::Camera::ProjectionType::PERSPECTIVE});
+    auto& camera = registry.get<render::Camera>(camera_entity);
     camera.viewport_.width_ = window_config.width_;
     camera.viewport_.height_ = window_config.height_;
-    auto camera_entity = registry.create();
-    registry.assign<render::Camera>(camera_entity, camera);
+    camera.position_ = math::Vec3f(0.0F, 0.0F, 15.0F);
+    camera.near_clip_ = 0.1F;
+    camera.far_clip_ = 100.0F;
 
-    // TODO: Create Illidan model instantiation
     // Instantiate a 3D model
+    auto model_entity = engine->InstantiateModel(engine_config.render_system_config_.model_files_[0]);
+    auto& material = registry.get<render::Material>(model_entity);
+    material.shaders_.vertex_shader_ = render_system_config.vertex_shader_files_[0];
+    material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[0];
+    material.texture_map_.diffuse_map_ = render_system_config.texture_files_[0];
+    auto& transform = registry.get<Transform>(model_entity);
+    transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
 
     //////////////////////////////////////////////////
     ///// Engine Loop
     //////////////////////////////////////////////////
-    engine->Initialize();
-    while (true) {
+    for (int i = 0; i < 5000; ++i) {
         engine->Tick();
     }
     engine->ShutDown();

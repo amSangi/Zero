@@ -42,7 +42,7 @@ void GLMesh::Initialize() {
     // Set vertex attribute pointers
     // Position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position_));
     // Normal
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal_));
@@ -54,9 +54,10 @@ void GLMesh::Initialize() {
 }
 
 void GLMesh::Draw() {
-    Initialize();
+    if (!vao_) return;
+    glBindVertexArray(vao_);
     glDrawArrays(GL_TRIANGLES, 0, indices_.size());
-    Cleanup();
+    glBindVertexArray(0);
 }
 
 

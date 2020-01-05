@@ -2,12 +2,13 @@
 
 #include <memory>
 #include <vector>
-#include "CoreEngine.hpp"
+#include "EngineCore.hpp"
 #include "EngineConfig.hpp"
 #include "NonCopyable.hpp"
 #include "System.hpp"
 #include "TimeDelta.hpp"
 #include "ZBase.hpp"
+#include "render/RenderSystem.hpp"
 
 namespace zero {
 
@@ -47,7 +48,17 @@ namespace zero {
          * @brief Get a reference to the core engine
          * @return the CoreEngine
          */
-        [[nodiscard]] CoreEngine* GetCoreEngine() const;
+        [[nodiscard]] EngineCore* GetEngineCore() const;
+
+        /**
+         * @brief Create a new entity based on a 3D model.
+         *
+         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
+         *
+         * @param model the fully qualified 3D filename
+         * @return the root entity associated with the 3D model. NullEntity if an error occurred.
+         */
+        [[nodiscard]] Component::Entity InstantiateModel(const std::string& model_filename);
 
     protected:
 
@@ -64,7 +75,12 @@ namespace zero {
         /**
          * @brief The engine core. Contains game data and objects that are used by many different Systems.
          */
-        std::unique_ptr<CoreEngine> core_engine_;
+        std::unique_ptr<EngineCore> engine_core_;
+
+        /**
+         * @brief The Rendering system used to create a window/OpenGL context, render game entities, and instnatiate 3D models.
+         */
+        std::unique_ptr<render::RenderSystem> render_system_;
 
         /**
          * @brief The systems that use the game data and objects to progress the game.

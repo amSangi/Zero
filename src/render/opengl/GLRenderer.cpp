@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 using namespace zero::render;
 
@@ -31,15 +32,14 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
         stage.filename_ = vertex_shader_file;
 
         // Read source
-        std::ifstream in(vertex_shader_file, std::ios::in);
-        if (!in) continue;
-        in.seekg(0, std::ios::end);
-        stage.source_.resize(in.tellg());
-        in.seekg(0, std::ios::beg);
-        in.read(&stage.source_[0], stage.source_.size());
-        in.close();
+        ReadShaderSource(stage.filename_, stage.source_);
+        if (stage.source_.empty()) {
+            continue;
+        }
 
-        graphics_compiler_->InitializeShader(stage);
+        if (!graphics_compiler_->InitializeShader(stage)) {
+            std::cout << "Failed to initialize vertex shader" << std::endl;
+        }
     }
     for (const auto& fragment_shader_file : config.fragment_shader_files_) {
         ShaderStage stage;
@@ -47,21 +47,21 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
         stage.filename_ = fragment_shader_file;
 
         // Read source
-        std::ifstream in(fragment_shader_file, std::ios::in);
-        if (!in) continue;
-        in.seekg(0, std::ios::end);
-        stage.source_.resize(in.tellg());
-        in.seekg(0, std::ios::beg);
-        in.read(&stage.source_[0], stage.source_.size());
-        in.close();
+        ReadShaderSource(stage.filename_, stage.source_);
+        if (stage.source_.empty()) {
+            continue;
+        }
 
-        graphics_compiler_->InitializeShader(stage);
+        if (!graphics_compiler_->InitializeShader(stage)) {
+            std::cout << "Failed to initialize fragment shader" << std::endl;
+        }
     }
 
     // Initialize 3D Models
     for (const auto& model_file : config.model_files_) {
         model_manager_->LoadModel(model_file);
     }
+    model_manager_->InitializeModels();
 
     // Initialize Images
     for (const auto& texture_file : config.texture_files_) {
@@ -90,7 +90,6 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
         const auto& camera = camera_view.get(camera_entity);
         const auto projection_matrix = camera.GetProjectionMatrix();
         const auto view_matrix = camera.GetViewMatrix();
-        const auto view_direction = camera.GetViewDirection();
 
         // Do not render culled entities
         auto culler = ViewVolumeBuilder::create(camera);
@@ -116,11 +115,19 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
 
             auto model = model_manager_->GetModel(model_instance.filename_);
             if (!model) {
+                // TODO: Add error logging
+                std::cout << "Failed to load model" << std::endl;
                 continue;
             }
+            model->Initialize();
 
             // Shader Program
             auto graphics_program = graphics_compiler_->CreateProgram(material);
+            if (!graphics_program) {
+                // TODO: Add error logging
+                std::cout << "Failed to create graphics program" << std::endl;
+                continue;
+            }
             graphics_program->Use();
 
             // Texture Maps
@@ -134,27 +141,46 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
             auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, diffuse_index);
             auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, displacement_index);
             auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, normal_index);
-            if (gl_alpha_texture) gl_alpha_texture->Bind(GL_TEXTURE0 + alpha_index);
-            if (gl_ambient_texture) gl_ambient_texture->Bind(GL_TEXTURE0 + ambient_index);
-            if (gl_diffuse_texture) gl_diffuse_texture->Bind(GL_TEXTURE0 + diffuse_index);
-            if (gl_displacement_texture) gl_displacement_texture->Bind(GL_TEXTURE0 + displacement_index);
-            if (gl_normal_texture) gl_normal_texture->Bind(GL_TEXTURE0 + normal_index);
+            if (gl_alpha_texture) {
+                GLenum texture_unit = GL_TEXTURE0 + alpha_index;
+                gl_alpha_texture->GenerateMipMap(texture_unit);
+                gl_alpha_texture->Bind(texture_unit);
+                graphics_program->SetUniform("alpha_texture", alpha_index);
+            }
+            if (gl_ambient_texture) {
+                GLenum texture_unit = GL_TEXTURE0 + ambient_index;
+                gl_ambient_texture->GenerateMipMap(texture_unit);
+                gl_ambient_texture->Bind(texture_unit);
+                graphics_program->SetUniform("ambient_texture", ambient_index);
+            }
+            if (gl_diffuse_texture) {
+                GLenum texture_unit = GL_TEXTURE0 + diffuse_index;
+                gl_diffuse_texture->GenerateMipMap(texture_unit);
+                gl_diffuse_texture->Bind(texture_unit);
+                graphics_program->SetUniform("diffuse_texture", diffuse_index);
+            }
+            if (gl_displacement_texture) {
+                GLenum texture_unit = GL_TEXTURE0 + displacement_index;
+                gl_displacement_texture->GenerateMipMap(texture_unit);
+                gl_displacement_texture->Bind(texture_unit);
+                graphics_program->SetUniform("displacement_texture", displacement_index);
+            }
+            if (gl_normal_texture) {
+                GLenum texture_unit = GL_TEXTURE0 + normal_index;
+                gl_normal_texture->GenerateMipMap(texture_unit);
+                gl_normal_texture->Bind(texture_unit);
+                graphics_program->SetUniform("normal_texture", normal_index);
+            }
 
-            // Uniforms
-            graphics_program->SetUniform("alpha_texture", alpha_index);
-            graphics_program->SetUniform("ambient_texture", ambient_index);
-            graphics_program->SetUniform("diffuse_texture", diffuse_index);
-            graphics_program->SetUniform("displacement_texture", displacement_index);
-            graphics_program->SetUniform("normal_texture", normal_index);
             graphics_program->SetUniform("projection_matrix", projection_matrix);
             graphics_program->SetUniform("camera_position", camera.position_);
-            graphics_program->SetUniform("camera_view_direction", view_direction);
             graphics_program->FlushUniforms();
 
             RenderEntity(registry,
                          viewable_entities,
                          graphics_program,
                          view_matrix,
+                         projection_matrix,
                          transform,
                          model);
 
@@ -177,6 +203,7 @@ void GLRenderer::ShutDown() {
 zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, const std::string& model) {
     auto gl_model = model_manager_->GetModel(model);
     if (!gl_model) {
+        // TODO: Add error logging
         return Component::NullEntity;
     }
 
@@ -187,12 +214,14 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
                               const std::vector<Component::Entity>& viewable_entities,
                               const std::shared_ptr<IProgram>& graphics_program,
                               const math::Matrix4x4& view_matrix,
+                              const math::Matrix4x4& projection_matrix,
                               const Transform& transform,
                               const std::shared_ptr<GLModel>& model) {
 
     // Render model
-    graphics_program->FlushUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
-    RenderGLModel(model);
+    auto model_view_matrix = view_matrix * transform.GetLocalToWorldMatrix();
+    graphics_program->FlushUniform("model_view_matrix", model_view_matrix);
+    model->Draw();
 
     // Render child models
     for (auto child_entity : transform.children_) {
@@ -206,6 +235,7 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
         const auto& child_model_instance = registry.get<const ModelInstance>(child_entity);
         auto child_gl_model = model->FindChild(child_model_instance.child_identifier_);
         if (!child_gl_model) {
+            // TODO: Add error logging
             continue;
         }
 
@@ -214,13 +244,16 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
                      viewable_entities,
                      graphics_program,
                      view_matrix,
+                     projection_matrix,
                      child_transform,
                      child_gl_model);
     }
 }
 
-void GLRenderer::RenderGLModel(const std::shared_ptr<GLModel>& gl_model) {
-    for (const auto& gl_mesh : gl_model->GetMeshes()) {
-        gl_mesh->Draw();
-    }
+void GLRenderer::ReadShaderSource(const std::string& filename, std::string& destination) const {
+    std::ifstream input_file(filename);
+    if (!input_file) return;
+    std::stringstream buffer;
+    buffer << input_file.rdbuf();
+    destination = buffer.str();
 }

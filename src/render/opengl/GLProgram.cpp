@@ -2,8 +2,7 @@
 
 using namespace zero::render;
 
-std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
-        const std::vector<std::shared_ptr<zero::render::GLShader>>& shaders) {
+std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::shared_ptr<zero::render::GLShader>>& shaders) {
 
     if (shaders.empty()) return nullptr;
 
@@ -24,7 +23,9 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(
     return program;
 }
 
-GLProgram::GLProgram(GLuint id) : id_(id) {}
+GLProgram::GLProgram(GLuint id)
+: id_(id)
+{}
 
 GLProgram::~GLProgram() {
     Cleanup();
@@ -80,12 +81,12 @@ void GLProgram::SetUniform(const std::string& name, float value) {
 
 void GLProgram::FlushUniform(const std::string& name, math::Matrix4x4 value) {
     matrix4x4_map_[name] = value;
-    glUniformMatrix4fv(glGetUniformLocation(id_, name.c_str()), 1, GL_FALSE, value[0]);
+    glUniformMatrix4fv(glGetUniformLocation(id_, name.c_str()), 1, GL_TRUE, &value[0][0]);
 }
 
 void GLProgram::FlushUniform(const std::string& name, math::Matrix3x3 value) {
     matrix3x3_map_[name] = value;
-    glUniformMatrix3fv(glGetUniformLocation(id_, name.c_str()), 1, GL_FALSE, value[0]);
+    glUniformMatrix3fv(glGetUniformLocation(id_, name.c_str()), 1, GL_TRUE, &value[0][0]);
 }
 
 void GLProgram::FlushUniform(const std::string& name, math::Vec4f value) {
@@ -116,12 +117,12 @@ void GLProgram::FlushUniform(const std::string& name, float value) {
 void GLProgram::FlushUniforms() {
     // Flush Matrix4x4
     for (const auto& iter : matrix4x4_map_) {
-        glUniformMatrix4fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_FALSE, iter.second[0]);
+        glUniformMatrix4fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_TRUE, &iter.second[0][0]);
     }
 
     // Flush Matrix3x3
     for (const auto& iter : matrix3x3_map_) {
-        glUniformMatrix3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_FALSE, iter.second[0]);
+        glUniformMatrix3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_TRUE, &iter.second[0][0]);
     }
 
     // Flush Vec4f

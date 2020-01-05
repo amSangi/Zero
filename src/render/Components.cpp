@@ -155,17 +155,27 @@ zero::math::Matrix4x4 Camera::GetProjectionMatrix() const {
 }
 
 zero::math::Matrix4x4 Camera::GetViewMatrix() const {
-    return GetCameraToWorldMatrix().Inverse();
+    math::Vec3f k = math::Vec3f::Normalize(position_ - target_);
+    math::Vec3f i = math::Vec3f::Normalize(math::Vec3f::Cross(k, up_));
+    math::Vec3f j = math::Vec3f::Cross(i, k);
+    math::Matrix4x4 result = math::Matrix4x4::Identity();
+    result[0][0] = i.x_;
+    result[0][1] = i.y_;
+    result[0][2] = i.z_;
+    result[1][0] = j.x_;
+    result[1][1] = j.y_;
+    result[1][2] = j.z_;
+    result[2][0] = -k.x_;
+    result[2][1] = -k.y_;
+    result[2][2] = -k.z_;
+    result[0][3] = -math::Vec3f::Dot(i, position_);
+    result[1][3] = -math::Vec3f::Dot(j, position_);
+    result[2][3] = -math::Vec3f::Dot(k, position_);
+    return result;
 }
 
 zero::math::Matrix4x4 Camera::GetCameraToWorldMatrix() const {
-    math::Vec3f k = math::Vec3f::Normalize(position_ - target_);
-    math::Vec3f i = math::Vec3f::Normalize(math::Vec3f::Cross(up_, k));
-    math::Vec3f j = math::Vec3f::Cross(k, i);
-    return math::Matrix4x4(i.x_, j.x_, k.x_, position_.x_,
-                           i.y_, j.y_, k.y_, position_.y_,
-                           i.z_, j.z_, k.z_, position_.z_,
-                           0.0F, 0.0F, 0.0F, 1.0F);
+    return GetViewMatrix().Inverse();
 }
 
 zero::math::Matrix4x4 Camera::Perspective(math::Radian vertical_fov,
@@ -195,10 +205,10 @@ zero::math::Matrix4x4 Camera::Orthographic(float left,
     math::Matrix4x4 orthographic_matrix(0.0F);
 
     orthographic_matrix[0][0] = 2.0F / (right - left);
-    orthographic_matrix[0][3] = -(right + left) / (right - left);
     orthographic_matrix[1][1] = 2.0F / (top - bottom);
-    orthographic_matrix[1][3] = -(top + bottom) / (top - bottom);
     orthographic_matrix[2][2] = -2.0F / (far - near);
+    orthographic_matrix[0][3] = -(right + left) / (right - left);
+    orthographic_matrix[1][3] = -(top + bottom) / (top - bottom);
     orthographic_matrix[2][3] = -(far + near) / (far - near);
     orthographic_matrix[3][3] = 1.0F;
 

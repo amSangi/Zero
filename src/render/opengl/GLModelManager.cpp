@@ -21,7 +21,8 @@ bool GLModelManager::LoadModel(const std::string& filename) {
                 | aiProcess_OptimizeGraph
                 | aiProcess_GenNormals
                 | aiProcess_GenBoundingBoxes
-                | aiProcess_ImproveCacheLocality;
+                | aiProcess_ImproveCacheLocality
+                | aiProcess_FlipUVs;
     const aiScene* scene = importer.ReadFile(filename.c_str(), flags);
 
     if (!scene
@@ -32,6 +33,12 @@ bool GLModelManager::LoadModel(const std::string& filename) {
 
     model_map_.emplace(filename, GLModel::CreateGLModel(filename, random_generator_, 0, scene->mRootNode, scene));
     return true;
+}
+
+void GLModelManager::InitializeModels() {
+    for (const auto& model_pair : model_map_) {
+        model_pair.second->Initialize();
+    }
 }
 
 void GLModelManager::ClearModels() {

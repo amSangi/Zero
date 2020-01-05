@@ -5,8 +5,7 @@ using namespace zero::render;
 
 OrthographicViewVolume::OrthographicViewVolume(const math::Vec3f& min, const math::Vec3f& max)
 : view_box_(min, max)
-{
-}
+{}
 
 bool OrthographicViewVolume::IsCulled(const math::Vec3f& point) const {
     return !view_box_.Contains(point);

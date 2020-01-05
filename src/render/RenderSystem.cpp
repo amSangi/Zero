@@ -4,15 +4,14 @@
 
 using namespace zero::render;
 
-RenderSystem::RenderSystem(CoreEngine* core_engine, const RenderSystemConfig& config)
-: zero::System(core_engine)
+RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& config)
+: zero::System(engine_core)
 , config_(config)
 , animator_(nullptr)
 , window_(std::make_unique<Window>(config.window_config_))
 , renderer_(std::make_unique<GLRenderer>())
 , propagator_(std::make_unique<Propagator>())
-{
-}
+{}
 
 void RenderSystem::Initialize() {
     ShutDown();

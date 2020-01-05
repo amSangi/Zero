@@ -33,6 +33,11 @@ namespace zero::render {
         bool LoadModel(const std::string& filename);
 
         /**
+         * @brief Initialize all GLModels
+         */
+        void InitializeModels();
+
+        /**
          * @brief Clear all the models
          */
         void ClearModels();

@@ -51,6 +51,16 @@ namespace zero::render {
         ~GLModel() override = default;
 
         /**
+         * @brief Initialize the meshes
+         */
+        void Initialize();
+
+        /**
+         * @brief Draw the meshes
+         */
+        void Draw();
+
+        /**
          * @see IModel::GetTransform
          */
         [[nodiscard]] Transform GetTransform() const override;

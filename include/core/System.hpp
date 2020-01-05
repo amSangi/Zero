@@ -1,7 +1,7 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "CoreEngine.hpp"
+#include "EngineCore.hpp"
 #include "TimeDelta.hpp"
 
 namespace zero {
@@ -20,9 +20,9 @@ namespace zero {
 
         /**
          * @brief System Constructor
-         * @param core_engine the core game objects shared between different systems
+         * @param engine_core the core objects shared amongst different systems
          */
-        explicit System(CoreEngine* core_engine);
+        explicit System(EngineCore* engine_core);
 
         /**
          * @brief Default Virtual Destructor
@@ -70,9 +70,9 @@ namespace zero {
     protected:
 
         /**
-         * @brief The core game engine data shared between systems
+         * @brief The core objects shared amongst different systems
          */
-        CoreEngine* core_engine_;
+        EngineCore* engine_core_;
 
     }; // abstract class System
 
