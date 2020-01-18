@@ -20,30 +20,21 @@ namespace zero::render {
         /**
          * @brief Default constructor
          */
-        Volume()
-        : Component()
-        , bounding_volume_()
-        {}
+        Volume();
 
         /**
          * @brief Construct a volume with a given position and radius
          * @param position the position of the volume
          * @param radius the radius of the volume
          */
-        Volume(const math::Vec3f& position, float radius)
-        : Component()
-        , bounding_volume_(position, radius)
-        {}
+        Volume(const math::Vec3f& position, float radius);
 
         /**
          * @brief Construct a volume from a Axis-Aligned Bounding Box
          * @param min the minimum point of the box
          * @param max the maximum point of the box
          */
-        Volume(const math::Vec3f& min, const math::Vec3f& max)
-        : Component()
-        , bounding_volume_(min, max)
-        {}
+        Volume(const math::Vec3f& min, const math::Vec3f& max);
 
         /**
          * @brief Engulf the other volume so that the other volume is inside
@@ -237,15 +228,81 @@ namespace zero::render {
          */
         explicit Camera(ProjectionType projection_type);
 
+        /**
+         * @brief Get the projection type of the camera
+         * @return the projection type
+         */
         [[nodiscard]] ProjectionType GetProjectionType() const;
 
+        /**
+         * @brief Translate the position relative to the world
+         * @param translation the translation
+         */
+        void Translate(const math::Vec3f& translation);
+
+        /**
+         * @brief Translate the position relative to the camera
+         * @param translation the translation
+         */
+        void TranslateRelative(const math::Vec3f& translation);
+
+        /**
+         * @brief Rotate the camera relative to the world
+         * @param rotation the rotation to apply
+         */
+        void Rotate(const math::Quaternion& rotation);
+
+        /**
+         * @brief Pitch the camera relative to its right vector
+         * @param angle the angle of rotation
+         */
+        void PitchRelative(const math::Radian& angle);
+
+        /**
+         * @brief Yaw the camera relative to its up vector
+         * @param angle the angle of rotation
+         */
+        void YawRelative(const math::Radian& angle);
+
+        /**
+         * @brief Roll the camera around its viewing direction
+         * @param angle the angle of rotation
+         */
+        void RollRelative(const math::Radian& angle);
+
+        /**
+         * @brief Orientate the camera to look at the target
+         * @param target the target to look at
+         */
         void LookAt(const math::Vec3f& target);
 
+        /**
+         * @brief Get the near plane coordinates
+         * @param bottom_left the bottom left corner of the near plane
+         * @param top_right the top right corner of the near plane
+         */
         void GetNearClipCoordinates(math::Vec3f& bottom_left,
                                     math::Vec3f& top_right) const;
 
+        /**
+         * @brief Get the far plane coordinates
+         * @param bottom_left the bottom left corner of the far plane
+         * @param top_right the top right corner of the far plane
+         */
         void GetFarClipCoordinates(math::Vec3f& bottom_left,
                                    math::Vec3f& top_right) const;
+
+        /**
+         * @brief Get the relative up vector of the camera
+         * @return the up vector
+         */
+        [[nodiscard]] math::Vec3f GetUpVector() const;
+
+        /**
+         * @brief Get the relative right vector of the camera
+         * @return the right vector
+         */
+        [[nodiscard]] math::Vec3f GetRightVector() const;
 
         /**
          * @brief Get the direction the camera is looking at
@@ -253,6 +310,10 @@ namespace zero::render {
          */
         [[nodiscard]] math::Vec3f GetViewDirection() const;
 
+        /**
+         * @brief Get the vertical field of view
+         * @return the vertical fov angle in radians
+         */
         [[nodiscard]] math::Radian GetVerticalFieldOfView() const;
 
         /**
@@ -291,21 +352,13 @@ namespace zero::render {
          */
         math::Degree horizontal_field_of_view_;
         /**
-         * @brief The up vector of the camera in 3D space
-         */
-        math::Vec3f up_;
-        /**
          * @brief The camera position in 3D space.
          *
          * Also known as the "eye" position.
          */
         math::Vec3f position_;
         /**
-         * @brief The point the camera is looking at
-         */
-        math::Vec3f target_;
-        /**
-         * @brief The camera orientation in 3D space
+         * @brief The camera orientation in 3D space.
          */
         math::Quaternion orientation_;
         /**

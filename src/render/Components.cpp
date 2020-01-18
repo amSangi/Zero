@@ -4,7 +4,7 @@
 
 using namespace zero::render;
 
-constexpr float kDefaultNearClip = 20.0F;
+constexpr float kDefaultNearClip = 0.1F;
 constexpr float kDefaultFarClip = 500.0F;
 constexpr float kDefaultHorizontalFOVDegrees = 65.0F;
 constexpr zero::uint32 kDefaultViewportWidth = 800;
@@ -13,6 +13,21 @@ constexpr zero::uint32 kDefaultViewportHeight = 600;
 ////////////////////////////////////////////////////////////
 ///// Volume
 ////////////////////////////////////////////////////////////
+
+Volume::Volume()
+: Component()
+, bounding_volume_()
+{}
+
+Volume::Volume(const math::Vec3f& position, float radius)
+: Component()
+, bounding_volume_(position, radius)
+{}
+
+Volume::Volume(const math::Vec3f& min, const math::Vec3f& max)
+: Component()
+, bounding_volume_(min, max)
+{}
 
 void Volume::Engulf(const Volume& other) {
     bounding_volume_.Merge(other.bounding_volume_);
@@ -55,10 +70,8 @@ Camera::Camera()
 , near_clip_(kDefaultNearClip)
 , far_clip_(kDefaultFarClip)
 , horizontal_field_of_view_(kDefaultHorizontalFOVDegrees)
-, up_(math::Vec3f::Up())
 , position_(math::Vec3f::Zero())
-, target_(math::Vec3f::Back())
-, orientation_()
+, orientation_(math::Quaternion::Identity())
 , viewport_()
 {
 }
@@ -68,10 +81,8 @@ Camera::Camera(Camera::ProjectionType projection_type)
 , near_clip_(kDefaultNearClip)
 , far_clip_(kDefaultFarClip)
 , horizontal_field_of_view_(kDefaultHorizontalFOVDegrees)
-, up_(math::Vec3f::Up())
 , position_(math::Vec3f::Zero())
-, target_(math::Vec3f::Back())
-, orientation_()
+, orientation_(math::Quaternion::Identity())
 , viewport_()
 {
 }
@@ -80,12 +91,37 @@ Camera::ProjectionType Camera::GetProjectionType() const {
     return projection_;
 }
 
-void Camera::LookAt(const math::Vec3f& target) {
-    math::Vec3f direction = target - position_;
-    math::Quaternion rotation = math::Quaternion::LookRotation(direction, up_);
+void Camera::Translate(const math::Vec3f& translation) {
+    position_ += translation;
+}
+
+void Camera::TranslateRelative(const math::Vec3f& translation) {
+    Translate(orientation_ * translation);
+}
+
+void Camera::Rotate(const math::Quaternion& rotation) {
     orientation_ = rotation * orientation_;
     orientation_.Unit();
-    target_ = target;
+}
+
+void Camera::PitchRelative(const math::Radian& angle) {
+    auto rotation = math::Quaternion::FromAngleAxis(GetRightVector(), angle);
+    Rotate(rotation);
+}
+
+void Camera::YawRelative(const math::Radian& angle) {
+    auto rotation = math::Quaternion::FromAngleAxis(GetUpVector(), angle);
+    Rotate(rotation);
+}
+
+void Camera::RollRelative(const math::Radian& angle) {
+    auto rotation = math::Quaternion::FromAngleAxis(GetViewDirection(), angle);
+    Rotate(rotation);
+}
+
+void Camera::LookAt(const math::Vec3f& target) {
+    math::Quaternion rotation = math::Quaternion::FromToRotation(GetViewDirection(), target);
+    Rotate(rotation);
 }
 
 void Camera::GetNearClipCoordinates(math::Vec3f& bottom_left,
@@ -94,11 +130,12 @@ void Camera::GetNearClipCoordinates(math::Vec3f& bottom_left,
     float half_near_height = math::Tan(GetVerticalFieldOfView().rad_ / 2.0F) * near_clip_;
     float half_near_width = half_near_height * viewport_.GetAspectRatio();
 
-    math::Vec3f view_direction = math::Vec3f::Normalize(target_ - position_);
+    math::Vec3f up = GetUpVector();
+    math::Vec3f view_direction = GetViewDirection();
     math::Vec3f center = position_ + (view_direction * near_clip_);
-    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up_));
+    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up));
 
-    math::Vec3f vertical = (up_ * half_near_height);
+    math::Vec3f vertical = (up * half_near_height);
     math::Vec3f horizontal = (right_vector * half_near_width);
     bottom_left = center - vertical - horizontal;
     top_right = center + vertical + horizontal;
@@ -111,18 +148,27 @@ void Camera::GetFarClipCoordinates(math::Vec3f& bottom_left,
     float half_far_height = math::Tan(GetVerticalFieldOfView().rad_ / 2.0F) * far_clip_;
     float half_far_width = half_far_height * viewport_.GetAspectRatio();
 
-    math::Vec3f view_direction = math::Vec3f::Normalize(target_ - position_);
+    math::Vec3f up = GetUpVector();
+    math::Vec3f view_direction = GetViewDirection();
     math::Vec3f center = position_ + (view_direction * far_clip_);
-    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up_));
+    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up));
 
-    math::Vec3f vertical = (up_ * half_far_height);
+    math::Vec3f vertical = (up * half_far_height);
     math::Vec3f horizontal = (right_vector * half_far_width);
     bottom_left = center - vertical - horizontal;
     top_right = center + vertical + horizontal;
 }
 
+zero::math::Vec3f Camera::GetUpVector() const {
+    return orientation_ * math::Vec3f::Up();
+}
+
+zero::math::Vec3f Camera::GetRightVector() const {
+    return orientation_ * math::Vec3f::Right();
+}
+
 zero::math::Vec3f Camera::GetViewDirection() const {
-    return math::Vec3f::Normalize(target_ - position_);
+    return orientation_ * math::Vec3f::Back();
 }
 
 zero::math::Radian Camera::GetVerticalFieldOfView() const {
@@ -155,27 +201,11 @@ zero::math::Matrix4x4 Camera::GetProjectionMatrix() const {
 }
 
 zero::math::Matrix4x4 Camera::GetViewMatrix() const {
-    math::Vec3f k = math::Vec3f::Normalize(position_ - target_);
-    math::Vec3f i = math::Vec3f::Normalize(math::Vec3f::Cross(k, up_));
-    math::Vec3f j = math::Vec3f::Cross(i, k);
-    math::Matrix4x4 result = math::Matrix4x4::Identity();
-    result[0][0] = i.x_;
-    result[0][1] = i.y_;
-    result[0][2] = i.z_;
-    result[1][0] = j.x_;
-    result[1][1] = j.y_;
-    result[1][2] = j.z_;
-    result[2][0] = -k.x_;
-    result[2][1] = -k.y_;
-    result[2][2] = -k.z_;
-    result[0][3] = -math::Vec3f::Dot(i, position_);
-    result[1][3] = -math::Vec3f::Dot(j, position_);
-    result[2][3] = -math::Vec3f::Dot(k, position_);
-    return result;
+    return GetCameraToWorldMatrix().Inverse();
 }
 
 zero::math::Matrix4x4 Camera::GetCameraToWorldMatrix() const {
-    return GetViewMatrix().Inverse();
+    return math::Matrix4x4::Identity().Translate(position_).Rotate(orientation_);
 }
 
 zero::math::Matrix4x4 Camera::Perspective(math::Radian vertical_fov,

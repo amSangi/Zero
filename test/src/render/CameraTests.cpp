@@ -6,16 +6,16 @@ using namespace zero::render;
 
 TEST(TestCamera, LookAt) {
     Camera camera;
-    EXPECT_EQ(camera.target_, math::Vec3f::Back());
+    EXPECT_EQ(camera.GetViewDirection(), math::Vec3f::Back());
     camera.LookAt(math::Vec3f::Up());
-    EXPECT_EQ(camera.target_, math::Vec3f::Up());
+    EXPECT_EQ(camera.GetViewDirection(), math::Vec3f::Up());
 }
 
 TEST(TestCamera, LookAt_MoveAndLookLeft) {
     Camera camera;
     camera.position_ = math::Vec3f::Forward();
     camera.LookAt(math::Vec3f::Left());
-    EXPECT_EQ(camera.target_, math::Vec3f::Left());
+    EXPECT_EQ(camera.GetViewDirection(), math::Vec3f::Left());
     EXPECT_EQ(camera.position_, math::Vec3f::Forward());
 }
 

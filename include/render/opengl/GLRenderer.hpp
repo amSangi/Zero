@@ -84,7 +84,12 @@ namespace zero::render {
          * @param filename the shader file
          * @param destination the destination
          */
-        void ReadShaderSource(const std::string& filename, std::string& destination) const;
+        static void ReadShaderSource(const std::string& filename, std::string& destination);
+
+        /**
+         * @brief Setup OpenGL for rendering
+         */
+        static void InitializeGL();
 
         /**
          * @brief Manage shader and graphics program usage

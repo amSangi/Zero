@@ -25,6 +25,8 @@ GLRenderer::~GLRenderer() {
 void GLRenderer::Initialize(const RenderSystemConfig& config) {
     ShutDown();
 
+    InitializeGL();
+
     // Initialize Shaders
     for (const auto& vertex_shader_file : config.vertex_shader_files_) {
         ShaderStage stage;
@@ -250,10 +252,14 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
     }
 }
 
-void GLRenderer::ReadShaderSource(const std::string& filename, std::string& destination) const {
+void GLRenderer::ReadShaderSource(const std::string& filename, std::string& destination) {
     std::ifstream input_file(filename);
     if (!input_file) return;
     std::stringstream buffer;
     buffer << input_file.rdbuf();
     destination = buffer.str();
+}
+
+void GLRenderer::InitializeGL() {
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 }

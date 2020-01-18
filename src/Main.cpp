@@ -4,13 +4,11 @@
 #include <iostream>
 #include <memory>
 #include "render/opengl/OpenGL.hpp"
+#include <SDL.h>
 
 using namespace zero;
 
-int main(int argc, char *argv[]) {
-    //////////////////////////////////////////////////
-    ///// Window Configuration
-    //////////////////////////////////////////////////
+WindowConfig CreateWindowConfig() {
     WindowConfig window_config;
     window_config.window_flags_ = WindowFlags::NO_FLAGS;
     window_config.width_ = 800;
@@ -20,10 +18,10 @@ int main(int argc, char *argv[]) {
     window_config.refresh_rate_ = RefreshRate::SYNCHRONIZED;
     window_config.title_ = "Zero Engine Demo";
     window_config.window_icon_image_file_ = "";
+    return window_config;
+}
 
-    //////////////////////////////////////////////////
-    ///// Render System Configuration
-    //////////////////////////////////////////////////
+RenderSystemConfig CreateRenderSystemConfig(const WindowConfig& window_config) {
     RenderSystemConfig render_system_config;
     render_system_config.window_config_ = window_config;
     std::filesystem::path resources_path{std::filesystem::current_path().append("..\\resources\\")};
@@ -58,18 +56,75 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+    return render_system_config;
+}
 
+void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode) {
+    math::Vec3f horizontal_speed = math::Vec3f(1.0F, 0.0F, 0.0F);
+    math::Vec3f vertical_speed = math::Vec3f(0.0F, 1.0F, 0.0F);
+    math::Vec3f forward_speed = math::Vec3f(0.0F, 0.0F, 1.0F);
+    math::Radian angle = math::Radian::FromDegree(10.0F);
+    math::Radian opposite_angle = math::Radian::FromDegree(-10.0F);
+    switch (keycode)
+    {
+        case SDLK_a:
+            camera.TranslateRelative(-1.0F * horizontal_speed);
+            break;
+        case SDLK_d:
+            camera.TranslateRelative(horizontal_speed);
+            break;
+        case SDLK_w:
+            camera.TranslateRelative(vertical_speed);
+            break;
+        case SDLK_s:
+            camera.TranslateRelative(-1.0F * vertical_speed);
+            break;
+        case SDLK_z:
+            camera.TranslateRelative(forward_speed);
+            break;
+        case SDLK_x:
+            camera.TranslateRelative(-1.0F * forward_speed);
+            break;
+        case SDLK_q:
+            camera.RollRelative(opposite_angle);
+            break;
+        case SDLK_e:
+            camera.RollRelative(angle);
+            break;
+        case SDLK_UP:
+            camera.PitchRelative(angle);
+            break;
+        case SDLK_DOWN:
+            camera.PitchRelative(opposite_angle);
+            break;
+        case SDLK_RIGHT:
+            camera.YawRelative(opposite_angle);
+            break;
+        case SDLK_LEFT:
+            camera.YawRelative(angle);
+            break;
+        default:
+            break;
+    }
+}
+
+int main(int argc, char *argv[]) {
     //////////////////////////////////////////////////
     ///// Engine Configuration
     //////////////////////////////////////////////////
+    // region Engine Configuration
+    WindowConfig window_config = CreateWindowConfig();
+    RenderSystemConfig render_system_config = CreateRenderSystemConfig(window_config);
     EngineConfig engine_config;
     engine_config.render_system_config_ = render_system_config;
     std::shared_ptr<zero::Engine> engine = std::make_shared<Engine>(engine_config);
     engine->Initialize();
+    // endregion
 
     //////////////////////////////////////////////////
     ///// Game Object Instantiation
     //////////////////////////////////////////////////
+    // region Game Object Instantiation
     auto& registry = engine->GetEngineCore()->GetRegistry();
 
     // Instantiate the camera
@@ -90,13 +145,30 @@ int main(int argc, char *argv[]) {
     material.texture_map_.diffuse_map_ = render_system_config.texture_files_[0];
     auto& transform = registry.get<Transform>(model_entity);
     transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
+    // endregion
 
     //////////////////////////////////////////////////
     ///// Engine Loop
     //////////////////////////////////////////////////
-    for (int i = 0; i < 5000; ++i) {
+    // region Engine Loop
+    bool quit = false;
+    SDL_Event event;
+    while( !quit ){
+        while( SDL_PollEvent( &event ) ){
+            switch( event.type ){
+                case SDL_KEYDOWN:
+                    HandleCameraMovement(camera, event.key.keysym.sym);
+                    break;
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
         engine->Tick();
     }
+    // endregion
     engine->ShutDown();
     return 0;
 }

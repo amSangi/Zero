@@ -111,7 +111,7 @@ void Window::Cleanup() {
 
     if (sdl_window_) {
         SDL_DestroyWindow(sdl_window_);
-        SDL_Quit();
         sdl_window_ = nullptr;
     }
+    SDL_Quit();
 }
