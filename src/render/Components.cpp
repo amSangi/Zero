@@ -73,6 +73,7 @@ Camera::Camera()
 , position_(math::Vec3f::Zero())
 , orientation_(math::Quaternion::Identity())
 , viewport_()
+, render_bounding_volumes_(false)
 {
 }
 
@@ -84,6 +85,7 @@ Camera::Camera(Camera::ProjectionType projection_type)
 , position_(math::Vec3f::Zero())
 , orientation_(math::Quaternion::Identity())
 , viewport_()
+, render_bounding_volumes_(false)
 {
 }
 
@@ -120,7 +122,7 @@ void Camera::RollRelative(const math::Radian& angle) {
 }
 
 void Camera::LookAt(const math::Vec3f& target) {
-    math::Quaternion rotation = math::Quaternion::FromToRotation(GetViewDirection(), target);
+    math::Quaternion rotation = math::Quaternion::FromToRotation(GetViewDirection(), target - position_);
     Rotate(rotation);
 }
 
@@ -133,7 +135,7 @@ void Camera::GetNearClipCoordinates(math::Vec3f& bottom_left,
     math::Vec3f up = GetUpVector();
     math::Vec3f view_direction = GetViewDirection();
     math::Vec3f center = position_ + (view_direction * near_clip_);
-    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up));
+    math::Vec3f right_vector = GetRightVector();
 
     math::Vec3f vertical = (up * half_near_height);
     math::Vec3f horizontal = (right_vector * half_near_width);
@@ -151,7 +153,7 @@ void Camera::GetFarClipCoordinates(math::Vec3f& bottom_left,
     math::Vec3f up = GetUpVector();
     math::Vec3f view_direction = GetViewDirection();
     math::Vec3f center = position_ + (view_direction * far_clip_);
-    math::Vec3f right_vector = math::Vec3f::Normalize(math::Vec3f::Cross(view_direction, up));
+    math::Vec3f right_vector = GetRightVector();
 
     math::Vec3f vertical = (up * half_far_height);
     math::Vec3f horizontal = (right_vector * half_far_width);

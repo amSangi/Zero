@@ -14,6 +14,5 @@ in vec3 model_view_position;
 in vec2 texture_coord;
 
 void main() {
-    //gl_FragColor = texture2D(diffuse_texture, texture_coord);
-    gl_FragColor = vec4(1,1,1,1);
+    gl_FragColor = texture2D(diffuse_texture, texture_coord);
 }

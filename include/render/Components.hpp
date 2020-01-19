@@ -366,6 +366,11 @@ namespace zero::render {
          */
         Viewport viewport_;
 
+        /**
+         * @brief Should the bounding view volumes of the game entities be rendered?
+         */
+        bool render_bounding_volumes_;
+
     private:
 
         /**

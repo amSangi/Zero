@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IViewVolume.hpp"
+#include "math/Plane.hpp"
 
 namespace zero::render {
 

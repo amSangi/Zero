@@ -1,6 +1,5 @@
 #pragma once
 
-#include "math/Plane.hpp"
 #include "Components.hpp"
 
 namespace zero::render {

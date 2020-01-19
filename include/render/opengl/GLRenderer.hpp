@@ -62,6 +62,33 @@ namespace zero::render {
     private:
 
         /**
+         * @brief Update all OpenGL settings (e.g. Set viewport, clear color buffers, etc)
+         * @param camera the camera being rendered to
+         */
+        static void UpdateGL(const Camera& camera);
+
+        /**
+         * @brief Toggle wireframe mode
+         * @param enable_wireframe should wireframe be enabled?
+         */
+        static void ToggleWireframeMode(bool enable_wireframe);
+
+        /**
+         * @brief Render the wireframe of the bounding volume
+         * @param volume the volume to render
+         */
+        static void RenderVolume(const Volume& volume);
+
+        /**
+         * @brief Get all non-culled entities that are renderable (i.e. contain
+         * @param registry the registry containing all the entities and their components
+         * @param camera the camera to cull against
+         * @return all viewable entities
+         */
+        static std::vector<Component::Entity> GetViewableEntities(const entt::registry& registry,
+                                                                  const Camera& camera);
+
+        /**
          * @brief Render an entity
          * @param registry the registry containing all the entities and their components
          * @param viewable_entities the list of all non-culled entities
@@ -85,11 +112,6 @@ namespace zero::render {
          * @param destination the destination
          */
         static void ReadShaderSource(const std::string& filename, std::string& destination);
-
-        /**
-         * @brief Setup OpenGL for rendering
-         */
-        static void InitializeGL();
 
         /**
          * @brief Manage shader and graphics program usage

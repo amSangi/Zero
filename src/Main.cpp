@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
-#include "render/opengl/OpenGL.hpp"
 #include <SDL.h>
 
 using namespace zero;
@@ -59,7 +58,7 @@ RenderSystemConfig CreateRenderSystemConfig(const WindowConfig& window_config) {
     return render_system_config;
 }
 
-void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode) {
+void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode, const math::Vec3f& default_position) {
     math::Vec3f horizontal_speed = math::Vec3f(1.0F, 0.0F, 0.0F);
     math::Vec3f vertical_speed = math::Vec3f(0.0F, 1.0F, 0.0F);
     math::Vec3f forward_speed = math::Vec3f(0.0F, 0.0F, 1.0F);
@@ -103,6 +102,10 @@ void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode) {
         case SDLK_LEFT:
             camera.YawRelative(angle);
             break;
+        case SDLK_ESCAPE:
+            camera.position_ = default_position;
+            camera.orientation_ = math::Quaternion::Identity();
+            break;
         default:
             break;
     }
@@ -131,11 +134,13 @@ int main(int argc, char *argv[]) {
     auto camera_entity = registry.create();
     registry.assign<render::Camera>(camera_entity, render::Camera{render::Camera::ProjectionType::PERSPECTIVE});
     auto& camera = registry.get<render::Camera>(camera_entity);
+    auto default_camera_position = math::Vec3f(0.0F, 0.0F, 15.0F);
     camera.viewport_.width_ = window_config.width_;
     camera.viewport_.height_ = window_config.height_;
-    camera.position_ = math::Vec3f(0.0F, 0.0F, 15.0F);
+    camera.position_ = default_camera_position;
     camera.near_clip_ = 0.1F;
     camera.far_clip_ = 100.0F;
+    camera.render_bounding_volumes_ = true;
 
     // Instantiate a 3D model
     auto model_entity = engine->InstantiateModel(engine_config.render_system_config_.model_files_[0]);
@@ -143,6 +148,7 @@ int main(int argc, char *argv[]) {
     material.shaders_.vertex_shader_ = render_system_config.vertex_shader_files_[0];
     material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[0];
     material.texture_map_.diffuse_map_ = render_system_config.texture_files_[0];
+    material.wireframe_enabled_ = false;
     auto& transform = registry.get<Transform>(model_entity);
     transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
     // endregion
@@ -157,7 +163,7 @@ int main(int argc, char *argv[]) {
         while( SDL_PollEvent( &event ) ){
             switch( event.type ){
                 case SDL_KEYDOWN:
-                    HandleCameraMovement(camera, event.key.keysym.sym);
+                    HandleCameraMovement(camera, event.key.keysym.sym, default_camera_position);
                     break;
                 case SDL_QUIT:
                     quit = true;

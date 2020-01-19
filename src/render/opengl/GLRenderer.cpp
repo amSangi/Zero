@@ -11,6 +11,12 @@
 
 using namespace zero::render;
 
+constexpr zero::uint8 kAlphaTextureIndex = 0;
+constexpr zero::uint8 kAmbientTextureIndex = 1;
+constexpr zero::uint8 kDiffuseTextureIndex = 2;
+constexpr zero::uint8 kDisplacementTextureIndex = 3;
+constexpr zero::uint8 kNormalTextureIndex = 4;
+
 GLRenderer::GLRenderer()
 : graphics_compiler_(std::make_unique<GLCompiler>())
 , model_manager_(std::make_unique<GLModelManager>())
@@ -25,7 +31,7 @@ GLRenderer::~GLRenderer() {
 void GLRenderer::Initialize(const RenderSystemConfig& config) {
     ShutDown();
 
-    InitializeGL();
+    glEnable(GL_DEPTH_TEST);
 
     // Initialize Shaders
     for (const auto& vertex_shader_file : config.vertex_shader_files_) {
@@ -93,19 +99,8 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
         const auto projection_matrix = camera.GetProjectionMatrix();
         const auto view_matrix = camera.GetViewMatrix();
 
-        // Do not render culled entities
-        auto culler = ViewVolumeBuilder::create(camera);
-        std::vector<Component::Entity> viewable_entities;
-        for (auto renderable_entity : renderable_view) {
-            const auto& volume = renderable_view.get<const Volume>(renderable_entity);
-            if (culler->IsCulled(volume.bounding_volume_)) continue;
-            viewable_entities.push_back(renderable_entity);
-        }
-
-        glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
-        glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
-        glClear(GL_COLOR_BUFFER_BIT);
-        
+        UpdateGL(camera);
+        std::vector<Component::Entity> viewable_entities = GetViewableEntities(registry, camera);
         for (auto viewable_entity : viewable_entities) {
             const auto& model_instance = renderable_view.get<const ModelInstance>(viewable_entity);
             if (model_instance.child_identifier_ != 0) {
@@ -114,6 +109,13 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
             }
             const auto& transform = renderable_view.get<const Transform>(viewable_entity);
             const auto& material = renderable_view.get<const Material>(viewable_entity);
+
+            if (camera.render_bounding_volumes_) {
+                const auto& volume = renderable_view.get<const Volume>(viewable_entity);
+                RenderVolume(volume);
+            }
+
+            ToggleWireframeMode(material.wireframe_enabled_);
 
             auto model = model_manager_->GetModel(model_instance.filename_);
             if (!model) {
@@ -133,45 +135,40 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
             graphics_program->Use();
 
             // Texture Maps
-            constexpr uint8 alpha_index = 0;
-            constexpr uint8 ambient_index = 1;
-            constexpr uint8 diffuse_index = 2;
-            constexpr uint8 displacement_index = 3;
-            constexpr uint8 normal_index = 4;
-            auto gl_alpha_texture = texture_manager_->CreateTexture(material.texture_map_.alpha_map_, alpha_index);
-            auto gl_ambient_texture = texture_manager_->CreateTexture(material.texture_map_.ambient_map_, ambient_index);
-            auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, diffuse_index);
-            auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, displacement_index);
-            auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, normal_index);
+            auto gl_alpha_texture = texture_manager_->CreateTexture(material.texture_map_.alpha_map_, kAlphaTextureIndex);
+            auto gl_ambient_texture = texture_manager_->CreateTexture(material.texture_map_.ambient_map_, kAmbientTextureIndex);
+            auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, kDiffuseTextureIndex);
+            auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, kDisplacementTextureIndex);
+            auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, kNormalTextureIndex);
             if (gl_alpha_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + alpha_index;
+                GLenum texture_unit = GL_TEXTURE0 + kAlphaTextureIndex;
                 gl_alpha_texture->GenerateMipMap(texture_unit);
                 gl_alpha_texture->Bind(texture_unit);
-                graphics_program->SetUniform("alpha_texture", alpha_index);
+                graphics_program->SetUniform("alpha_texture", kAlphaTextureIndex);
             }
             if (gl_ambient_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + ambient_index;
+                GLenum texture_unit = GL_TEXTURE0 + kAmbientTextureIndex;
                 gl_ambient_texture->GenerateMipMap(texture_unit);
                 gl_ambient_texture->Bind(texture_unit);
-                graphics_program->SetUniform("ambient_texture", ambient_index);
+                graphics_program->SetUniform("ambient_texture", kAmbientTextureIndex);
             }
             if (gl_diffuse_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + diffuse_index;
+                GLenum texture_unit = GL_TEXTURE0 + kDiffuseTextureIndex;
                 gl_diffuse_texture->GenerateMipMap(texture_unit);
                 gl_diffuse_texture->Bind(texture_unit);
-                graphics_program->SetUniform("diffuse_texture", diffuse_index);
+                graphics_program->SetUniform("diffuse_texture", kDiffuseTextureIndex);
             }
             if (gl_displacement_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + displacement_index;
+                GLenum texture_unit = GL_TEXTURE0 + kDisplacementTextureIndex;
                 gl_displacement_texture->GenerateMipMap(texture_unit);
                 gl_displacement_texture->Bind(texture_unit);
-                graphics_program->SetUniform("displacement_texture", displacement_index);
+                graphics_program->SetUniform("displacement_texture", kDisplacementTextureIndex);
             }
             if (gl_normal_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + normal_index;
+                GLenum texture_unit = GL_TEXTURE0 + kNormalTextureIndex;
                 gl_normal_texture->GenerateMipMap(texture_unit);
                 gl_normal_texture->Bind(texture_unit);
-                graphics_program->SetUniform("normal_texture", normal_index);
+                graphics_program->SetUniform("normal_texture", kNormalTextureIndex);
             }
 
             graphics_program->SetUniform("projection_matrix", projection_matrix);
@@ -188,7 +185,6 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
 
             graphics_program->Finish();
         }
-
     }
 }
 
@@ -210,6 +206,50 @@ zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, c
     }
 
     return instantiator_->InstantiateModel(registry, gl_model);
+}
+
+//////////////////////////////////////////////////
+///// Static Helpers
+//////////////////////////////////////////////////
+
+void GLRenderer::UpdateGL(const Camera& camera) {
+    glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
+    glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GLRenderer::ToggleWireframeMode(bool enable_wireframe) {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (enable_wireframe) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+}
+
+void GLRenderer::RenderVolume(const Volume& volume) {
+    // TODO: Implement volume wireframe rendering
+}
+
+std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt::registry& registry,
+                                                                     const Camera& camera) {
+    auto renderable_view = registry.view<const Transform,
+                                         const Volume,
+                                         const Material,
+                                         const ModelInstance>();
+
+    auto culler = ViewVolumeBuilder::create(camera);
+    std::vector<Component::Entity> viewable_entities;
+
+    for (auto renderable_entity : renderable_view) {
+        const auto& volume = renderable_view.get<const Volume>(renderable_entity);
+        if (culler->IsCulled(volume.bounding_volume_)) {
+            std::cout << "Entity culled" << std::endl;
+            continue;
+        }
+        std::cout << "Entity not culled" << std::endl;
+        viewable_entities.push_back(renderable_entity);
+    }
+
+    return viewable_entities;
 }
 
 void GLRenderer::RenderEntity(const entt::registry& registry,
@@ -258,8 +298,4 @@ void GLRenderer::ReadShaderSource(const std::string& filename, std::string& dest
     std::stringstream buffer;
     buffer << input_file.rdbuf();
     destination = buffer.str();
-}
-
-void GLRenderer::InitializeGL() {
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 }
