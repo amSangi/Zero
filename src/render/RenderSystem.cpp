@@ -32,7 +32,6 @@ void RenderSystem::Update(const TimeDelta& time_delta) {
 }
 
 void RenderSystem::PostUpdate() {
-    // Cleanup the renderer after rendering
     renderer_->PostRender(GetRegistry());
 }
 

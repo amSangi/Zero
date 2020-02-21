@@ -75,15 +75,6 @@ GLModel::GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,
 , model_instance_(std::move(model_instance))
 {}
 
-void GLModel::Initialize() {
-    for (const auto& mesh : meshes_) {
-        mesh->Initialize();
-    }
-    for (const auto& child_model : child_models_) {
-        child_model->Initialize();
-    }
-}
-
 void GLModel::Draw() {
     for (const auto& mesh : meshes_) {
         mesh->Draw();

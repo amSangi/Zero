@@ -19,6 +19,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/Components.cpp
                              render/Image.cpp
                              render/Mesh.cpp
+                             render/MeshGenerator.cpp
                              render/OrthographicViewVolume.cpp
                              render/PerspectiveViewVolume.cpp
                              render/Propagator.cpp
@@ -27,10 +28,12 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/Window.cpp
                              render/opengl/GLAssetImportWrapper.cpp
                              render/opengl/GLCompiler.cpp
+                             render/opengl/GLDefaultShader.cpp
                              render/opengl/GLInstantiator.cpp
                              render/opengl/GLMesh.cpp
                              render/opengl/GLModel.cpp
                              render/opengl/GLModelManager.cpp
+                             render/opengl/GLPrimitiveGenerator.cpp
                              render/opengl/GLProgram.cpp
                              render/opengl/GLRenderer.cpp
                              render/opengl/GLSampler.cpp

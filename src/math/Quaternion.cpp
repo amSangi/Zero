@@ -191,11 +191,11 @@ Vec3f Quaternion::GetEulerAngles() const {
 	float test = x_ * y_ + z_ * w_;
 
 	if (test > 0.499F * unit) {
-		return Vec3f(2.0F * Atan2(x_, w_), PI_2, 0.0F);
+		return Vec3f(2.0F * Atan2(x_, w_), kHalfPi, 0.0F);
 	}
 
 	if (test < -0.499F * unit) {
-		return Vec3f(-2.0F * Atan2(x_, w_), -PI_2, 0.0F);
+		return Vec3f(-2.0F * Atan2(x_, w_), -kHalfPi, 0.0F);
 	}
 
 	float heading = Atan2(2.0F * (y_ * w_ - x_ * z_), xx - yy - zz + ww);
@@ -307,7 +307,7 @@ Quaternion Quaternion::FromMatrix3(const Matrix3x3& matrix) {
 }
 
 Quaternion Quaternion::LookRotation(const Vec3f& direction, const Vec3f& up) {
-	if (direction.SquareMagnitude() < EPSILON) {
+	if (direction.SquareMagnitude() < kEpsilon) {
 		return Identity();
 	}
 
@@ -329,10 +329,10 @@ Quaternion Quaternion::FromToRotation(const Vec3f& from, const Vec3f& to) {
 	float theta = Vec3f::Dot(from_N, to_N);
 	Vec3f rotation_axis;
 
-	if (theta < -1.0F + EPSILON) {
+	if (theta < -1.0F + kEpsilon) {
 		rotation_axis = Vec3f::Cross(Vec3f::Forward(), from_N);
 
-		if (rotation_axis.SquareMagnitude() < EPSILON) {
+		if (rotation_axis.SquareMagnitude() < kEpsilon) {
 			rotation_axis = Vec3f::Cross(Vec3f::Right(), from_N);
 		}
 

@@ -4,10 +4,12 @@
 #include <vector>
 #include "core/ZBase.hpp"
 #include "core/Component.hpp"
+#include "math/Box.hpp"
 #include "math/Sphere.hpp"
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
 #include "math/Matrix4x4.hpp"
+#include "math/Plane.hpp"
 #include "math/Quaternion.hpp"
 
 namespace zero::render {
@@ -58,6 +60,8 @@ namespace zero::render {
      * @brief A material component for rendering
      */
     struct Material : public Component {
+
+        Material();
 
         /**
          * @brief Shader files used by the material
@@ -149,6 +153,11 @@ namespace zero::render {
           */
          bool wireframe_enabled_;
 
+         /**
+          * @brief Is the entity visible? Only visible entities are rendered.
+          */
+         bool visible_;
+
     }; // struct Material
 
     /**
@@ -167,6 +176,36 @@ namespace zero::render {
         uint32 child_identifier_;
 
     }; // struct ModelInstance
+
+    /**
+     * @brief An instance of a primitive. The mesh is generated at runtime.
+     */
+    struct PrimitiveInstance : public Component {
+
+        /**
+         * @brief The type of the primitive
+         */
+        enum class Type
+        {
+            SPHERE,
+            BOX,
+            PLANE,
+        }; // enum class Type
+
+        /**
+         * @brief The mathematical representation of the primitive.
+         */
+        union Primitive
+        {
+            math::Sphere sphere_;
+            math::Box box_;
+            math::Plane plane_;
+        }; // union Primitive
+
+        Type type_;
+        Primitive primitive_;
+
+    }; // struct PrimitiveInstance
 
     /**
      * @brief Camera component that manages properties used for displaying the world on a viewport

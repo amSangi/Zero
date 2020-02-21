@@ -64,7 +64,7 @@ namespace zero::math {
 		 * @param d The degree value
 		 * @return The Radian
 		 */
-		static inline Radian FromDegree(float d)           { return Radian(d * DEGREE_TO_RADIAN); }
+		static inline Radian FromDegree(float d)           { return Radian(d * kDegreeToRadian); }
 
 		/**
 		 * @brief The radian value

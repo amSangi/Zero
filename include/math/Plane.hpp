@@ -46,7 +46,7 @@ namespace zero::math {
 		 * @param other The other plane
 		 * @return True if the other plane intersects with this. Otherwise false.
 		 */
-		bool Intersects(const Plane& other, float epsilon = EPSILON) const;
+		bool Intersects(const Plane& other, float epsilon = kEpsilon) const;
 
 		/* ********** Transform Operations ********** */
 

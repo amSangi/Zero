@@ -2,6 +2,9 @@
 #include "render/opengl/GLModel.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLSampler.hpp"
+#include "render/opengl/GLPrimitiveGenerator.hpp"
+#include "render/opengl/GLDefaultShader.hpp"
+#include "render/MeshGenerator.hpp"
 #include "render/ViewVolumeBuilder.hpp"
 #include "core/Transform.hpp"
 #include <algorithm>
@@ -30,61 +33,10 @@ GLRenderer::~GLRenderer() {
 
 void GLRenderer::Initialize(const RenderSystemConfig& config) {
     ShutDown();
-
-    glEnable(GL_DEPTH_TEST);
-
-    // Initialize Shaders
-    for (const auto& vertex_shader_file : config.vertex_shader_files_) {
-        ShaderStage stage;
-        stage.type_ = IShader::Type::VERTEX_SHADER;
-        stage.filename_ = vertex_shader_file;
-
-        // Read source
-        ReadShaderSource(stage.filename_, stage.source_);
-        if (stage.source_.empty()) {
-            continue;
-        }
-
-        if (!graphics_compiler_->InitializeShader(stage)) {
-            std::cout << "Failed to initialize vertex shader" << std::endl;
-        }
-    }
-    for (const auto& fragment_shader_file : config.fragment_shader_files_) {
-        ShaderStage stage;
-        stage.type_ = IShader::Type::FRAGMENT_SHADER;
-        stage.filename_ = fragment_shader_file;
-
-        // Read source
-        ReadShaderSource(stage.filename_, stage.source_);
-        if (stage.source_.empty()) {
-            continue;
-        }
-
-        if (!graphics_compiler_->InitializeShader(stage)) {
-            std::cout << "Failed to initialize fragment shader" << std::endl;
-        }
-    }
-
-    // Initialize 3D Models
-    for (const auto& model_file : config.model_files_) {
-        model_manager_->LoadModel(model_file);
-    }
-    model_manager_->InitializeModels();
-
-    // Initialize Images
-    for (const auto& texture_file : config.texture_files_) {
-        texture_manager_->InitializeImage(texture_file);
-    }
-
-    auto texture_sampler = std::make_shared<GLSampler>();
-    texture_sampler->Initialize();
-    texture_sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
-    texture_sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
-    texture_sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
-    texture_sampler->SetWrappingT(ISampler::Wrapping::REPEAT);
-    for (int i = 0; i < texture_manager_->GetTextureUnitCount(); ++i) {
-        texture_manager_->SetSampler(texture_sampler, i);
-    }
+    InitializeGL();
+    InitializeShaders(config);
+    InitializeModels(config);
+    InitializeImages(config);
 }
 
 void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_delta) {
@@ -112,18 +64,18 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
 
             if (camera.render_bounding_volumes_) {
                 const auto& volume = renderable_view.get<const Volume>(viewable_entity);
-                RenderVolume(volume);
+                RenderVolume(projection_matrix,
+                             view_matrix,
+                             volume);
+            }
+
+            if (!material.visible_) {
+                continue;
             }
 
             ToggleWireframeMode(material.wireframe_enabled_);
 
             auto model = model_manager_->GetModel(model_instance.filename_);
-            if (!model) {
-                // TODO: Add error logging
-                std::cout << "Failed to load model" << std::endl;
-                continue;
-            }
-            model->Initialize();
 
             // Shader Program
             auto graphics_program = graphics_compiler_->CreateProgram(material);
@@ -179,7 +131,6 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
                          viewable_entities,
                          graphics_program,
                          view_matrix,
-                         projection_matrix,
                          transform,
                          model);
 
@@ -209,24 +160,117 @@ zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, c
 }
 
 //////////////////////////////////////////////////
+///// Helpers
+//////////////////////////////////////////////////
+void GLRenderer::InitializeShaders(const RenderSystemConfig& config) {
+    for (const auto& vertex_shader_file : config.vertex_shader_files_) {
+        ShaderStage stage;
+        stage.type_ = IShader::Type::VERTEX_SHADER;
+        stage.name_ = vertex_shader_file;
+
+        ReadShaderSource(vertex_shader_file, stage.source_);
+        if (stage.source_.empty()) {
+            continue;
+        }
+
+        if (!graphics_compiler_->InitializeShader(stage)) {
+            std::cout << "Failed to initialize vertex shader" << std::endl;
+        }
+    }
+
+    for (const auto& fragment_shader_file : config.fragment_shader_files_) {
+        ShaderStage stage;
+        stage.type_ = IShader::Type::FRAGMENT_SHADER;
+        stage.name_ = fragment_shader_file;
+
+        // Read source
+        ReadShaderSource(fragment_shader_file, stage.source_);
+        if (stage.source_.empty()) {
+            continue;
+        }
+
+        if (!graphics_compiler_->InitializeShader(stage)) {
+            std::cout << "Failed to initialize fragment shader" << std::endl;
+        }
+    }
+
+    if (!graphics_compiler_->InitializeShader(GLDefaultShader::kVertexShader)) {
+        std::cout << "Failed to initialize default vertex shader" << std::endl;
+    }
+    if (!graphics_compiler_->InitializeShader(GLDefaultShader::kFragmentShader)) {
+        std::cout << "Failed to initialize default fragment shader" << std::endl;
+    }
+}
+
+void GLRenderer::InitializeModels(const RenderSystemConfig& config) {
+    for (const auto& model_file : config.model_files_) {
+        model_manager_->LoadModel(model_file);
+    }
+}
+
+void GLRenderer::InitializeImages(const RenderSystemConfig& config) {
+    for (const auto& texture_file : config.texture_files_) {
+        texture_manager_->InitializeImage(texture_file);
+    }
+    auto texture_sampler = std::make_shared<GLSampler>();
+    texture_sampler->Initialize();
+    texture_sampler->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
+    texture_sampler->SetMagnificationFilter(ISampler::Filter::LINEAR);
+    texture_sampler->SetWrappingS(ISampler::Wrapping::REPEAT);
+    texture_sampler->SetWrappingT(ISampler::Wrapping::REPEAT);
+    for (int i = 0; i < texture_manager_->GetTextureUnitCount(); ++i) {
+        texture_manager_->SetSampler(texture_sampler, i);
+    }
+}
+
+void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
+                              const math::Matrix4x4& view_matrix,
+                              const Volume& volume) {
+    Material default_material;
+    default_material.shaders_.vertex_shader_ = GLDefaultShader::kVertexShader.name_;
+    default_material.shaders_.fragment_shader_ = GLDefaultShader::kFragmentShader.name_;
+    ToggleWireframeMode(true);
+    auto gl_primitive_program = graphics_compiler_->CreateProgram(default_material);
+    gl_primitive_program->Use();
+    gl_primitive_program->SetUniform("projection_matrix", projection_matrix);
+    // View Matrix * Identity Matrix = View Matrix
+    gl_primitive_program->SetUniform("model_view_matrix", view_matrix);
+    gl_primitive_program->FlushUniforms();
+
+    auto gl_primitive = GLPrimitiveGenerator::Generate(volume.bounding_volume_);
+    gl_primitive->Draw();
+    gl_primitive_program->Finish();
+}
+
+//////////////////////////////////////////////////
 ///// Static Helpers
 //////////////////////////////////////////////////
+void GLRenderer::InitializeGL() {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+
+    glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
+
+    glDepthFunc(GL_LEQUAL);
+}
 
 void GLRenderer::UpdateGL(const Camera& camera) {
     glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
     glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void GLRenderer::ToggleWireframeMode(bool enable_wireframe) {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     if (enable_wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
-}
-
-void GLRenderer::RenderVolume(const Volume& volume) {
-    // TODO: Implement volume wireframe rendering
+    else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 }
 
 std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt::registry& registry,
@@ -242,10 +286,8 @@ std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt:
     for (auto renderable_entity : renderable_view) {
         const auto& volume = renderable_view.get<const Volume>(renderable_entity);
         if (culler->IsCulled(volume.bounding_volume_)) {
-            std::cout << "Entity culled" << std::endl;
             continue;
         }
-        std::cout << "Entity not culled" << std::endl;
         viewable_entities.push_back(renderable_entity);
     }
 
@@ -256,7 +298,6 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
                               const std::vector<Component::Entity>& viewable_entities,
                               const std::shared_ptr<IProgram>& graphics_program,
                               const math::Matrix4x4& view_matrix,
-                              const math::Matrix4x4& projection_matrix,
                               const Transform& transform,
                               const std::shared_ptr<GLModel>& model) {
 
@@ -286,7 +327,6 @@ void GLRenderer::RenderEntity(const entt::registry& registry,
                      viewable_entities,
                      graphics_program,
                      view_matrix,
-                     projection_matrix,
                      child_transform,
                      child_gl_model);
     }

@@ -63,5 +63,5 @@ Radian& Radian::operator/=(const Degree& d) {
 }
 
 Degree Radian::ToDegree() const {
-    return Degree(rad_ * RADIAN_TO_DEGREE);
+    return Degree(rad_ * kRadianToDegree);
 }

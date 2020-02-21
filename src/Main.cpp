@@ -85,10 +85,10 @@ void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode, const mat
             camera.TranslateRelative(-1.0F * forward_speed);
             break;
         case SDLK_q:
-            camera.RollRelative(opposite_angle);
+            camera.RollRelative(angle);
             break;
         case SDLK_e:
-            camera.RollRelative(angle);
+            camera.RollRelative(opposite_angle);
             break;
         case SDLK_UP:
             camera.PitchRelative(angle);
@@ -149,6 +149,7 @@ int main(int argc, char *argv[]) {
     material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[0];
     material.texture_map_.diffuse_map_ = render_system_config.texture_files_[0];
     material.wireframe_enabled_ = false;
+    material.visible_ = true;
     auto& transform = registry.get<Transform>(model_entity);
     transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
     // endregion

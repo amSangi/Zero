@@ -61,6 +61,24 @@ namespace zero::render {
 
     private:
 
+        void InitializeShaders(const RenderSystemConfig& config);
+        void InitializeModels(const RenderSystemConfig& config);
+        void InitializeImages(const RenderSystemConfig& config);
+        /**
+         * @brief Render the wireframe of the bounding volume
+         * @param projection_matrix the projection matrix of the camera
+         * @param view_matrix the view matrix of the camera
+         * @param volume the volume to render
+         */
+        void RenderVolume(const math::Matrix4x4& projection_matrix,
+                          const math::Matrix4x4& view_matrix,
+                          const Volume& volume);
+
+        /**
+         * @brief Initialize OpenGL for rendering (e.g. enable depth testing)
+         */
+        static void InitializeGL();
+
         /**
          * @brief Update all OpenGL settings (e.g. Set viewport, clear color buffers, etc)
          * @param camera the camera being rendered to
@@ -74,13 +92,7 @@ namespace zero::render {
         static void ToggleWireframeMode(bool enable_wireframe);
 
         /**
-         * @brief Render the wireframe of the bounding volume
-         * @param volume the volume to render
-         */
-        static void RenderVolume(const Volume& volume);
-
-        /**
-         * @brief Get all non-culled entities that are renderable (i.e. contain
+         * @brief Get all non-culled entities that are renderable
          * @param registry the registry containing all the entities and their components
          * @param camera the camera to cull against
          * @return all viewable entities
@@ -94,7 +106,6 @@ namespace zero::render {
          * @param viewable_entities the list of all non-culled entities
          * @param graphics_program the graphics program used for the rendering of the entity
          * @param view_matrix the camera's view matrix
-         * @param projection_matrix the camera's projection matrix
          * @param transform the transform of the entity
          * @param model the 3D model associated with the entity
          */
@@ -102,7 +113,6 @@ namespace zero::render {
                                  const std::vector<Component::Entity>& viewable_entities,
                                  const std::shared_ptr<IProgram>& graphics_program,
                                  const math::Matrix4x4& view_matrix,
-                                 const math::Matrix4x4& projection_matrix,
                                  const Transform& transform,
                                  const std::shared_ptr<GLModel>& model);
 

@@ -269,7 +269,7 @@ namespace detail {
 
 		/**
 		 * @brief Normalize the vector if it's possible
-		 * @return True if magnitude is > EPSILON. False otherwise.
+		 * @return True if magnitude is > kEpsilon. False otherwise.
 		 */
 		bool Normalize();
 
@@ -278,7 +278,7 @@ namespace detail {
 		 * @param epsilon the epsilon value (very small)
 		 * @return True if the components are <= epsilon. False otherwise.
 		 */
-        [[nodiscard]] bool IsEpsilon(float epsilon = EPSILON) const;
+        [[nodiscard]] bool IsEpsilon(float epsilon = kEpsilon) const;
 
 		/**
 		 * @brief Helper to convert to a 3D Vector of the same type
@@ -514,7 +514,7 @@ namespace detail {
 		float magnitude = Magnitude();
 
 		float inv_magnitude = 1.0F / magnitude;
-		if (magnitude > SMALL_EPSILON) {
+		if (magnitude > kSmallEpsilon) {
 			operator*=(inv_magnitude);
 			return true;
 		}

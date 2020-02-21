@@ -247,19 +247,19 @@ TEST(TestVector, LerpComplex) {
 TEST(TestVector, Angle) {
 	Radian expected, actual;
 
-	expected = Radian(PI / 2.0F);
+	expected = Radian(kPi / 2.0F);
 	actual = Vec3f::Angle(Vec3f::Right(), Vec3f::Up());
 	EXPECT_EQ(actual, expected);
 
-	expected = Radian(PI);
+	expected = Radian(kPi);
 	actual = Vec3f::Angle(Vec3f::Right(), Vec3f::Left());
     EXPECT_EQ(actual, expected);
 
-	expected = Radian(PI / 2.0F);
+	expected = Radian(kPi / 2.0F);
 	actual = Vec3f::Angle(Vec3f::Right(), Vec3f::Down());
     EXPECT_EQ(actual, expected);
 
-	expected = Radian(PI / 2.0F);
+	expected = Radian(kPi / 2.0F);
 	actual = Vec3f::Angle(Vec3f(1.0F, 1.0F), Vec3f(-1.0F, 1.0F));
     EXPECT_EQ(actual, expected);
 

@@ -6,7 +6,7 @@ using namespace zero::render;
 
 std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh) {
     std::vector<Vertex> vertices;
-    std::vector<uint16> indices;
+    std::vector<uint32> indices;
     vertices.reserve(mesh->mNumVertices);
     indices.reserve(mesh->mNumFaces * 3);
 

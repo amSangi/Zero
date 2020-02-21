@@ -7,9 +7,9 @@
 namespace zero::render {
 
     /**
-     * @brief OpenGL mesh container. Stores the mesh data in main memory as well.
+     * @brief Mesh container with the ability to draw using OpenGL
      */
-    class GLMesh final : public Mesh, public IRenderResource {
+    class GLMesh final : public Mesh {
     public:
 
         /**
@@ -17,41 +17,14 @@ namespace zero::render {
          * @param vertices the interleaved vertex data
          * @param indices the vertex indices
          */
-        GLMesh(std::vector<Vertex>&& vertices, std::vector<uint16>&& indices);
+        GLMesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
 
-        ~GLMesh() override;
-
-        /**
-         * @brief Initialize the OpenGL identifiers (VAO, VBO, EBO)
-         */
-        void Initialize();
+        ~GLMesh() override = default;
 
         /**
          * @brief Render the mesh
          */
         void Draw();
-
-    private:
-
-        /**
-         * @brief Cleanup all of the rendering resources
-         */
-        void Cleanup() override;
-
-        /**
-         * @brief Vertex Array Object identifier
-         */
-        GLuint vao_;
-
-        /**
-         * @brief Interleaved Vertex Buffer Identifier
-         */
-        GLuint vbo_;
-
-        /**
-         * @brief Vertex Index Buffer Identifier
-         */
-        GLuint ebo_;
 
     }; // class GLMesh
 

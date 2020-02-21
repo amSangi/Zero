@@ -54,7 +54,7 @@ bool Sphere::Contains(const Sphere& other) const {
     auto radius_difference = radius_ - other.radius_;
     auto square_radius_difference = radius_difference * radius_difference;
 	auto square_distance = Vec3f::SquareDistance(center_, other.center_);
-	return (square_distance - square_radius_difference) <= EPSILON;
+	return (square_distance - square_radius_difference) <= kEpsilon;
 }
 
 bool Sphere::Contains(const Vec3f& point) const {
@@ -67,7 +67,7 @@ bool Sphere::Intersects(const Sphere& other) const {
 }
 
 void Sphere::Merge(const Sphere& other) {
-	if (radius_ <= EPSILON || other.Contains(*this)) {
+	if (radius_ <= kEpsilon || other.Contains(*this)) {
 		*this = other;
 	}
 	else if (Contains(other)) {
@@ -78,7 +78,7 @@ void Sphere::Merge(const Sphere& other) {
 		Vec3f direction = center_ - other.center_;
 		float distance = direction.Magnitude();
 		// Normalize direction
-		if (distance > SMALL_EPSILON) direction /= distance;
+		if (distance > kSmallEpsilon) direction /= distance;
 
 		// Half of diameter of enclosing circle
 		float merged_radius = (distance + radius_ + other.radius_) * 0.5F;

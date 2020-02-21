@@ -25,7 +25,7 @@ namespace zero::render {
          * @param vertices Interleaved vertices
          * @param indices Vertex indices
          */
-        Mesh(std::vector<Vertex>&& vertices, std::vector<uint16>&& indices);
+        Mesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
 
         virtual ~Mesh() = default;
 
@@ -39,11 +39,11 @@ namespace zero::render {
          * @brief Get the vertex indices
          * @return the indices
          */
-        [[nodiscard]] const std::vector<uint16>& GetIndices() const;
+        [[nodiscard]] const std::vector<uint32>& GetIndices() const;
 
     protected:
         std::vector<Vertex> vertices_;
-        std::vector<uint16> indices_;
+        std::vector<uint32> indices_;
 
     }; // class Mesh
 

@@ -51,7 +51,7 @@ std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
 }
 
 bool GLCompiler::InitializeShader(const ShaderStage& stage) {
-    if (shader_map_.find(stage.filename_) != shader_map_.end()) return true;
+    if (shader_map_.find(stage.name_) != shader_map_.end()) return true;
 
     std::shared_ptr<GLShader> shader = std::make_shared<GLShader>(stage.source_, stage.type_);
 
@@ -59,7 +59,7 @@ bool GLCompiler::InitializeShader(const ShaderStage& stage) {
         return false;
     }
 
-    shader_map_[stage.filename_] = shader;
+    shader_map_[stage.name_] = shader;
     return true;
 }
 

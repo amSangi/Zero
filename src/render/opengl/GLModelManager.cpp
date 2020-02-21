@@ -35,12 +35,6 @@ bool GLModelManager::LoadModel(const std::string& filename) {
     return true;
 }
 
-void GLModelManager::InitializeModels() {
-    for (const auto& model_pair : model_map_) {
-        model_pair.second->Initialize();
-    }
-}
-
 void GLModelManager::ClearModels() {
     model_map_.clear();
 }

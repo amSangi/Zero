@@ -188,10 +188,10 @@ TEST(TestQuaternion, FromAngleAxis) {
 
 TEST(TestQuaternion, LookRotation) {
 	EXPECT_EQ(Quaternion::LookRotation(Vec3f::Right()).GetEulerAngles(),
-              Vec3f(0.0F, 90.0F * DEGREE_TO_RADIAN, 0.0F));
+              Vec3f(0.0F, 90.0F * kDegreeToRadian, 0.0F));
 }
 
 TEST(TestQuaternion, FromToRotation) {
 	EXPECT_EQ(Quaternion::FromToRotation(Vec3f::Right(), Vec3f::Up()).GetEulerAngles(),
-              Vec3f(0.0F, 90.0F * DEGREE_TO_RADIAN, 0.0F));
+              Vec3f(0.0F, 90.0F * kDegreeToRadian, 0.0F));
 }

@@ -58,14 +58,14 @@ namespace zero::math {
 		 * @brief Convert this Degree object into a Radian object
 		 * @return The Radian object
 		 */
-        [[nodiscard]] Radian ToRadian() const              { return Radian(deg_ * DEGREE_TO_RADIAN); }
+        [[nodiscard]] Radian ToRadian() const              { return Radian(deg_ * kDegreeToRadian); }
 
 		/**
 		 * @brief Create a Degree from a radian value
 		 * @param r The radian value
 		 * @return The Degree
 		 */
-		static inline Degree FromRadian(float r)           { return Degree(r * RADIAN_TO_DEGREE); }
+		static inline Degree FromRadian(float r)           { return Degree(r * kRadianToDegree); }
 
 		/**
 		 * @brief The degree value
