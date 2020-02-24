@@ -5,7 +5,7 @@
 
 using namespace zero::render;
 
-std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& root_filename,
+std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename,
                                                 std::minstd_rand0 rng,
                                                 uint32 identifier,
                                                 const aiNode* node,
@@ -41,7 +41,7 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& root_filename
     Transform transform = Transform::FromMatrix4x4(transformation);
 
     ModelInstance model_instance{};
-    model_instance.filename_ = root_filename;
+    model_instance.filename_ = filename;
     model_instance.child_identifier_ = identifier;
 
     auto root_model = std::make_shared<GLModel>(meshes,          // Mesh data
@@ -53,7 +53,7 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& root_filename
     // Create Child GLModels
     std::vector<std::shared_ptr<GLModel>> children;
     for (uint32 i = 0; i < node->mNumChildren; ++i) {
-        auto child_model = GLModel::CreateGLModel("", rng, rng(), node->mChildren[i], scene);
+        auto child_model = GLModel::CreateGLModel(filename, rng, rng(), node->mChildren[i], scene);
         child_model->parent_model_ = root_model;
         root_model->child_models_.push_back(std::move(child_model));
     }
@@ -116,7 +116,6 @@ std::shared_ptr<GLModel> GLModel::FindChild(uint32 identifier) const {
 
     return nullptr;
 }
-
 
 const std::vector<std::shared_ptr<GLModel>>& GLModel::GetChildren() const {
     return child_models_;

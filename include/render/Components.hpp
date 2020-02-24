@@ -166,7 +166,7 @@ namespace zero::render {
     struct ModelInstance : public Component {
 
         /**
-         * @brief The fully qualified filename of the 3D model. Empty string for child models.
+         * @brief The fully qualified filename of the 3D model.
          */
         std::string filename_;
 

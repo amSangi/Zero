@@ -39,7 +39,7 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
     InitializeImages(config);
 }
 
-void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_delta) {
+void GLRenderer::Render(const entt::registry& registry) {
     auto camera_view = registry.view<const Camera>();
     auto renderable_view = registry.view<const Transform,
                                          const Volume,
@@ -48,94 +48,7 @@ void GLRenderer::Render(const entt::registry& registry, const TimeDelta& time_de
 
     for (auto camera_entity : camera_view) {
         const auto& camera = camera_view.get(camera_entity);
-        const auto projection_matrix = camera.GetProjectionMatrix();
-        const auto view_matrix = camera.GetViewMatrix();
-
-        UpdateGL(camera);
-        std::vector<Component::Entity> viewable_entities = GetViewableEntities(registry, camera);
-        for (auto viewable_entity : viewable_entities) {
-            const auto& model_instance = renderable_view.get<const ModelInstance>(viewable_entity);
-            if (model_instance.child_identifier_ != 0) {
-                // Entity is a child entity. Already rendered.
-                continue;
-            }
-            const auto& transform = renderable_view.get<const Transform>(viewable_entity);
-            const auto& material = renderable_view.get<const Material>(viewable_entity);
-
-            if (camera.render_bounding_volumes_) {
-                const auto& volume = renderable_view.get<const Volume>(viewable_entity);
-                RenderVolume(projection_matrix,
-                             view_matrix,
-                             volume);
-            }
-
-            if (!material.visible_) {
-                continue;
-            }
-
-            ToggleWireframeMode(material.wireframe_enabled_);
-
-            auto model = model_manager_->GetModel(model_instance.filename_);
-
-            // Shader Program
-            auto graphics_program = graphics_compiler_->CreateProgram(material);
-            if (!graphics_program) {
-                // TODO: Add error logging
-                std::cout << "Failed to create graphics program" << std::endl;
-                continue;
-            }
-            graphics_program->Use();
-
-            // Texture Maps
-            auto gl_alpha_texture = texture_manager_->CreateTexture(material.texture_map_.alpha_map_, kAlphaTextureIndex);
-            auto gl_ambient_texture = texture_manager_->CreateTexture(material.texture_map_.ambient_map_, kAmbientTextureIndex);
-            auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, kDiffuseTextureIndex);
-            auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, kDisplacementTextureIndex);
-            auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, kNormalTextureIndex);
-            if (gl_alpha_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + kAlphaTextureIndex;
-                gl_alpha_texture->GenerateMipMap(texture_unit);
-                gl_alpha_texture->Bind(texture_unit);
-                graphics_program->SetUniform("alpha_texture", kAlphaTextureIndex);
-            }
-            if (gl_ambient_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + kAmbientTextureIndex;
-                gl_ambient_texture->GenerateMipMap(texture_unit);
-                gl_ambient_texture->Bind(texture_unit);
-                graphics_program->SetUniform("ambient_texture", kAmbientTextureIndex);
-            }
-            if (gl_diffuse_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + kDiffuseTextureIndex;
-                gl_diffuse_texture->GenerateMipMap(texture_unit);
-                gl_diffuse_texture->Bind(texture_unit);
-                graphics_program->SetUniform("diffuse_texture", kDiffuseTextureIndex);
-            }
-            if (gl_displacement_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + kDisplacementTextureIndex;
-                gl_displacement_texture->GenerateMipMap(texture_unit);
-                gl_displacement_texture->Bind(texture_unit);
-                graphics_program->SetUniform("displacement_texture", kDisplacementTextureIndex);
-            }
-            if (gl_normal_texture) {
-                GLenum texture_unit = GL_TEXTURE0 + kNormalTextureIndex;
-                gl_normal_texture->GenerateMipMap(texture_unit);
-                gl_normal_texture->Bind(texture_unit);
-                graphics_program->SetUniform("normal_texture", kNormalTextureIndex);
-            }
-
-            graphics_program->SetUniform("projection_matrix", projection_matrix);
-            graphics_program->SetUniform("camera_position", camera.position_);
-            graphics_program->FlushUniforms();
-
-            RenderEntity(registry,
-                         viewable_entities,
-                         graphics_program,
-                         view_matrix,
-                         transform,
-                         model);
-
-            graphics_program->Finish();
-        }
+        RenderWithCamera(camera, registry);
     }
 }
 
@@ -163,42 +76,31 @@ zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, c
 ///// Helpers
 //////////////////////////////////////////////////
 void GLRenderer::InitializeShaders(const RenderSystemConfig& config) {
-    for (const auto& vertex_shader_file : config.vertex_shader_files_) {
-        ShaderStage stage;
-        stage.type_ = IShader::Type::VERTEX_SHADER;
-        stage.name_ = vertex_shader_file;
-
-        ReadShaderSource(vertex_shader_file, stage.source_);
-        if (stage.source_.empty()) {
-            continue;
-        }
-
-        if (!graphics_compiler_->InitializeShader(stage)) {
-            std::cout << "Failed to initialize vertex shader" << std::endl;
-        }
-    }
-
-    for (const auto& fragment_shader_file : config.fragment_shader_files_) {
-        ShaderStage stage;
-        stage.type_ = IShader::Type::FRAGMENT_SHADER;
-        stage.name_ = fragment_shader_file;
-
-        // Read source
-        ReadShaderSource(fragment_shader_file, stage.source_);
-        if (stage.source_.empty()) {
-            continue;
-        }
-
-        if (!graphics_compiler_->InitializeShader(stage)) {
-            std::cout << "Failed to initialize fragment shader" << std::endl;
-        }
-    }
-
+    InitializeShaderFiles(config.vertex_shader_files_, IShader::Type::VERTEX_SHADER);
+    InitializeShaderFiles(config.fragment_shader_files_, IShader::Type::FRAGMENT_SHADER);
     if (!graphics_compiler_->InitializeShader(GLDefaultShader::kVertexShader)) {
         std::cout << "Failed to initialize default vertex shader" << std::endl;
     }
     if (!graphics_compiler_->InitializeShader(GLDefaultShader::kFragmentShader)) {
         std::cout << "Failed to initialize default fragment shader" << std::endl;
+    }
+}
+
+void GLRenderer::InitializeShaderFiles(const std::vector<std::string>& shaders, IShader::Type shader_type) {
+    for (const auto& shader_file : shaders) {
+        ShaderStage stage;
+        stage.type_ = shader_type;
+        stage.name_ = shader_file;
+
+        // Read source
+        ReadShaderSource(shader_file, stage.source_);
+        if (stage.source_.empty()) {
+            continue;
+        }
+
+        if (!graphics_compiler_->InitializeShader(stage)) {
+            std::cout << "Failed to initialize shader: " << shader_file << std::endl;
+        }
     }
 }
 
@@ -240,6 +142,98 @@ void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
     auto gl_primitive = GLPrimitiveGenerator::Generate(volume.bounding_volume_);
     gl_primitive->Draw();
     gl_primitive_program->Finish();
+}
+
+void GLRenderer::RenderWithCamera(const Camera& camera,
+                                  const entt::registry& registry) {
+
+    const auto projection_matrix = camera.GetProjectionMatrix();
+    const auto view_matrix = camera.GetViewMatrix();
+    UpdateGL(camera);
+    std::vector<Component::Entity> viewable_entities = GetViewableEntities(registry, camera);
+    auto renderable_view = registry.view<const Transform,
+                                         const Volume,
+                                         const Material,
+                                         const ModelInstance>();
+
+    for (auto viewable_entity : viewable_entities) {
+        const auto& model_instance = renderable_view.get<const ModelInstance>(viewable_entity);
+        const auto& transform = renderable_view.get<const Transform>(viewable_entity);
+        const auto& material = renderable_view.get<const Material>(viewable_entity);
+        if (!material.visible_) {
+            continue;
+        }
+        if (camera.render_bounding_volumes_) {
+            const auto& volume = renderable_view.get<const Volume>(viewable_entity);
+            RenderVolume(projection_matrix,
+                         view_matrix,
+                         volume);
+        }
+        ToggleWireframeMode(material.wireframe_enabled_);
+
+        // Find the correct model
+        auto model = model_manager_->GetModel(model_instance.filename_);
+        if (model_instance.child_identifier_ != 0) {
+            model = model->FindChild(model_instance.child_identifier_);
+        }
+
+        // Shader Program
+        auto graphics_program = graphics_compiler_->CreateProgram(material);
+        if (!graphics_program) {
+            // TODO: Add error logging
+            std::cout << "Failed to create graphics program" << std::endl;
+            continue;
+        }
+        graphics_program->Use();
+
+        // Texture Maps
+        auto gl_alpha_texture = texture_manager_->CreateTexture(material.texture_map_.alpha_map_, kAlphaTextureIndex);
+        auto gl_ambient_texture = texture_manager_->CreateTexture(material.texture_map_.ambient_map_, kAmbientTextureIndex);
+        auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, kDiffuseTextureIndex);
+        auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, kDisplacementTextureIndex);
+        auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, kNormalTextureIndex);
+        if (gl_alpha_texture) {
+            GLenum texture_unit = GL_TEXTURE0 + kAlphaTextureIndex;
+            gl_alpha_texture->GenerateMipMap(texture_unit);
+            gl_alpha_texture->Bind(texture_unit);
+            graphics_program->SetUniform("alpha_texture", kAlphaTextureIndex);
+        }
+        if (gl_ambient_texture) {
+            GLenum texture_unit = GL_TEXTURE0 + kAmbientTextureIndex;
+            gl_ambient_texture->GenerateMipMap(texture_unit);
+            gl_ambient_texture->Bind(texture_unit);
+            graphics_program->SetUniform("ambient_texture", kAmbientTextureIndex);
+        }
+        if (gl_diffuse_texture) {
+            GLenum texture_unit = GL_TEXTURE0 + kDiffuseTextureIndex;
+            gl_diffuse_texture->GenerateMipMap(texture_unit);
+            gl_diffuse_texture->Bind(texture_unit);
+            graphics_program->SetUniform("diffuse_texture", kDiffuseTextureIndex);
+        }
+        if (gl_displacement_texture) {
+            GLenum texture_unit = GL_TEXTURE0 + kDisplacementTextureIndex;
+            gl_displacement_texture->GenerateMipMap(texture_unit);
+            gl_displacement_texture->Bind(texture_unit);
+            graphics_program->SetUniform("displacement_texture", kDisplacementTextureIndex);
+        }
+        if (gl_normal_texture) {
+            GLenum texture_unit = GL_TEXTURE0 + kNormalTextureIndex;
+            gl_normal_texture->GenerateMipMap(texture_unit);
+            gl_normal_texture->Bind(texture_unit);
+            graphics_program->SetUniform("normal_texture", kNormalTextureIndex);
+        }
+
+        // Camera dependent uniforms
+        graphics_program->SetUniform("projection_matrix", projection_matrix);
+        graphics_program->SetUniform("camera_position", camera.position_);
+        graphics_program->FlushUniforms();
+
+        auto model_view_matrix = view_matrix * transform.GetLocalToWorldMatrix();
+        graphics_program->FlushUniform("model_view_matrix", model_view_matrix);
+        model->Draw();
+
+        graphics_program->Finish();
+    }
 }
 
 //////////////////////////////////////////////////
@@ -292,44 +286,6 @@ std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt:
     }
 
     return viewable_entities;
-}
-
-void GLRenderer::RenderEntity(const entt::registry& registry,
-                              const std::vector<Component::Entity>& viewable_entities,
-                              const std::shared_ptr<IProgram>& graphics_program,
-                              const math::Matrix4x4& view_matrix,
-                              const Transform& transform,
-                              const std::shared_ptr<GLModel>& model) {
-
-    // Render model
-    auto model_view_matrix = view_matrix * transform.GetLocalToWorldMatrix();
-    graphics_program->FlushUniform("model_view_matrix", model_view_matrix);
-    model->Draw();
-
-    // Render child models
-    for (auto child_entity : transform.children_) {
-        // Skip culled children
-        auto search = std::find(viewable_entities.begin(), viewable_entities.end(), child_entity);
-        if (search == viewable_entities.end()) {
-            continue;
-        }
-
-        // Skip entities if the child model does not exist
-        const auto& child_model_instance = registry.get<const ModelInstance>(child_entity);
-        auto child_gl_model = model->FindChild(child_model_instance.child_identifier_);
-        if (!child_gl_model) {
-            // TODO: Add error logging
-            continue;
-        }
-
-        const auto& child_transform = registry.get<const Transform>(child_entity);
-        RenderEntity(registry,
-                     viewable_entities,
-                     graphics_program,
-                     view_matrix,
-                     child_transform,
-                     child_gl_model);
-    }
 }
 
 void GLRenderer::ReadShaderSource(const std::string& filename, std::string& destination) {

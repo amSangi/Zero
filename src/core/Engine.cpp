@@ -18,7 +18,6 @@ void Engine::Initialize() {
 }
 
 void Engine::Tick() {
-    render_system_->PollWindowEvents();
     render_system_->PreUpdate();
     for (const auto& system : game_systems_) {
         system->PreUpdate();

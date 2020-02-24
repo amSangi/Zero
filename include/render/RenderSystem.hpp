@@ -4,7 +4,6 @@
 #include "core/System.hpp"
 #include "core/RenderSystemConfig.hpp"
 #include "Components.hpp"
-#include "IAnimator.hpp"
 #include "IRenderer.hpp"
 #include "Propagator.hpp"
 #include "Window.hpp"
@@ -54,11 +53,6 @@ namespace zero::render {
         void ShutDown() override;
 
         /**
-         * @brief Poll all the events on the rendering window and post them onto the EventBus for processing
-         */
-        void PollWindowEvents();
-
-        /**
          * @brief Create a new entity based on a 3D model.
          *
          * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
@@ -79,11 +73,6 @@ namespace zero::render {
          * @brief The window to manage the actual window and graphics api context
          */
         std::unique_ptr<Window> window_;
-
-        /**
-         * @brief The animator used to animate all dynamic models
-         */
-        std::unique_ptr<IAnimator> animator_;
 
         /**
          * @brief The renderer used to draw and cull entities onto the window

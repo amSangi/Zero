@@ -36,7 +36,7 @@ namespace zero::render {
          * @param registry the registry containing all the entities and their components
          * @param time_delta updated timing information since the last engine tick
          */
-        void Render(const entt::registry& registry, const TimeDelta& time_delta) override;
+        void Render(const entt::registry& registry) override;
 
         /**
          * @brief Release the images in the TextureManager from main memory
@@ -62,6 +62,7 @@ namespace zero::render {
     private:
 
         void InitializeShaders(const RenderSystemConfig& config);
+        void InitializeShaderFiles(const std::vector<std::string>& shaders, IShader::Type shader_type);
         void InitializeModels(const RenderSystemConfig& config);
         void InitializeImages(const RenderSystemConfig& config);
         /**
@@ -73,6 +74,14 @@ namespace zero::render {
         void RenderVolume(const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
+
+        /**
+         * @brief Render the entities using the camera
+         * @param camera the camera to render with
+         * @param registry the registry containing all the entities and their components
+         */
+        void RenderWithCamera(const Camera& camera,
+                              const entt::registry& registry);
 
         /**
          * @brief Initialize OpenGL for rendering (e.g. enable depth testing)
@@ -92,29 +101,13 @@ namespace zero::render {
         static void ToggleWireframeMode(bool enable_wireframe);
 
         /**
-         * @brief Get all non-culled entities that are renderable
+         * @brief Get all non-culled entities that are renderable.
          * @param registry the registry containing all the entities and their components
          * @param camera the camera to cull against
          * @return all viewable entities
          */
         static std::vector<Component::Entity> GetViewableEntities(const entt::registry& registry,
                                                                   const Camera& camera);
-
-        /**
-         * @brief Render an entity
-         * @param registry the registry containing all the entities and their components
-         * @param viewable_entities the list of all non-culled entities
-         * @param graphics_program the graphics program used for the rendering of the entity
-         * @param view_matrix the camera's view matrix
-         * @param transform the transform of the entity
-         * @param model the 3D model associated with the entity
-         */
-        static void RenderEntity(const entt::registry& registry,
-                                 const std::vector<Component::Entity>& viewable_entities,
-                                 const std::shared_ptr<IProgram>& graphics_program,
-                                 const math::Matrix4x4& view_matrix,
-                                 const Transform& transform,
-                                 const std::shared_ptr<GLModel>& model);
 
         /**
          * @brief Read the shader source into the destination

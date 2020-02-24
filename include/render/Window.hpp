@@ -43,11 +43,6 @@ namespace render {
         void SwapBuffers();
 
         /**
-         * @brief Poll all the window events and post them onto the EventBus
-         */
-        void PollEvents(event::EventBus& event_bus);
-
-        /**
          * @brief Clean up the Window and GL Context
          */
         void Cleanup();

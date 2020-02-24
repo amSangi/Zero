@@ -19,6 +19,12 @@ namespace zero::render {
          */
         GLMesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
 
+        /**
+         * @brief Constructor
+         * @param mesh the mesh
+         */
+        GLMesh(Mesh&& mesh);
+
         ~GLMesh() override = default;
 
         /**

@@ -24,9 +24,8 @@ namespace zero::render {
          * @brief Render all entities in the registry with Transform, Volume, Material, and ModelInstance components
          * using the active cameras in the world.
          * @param registry the registry containing all of the entities and their components
-         * @param time_delta updated timing information since the last engine tick
          */
-        virtual void Render(const entt::registry& registry, const TimeDelta& time_delta) = 0;
+        virtual void Render(const entt::registry& registry) = 0;
 
         /**
          * @brief Perform post-rendering cleanup

@@ -7,6 +7,11 @@ Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices)
 , indices_(std::move(indices))
 {}
 
+Mesh::Mesh(Mesh&& mesh) noexcept
+: vertices_(std::move(mesh.vertices_))
+, indices_(std::move(mesh.indices_))
+{}
+
 const std::vector<Vertex>& Mesh::GetVertices() const {
     return vertices_;
 }

@@ -10,8 +10,17 @@ namespace zero::render {
      * @brief Interleaved Mesh Vertex
      */
     struct Vertex {
+        /**
+         * @brief The vertex position
+         */
         math::Vec3f position_;
+        /**
+         * @brief The vertex normal
+         */
         math::Vec3f normal_;
+        /**
+         * @brief The vertex UV texture coordinate
+         */
         math::Vec2f texture_coordinate_;
     }; // struct Vertex
 
@@ -26,6 +35,12 @@ namespace zero::render {
          * @param indices Vertex indices
          */
         Mesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
+
+        /**
+         * @brief Move Constructor
+         * @param mesh the mesh
+         */
+        Mesh(Mesh&& mesh) noexcept;
 
         virtual ~Mesh() = default;
 

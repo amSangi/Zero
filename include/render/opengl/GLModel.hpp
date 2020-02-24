@@ -22,13 +22,13 @@ namespace zero::render {
 
         /**
          * @brief Create a GLModel for an associated AssImp aiNode and aiScene
-         * @param root_filename the filename associated with the root model. Empty for child models.
+         * @param filename the filename associated with the 3D model.
          * @param rng the random number generator used to generate identifiers for child models
          * @param node the aiNode the model will be associated with
          * @param scene the aiScene the node is associated with
          * @return a GLModel instance
          */
-        static std::shared_ptr<GLModel> CreateGLModel(const std::string& root_filename,
+        static std::shared_ptr<GLModel> CreateGLModel(const std::string& filename,
                                                       std::minstd_rand0 rng,
                                                       uint32 identifier,
                                                       const aiNode* node,

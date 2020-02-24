@@ -7,7 +7,6 @@ using namespace zero::render;
 RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& config)
 : zero::System(engine_core)
 , config_(config)
-, animator_(nullptr)
 , window_(std::make_unique<Window>(config.window_config_))
 , renderer_(std::make_unique<GLRenderer>())
 , propagator_(std::make_unique<Propagator>())
@@ -27,7 +26,7 @@ void RenderSystem::PreUpdate() {
 }
 
 void RenderSystem::Update(const TimeDelta& time_delta) {
-    renderer_->Render(GetRegistry(), time_delta);
+    renderer_->Render(GetRegistry());
     window_->SwapBuffers();
 }
 
@@ -38,10 +37,6 @@ void RenderSystem::PostUpdate() {
 void RenderSystem::ShutDown() {
     renderer_->ShutDown();
     window_->Cleanup();
-}
-
-void RenderSystem::PollWindowEvents() {
-    window_->PollEvents(GetEventBus());
 }
 
 zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model) {

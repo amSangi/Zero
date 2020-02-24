@@ -6,6 +6,10 @@ GLMesh::GLMesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices)
 : Mesh(std::move(vertices), std::move(indices))
 {}
 
+GLMesh::GLMesh(Mesh&& mesh)
+: Mesh(std::move(mesh))
+{}
+
 void GLMesh::Draw() {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);

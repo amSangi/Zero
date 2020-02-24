@@ -99,10 +99,6 @@ void Window::SwapBuffers() {
     SDL_GL_SwapWindow(sdl_window_);
 }
 
-void Window::PollEvents(event::EventBus& event_bus) {
-    // TODO: Post events onto the event bus
-}
-
 void Window::Cleanup() {
     if (sdl_gl_context_) {
         SDL_GL_DeleteContext(sdl_gl_context_);
