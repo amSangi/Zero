@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <core/ZBase.hpp>
+#include "render/Components.hpp"
 
 // Forward Declarations
 class aiScene;
@@ -43,6 +44,13 @@ namespace zero::render {
          * @return the GLModel. Nullptr if the model does not exist.
          */
         std::shared_ptr<GLModel> GetModel(const std::string& filename);
+
+        /**
+         * @brief Retrieve the correct GLModel from a ModelInstance.
+         * @param model_instance the model instance of the GLModel
+         * @return the GLModel associated with the ModelInstance. Nullptr if it does not exist.
+         */
+        std::shared_ptr<GLModel> GetModel(const ModelInstance& model_instance);
 
     private:
         /**

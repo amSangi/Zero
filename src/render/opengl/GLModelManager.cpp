@@ -44,3 +44,14 @@ std::shared_ptr<GLModel> GLModelManager::GetModel(const std::string& filename) {
     if (model_search == model_map_.end()) return nullptr;
     return model_search->second;
 }
+
+std::shared_ptr<GLModel> GLModelManager::GetModel(const ModelInstance& model_instance) {
+    auto model = GetModel(model_instance.filename_);
+    if (!model) {
+        return nullptr;
+    }
+    if (model_instance.child_identifier_ != 0) {
+        model = model->FindChild(model_instance.child_identifier_);
+    }
+    return model;
+}

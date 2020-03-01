@@ -45,20 +45,30 @@ namespace zero {
         void ShutDown();
 
         /**
-         * @brief Get a reference to the core engine
-         * @return the CoreEngine
+         * @brief Get a raw reference to the engine core
+         * @return the EngineCore
          */
         [[nodiscard]] EngineCore* GetEngineCore() const;
 
         /**
          * @brief Create a new entity based on a 3D model.
          *
-         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
+         * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
          * @param model the fully qualified 3D filename
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
         [[nodiscard]] Component::Entity InstantiateModel(const std::string& model_filename);
+
+        /**
+         * @brief Create a new entity based on a primitive shape.
+         *
+         * Constructs an entity with Transform, Volume, Material, and PrimitiveInstance components.
+         *
+         * @param primitive the primitive instance data.
+         * @return the primitive entity instance.
+         */
+        [[nodiscard]] Component::Entity InstantiatePrimitive(const render::PrimitiveInstance& primitive);
 
     protected:
 

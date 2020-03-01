@@ -23,7 +23,7 @@ namespace zero::render {
          * @brief Constructor
          * @param mesh the mesh
          */
-        GLMesh(Mesh&& mesh);
+        explicit GLMesh(Mesh&& mesh);
 
         ~GLMesh() override = default;
 

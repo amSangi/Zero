@@ -46,3 +46,7 @@ EngineCore* Engine::GetEngineCore() const {
 Component::Entity Engine::InstantiateModel(const std::string& model_filename) {
     return render_system_->CreateModelInstance(model_filename);
 }
+
+Component::Entity Engine::InstantiatePrimitive(const render::PrimitiveInstance& primitive) {
+    return render_system_->CreatePrimitiveInstance(primitive);
+}

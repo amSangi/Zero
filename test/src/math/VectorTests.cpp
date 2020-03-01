@@ -136,7 +136,7 @@ TEST(TestVector, NormalizeComplex) {
 
 TEST(TestVector, IsEpsilon) {
 	EXPECT_TRUE(Vec3f::Zero().IsEpsilon());
-	EXPECT_TRUE(Vec3f(EPSILON).IsEpsilon());
+	EXPECT_TRUE(Vec3f(kEpsilon).IsEpsilon());
 
 	EXPECT_FALSE(Vec3f::One().IsEpsilon());
 	EXPECT_FALSE(Vec3f(0.00001F).IsEpsilon());

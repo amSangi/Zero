@@ -39,12 +39,14 @@ TEST(TestSphere, ContainsItself) {
     EXPECT_TRUE(sphere.Contains(sphere));
     sphere = Sphere(Vec3f(-251.34F, 234.1452F, -25134.13F), 0.1F);
     EXPECT_TRUE(sphere.Contains(sphere));
+    sphere = Sphere::Zero();
+    EXPECT_TRUE(sphere.Contains(sphere));
 }
 
 TEST(TestSphere, ContainsPoint) {
     Sphere sphere(Vec3f::Zero(), 100.0F);
 
-    EXPECT_TRUE(sphere.Contains(Vec3f(0.f, 0.0F, 25.0F)));
+    EXPECT_TRUE(sphere.Contains(Vec3f(0.F, 0.0F, 25.0F)));
     EXPECT_TRUE(sphere.Contains(Vec3f(0.0F, 0.0F, 99.9F)));
     EXPECT_TRUE(sphere.Contains(Vec3f(0.0F, 0.0F, 99.9F)));
     EXPECT_TRUE(sphere.Contains(Vec3f(0.0F, 0.0F, 100.0F)));

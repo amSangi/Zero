@@ -32,9 +32,7 @@ namespace zero::render {
         void Initialize(const RenderSystemConfig& config) override;
 
         /**
-         * @brief Render all drawable entities in the game world
-         * @param registry the registry containing all the entities and their components
-         * @param time_delta updated timing information since the last engine tick
+         * @see IRenderer::Render
          */
         void Render(const entt::registry& registry) override;
 
@@ -50,14 +48,14 @@ namespace zero::render {
         void ShutDown() override;
 
         /**
-         * @brief Create an entity instance based on a 3D model
-         *
-         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
-         *
-         * @param registry the registry containing all the entities and their components
-         * @param model the fully qualified 3D model file to instantiate
+         * @see IRenderer::InstantiateModel
          */
         Component::Entity InstantiateModel(entt::registry& registry, const std::string& model) override;
+
+        /**
+         * @see IRenderer::InstantiatePrimitive
+         */
+        Component::Entity InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive) override;
 
     private:
 
@@ -130,11 +128,6 @@ namespace zero::render {
          * @brief Manage texture image usage
          */
         std::unique_ptr<GLTextureManager> texture_manager_;
-
-        /**
-         * @brief Instantiate game entities from GLModels
-         */
-        std::unique_ptr<GLInstantiator> instantiator_;
 
     }; // class GLRenderer
 

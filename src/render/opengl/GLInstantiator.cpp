@@ -23,3 +23,9 @@ zero::Component::Entity GLInstantiator::InstantiateModel(entt::registry& registr
     registry.assign<Transform>(entity, transform);
     return entity;
 }
+
+zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& registry,
+                                                             const PrimitiveInstance& primitive) {
+    // TODO: Instantiate a primitive
+    return Component::NullEntity;
+}

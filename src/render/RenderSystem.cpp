@@ -42,3 +42,7 @@ void RenderSystem::ShutDown() {
 zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model) {
     return renderer_->InstantiateModel(GetRegistry(), model);
 }
+
+zero::Component::Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive) {
+    return renderer_->InstantiatePrimitive(GetRegistry(), primitive);
+}

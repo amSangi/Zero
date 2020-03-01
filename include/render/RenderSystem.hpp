@@ -55,12 +55,22 @@ namespace zero::render {
         /**
          * @brief Create a new entity based on a 3D model.
          *
-         * Constructs an entity with a Transform, Volume, Material, and ModelInstance components.
+         * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
          * @param model the fully qualified 3D filename
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
-        Component::Entity CreateModelInstance(const std::string& model);
+        [[nodiscard]] Component::Entity CreateModelInstance(const std::string& model);
+
+        /**
+         * @brief Create a new entity based on a primitive shape.
+         *
+         * Constructs an entity with Transform, Volume, Material, and PrimitiveInstance components.
+         *
+         * @param primitive the primitive instance data.
+         * @return the primitive entity instance.
+         */
+        [[nodiscard]] Component::Entity CreatePrimitiveInstance(const PrimitiveInstance& primitive);
 
     private:
 

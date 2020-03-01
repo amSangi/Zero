@@ -11,6 +11,7 @@
 #include "math/Matrix4x4.hpp"
 #include "math/Plane.hpp"
 #include "math/Quaternion.hpp"
+#include "Shapes.hpp"
 
 namespace zero::render {
 
@@ -178,28 +179,92 @@ namespace zero::render {
     }; // struct ModelInstance
 
     /**
-     * @brief An instance of a primitive. The mesh is generated at runtime.
+     * @brief An instance of a primitive.
      */
     struct PrimitiveInstance : public Component {
 
         /**
-         * @brief The type of the primitive
+         * @brief The primitive type
          */
-        enum class Type
-        {
-            SPHERE,
+        enum class Type {
             BOX,
+            CONE,
+            CYLINDER,
             PLANE,
+            SPHERE,
+            TORUS,
         }; // enum class Type
 
         /**
-         * @brief The mathematical representation of the primitive.
+         * @brief Default constructs a unit box
          */
-        union Primitive
-        {
-            math::Sphere sphere_;
+        PrimitiveInstance();
+
+        /**
+         * @brief Construct a primitive of a given type
+         */
+        ///@{
+        explicit PrimitiveInstance(const math::Box& box);
+        explicit PrimitiveInstance(const math::Plane& plane);
+        explicit PrimitiveInstance(const math::Sphere& sphere);
+        explicit PrimitiveInstance(const Cone& cone);
+        explicit PrimitiveInstance(const Cylinder& cylinder);
+        explicit PrimitiveInstance(const Torus& torus);
+        ///@}
+
+        /**
+         * @brief Get the primitive type
+         * @return the primitive type
+         */
+        [[nodiscard]] Type GetType() const;
+
+        /**
+         * @brief Change the primitive
+         */
+        ///@{
+        void Set(const math::Box& box);
+        void Set(const math::Plane& plane);
+        void Set(const math::Sphere& sphere);
+        void Set(const Cone& cone);
+        void Set(const Cylinder& cylinder);
+        void Set(const Torus& torus);
+        ///@}
+
+        /**
+         * @brief Get the primitive data
+         */
+        ///@{
+        [[nodiscard]] const math::Box& GetBox();
+        [[nodiscard]] const math::Plane& GetPlane();
+        [[nodiscard]] const math::Sphere& GetSphere();
+        [[nodiscard]] const Cone& GetCone();
+        [[nodiscard]] const Cylinder& GetCylinder();
+        [[nodiscard]] const Torus& GetTorus();
+        ///@}
+
+    private:
+        /**
+         * @brief The primitive data
+         */
+        union Primitive {
+            /**
+             * @brief Construct a primitive of a given type
+             */
+            ///@{
+            explicit Primitive(const math::Box& box);
+            explicit Primitive(const math::Plane& plane);
+            explicit Primitive(const math::Sphere& sphere);
+            explicit Primitive(const Cone& cone);
+            explicit Primitive(const Cylinder& cylinder);
+            explicit Primitive(const Torus& torus);
+            ///@}
+
             math::Box box_;
             math::Plane plane_;
+            math::Sphere sphere_;
+            Cone cone_;
+            Cylinder cylinder_;
+            Torus torus_;
         }; // union Primitive
 
         Type type_;

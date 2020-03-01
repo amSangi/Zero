@@ -7,7 +7,6 @@
 #include "render/MeshGenerator.hpp"
 #include "render/ViewVolumeBuilder.hpp"
 #include "core/Transform.hpp"
-#include <algorithm>
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -24,7 +23,6 @@ GLRenderer::GLRenderer()
 : graphics_compiler_(std::make_unique<GLCompiler>())
 , model_manager_(std::make_unique<GLModelManager>())
 , texture_manager_(std::make_unique<GLTextureManager>())
-, instantiator_(std::make_unique<GLInstantiator>())
 {}
 
 GLRenderer::~GLRenderer() {
@@ -69,7 +67,11 @@ zero::Component::Entity GLRenderer::InstantiateModel(entt::registry& registry, c
         return Component::NullEntity;
     }
 
-    return instantiator_->InstantiateModel(registry, gl_model);
+    return GLInstantiator::InstantiateModel(registry, gl_model);
+}
+
+zero::Component::Entity GLRenderer::InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive) {
+    return GLInstantiator::InstantiatePrimitive(registry, primitive);
 }
 
 //////////////////////////////////////////////////
@@ -146,7 +148,7 @@ void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
 
 void GLRenderer::RenderWithCamera(const Camera& camera,
                                   const entt::registry& registry) {
-
+    // TODO: Update rendering loop to render primitives too
     const auto projection_matrix = camera.GetProjectionMatrix();
     const auto view_matrix = camera.GetViewMatrix();
     UpdateGL(camera);
@@ -171,10 +173,10 @@ void GLRenderer::RenderWithCamera(const Camera& camera,
         }
         ToggleWireframeMode(material.wireframe_enabled_);
 
-        // Find the correct model
-        auto model = model_manager_->GetModel(model_instance.filename_);
-        if (model_instance.child_identifier_ != 0) {
-            model = model->FindChild(model_instance.child_identifier_);
+        // GLModel
+        auto model = model_manager_->GetModel(model_instance);
+        if (!model) {
+            continue;
         }
 
         // Shader Program
