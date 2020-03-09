@@ -6,7 +6,7 @@
 
 namespace zero::render {
 
-    // Forward Declaration
+    // Forward declarations
     class GLShader;
 
     /**

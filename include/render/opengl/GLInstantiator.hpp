@@ -5,7 +5,9 @@
 
 namespace zero::render {
 
+    // Forward declarations
     class GLModel;
+
     class GLInstantiator {
     public:
 
@@ -36,7 +38,7 @@ namespace zero::render {
          * @return the entity associated with the new instantiated primitive.
          */
         [[nodiscard]] static Component::Entity InstantiatePrimitive(entt::registry& registry,
-                                                                    const PrimitiveInstance& primitive);
+                                                                    PrimitiveInstance primitive);
     }; // class GLInstantiator
 
 } // namespace zero::render

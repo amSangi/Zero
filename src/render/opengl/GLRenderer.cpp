@@ -1,11 +1,18 @@
 #include "render/opengl/GLRenderer.hpp"
+#include "render/opengl/GLCompiler.hpp"
+#include "render/opengl/GLModelManager.hpp"
+#include "render/opengl/GLTextureManager.hpp"
+#include "render/opengl/GLInstantiator.hpp"
 #include "render/opengl/GLModel.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLSampler.hpp"
+#include "render/opengl/GLProgram.hpp"
 #include "render/opengl/GLPrimitiveGenerator.hpp"
 #include "render/opengl/GLDefaultShader.hpp"
 #include "render/MeshGenerator.hpp"
 #include "render/ViewVolumeBuilder.hpp"
+#include "render/IViewVolume.hpp"
+#include "render/Components.hpp"
 #include "core/Transform.hpp"
 #include <fstream>
 #include <vector>
@@ -39,14 +46,9 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
 
 void GLRenderer::Render(const entt::registry& registry) {
     auto camera_view = registry.view<const Camera>();
-    auto renderable_view = registry.view<const Transform,
-                                         const Volume,
-                                         const Material,
-                                         const ModelInstance>();
-
     for (auto camera_entity : camera_view) {
         const auto& camera = camera_view.get(camera_entity);
-        RenderWithCamera(camera, registry);
+        RenderEntities(camera, registry);
     }
 }
 
@@ -134,50 +136,41 @@ void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
     default_material.shaders_.vertex_shader_ = GLDefaultShader::kVertexShader.name_;
     default_material.shaders_.fragment_shader_ = GLDefaultShader::kFragmentShader.name_;
     ToggleWireframeMode(true);
+
+    auto model_matrix = math::Matrix4x4::Identity()
+            .Scale(math::Vec3f(volume.bounding_volume_.radius_))
+            .Translate(volume.bounding_volume_.center_);
     auto gl_primitive_program = graphics_compiler_->CreateProgram(default_material);
     gl_primitive_program->Use();
     gl_primitive_program->SetUniform("projection_matrix", projection_matrix);
-    // View Matrix * Identity Matrix = View Matrix
-    gl_primitive_program->SetUniform("model_view_matrix", view_matrix);
+    gl_primitive_program->SetUniform("model_view_matrix", view_matrix * model_matrix);
     gl_primitive_program->FlushUniforms();
 
-    auto gl_primitive = GLPrimitiveGenerator::Generate(volume.bounding_volume_);
+    PrimitiveInstance primitive_instance{volume.bounding_volume_};
+    auto gl_primitive = GLPrimitiveGenerator::Generate(primitive_instance);
     gl_primitive->Draw();
     gl_primitive_program->Finish();
 }
 
-void GLRenderer::RenderWithCamera(const Camera& camera,
-                                  const entt::registry& registry) {
-    // TODO: Update rendering loop to render primitives too
+void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& registry) {
+    UpdateGL(camera);
     const auto projection_matrix = camera.GetProjectionMatrix();
     const auto view_matrix = camera.GetViewMatrix();
-    UpdateGL(camera);
-    std::vector<Component::Entity> viewable_entities = GetViewableEntities(registry, camera);
-    auto renderable_view = registry.view<const Transform,
-                                         const Volume,
-                                         const Material,
-                                         const ModelInstance>();
-
+    auto viewable_entities = GetViewableEntities(registry, camera);
+    auto renderable_view = registry.view<const Transform, const Material, const Volume>();
+    auto model_view = registry.view<const ModelInstance>();
+    auto primitive_view = registry.view<const PrimitiveInstance>();
     for (auto viewable_entity : viewable_entities) {
-        const auto& model_instance = renderable_view.get<const ModelInstance>(viewable_entity);
         const auto& transform = renderable_view.get<const Transform>(viewable_entity);
         const auto& material = renderable_view.get<const Material>(viewable_entity);
+        const auto& volume = renderable_view.get<const Volume>(viewable_entity);
         if (!material.visible_) {
             continue;
         }
         if (camera.render_bounding_volumes_) {
-            const auto& volume = renderable_view.get<const Volume>(viewable_entity);
-            RenderVolume(projection_matrix,
-                         view_matrix,
-                         volume);
+            RenderVolume(projection_matrix, view_matrix, volume);
         }
         ToggleWireframeMode(material.wireframe_enabled_);
-
-        // GLModel
-        auto model = model_manager_->GetModel(model_instance);
-        if (!model) {
-            continue;
-        }
 
         // Shader Program
         auto graphics_program = graphics_compiler_->CreateProgram(material);
@@ -187,52 +180,33 @@ void GLRenderer::RenderWithCamera(const Camera& camera,
             continue;
         }
         graphics_program->Use();
-
         // Texture Maps
-        auto gl_alpha_texture = texture_manager_->CreateTexture(material.texture_map_.alpha_map_, kAlphaTextureIndex);
-        auto gl_ambient_texture = texture_manager_->CreateTexture(material.texture_map_.ambient_map_, kAmbientTextureIndex);
-        auto gl_diffuse_texture = texture_manager_->CreateTexture(material.texture_map_.diffuse_map_, kDiffuseTextureIndex);
-        auto gl_displacement_texture = texture_manager_->CreateTexture(material.texture_map_.displacement_map_, kDisplacementTextureIndex);
-        auto gl_normal_texture = texture_manager_->CreateTexture(material.texture_map_.normal_map_, kNormalTextureIndex);
-        if (gl_alpha_texture) {
-            GLenum texture_unit = GL_TEXTURE0 + kAlphaTextureIndex;
-            gl_alpha_texture->GenerateMipMap(texture_unit);
-            gl_alpha_texture->Bind(texture_unit);
-            graphics_program->SetUniform("alpha_texture", kAlphaTextureIndex);
-        }
-        if (gl_ambient_texture) {
-            GLenum texture_unit = GL_TEXTURE0 + kAmbientTextureIndex;
-            gl_ambient_texture->GenerateMipMap(texture_unit);
-            gl_ambient_texture->Bind(texture_unit);
-            graphics_program->SetUniform("ambient_texture", kAmbientTextureIndex);
-        }
-        if (gl_diffuse_texture) {
-            GLenum texture_unit = GL_TEXTURE0 + kDiffuseTextureIndex;
-            gl_diffuse_texture->GenerateMipMap(texture_unit);
-            gl_diffuse_texture->Bind(texture_unit);
-            graphics_program->SetUniform("diffuse_texture", kDiffuseTextureIndex);
-        }
-        if (gl_displacement_texture) {
-            GLenum texture_unit = GL_TEXTURE0 + kDisplacementTextureIndex;
-            gl_displacement_texture->GenerateMipMap(texture_unit);
-            gl_displacement_texture->Bind(texture_unit);
-            graphics_program->SetUniform("displacement_texture", kDisplacementTextureIndex);
-        }
-        if (gl_normal_texture) {
-            GLenum texture_unit = GL_TEXTURE0 + kNormalTextureIndex;
-            gl_normal_texture->GenerateMipMap(texture_unit);
-            gl_normal_texture->Bind(texture_unit);
-            graphics_program->SetUniform("normal_texture", kNormalTextureIndex);
+        auto gl_textures = texture_manager_->CreateTextureMap(material);
+        for (int i = 0; i < gl_textures.size(); ++i) {
+            const auto& gl_texture = gl_textures[i];
+            GLenum texture_unit = GL_TEXTURE0 + i;
+            gl_texture->GenerateMipMap(texture_unit);
+            gl_texture->Bind(texture_unit);
+            graphics_program->SetUniform(gl_texture->GetUniformName(), i);
         }
 
         // Camera dependent uniforms
         graphics_program->SetUniform("projection_matrix", projection_matrix);
         graphics_program->SetUniform("camera_position", camera.position_);
+        graphics_program->SetUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
         graphics_program->FlushUniforms();
 
-        auto model_view_matrix = view_matrix * transform.GetLocalToWorldMatrix();
-        graphics_program->FlushUniform("model_view_matrix", model_view_matrix);
-        model->Draw();
+        // Draw Mesh
+        if (registry.has<ModelInstance>(viewable_entity)) {
+            const auto& model_instance = model_view.get(viewable_entity);
+            auto model = model_manager_->GetModel(model_instance);
+            if (model) model->Draw();
+        }
+        else {
+            const auto& primitive_instance = primitive_view.get(viewable_entity);
+            auto primitive = GLPrimitiveGenerator::Generate(primitive_instance);
+            if (primitive) primitive->Draw();
+        }
 
         graphics_program->Finish();
     }
@@ -272,15 +246,17 @@ void GLRenderer::ToggleWireframeMode(bool enable_wireframe) {
 std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt::registry& registry,
                                                                      const Camera& camera) {
     auto renderable_view = registry.view<const Transform,
-                                         const Volume,
                                          const Material,
-                                         const ModelInstance>();
+                                         const Volume>();
 
     auto culler = ViewVolumeBuilder::create(camera);
     std::vector<Component::Entity> viewable_entities;
 
     for (auto renderable_entity : renderable_view) {
         const auto& volume = renderable_view.get<const Volume>(renderable_entity);
+        if (!registry.has<ModelInstance>(renderable_entity) && !registry.has<PrimitiveInstance>(renderable_entity)) {
+            continue;
+        }
         if (culler->IsCulled(volume.bounding_volume_)) {
             continue;
         }

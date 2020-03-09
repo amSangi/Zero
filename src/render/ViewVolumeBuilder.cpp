@@ -1,4 +1,7 @@
 #include "render/ViewVolumeBuilder.hpp"
+#include "render/OrthographicViewVolume.hpp"
+#include "render/PerspectiveViewVolume.hpp"
+#include "render/Components.hpp"
 
 using namespace zero::render;
 

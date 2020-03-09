@@ -1,6 +1,7 @@
 #include "render/opengl/GLAssetImportWrapper.hpp"
 #include <math/Box.hpp>
 #include <assimp/scene.h>
+#include "render/opengl/GLMesh.hpp"
 
 using namespace zero::render;
 

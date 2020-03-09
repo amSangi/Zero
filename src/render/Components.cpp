@@ -76,12 +76,12 @@ PrimitiveInstance::Primitive::Primitive(const math::Box& box)
 : box_(box)
 {}
 
-PrimitiveInstance::Primitive::Primitive(const math::Plane& plane)
-: plane_(plane)
-{}
-
 PrimitiveInstance::Primitive::Primitive(const math::Sphere& sphere)
 : sphere_(sphere)
+{}
+
+PrimitiveInstance::Primitive::Primitive(const Plane& plane)
+        : plane_(plane)
 {}
 
 PrimitiveInstance::Primitive::Primitive(const Cone& cone)
@@ -105,14 +105,14 @@ PrimitiveInstance::PrimitiveInstance(const math::Box& box)
 , primitive_(box)
 {}
 
-PrimitiveInstance::PrimitiveInstance(const math::Plane& plane)
-: type_(Type::PLANE)
-, primitive_(plane)
-{}
-
 PrimitiveInstance::PrimitiveInstance(const math::Sphere& sphere)
 : type_(Type::SPHERE)
 , primitive_(sphere)
+{}
+
+PrimitiveInstance::PrimitiveInstance(const Plane& plane)
+        : type_(Type::PLANE)
+        , primitive_(plane)
 {}
 
 PrimitiveInstance::PrimitiveInstance(const Cone& cone)
@@ -139,14 +139,14 @@ void PrimitiveInstance::Set(const math::Box& box) {
     primitive_.box_ = box;
 }
 
-void PrimitiveInstance::Set(const math::Plane& plane) {
-    type_ = Type::PLANE;
-    primitive_.plane_ = plane;
-}
-
 void PrimitiveInstance::Set(const math::Sphere& sphere) {
     type_ = Type::SPHERE;
     primitive_.sphere_ = sphere;
+}
+
+void PrimitiveInstance::Set(const Plane& plane) {
+    type_ = Type::PLANE;
+    primitive_.plane_ = plane;
 }
 
 void PrimitiveInstance::Set(const Cone& cone) {
@@ -169,14 +169,14 @@ const zero::math::Box& PrimitiveInstance::GetBox() {
     return primitive_.box_;
 }
 
-const zero::math::Plane& PrimitiveInstance::GetPlane() {
-    if (type_ != Type::PLANE) Set(math::Plane::Up());
-    return primitive_.plane_;
-}
-
 const zero::math::Sphere& PrimitiveInstance::GetSphere() {
     if (type_ != Type::SPHERE) Set(math::Sphere::Zero());
     return primitive_.sphere_;
+}
+
+const Plane& PrimitiveInstance::GetPlane() {
+    if (type_ != Type::PLANE) Set(Plane());
+    return primitive_.plane_;
 }
 
 const Cone& PrimitiveInstance::GetCone() {

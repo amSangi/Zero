@@ -1,10 +1,12 @@
 #pragma once
 
 #include <memory>
-#include "OrthographicViewVolume.hpp"
-#include "PerspectiveViewVolume.hpp"
 
 namespace zero::render {
+
+    // Forward declarations
+    class Camera;
+    class IViewVolume;
 
     /**
      * @brief Builder used to create IViewVolume instances given a camera

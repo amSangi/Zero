@@ -68,7 +68,7 @@ namespace zero {
          * @param primitive the primitive instance data.
          * @return the primitive entity instance.
          */
-        [[nodiscard]] Component::Entity InstantiatePrimitive(const render::PrimitiveInstance& primitive);
+        [[nodiscard]] Component::Entity InstantiatePrimitive(render::PrimitiveInstance primitive);
 
     protected:
 

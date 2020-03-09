@@ -1,14 +1,17 @@
 #pragma once
 
 #include <memory>
-#include "core/System.hpp"
+#include "core/Component.hpp"
 #include "core/RenderSystemConfig.hpp"
-#include "Components.hpp"
-#include "IRenderer.hpp"
-#include "Propagator.hpp"
-#include "Window.hpp"
+#include "core/System.hpp"
+#include "render/IRenderer.hpp"
+#include "render/Propagator.hpp"
+#include "render/Window.hpp"
 
 namespace zero::render {
+
+    // Forward declarations
+    class PrimitiveInstance;
 
     /**
      * @brief The RenderingSystem uses transform, mesh, material, scene, and camera components

@@ -4,14 +4,17 @@
 #include <entt/entt.hpp>
 #include "core/TimeDelta.hpp"
 #include "core/Transform.hpp"
-#include "render/IProgram.hpp"
 #include "render/IRenderer.hpp"
-#include "render/opengl/GLCompiler.hpp"
-#include "render/opengl/GLInstantiator.hpp"
-#include "render/opengl/GLModelManager.hpp"
-#include "render/opengl/GLTextureManager.hpp"
+#include "render/IShader.hpp"
 
 namespace zero::render {
+
+    // Forward declarations
+    class Camera;
+    class GLCompiler;
+    class GLModelManager;
+    class GLTextureManager;
+    class Volume;
 
     /**
      * @brief Render all drawable entities in the game using OpenGL.
@@ -73,13 +76,7 @@ namespace zero::render {
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
 
-        /**
-         * @brief Render the entities using the camera
-         * @param camera the camera to render with
-         * @param registry the registry containing all the entities and their components
-         */
-        void RenderWithCamera(const Camera& camera,
-                              const entt::registry& registry);
+        void RenderEntities(const Camera& camera, const entt::registry& registry);
 
         /**
          * @brief Initialize OpenGL for rendering (e.g. enable depth testing)

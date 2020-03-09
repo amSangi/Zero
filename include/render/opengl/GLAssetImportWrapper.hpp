@@ -2,13 +2,15 @@
 
 #include <memory>
 #include "render/Components.hpp"
-#include "GLMesh.hpp"
 
-// Forward Declarations
+// Forward declarations
 class aiMesh;
 class aiMaterial;
 
 namespace zero::render {
+
+    // Forward declarations
+    class GLMesh;
 
     /**
      * @brief Convert AssImp objects into Zero engine specific objects

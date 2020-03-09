@@ -1,9 +1,9 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include "core/Component.hpp"
 #include "core/Transform.hpp"
 #include "math/Matrix4x4.hpp"
-#include "render/Components.hpp"
 
 namespace zero::render {
 

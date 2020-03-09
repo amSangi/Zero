@@ -1,8 +1,22 @@
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLSampler.hpp"
+#include "render/Components.hpp"
+#include "render/Image.hpp"
 
 using namespace zero::render;
+
+constexpr zero::uint8 kAlphaTextureIndex = 0;
+constexpr zero::uint8 kAmbientTextureIndex = 1;
+constexpr zero::uint8 kDiffuseTextureIndex = 2;
+constexpr zero::uint8 kDisplacementTextureIndex = 3;
+constexpr zero::uint8 kNormalTextureIndex = 4;
+
+constexpr auto kAlphaTextureUniformName = "alpha_texture";
+constexpr auto kAmbientTextureUniformName = "ambient_texture";
+constexpr auto kDiffuseTextureUniformName = "diffuse_texture";
+constexpr auto kDisplacementTextureUniformName = "displacement_texture";
+constexpr auto kNormalTextureUniformName = "normal_texture";
 
 GLTextureManager::GLTextureManager()
 : image_map_()
@@ -21,7 +35,35 @@ void GLTextureManager::SetSampler(const std::shared_ptr<GLSampler>& sampler, uin
     glBindSampler(index, sampler->GetNativeIdentifier());
 }
 
-std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& filename, zero::uint8 index) {
+std::vector<std::shared_ptr<GLTexture>> GLTextureManager::CreateTextureMap(const Material& material) {
+    std::vector<std::shared_ptr<GLTexture>> gl_textures;
+    auto gl_alpha_texture = CreateTexture(material.texture_map_.alpha_map_, kAlphaTextureIndex, kAlphaTextureUniformName);
+    auto gl_ambient_texture = CreateTexture(material.texture_map_.ambient_map_, kAmbientTextureIndex, kAmbientTextureUniformName);
+    auto gl_diffuse_texture = CreateTexture(material.texture_map_.diffuse_map_, kDiffuseTextureIndex, kDiffuseTextureUniformName);
+    auto gl_displacement_texture = CreateTexture(material.texture_map_.displacement_map_, kDisplacementTextureIndex, kDisplacementTextureUniformName);
+    auto gl_normal_texture = CreateTexture(material.texture_map_.normal_map_, kNormalTextureIndex, kNormalTextureUniformName);
+    if (gl_alpha_texture) {
+        gl_textures.push_back(gl_alpha_texture);
+    }
+    if (gl_ambient_texture) {
+        gl_textures.push_back(gl_ambient_texture);
+    }
+    if (gl_diffuse_texture) {
+        gl_textures.push_back(gl_diffuse_texture);
+    }
+    if (gl_displacement_texture) {
+        gl_textures.push_back(gl_displacement_texture);
+    }
+    if (gl_normal_texture) {
+        gl_textures.push_back(gl_normal_texture);
+    }
+    return gl_textures;
+}
+
+
+std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& filename,
+                                                           zero::uint8 index,
+                                                           const std::string& uniform_name) {
     if (index >= GetTextureUnitCount()) {
         return nullptr;
     }
@@ -76,7 +118,9 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& fi
                  GL_UNSIGNED_BYTE,    // Data type of the pixel data.
                  image->GetData());   // Pointer to the image data in memory.
 
-    return std::make_shared<GLTexture>(texture_id, target);
+    auto gl_texture = std::make_shared<GLTexture>(texture_id, target);
+    gl_texture->SetUniformName(uniform_name);
+    return gl_texture;
 }
 
 bool GLTextureManager::InitializeImage(const std::string& filename) {

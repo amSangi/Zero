@@ -1,4 +1,5 @@
 #include "render/opengl/GLProgram.hpp"
+#include "render/opengl/GLShader.hpp"
 
 using namespace zero::render;
 

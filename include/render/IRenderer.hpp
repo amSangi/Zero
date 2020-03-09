@@ -1,10 +1,13 @@
 #pragma once
 
+#include <string>
 #include <entt/entt.hpp>
-#include "render/Components.hpp"
 #include "core/RenderSystemConfig.hpp"
 
 namespace zero::render {
+
+    // Forward declarations
+    class PrimitiveInstance;
 
     /**
      * @brief Draw primitives and objects onto the current active rendering context
@@ -21,8 +24,8 @@ namespace zero::render {
         virtual void Initialize(const RenderSystemConfig& config) = 0;
 
         /**
-         * @brief Render all entities in the registry with Transform, Volume, Material, and ModelInstance components
-         * using the active cameras in the world.
+         * @brief Render all entities in the registry with Transform, Volume, Material, and either
+         * ModelInstance or PrimitiveInstance components using the active cameras in the world.
          * @param registry the registry containing all of the entities and their components
          */
         virtual void Render(const entt::registry& registry) = 0;

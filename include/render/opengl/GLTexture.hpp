@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <string>
 #include "OpenGL.hpp"
 #include "render/IRenderResource.hpp"
 
@@ -45,6 +45,18 @@ namespace zero::render {
          */
         [[nodiscard]] GLuint GetIdentifier() const;
 
+        /**
+         * @brief Get the uniform name
+         * @return the uniform name. Empty string if one is not set.
+         */
+        [[nodiscard]] std::string GetUniformName() const;
+
+        /**
+         * @brief Set the uniform name of the texture
+         * @param uniform_name the uniform name
+         */
+        void SetUniformName(const std::string& uniform_name);
+
     protected:
         /**
          * @brief Destroy the texture resources
@@ -62,6 +74,11 @@ namespace zero::render {
          * @brief The OpenGL texture target
          */
         GLenum target_;
+
+        /**
+         * @brief The shader uniform sampler name the texture is associated with
+         */
+        std::string uniform_name_;
 
     }; // class GLTexture
 

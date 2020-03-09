@@ -1,6 +1,7 @@
 #include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
+#include "render/Components.hpp"
 
 using namespace zero::render;
 

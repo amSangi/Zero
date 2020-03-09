@@ -4,6 +4,12 @@
 
 namespace zero::render {
 
+    struct Plane {
+        math::Vec3f center_;
+        uint32 width_;
+        uint32 height_;
+    }; // struct Plane
+
     struct Cone {
         // TODO: Add data types that represent a cone
     }; // struct Cone
@@ -13,7 +19,7 @@ namespace zero::render {
     }; // struct Cylinder
 
     struct Torus {
-        math::Vec3f origin_;
+        math::Vec3f center_;
         float inner_radius_;
         float outer_radius_;
     }; // struct Torus

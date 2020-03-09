@@ -4,8 +4,6 @@
 #include <random>
 #include <string>
 #include <unordered_map>
-#include <core/ZBase.hpp>
-#include "render/Components.hpp"
 
 // Forward Declarations
 class aiScene;
@@ -15,6 +13,7 @@ namespace zero::render {
 
     // Forward Declaration
     class GLModel;
+    class ModelInstance;
 
     /**
      * @brief Manage the loading and lifetime of GLModels

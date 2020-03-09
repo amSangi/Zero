@@ -5,6 +5,7 @@ using namespace zero::render;
 GLTexture::GLTexture(GLuint id, GLenum target)
 : id_(id)
 , target_(target)
+, uniform_name_()
 {}
 
 GLTexture::~GLTexture() {
@@ -32,4 +33,12 @@ GLenum GLTexture::GetTarget() const {
 
 GLuint GLTexture::GetIdentifier() const {
     return id_;
+}
+
+std::string GLTexture::GetUniformName() const {
+    return uniform_name_;
+}
+
+void GLTexture::SetUniformName(const std::string& uniform_name) {
+    uniform_name_ = uniform_name;
 }

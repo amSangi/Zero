@@ -24,7 +24,7 @@ GLShader::GLShader(const std::string& source, IShader::Type type) : type_(type) 
             id_ = glCreateShader(GL_COMPUTE_SHADER);
             break;
         default:
-            id_ = glCreateShader(GL_COMPUTE_SHADER);
+            id_ = 0;
             break;
     }
 

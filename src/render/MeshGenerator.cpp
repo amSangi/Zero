@@ -2,8 +2,7 @@
 
 using namespace zero::render;
 
-Mesh MeshGenerator::GenerateSphere(const math::Sphere& sphere,
-                                   zero::uint32 latitude_count,
+Mesh MeshGenerator::GenerateSphere(zero::uint32 latitude_count,
                                    zero::uint32 longitude_count) {
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
@@ -27,7 +26,7 @@ Mesh MeshGenerator::GenerateSphere(const math::Sphere& sphere,
             vertex.normal_ = math::Vec3f(xz * math::Sin(longitude_angle),
                                          y,
                                          xz * math::Cos(longitude_angle));
-            vertex.position_ = (vertex.normal_ * sphere.radius_) + sphere.center_;
+            vertex.position_ = vertex.normal_;
             vertex.texture_coordinate_ = math::Vec2f(static_cast<float>(j) / longitude_count,
                                                      static_cast<float>(i) / latitude_count);
             temp_vertices.push_back(vertex);
@@ -95,8 +94,7 @@ Mesh MeshGenerator::GenerateSphere(const math::Sphere& sphere,
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GeneratePlane(const math::Vec3f& origin,
-                                  const math::Vec3f& u_axis,
+Mesh MeshGenerator::GeneratePlane(const math::Vec3f& u_axis,
                                   const math::Vec3f& v_axis,
                                   uint32 row_count,
                                   uint32 column_count) {
@@ -113,7 +111,7 @@ Mesh MeshGenerator::GeneratePlane(const math::Vec3f& origin,
             float u = i * row_increment;
             float v = j * column_increment;
             Vertex vertex{};
-            vertex.position_ = origin + ((u - 0.5F) * u_axis) + ((v - 0.5F) * v_axis);
+            vertex.position_ = ((u - 0.5F) * u_axis) + ((v - 0.5F) * v_axis);
             vertex.normal_ = normal;
             vertex.texture_coordinate_ = math::Vec2f(u, v);
             vertices.push_back(vertex);

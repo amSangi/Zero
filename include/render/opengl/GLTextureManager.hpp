@@ -1,16 +1,18 @@
 #pragma once
 
 #include <memory>
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
+#include <vector>
 #include "render/ITextureManager.hpp"
-#include "render/Image.hpp"
 
 namespace zero::render {
 
     // Forward Declarations
     class GLTexture;
     class GLSampler;
+    class Material;
+    class Image;
 
     /**
      * @brief Create OpenGL texture objects and manage image lifetime
@@ -35,12 +37,20 @@ namespace zero::render {
         void SetSampler(const std::shared_ptr<GLSampler>& sampler, uint8 texture_unit);
 
         /**
+         * @brief Create a series of
+         * @param material the material containing the texture map files
+         * @return a list of GLTextures
+         */
+        std::vector<std::shared_ptr<GLTexture>> CreateTextureMap(const Material& material);
+
+        /**
          * @brief Create a graphics texture object
          * @param filename the filename of the image to use for the graphics texture
          * @param index the texture unit to use (0 based)
+         * @param uniform_name the uniform sampler name the texture is associated with
          * @return an OpenGL graphics texture object
          */
-        std::shared_ptr<GLTexture> CreateTexture(const std::string& filename, uint8 index);
+        std::shared_ptr<GLTexture> CreateTexture(const std::string& filename, uint8 index, const std::string& uniform_name = "");
 
         /**
          * @see ITextureManager::InitializeImage

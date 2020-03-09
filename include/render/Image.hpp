@@ -1,9 +1,10 @@
 #pragma once
 
-#include <memory>
 #include <string>
-#include <SDL_surface.h>
 #include "core/ZBase.hpp"
+
+// Forward declarations
+class SDL_Surface;
 
 namespace zero::render {
 

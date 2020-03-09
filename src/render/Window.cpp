@@ -1,6 +1,4 @@
-#include "event/EventBus.hpp"
 #include "render/Window.hpp"
-#include <utility>
 #include "render/opengl/OpenGL.hpp"
 #include <SDL.h>
 #include <SDL_image.h>

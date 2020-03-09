@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Components.hpp"
+#include "math/Vector3.hpp"
+#include "math/Sphere.hpp"
+#include "math/Box.hpp"
 
 namespace zero::render {
 

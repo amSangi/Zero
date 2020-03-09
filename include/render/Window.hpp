@@ -3,14 +3,7 @@
 #include <SDL_video.h>
 #include "core/WindowConfig.hpp"
 
-namespace zero {
-namespace event {
-    // Forward declaration
-    class EventBus;
-} // namespace event
-
-namespace render {
-
+namespace zero::render {
     /**
      * @brief SDL Window and SDL GL Context Wrapper
      */
@@ -67,4 +60,3 @@ namespace render {
     }; // class Window
 
 } // namespace render
-} // namespace zero

@@ -2,11 +2,13 @@
 
 #include <memory>
 #include <string>
-#include "Components.hpp"
-#include "ShaderStage.hpp"
-#include "IProgram.hpp"
+#include "render/ShaderStage.hpp"
+#include "render/IProgram.hpp"
 
 namespace zero::render {
+
+    // Forward declarations
+    class Material;
 
     /**
      * @brief Stores Graphics Shaders and creates Graphics Programs. The Material component dictates the

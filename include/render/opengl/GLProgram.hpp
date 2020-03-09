@@ -5,10 +5,12 @@
 #include <vector>
 #include <unordered_map>
 #include "OpenGL.hpp"
-#include "GLShader.hpp"
 #include "render/IProgram.hpp"
 
 namespace zero::render {
+
+    // Forward declarations
+    class GLShader;
 
     /**
      * @brief OpenGL graphics program wrapper

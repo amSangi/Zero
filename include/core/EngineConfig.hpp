@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderSystemConfig.hpp"
+#include "core/RenderSystemConfig.hpp"
 
 namespace zero {
 

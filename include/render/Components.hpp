@@ -205,8 +205,8 @@ namespace zero::render {
          */
         ///@{
         explicit PrimitiveInstance(const math::Box& box);
-        explicit PrimitiveInstance(const math::Plane& plane);
         explicit PrimitiveInstance(const math::Sphere& sphere);
+        explicit PrimitiveInstance(const Plane& plane);
         explicit PrimitiveInstance(const Cone& cone);
         explicit PrimitiveInstance(const Cylinder& cylinder);
         explicit PrimitiveInstance(const Torus& torus);
@@ -223,8 +223,8 @@ namespace zero::render {
          */
         ///@{
         void Set(const math::Box& box);
-        void Set(const math::Plane& plane);
         void Set(const math::Sphere& sphere);
+        void Set(const Plane& plane);
         void Set(const Cone& cone);
         void Set(const Cylinder& cylinder);
         void Set(const Torus& torus);
@@ -235,8 +235,8 @@ namespace zero::render {
          */
         ///@{
         [[nodiscard]] const math::Box& GetBox();
-        [[nodiscard]] const math::Plane& GetPlane();
         [[nodiscard]] const math::Sphere& GetSphere();
+        [[nodiscard]] const Plane& GetPlane();
         [[nodiscard]] const Cone& GetCone();
         [[nodiscard]] const Cylinder& GetCylinder();
         [[nodiscard]] const Torus& GetTorus();
@@ -252,16 +252,16 @@ namespace zero::render {
              */
             ///@{
             explicit Primitive(const math::Box& box);
-            explicit Primitive(const math::Plane& plane);
             explicit Primitive(const math::Sphere& sphere);
+            explicit Primitive(const Plane& plane);
             explicit Primitive(const Cone& cone);
             explicit Primitive(const Cylinder& cylinder);
             explicit Primitive(const Torus& torus);
             ///@}
 
             math::Box box_;
-            math::Plane plane_;
             math::Sphere sphere_;
+            Plane plane_;
             Cone cone_;
             Cylinder cylinder_;
             Torus torus_;
