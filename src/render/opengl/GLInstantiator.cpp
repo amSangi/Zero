@@ -3,6 +3,7 @@
 #include "render/opengl/GLModel.hpp"
 #include "render/Components.hpp"
 #include "core/Transform.hpp"
+#include "math/Box.hpp"
 
 using namespace zero::render;
 
@@ -18,7 +19,9 @@ zero::Component::Entity GLInstantiator::InstantiateModel(entt::registry& registr
     transform.parent_ = parent;
     for (const auto& child_gl_model : gl_model->GetChildren()) {
         auto child_entity = InstantiateModel(registry, child_gl_model, entity);
-        transform.children_.push_back(child_entity);
+        if (child_entity != Component::NullEntity) {
+            transform.children_.push_back(child_entity);
+        }
     }
 
     registry.assign<Transform>(entity, transform);
@@ -30,13 +33,15 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
     auto entity = registry.create();
     Transform transform{};
     Volume volume{};
+    // Set transform/volume values
     switch (primitive.GetType()) {
         case PrimitiveInstance::Type::BOX:
         {
             const auto& box = primitive.GetBox();
-            transform.position_ = box.Center();
-            volume.bounding_volume_.center_ = transform.position_;
-            volume.Engulf(Volume(box.min_, box.max_));
+            math::Box math_box{math::Vec3f::Zero(), math::Vec3f(box.width_, box.height_, box.depth_)};
+            volume.bounding_volume_.center_ = math_box.Center();
+            volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
+            transform.scale_ = math_box.max_;
             break;
         }
         case PrimitiveInstance::Type::CONE:
@@ -54,28 +59,24 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         case PrimitiveInstance::Type::PLANE:
         {
             const auto& plane = primitive.GetPlane();
-            transform.position_ = plane.center_;
-            transform.scale_ = math::Vec3f(plane.width_, plane.height_, 1.0F);
-            volume.bounding_volume_.center_ = transform.position_;
-            auto offset = math::Vec3f(plane.width_, plane.height_, 0.0F);
-            auto min = transform.position_ - offset;
-            auto max = transform.position_ + offset;
-            volume.Engulf(Volume(min, max));
+            auto half_width = plane.width_ * 0.5F;
+            auto half_height = plane.height_ * 0.5F;
+            volume.bounding_volume_.center_ = math::Vec3f(half_width,
+                                                          0.0F,
+                                                          half_height);
+            volume.bounding_volume_.radius_ = half_width + half_height;
             break;
         }
         case PrimitiveInstance::Type::SPHERE:
         {
             const auto& sphere = primitive.GetSphere();
-            transform.position_ = sphere.center_;
-            transform.scale_ = math::Vec3f(sphere.radius_);
-            volume.bounding_volume_ = math::Sphere(transform.position_, sphere.radius_ + math::kEpsilon);
+            volume.bounding_volume_.radius_ = 1.05F;
             break;
         }
         case PrimitiveInstance::Type::TORUS:
         {
             const auto& torus = primitive.GetTorus();
-            transform.position_ = torus.center_;
-            volume.bounding_volume_ = math::Sphere(transform.position_, torus.outer_radius_ + math::kEpsilon);
+            volume.bounding_volume_.radius_ = (torus.radius_ + torus.tube_radius_);
             break;
         }
     }

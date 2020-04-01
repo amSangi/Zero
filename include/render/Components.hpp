@@ -4,7 +4,6 @@
 #include <vector>
 #include "core/ZBase.hpp"
 #include "core/Component.hpp"
-#include "math/Box.hpp"
 #include "math/Sphere.hpp"
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
@@ -204,8 +203,8 @@ namespace zero::render {
          * @brief Construct a primitive of a given type
          */
         ///@{
-        explicit PrimitiveInstance(const math::Box& box);
-        explicit PrimitiveInstance(const math::Sphere& sphere);
+        explicit PrimitiveInstance(const Box& box);
+        explicit PrimitiveInstance(const Sphere& sphere);
         explicit PrimitiveInstance(const Plane& plane);
         explicit PrimitiveInstance(const Cone& cone);
         explicit PrimitiveInstance(const Cylinder& cylinder);
@@ -222,8 +221,8 @@ namespace zero::render {
          * @brief Change the primitive
          */
         ///@{
-        void Set(const math::Box& box);
-        void Set(const math::Sphere& sphere);
+        void Set(const Box& box);
+        void Set(const Sphere& sphere);
         void Set(const Plane& plane);
         void Set(const Cone& cone);
         void Set(const Cylinder& cylinder);
@@ -234,8 +233,8 @@ namespace zero::render {
          * @brief Get the primitive data
          */
         ///@{
-        [[nodiscard]] const math::Box& GetBox();
-        [[nodiscard]] const math::Sphere& GetSphere();
+        [[nodiscard]] const Box& GetBox();
+        [[nodiscard]] const Sphere& GetSphere();
         [[nodiscard]] const Plane& GetPlane();
         [[nodiscard]] const Cone& GetCone();
         [[nodiscard]] const Cylinder& GetCylinder();
@@ -251,16 +250,16 @@ namespace zero::render {
              * @brief Construct a primitive of a given type
              */
             ///@{
-            explicit Primitive(const math::Box& box);
-            explicit Primitive(const math::Sphere& sphere);
+            explicit Primitive(const Box& box);
+            explicit Primitive(const Sphere& sphere);
             explicit Primitive(const Plane& plane);
             explicit Primitive(const Cone& cone);
             explicit Primitive(const Cylinder& cylinder);
             explicit Primitive(const Torus& torus);
             ///@}
 
-            math::Box box_;
-            math::Sphere sphere_;
+            Box box_;
+            Sphere sphere_;
             Plane plane_;
             Cone cone_;
             Cylinder cylinder_;

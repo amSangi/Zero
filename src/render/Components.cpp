@@ -72,11 +72,11 @@ Material::Material()
 ////////////////////////////////////////////////////////////
 ///// PrimitiveInstance
 ////////////////////////////////////////////////////////////
-PrimitiveInstance::Primitive::Primitive(const math::Box& box)
+PrimitiveInstance::Primitive::Primitive(const Box& box)
 : box_(box)
 {}
 
-PrimitiveInstance::Primitive::Primitive(const math::Sphere& sphere)
+PrimitiveInstance::Primitive::Primitive(const Sphere& sphere)
 : sphere_(sphere)
 {}
 
@@ -97,15 +97,15 @@ PrimitiveInstance::Primitive::Primitive(const Torus& torus)
 {}
 
 PrimitiveInstance::PrimitiveInstance()
-: PrimitiveInstance(math::Box::Unit())
+: PrimitiveInstance(Box())
 {}
 
-PrimitiveInstance::PrimitiveInstance(const math::Box& box)
+PrimitiveInstance::PrimitiveInstance(const Box& box)
 : type_(Type::BOX)
 , primitive_(box)
 {}
 
-PrimitiveInstance::PrimitiveInstance(const math::Sphere& sphere)
+PrimitiveInstance::PrimitiveInstance(const Sphere& sphere)
 : type_(Type::SPHERE)
 , primitive_(sphere)
 {}
@@ -134,12 +134,12 @@ PrimitiveInstance::Type PrimitiveInstance::GetType() const {
     return type_;
 }
 
-void PrimitiveInstance::Set(const math::Box& box) {
+void PrimitiveInstance::Set(const Box& box) {
     type_ = Type::BOX;
     primitive_.box_ = box;
 }
 
-void PrimitiveInstance::Set(const math::Sphere& sphere) {
+void PrimitiveInstance::Set(const Sphere& sphere) {
     type_ = Type::SPHERE;
     primitive_.sphere_ = sphere;
 }
@@ -164,13 +164,13 @@ void PrimitiveInstance::Set(const Torus& torus) {
     primitive_.torus_ = torus;
 }
 
-const zero::math::Box& PrimitiveInstance::GetBox() {
-    if (type_ != Type::BOX) Set(math::Box::Unit());
+const Box& PrimitiveInstance::GetBox() {
+    if (type_ != Type::BOX) Set(Box());
     return primitive_.box_;
 }
 
-const zero::math::Sphere& PrimitiveInstance::GetSphere() {
-    if (type_ != Type::SPHERE) Set(math::Sphere::Zero());
+const Sphere& PrimitiveInstance::GetSphere() {
+    if (type_ != Type::SPHERE) Set(Sphere());
     return primitive_.sphere_;
 }
 

@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/PerspectiveViewVolume.cpp
                              render/Propagator.cpp
                              render/RenderSystem.cpp
+                             render/Shapes.cpp
                              render/ViewVolumeBuilder.cpp
                              render/Window.cpp
                              render/opengl/GLAssetImportWrapper.cpp

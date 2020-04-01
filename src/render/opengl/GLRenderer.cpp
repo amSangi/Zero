@@ -144,9 +144,11 @@ void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
     gl_primitive_program->Use();
     gl_primitive_program->SetUniform("projection_matrix", projection_matrix);
     gl_primitive_program->SetUniform("model_view_matrix", view_matrix * model_matrix);
+    gl_primitive_program->SetUniform("color", math::Vec3f(1.0F, 0.0F, 0.0F));
     gl_primitive_program->FlushUniforms();
 
-    PrimitiveInstance primitive_instance{volume.bounding_volume_};
+    PrimitiveInstance primitive_instance{};
+    primitive_instance.Set(render::Sphere());
     auto gl_primitive = GLPrimitiveGenerator::Generate(primitive_instance);
     gl_primitive->Draw();
     gl_primitive_program->Finish();
@@ -190,10 +192,11 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
             graphics_program->SetUniform(gl_texture->GetUniformName(), i);
         }
 
-        // Camera dependent uniforms
+        // Set uniforms
         graphics_program->SetUniform("projection_matrix", projection_matrix);
-        graphics_program->SetUniform("camera_position", camera.position_);
         graphics_program->SetUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
+        graphics_program->SetUniform("color", math::Vec3f::One());
+        graphics_program->SetUniform("camera_position", camera.position_);
         graphics_program->FlushUniforms();
 
         // Draw Mesh
@@ -258,7 +261,7 @@ std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt:
             continue;
         }
         if (culler->IsCulled(volume.bounding_volume_)) {
-            continue;
+            //continue;
         }
         viewable_entities.push_back(renderable_entity);
     }

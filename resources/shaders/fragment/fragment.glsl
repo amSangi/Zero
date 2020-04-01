@@ -8,6 +8,7 @@ uniform sampler2D displacement_texture;
 uniform sampler2D normal_texture;
 uniform mat4 projection_matrix;
 uniform mat4 model_view_matrix;
+uniform vec3 color;
 uniform vec3 camera_position;
 
 in vec3 model_view_position;
