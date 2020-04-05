@@ -15,6 +15,23 @@ Plane::Plane()
 , v_axis_(math::Vec3f::Forward())
 {}
 
+Cone::Cone()
+: radius_(1.0F)
+, height_(1)
+, radial_segments_(16)
+, height_segments_(1)
+, is_open_ended_(false)
+{}
+
+Cylinder::Cylinder()
+: top_radius_(1.0F)
+, bottom_radius_(1.0F)
+, height_(1)
+, radial_segments_(16)
+, height_segments_(1)
+, is_open_ended_(false)
+{}
+
 Sphere::Sphere()
 : latitude_count_(16)
 , longitude_count_(16)

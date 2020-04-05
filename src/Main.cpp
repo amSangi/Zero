@@ -155,14 +155,11 @@ int main(int argc, char *argv[]) {
 
     // Instantiate a box
     render::PrimitiveInstance primitive{};
-    render::Box shape{};
-    shape.width_ = 1U;
-    shape.height_ = 5U;
-    shape.depth_ = 5U;
+    render::Cone shape{};
     primitive.Set(shape);
     auto primitive_entity = engine->InstantiatePrimitive(primitive);
     auto& primitive_material = registry.get<render::Material>(primitive_entity);
-    primitive_material.wireframe_enabled_ = false;
+    primitive_material.wireframe_enabled_ = true;
     primitive_material.visible_ = true;
     // endregion
 

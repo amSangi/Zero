@@ -229,6 +229,8 @@ Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
 
+    float radius = math::Abs(torus.radius_);
+    float tube_radius = math::Abs(torus.tube_radius_);
     uint32 radial_segments = torus.radial_segments_ < 16 ? 16 : torus.radial_segments_;
     uint32 tubular_segments = torus.tubular_segments_ < 16 ? 16 : torus.tubular_segments_;
     vertices.reserve((radial_segments + 1) * (tubular_segments + 1));
@@ -247,10 +249,10 @@ Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
             float cos_tubular_segment = math::Cos(tubular_segment);
             float sin_tubular_segment = math::Sin(tubular_segment);
             Vertex vertex{};
-            vertex.position_ = math::Vec3f((torus.radius_ + torus.tube_radius_ * cos_radial_segment) * cos_tubular_segment,
-                                           (torus.radius_ + torus.tube_radius_ * cos_radial_segment) * sin_tubular_segment,
-                                            torus.radius_ * sin_radial_segment);
-            auto center = math::Vec3f(torus.radius_ * cos_tubular_segment, torus.radius_ * sin_tubular_segment, 0.0F);
+            vertex.position_ = math::Vec3f((radius + tube_radius * cos_radial_segment) * cos_tubular_segment,
+                                           (radius + tube_radius * cos_radial_segment) * sin_tubular_segment,
+                                           tube_radius * sin_radial_segment);
+            auto center = math::Vec3f(radius * cos_tubular_segment, radius * sin_tubular_segment, 0.0F);
             vertex.normal_ = math::Vec3f::Normalize(vertex.position_ - center);
             vertex.texture_coordinate_ = math::Vec2f(u, v);
             vertices.push_back(vertex);
@@ -278,16 +280,143 @@ Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GenerateCone() {
-    // TODO: Finish Implementation
+Mesh MeshGenerator::GenerateCone(const Cone& cone) {
+    Cylinder cylinder{};
+    cylinder.top_radius_ = 0.0F;
+    cylinder.bottom_radius_ = cone.radius_;
+    cylinder.height_ = cone.height_;
+    cylinder.radial_segments_ = cone.radial_segments_;
+    cylinder.height_segments_ = cone.height_segments_;
+    cylinder.is_open_ended_ = false;
+    return MeshGenerator::GenerateCylinder(cylinder);
+}
+
+Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder) {
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
+
+    // Generate Cylinder Body
+    float top_radius = math::Abs(cylinder.top_radius_);
+    float bottom_radius = math::Abs(cylinder.bottom_radius_);
+    float theta_start = 0.0F;
+    float theta_length = math::kTwoPi;
+    float slope = (bottom_radius - top_radius) / cylinder.height_;
+    float half_height = cylinder.height_ * 0.5F;
+    uint32 index = 0;
+    std::vector<std::vector<uint32>> index_matrix;
+    // Vertices
+    for (uint32 y = 0; y <= cylinder.height_segments_; ++y) {
+        float v = static_cast<float>(y) / cylinder.height_segments_;
+        float radius = v * (bottom_radius - top_radius) + top_radius;
+        std::vector<uint32> index_row;
+        for (uint32 x = 0; x <= cylinder.radial_segments_; ++x) {
+            float u = static_cast<float>(x) / cylinder.radial_segments_;
+            float theta = u * theta_length + theta_start;
+            float sin_theta = math::Sin(theta);
+            float cos_theta = math::Cos(theta);
+            Vertex vertex{};
+            vertex.position_ = math::Vec3f(radius * sin_theta,
+                                           -v * cylinder.height_ + half_height,
+                                           radius * cos_theta);
+            vertex.normal_ = math::Vec3f::Normalize(math::Vec3f(sin_theta, slope, cos_theta));
+            vertex.texture_coordinate_ = math::Vec2f(u, 1.0F - v);
+            vertices.push_back(vertex);
+            index_row.push_back(index++);
+        }
+        index_matrix.push_back(index_row);
+    }
+
+    // Indices
+    for (uint32 x = 0; x < cylinder.radial_segments_; ++x) {
+        for (uint32 y = 0; y < cylinder.height_segments_; ++y) {
+            uint32 a = index_matrix[y][x];
+            uint32 b = index_matrix[y + 1][x];
+            uint32 c = index_matrix[y + 1][x + 1];
+            uint32 d = index_matrix[y][x + 1];
+
+            indices.push_back(a);
+            indices.push_back(b);
+            indices.push_back(d);
+
+            indices.push_back(b);
+            indices.push_back(c);
+            indices.push_back(d);
+        }
+    }
+
+    // Generate and append cap meshes
+    if (!cylinder.is_open_ended_) {
+        if (cylinder.top_radius_ > 0.0F) {
+            auto top_cap_mesh = GenerateCylinderCap(cylinder, index, true);
+            const auto& top_cap_vertices = top_cap_mesh.GetVertices();
+            const auto& top_cap_indices = top_cap_mesh.GetIndices();
+            vertices.insert(vertices.end(), top_cap_vertices.begin(), top_cap_vertices.end());
+            indices.insert(indices.end(), top_cap_indices.begin(),top_cap_indices.end());
+        }
+        if (cylinder.bottom_radius_ > 0.0F) {
+            auto bottom_cap_mesh = GenerateCylinderCap(cylinder, index, false);
+            const auto& bottom_cap_vertices = bottom_cap_mesh.GetVertices();
+            const auto& bottom_cap_indices = bottom_cap_mesh.GetIndices();
+            vertices.insert(vertices.end(), bottom_cap_vertices.begin(), bottom_cap_vertices.end());
+            indices.insert(indices.end(), bottom_cap_indices.begin(),bottom_cap_indices.end());
+        }
+    }
+
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GenerateCylinder() {
-    // TODO: Finish Implementation
+Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index, bool isTopCap){
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
+
+    float half_height = cylinder.height_ * 0.5F;
+    float radius = isTopCap ? cylinder.top_radius_ : cylinder.bottom_radius_;
+    float sign = isTopCap ? 1.0F : -1.0F;
+    uint32 start_center_index = index;
+    // Generate center vertex data
+    for (uint32 x = 1; x <= cylinder.radial_segments_; ++x) {
+        Vertex vertex{};
+        vertex.position_ = math::Vec3f(0.0F, half_height * sign, 0.0F);
+        vertex.normal_ = math::Vec3f(0.0F, sign, 0.0F);
+        vertex.texture_coordinate_ = math::Vec2f(0.5F, 0.5F);
+        vertices.push_back(vertex);
+        ++index;
+    }
+
+    uint32 end_center_index = index;
+
+    // Generate surrounding vertices
+    for (uint32 x = 0; x <= cylinder.radial_segments_; ++x) {
+        float u = static_cast<float>(x) / cylinder.radial_segments_;
+        float theta = u * math::kTwoPi;
+        float cos_theta = math::Cos(theta);
+        float sin_theta = math::Sin(theta);
+        Vertex vertex{};
+        vertex.position_ = math::Vec3f(radius * sin_theta,
+                                       half_height * sign,
+                                       radius * cos_theta);
+        vertex.normal_ = math::Vec3f(0.0F, sign, 0.0F);
+        vertex.texture_coordinate_ = math::Vec2f((cos_theta * 0.5F) + 0.5F,
+                                                 (sin_theta * 0.5F * sign) + 0.5F);
+        vertices.push_back(vertex);
+        ++index;
+    }
+
+    // Generate indices
+    for (uint32 x = 0; x < cylinder.radial_segments_; ++x) {
+        uint32 c = start_center_index + x;
+        uint32 i = end_center_index + x;
+        if (isTopCap) {
+            indices.push_back(i);
+            indices.push_back(i + 1);
+            indices.push_back(c);
+        }
+        else {
+            indices.push_back(i + 1);
+            indices.push_back(i);
+            indices.push_back(c);
+        }
+    }
+
     return Mesh(std::move(vertices), std::move(indices));
 }

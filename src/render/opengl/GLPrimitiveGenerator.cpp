@@ -9,9 +9,9 @@ std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(PrimitiveInstance primiti
         case PrimitiveInstance::Type::BOX:
             return std::make_unique<GLMesh>(MeshGenerator::GenerateBox());
         case PrimitiveInstance::Type::CONE:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateCone());
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateCone(primitive.GetCone()));
         case PrimitiveInstance::Type::CYLINDER:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateCylinder());
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateCylinder(primitive.GetCylinder()));
         case PrimitiveInstance::Type::PLANE:
             return std::make_unique<GLMesh>(MeshGenerator::GeneratePlane(primitive.GetPlane()));
         case PrimitiveInstance::Type::SPHERE:

@@ -47,13 +47,16 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         case PrimitiveInstance::Type::CONE:
         {
             const auto& cone = primitive.GetCone();
-            // TODO: Update transform/volume
+            auto half_height = cone.height_ * 0.5F;
+            volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + cone.radius_ * cone.radius_);
             break;
         }
         case PrimitiveInstance::Type::CYLINDER:
         {
             const auto& cylinder = primitive.GetCylinder();
-            // TODO: Update transform/volume
+            auto half_height = cylinder.height_ * 0.5F;
+            auto largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
+            volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + largest_radius * largest_radius);
             break;
         }
         case PrimitiveInstance::Type::PLANE:
@@ -70,13 +73,15 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         case PrimitiveInstance::Type::SPHERE:
         {
             const auto& sphere = primitive.GetSphere();
+            // Volume slightly larger
             volume.bounding_volume_.radius_ = 1.05F;
             break;
         }
         case PrimitiveInstance::Type::TORUS:
         {
             const auto& torus = primitive.GetTorus();
-            volume.bounding_volume_.radius_ = (torus.radius_ + torus.tube_radius_);
+            // Volume slightly larger
+            volume.bounding_volume_.radius_ = (torus.radius_ + torus.tube_radius_) + 0.05F;
             break;
         }
     }
