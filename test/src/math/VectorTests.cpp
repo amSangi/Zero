@@ -110,7 +110,7 @@ TEST(TestVector, Normalize) {
 
 	// Instance method
 	Vec3f actual = Vec3f::One();
-	EXPECT_TRUE(actual.Normalize());
+	EXPECT_GT(actual.Normalize(), kSmallEpsilon);
 	EXPECT_EQ(actual, expected);
 
 	EXPECT_TRUE(Equal(expected.x_, actual.x_));
@@ -126,7 +126,7 @@ TEST(TestVector, NormalizeComplex) {
 	EXPECT_EQ(Vec4f::Normalize(actual), expected);
 
 	// Instance method
-	EXPECT_TRUE(actual.Normalize());
+	EXPECT_GT(actual.Normalize(), kSmallEpsilon);
 	EXPECT_EQ(actual, expected);
 	EXPECT_TRUE(Equal(expected.x_, actual.x_));
 	EXPECT_TRUE(Equal(expected.y_, actual.y_));
@@ -194,7 +194,8 @@ TEST(TestVector, Reflect) {
 
 TEST(TestVector, ReflectComplex) {
 	Vec3f normal = Vec3f::Normalize(Vec3f::One());
-	Vec3f incident, reflect;
+	Vec3f incident;
+	Vec3f reflect;
 
 	incident = -1.0F * normal;
 	reflect = Vec3f::Reflect(incident, normal);

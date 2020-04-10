@@ -269,9 +269,9 @@ namespace detail {
 
 		/**
 		 * @brief Normalize the vector if it's possible
-		 * @return True if magnitude is > kEpsilon. False otherwise.
+		 * @return the magnitude
 		 */
-		bool Normalize();
+		float Normalize();
 
 		/**
 		 * @brief Check to see if all of the components are less than or equal to an epsilon value
@@ -510,16 +510,16 @@ namespace detail {
 	}
 
 	template<uint16 dims, class T>
-	bool Vector<dims, T>::Normalize() {
+	float Vector<dims, T>::Normalize() {
 		float magnitude = Magnitude();
 
 		float inv_magnitude = 1.0F / magnitude;
 		if (magnitude > kSmallEpsilon) {
 			operator*=(inv_magnitude);
-			return true;
+			return magnitude;
 		}
 
-		return false;
+		return 0.0F;
 	}
 
 	template<uint16 dims, class T>

@@ -66,10 +66,6 @@ float Plane::Distance(const Vec3f& point) const {
 	return Vec3f::Dot(normal_, point) + d_;
 }
 
-bool Plane::Normalize() {
-	return normal_.Normalize();
-}
-
 Plane Plane::Flip() const {
 	return Plane(normal_ * -1.0F, -d_);
 }

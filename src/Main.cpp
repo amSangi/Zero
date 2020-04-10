@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
     auto camera_entity = registry.create();
     registry.assign<render::Camera>(camera_entity, render::Camera{render::Camera::ProjectionType::PERSPECTIVE});
     auto& camera = registry.get<render::Camera>(camera_entity);
-    auto default_camera_position = math::Vec3f(0.0F, 1.0F, 15.0F);
+    auto default_camera_position = math::Vec3f(0.0F, 1.0F, 5.0F);
     camera.viewport_.width_ = window_config.width_;
     camera.viewport_.height_ = window_config.height_;
     camera.position_ = default_camera_position;

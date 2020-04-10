@@ -261,7 +261,7 @@ std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt:
             continue;
         }
         if (culler->IsCulled(volume.bounding_volume_)) {
-            //continue;
+            continue;
         }
         viewable_entities.push_back(renderable_entity);
     }

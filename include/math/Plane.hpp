@@ -37,7 +37,7 @@ namespace zero::math {
 		/**
 		 * @return a vec4f representing this plane
 		 */
-		Vec4f ToVector4() const;
+		[[nodiscard]] Vec4f ToVector4() const;
 
 		/* ********** Intersection Tests ********** */
 
@@ -46,7 +46,7 @@ namespace zero::math {
 		 * @param other The other plane
 		 * @return True if the other plane intersects with this. Otherwise false.
 		 */
-		bool Intersects(const Plane& other, float epsilon = kEpsilon) const;
+		[[nodiscard]] bool Intersects(const Plane& other, float epsilon = kEpsilon) const;
 
 		/* ********** Transform Operations ********** */
 
@@ -83,12 +83,6 @@ namespace zero::math {
 		 * @return the distance from this to the given point
 		 */
         [[nodiscard]] float Distance(const Vec3f& point) const;
-
-		/**
-		 * @brief Normalize the plane
-		 * @return True if the magnitude is not zero. Otherwise False.
-		 */
-		bool Normalize();
 
 		/**
 		 * @brief Flip the plane to face the opposite direction
