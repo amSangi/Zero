@@ -23,7 +23,7 @@ namespace zero::render {
 
         GLModelManager();
 
-        virtual ~GLModelManager() = default;
+        ~GLModelManager() = default;
 
         /**
          * @brief Load a model from a 3D file. A single 3D file may contain multiple sub models.

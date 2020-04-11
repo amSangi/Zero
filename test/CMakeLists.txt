@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/render/OrthographicViewVolumeTests.cpp
                                src/render/PropagatorTests.cpp
                                src/render/PerspectiveViewVolumeTests.cpp
+                               src/render/ShapeTests.cpp
                                src/render/opengl/GLCompilerTests.cpp
                                src/render/opengl/GLProgramTests.cpp
                                src/render/opengl/GLShaderTests.cpp

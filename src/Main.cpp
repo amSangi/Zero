@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 
     // Instantiate a box
     render::PrimitiveInstance primitive{};
-    render::Cone shape{};
+    render::Torus shape{};
     primitive.Set(shape);
     auto primitive_entity = engine->InstantiatePrimitive(primitive);
     auto& primitive_material = registry.get<render::Material>(primitive_entity);

@@ -13,6 +13,7 @@ namespace zero::render {
     class Camera;
     class GLCompiler;
     class GLModelManager;
+    class GLPrimitiveMeshManager;
     class GLTextureManager;
     class Volume;
 
@@ -117,9 +118,14 @@ namespace zero::render {
         std::unique_ptr<GLCompiler> graphics_compiler_;
 
         /**
-         * @brief Manage mesh usage
+         * @brief Manage model meshes
          */
         std::unique_ptr<GLModelManager> model_manager_;
+        
+        /**
+         * @brief Manage primitive meshes
+         */
+        std::unique_ptr<GLPrimitiveMeshManager> primitive_manager_;
 
         /**
          * @brief Manage texture image usage

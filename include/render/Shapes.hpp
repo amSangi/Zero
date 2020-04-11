@@ -9,6 +9,8 @@ namespace zero::render {
      */
     struct Box {
         Box();
+        bool operator==(const Box& other) const;
+        bool operator!=(const Box& other) const;
         /**
          * @brief The width of the box (+x)
          */
@@ -28,6 +30,8 @@ namespace zero::render {
      */
     struct Plane {
         Plane();
+        bool operator==(const Plane& other) const;
+        bool operator!=(const Plane& other) const;
         /**
          * @brief The width of the plane (+u)
          */
@@ -55,6 +59,8 @@ namespace zero::render {
      */
     struct Cone {
         Cone();
+        bool operator==(const Cone& other) const;
+        bool operator!=(const Cone& other) const;
         /**
          * @brief The radius of the base of the cone
          */
@@ -82,6 +88,8 @@ namespace zero::render {
      */
     struct Cylinder {
         Cylinder();
+        bool operator==(const Cylinder& other) const;
+        bool operator!=(const Cylinder& other) const;
         /**
          * @brief The top radius of the cylinder
          */
@@ -90,6 +98,9 @@ namespace zero::render {
          * @brief The bottom radius of the cylinder
          */
         float bottom_radius_;
+        /**
+         * @brief The height of the cylinder
+         */
         uint32 height_;
         /**
          * @brief Radial segments of the cylinder
@@ -110,6 +121,8 @@ namespace zero::render {
      */
     struct Sphere {
         Sphere();
+        bool operator==(const Sphere& other) const;
+        bool operator!=(const Sphere& other) const;
         /**
          * @brief Latitudinal segments of the sphere
          */
@@ -125,6 +138,8 @@ namespace zero::render {
      */
     struct Torus {
         Torus();
+        bool operator==(const Torus& other) const;
+        bool operator!=(const Torus& other) const;
         /**
          * @brief The central radius of the torus
          */

@@ -81,7 +81,7 @@ PrimitiveInstance::Primitive::Primitive(const Sphere& sphere)
 {}
 
 PrimitiveInstance::Primitive::Primitive(const Plane& plane)
-        : plane_(plane)
+: plane_(plane)
 {}
 
 PrimitiveInstance::Primitive::Primitive(const Cone& cone)
@@ -111,8 +111,8 @@ PrimitiveInstance::PrimitiveInstance(const Sphere& sphere)
 {}
 
 PrimitiveInstance::PrimitiveInstance(const Plane& plane)
-        : type_(Type::PLANE)
-        , primitive_(plane)
+: type_(Type::PLANE)
+, primitive_(plane)
 {}
 
 PrimitiveInstance::PrimitiveInstance(const Cone& cone)

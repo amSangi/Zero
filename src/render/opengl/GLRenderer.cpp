@@ -1,13 +1,12 @@
 #include "render/opengl/GLRenderer.hpp"
 #include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLModelManager.hpp"
+#include "render/opengl/GLPrimitiveMeshManager.hpp"
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLInstantiator.hpp"
 #include "render/opengl/GLModel.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLSampler.hpp"
-#include "render/opengl/GLProgram.hpp"
-#include "render/opengl/GLPrimitiveGenerator.hpp"
 #include "render/opengl/GLDefaultShader.hpp"
 #include "render/MeshGenerator.hpp"
 #include "render/ViewVolumeBuilder.hpp"
@@ -29,6 +28,7 @@ constexpr zero::uint8 kNormalTextureIndex = 4;
 GLRenderer::GLRenderer()
 : graphics_compiler_(std::make_unique<GLCompiler>())
 , model_manager_(std::make_unique<GLModelManager>())
+, primitive_manager_(std::make_unique<GLPrimitiveMeshManager>())
 , texture_manager_(std::make_unique<GLTextureManager>())
 {}
 
@@ -42,6 +42,7 @@ void GLRenderer::Initialize(const RenderSystemConfig& config) {
     InitializeShaders(config);
     InitializeModels(config);
     InitializeImages(config);
+    primitive_manager_->LoadPrimitives();
 }
 
 void GLRenderer::Render(const entt::registry& registry) {
@@ -59,6 +60,7 @@ void GLRenderer::PostRender(entt::registry& registry) {
 void GLRenderer::ShutDown() {
     graphics_compiler_->ClearShaders();
     model_manager_->ClearModels();
+    primitive_manager_->ClearPrimitives();
     texture_manager_->ClearImages();
 }
 
@@ -149,7 +151,7 @@ void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
 
     PrimitiveInstance primitive_instance{};
     primitive_instance.Set(render::Sphere());
-    auto gl_primitive = GLPrimitiveGenerator::Generate(primitive_instance);
+    auto gl_primitive = primitive_manager_->GetPrimitiveMesh(primitive_instance);
     gl_primitive->Draw();
     gl_primitive_program->Finish();
 }
@@ -207,7 +209,7 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
         }
         else {
             const auto& primitive_instance = primitive_view.get(viewable_entity);
-            auto primitive = GLPrimitiveGenerator::Generate(primitive_instance);
+            auto primitive = primitive_manager_->GetPrimitiveMesh(primitive_instance);
             if (primitive) primitive->Draw();
         }
 
