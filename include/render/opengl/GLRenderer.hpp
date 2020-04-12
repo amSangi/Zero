@@ -62,11 +62,23 @@ namespace zero::render {
         Component::Entity InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive) override;
 
     private:
-
+        /**
+         * @brief Initialization helper
+         */
+        ///@{
         void InitializeShaders(const RenderSystemConfig& config);
         void InitializeShaderFiles(const std::vector<std::string>& shaders, IShader::Type shader_type);
         void InitializeModels(const RenderSystemConfig& config);
         void InitializeImages(const RenderSystemConfig& config);
+        ///@}
+
+        /**
+         * @brief Render all viewable entities with a mesh
+         * @param camera the camera to render to
+         * @param registry the registry containing all the entities and their components
+         */
+        void RenderEntities(const Camera& camera, const entt::registry& registry);
+
         /**
          * @brief Render the wireframe of the bounding volume
          * @param projection_matrix the projection matrix of the camera
@@ -76,8 +88,6 @@ namespace zero::render {
         void RenderVolume(const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
-
-        void RenderEntities(const Camera& camera, const entt::registry& registry);
 
         /**
          * @brief Initialize OpenGL for rendering (e.g. enable depth testing)
@@ -98,8 +108,13 @@ namespace zero::render {
 
         /**
          * @brief Get all non-culled entities that are renderable.
+         *
+         * An entity is viewable if it is not culled by the camera and if it contains either a Model mesh or Primitive
+         * mesh.
+         * Required components: Transform, Material, Volume, (ModelInstance or PrimitiveInstance)
+         *
          * @param registry the registry containing all the entities and their components
-         * @param camera the camera to cull against
+         * @param camera the camera render to
          * @return all viewable entities
          */
         static std::vector<Component::Entity> GetViewableEntities(const entt::registry& registry,

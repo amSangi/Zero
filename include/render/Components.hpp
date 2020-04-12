@@ -154,7 +154,7 @@ namespace zero::render {
          bool wireframe_enabled_;
 
          /**
-          * @brief Is the entity visible? Only visible entities are rendered.
+          * @brief Is the entity and its children visible? Only visible entities are rendered.
           */
          bool visible_;
 

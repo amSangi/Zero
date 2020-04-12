@@ -14,6 +14,7 @@
 #include "render/Components.hpp"
 #include "core/Transform.hpp"
 #include <fstream>
+#include <deque>
 #include <vector>
 #include <iostream>
 
@@ -131,31 +132,6 @@ void GLRenderer::InitializeImages(const RenderSystemConfig& config) {
     }
 }
 
-void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
-                              const math::Matrix4x4& view_matrix,
-                              const Volume& volume) {
-    Material default_material;
-    default_material.shaders_.vertex_shader_ = GLDefaultShader::kVertexShader.name_;
-    default_material.shaders_.fragment_shader_ = GLDefaultShader::kFragmentShader.name_;
-    ToggleWireframeMode(true);
-
-    auto model_matrix = math::Matrix4x4::Identity()
-            .Scale(math::Vec3f(volume.bounding_volume_.radius_))
-            .Translate(volume.bounding_volume_.center_);
-    auto gl_primitive_program = graphics_compiler_->CreateProgram(default_material);
-    gl_primitive_program->Use();
-    gl_primitive_program->SetUniform("projection_matrix", projection_matrix);
-    gl_primitive_program->SetUniform("model_view_matrix", view_matrix * model_matrix);
-    gl_primitive_program->SetUniform("color", math::Vec3f(1.0F, 0.0F, 0.0F));
-    gl_primitive_program->FlushUniforms();
-
-    PrimitiveInstance primitive_instance{};
-    primitive_instance.Set(render::Sphere());
-    auto gl_primitive = primitive_manager_->GetPrimitiveMesh(primitive_instance);
-    gl_primitive->Draw();
-    gl_primitive_program->Finish();
-}
-
 void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& registry) {
     UpdateGL(camera);
     const auto projection_matrix = camera.GetProjectionMatrix();
@@ -168,9 +144,6 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
         const auto& transform = renderable_view.get<const Transform>(viewable_entity);
         const auto& material = renderable_view.get<const Material>(viewable_entity);
         const auto& volume = renderable_view.get<const Volume>(viewable_entity);
-        if (!material.visible_) {
-            continue;
-        }
         if (camera.render_bounding_volumes_) {
             RenderVolume(projection_matrix, view_matrix, volume);
         }
@@ -217,6 +190,31 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
     }
 }
 
+void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
+                              const math::Matrix4x4& view_matrix,
+                              const Volume& volume) {
+    Material default_material;
+    default_material.shaders_.vertex_shader_ = GLDefaultShader::kVertexShader.name_;
+    default_material.shaders_.fragment_shader_ = GLDefaultShader::kFragmentShader.name_;
+    ToggleWireframeMode(true);
+
+    auto model_matrix = math::Matrix4x4::Identity()
+            .Scale(math::Vec3f(volume.bounding_volume_.radius_))
+            .Translate(volume.bounding_volume_.center_);
+    auto gl_primitive_program = graphics_compiler_->CreateProgram(default_material);
+    gl_primitive_program->Use();
+    gl_primitive_program->SetUniform("projection_matrix", projection_matrix);
+    gl_primitive_program->SetUniform("model_view_matrix", view_matrix * model_matrix);
+    gl_primitive_program->SetUniform("color", math::Vec3f(1.0F, 0.0F, 0.0F));
+    gl_primitive_program->FlushUniforms();
+
+    PrimitiveInstance primitive_instance{};
+    primitive_instance.Set(render::Sphere());
+    auto gl_primitive = primitive_manager_->GetPrimitiveMesh(primitive_instance);
+    gl_primitive->Draw();
+    gl_primitive_program->Finish();
+}
+
 //////////////////////////////////////////////////
 ///// Static Helpers
 //////////////////////////////////////////////////
@@ -255,17 +253,43 @@ std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt:
                                          const Volume>();
 
     auto culler = ViewVolumeBuilder::create(camera);
+    std::deque<Component::Entity> entities_to_cull;
     std::vector<Component::Entity> viewable_entities;
-
+    // Get all root entities that are visible
     for (auto renderable_entity : renderable_view) {
-        const auto& volume = renderable_view.get<const Volume>(renderable_entity);
-        if (!registry.has<ModelInstance>(renderable_entity) && !registry.has<PrimitiveInstance>(renderable_entity)) {
+        const auto& transform = renderable_view.get<const Transform>(renderable_entity);
+        const auto& material = renderable_view.get<const Material>(renderable_entity);
+        if (!material.visible_) {
+            continue;
+            
+        }
+        if (transform.parent_ == Component::NullEntity) {
+            entities_to_cull.push_front(renderable_entity);
+        }
+    }
+
+    // Cull entities
+    while (!entities_to_cull.empty()) {
+        auto entity = entities_to_cull.front();
+        entities_to_cull.pop_front();
+
+        // Ignore entities that do not have a mesh
+        if (!registry.has<ModelInstance>(entity) && !registry.has<PrimitiveInstance>(entity)) {
             continue;
         }
+
+        // Entity and its children are culled
+        const auto& volume = renderable_view.get<const Volume>(entity);
         if (culler->IsCulled(volume.bounding_volume_)) {
             continue;
         }
-        viewable_entities.push_back(renderable_entity);
+
+        // Cull the children
+        const auto& transform = renderable_view.get<const Transform>(entity);
+        entities_to_cull.insert(entities_to_cull.end(), transform.children_.begin(), transform.children_.end());
+
+        // Entity is viewable and contains a mesh
+        viewable_entities.push_back(entity);
     }
 
     return viewable_entities;
