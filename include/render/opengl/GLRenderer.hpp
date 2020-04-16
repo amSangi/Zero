@@ -15,6 +15,7 @@ namespace zero::render {
     class GLModelManager;
     class GLPrimitiveMeshManager;
     class GLTextureManager;
+    class IProgram;
     class Volume;
 
     /**
@@ -105,6 +106,16 @@ namespace zero::render {
          * @param enable_wireframe should wireframe be enabled?
          */
         static void ToggleWireframeMode(bool enable_wireframe);
+
+        /**
+         * @brief Set the light uniforms in the shader program
+         *
+         * Queries the registry for all entities with Transform and Light components
+         *
+         * @param graphics_program the shader program
+         * @param registry the registry containing all the entities and their components
+         */
+        static void SetLightUniforms(std::shared_ptr<IProgram> graphics_program, const entt::registry& registry);
 
         /**
          * @brief Get all non-culled entities that are renderable.

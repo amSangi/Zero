@@ -3,7 +3,8 @@
 #include <set>
 #include <stack>
 #include <queue>
-#include "render/Components.hpp"
+#include "core/Transform.hpp"
+#include "render/Volume.hpp"
 
 using namespace zero::math;
 using namespace zero::render;

@@ -16,16 +16,19 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
                              math/Sphere.cpp
-                             render/Components.cpp
+                             render/Camera.cpp
                              render/Image.cpp
+                             render/Material.cpp
                              render/Mesh.cpp
                              render/MeshGenerator.cpp
                              render/OrthographicViewVolume.cpp
                              render/PerspectiveViewVolume.cpp
+                             render/PrimitiveInstance.cpp
                              render/Propagator.cpp
                              render/RenderSystem.cpp
                              render/Shapes.cpp
                              render/ViewVolumeBuilder.cpp
+                             render/Volume.cpp
                              render/Window.cpp
                              render/opengl/GLAssetImportWrapper.cpp
                              render/opengl/GLCompiler.cpp

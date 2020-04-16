@@ -1,6 +1,6 @@
 #include "render/RenderSystem.hpp"
 #include "render/opengl/GLRenderer.hpp"
-#include "render/Components.hpp"
+#include "render/PrimitiveInstance.hpp"
 
 using namespace zero::render;
 

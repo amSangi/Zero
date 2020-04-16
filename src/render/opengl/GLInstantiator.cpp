@@ -29,7 +29,7 @@ zero::Component::Entity GLInstantiator::InstantiateModel(entt::registry& registr
 }
 
 zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& registry,
-                                                             PrimitiveInstance primitive) {
+                                                             const PrimitiveInstance& primitive) {
     auto entity = registry.create();
     Transform transform{};
     Volume volume{};
@@ -37,7 +37,7 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
     switch (primitive.GetType()) {
         case PrimitiveInstance::Type::BOX:
         {
-            const auto& box = primitive.GetBox();
+            auto box = primitive.GetBox();
             math::Box math_box{math::Vec3f::Zero(), math::Vec3f(box.width_, box.height_, box.depth_)};
             volume.bounding_volume_.center_ = math_box.Center();
             volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
@@ -46,14 +46,14 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         }
         case PrimitiveInstance::Type::CONE:
         {
-            const auto& cone = primitive.GetCone();
+            auto cone = primitive.GetCone();
             auto half_height = cone.height_ * 0.5F;
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + cone.radius_ * cone.radius_);
             break;
         }
         case PrimitiveInstance::Type::CYLINDER:
         {
-            const auto& cylinder = primitive.GetCylinder();
+            auto cylinder = primitive.GetCylinder();
             auto half_height = cylinder.height_ * 0.5F;
             auto largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + largest_radius * largest_radius);
@@ -61,7 +61,7 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         }
         case PrimitiveInstance::Type::PLANE:
         {
-            const auto& plane = primitive.GetPlane();
+            auto plane = primitive.GetPlane();
             auto half_width = plane.width_ * 0.5F;
             auto half_height = plane.height_ * 0.5F;
             volume.bounding_volume_.center_ = math::Vec3f(half_width,
@@ -72,14 +72,14 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         }
         case PrimitiveInstance::Type::SPHERE:
         {
-            const auto& sphere = primitive.GetSphere();
+            auto sphere = primitive.GetSphere();
             // Volume slightly larger
             volume.bounding_volume_.radius_ = 1.05F;
             break;
         }
         case PrimitiveInstance::Type::TORUS:
         {
-            const auto& torus = primitive.GetTorus();
+            auto torus = primitive.GetTorus();
             // Volume slightly larger
             volume.bounding_volume_.radius_ = (torus.radius_ + torus.tube_radius_) + 0.05F;
             break;

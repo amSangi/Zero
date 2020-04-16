@@ -1,5 +1,5 @@
 #include "core/Engine.hpp"
-#include "render/Components.hpp"
+#include "render/PrimitiveInstance.hpp"
 
 using namespace zero;
 

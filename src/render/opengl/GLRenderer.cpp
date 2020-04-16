@@ -167,6 +167,9 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
             graphics_program->SetUniform(gl_texture->GetUniformName(), i);
         }
 
+        // Set lights
+        SetLightUniforms(graphics_program, registry);
+
         // Set uniforms
         graphics_program->SetUniform("projection_matrix", projection_matrix);
         graphics_program->SetUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
@@ -246,6 +249,11 @@ void GLRenderer::ToggleWireframeMode(bool enable_wireframe) {
     }
 }
 
+void GLRenderer::SetLightUniforms(std::shared_ptr<IProgram> graphics_program, const entt::registry& registry) {
+    // TODO: Finish Implementation
+}
+
+
 std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt::registry& registry,
                                                                      const Camera& camera) {
     auto renderable_view = registry.view<const Transform,
@@ -261,7 +269,6 @@ std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt:
         const auto& material = renderable_view.get<const Material>(renderable_entity);
         if (!material.visible_) {
             continue;
-            
         }
         if (transform.parent_ == Component::NullEntity) {
             entities_to_cull.push_front(renderable_entity);

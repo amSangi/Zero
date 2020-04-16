@@ -38,7 +38,7 @@ namespace zero::render {
          * @return the entity associated with the new instantiated primitive.
          */
         [[nodiscard]] static Component::Entity InstantiatePrimitive(entt::registry& registry,
-                                                                    PrimitiveInstance primitive);
+                                                                    const PrimitiveInstance& primitive);
     }; // class GLInstantiator
 
 } // namespace zero::render

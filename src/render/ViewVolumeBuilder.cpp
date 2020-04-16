@@ -1,7 +1,8 @@
 #include "render/ViewVolumeBuilder.hpp"
 #include "render/OrthographicViewVolume.hpp"
 #include "render/PerspectiveViewVolume.hpp"
-#include "render/Components.hpp"
+#include "render/Camera.hpp"
+#include "math/Matrix4x4.hpp"
 
 using namespace zero::render;
 

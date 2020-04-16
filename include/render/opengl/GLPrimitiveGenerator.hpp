@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include "render/Components.hpp"
 
 namespace zero::render {
 
@@ -22,7 +21,7 @@ namespace zero::render {
          * @param primitive the primitive
          * @return the GLMesh
          */
-        static std::unique_ptr<GLMesh> Generate(PrimitiveInstance primitive);
+        static std::unique_ptr<GLMesh> Generate(const PrimitiveInstance& primitive);
     }; // class GLPrimitiveGenerator
 
 } // namespace zero::render

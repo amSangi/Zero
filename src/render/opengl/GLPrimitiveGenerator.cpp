@@ -1,10 +1,11 @@
 #include "render/opengl/GLPrimitiveGenerator.hpp"
 #include "render/opengl/GLMesh.hpp"
 #include "render/MeshGenerator.hpp"
+#include "render/PrimitiveInstance.hpp"
 
 using namespace zero::render;
 
-std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(PrimitiveInstance primitive) {
+std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(const PrimitiveInstance& primitive) {
     switch (primitive.GetType()) {
         case PrimitiveInstance::Type::BOX:
             return std::make_unique<GLMesh>(MeshGenerator::GenerateBox());

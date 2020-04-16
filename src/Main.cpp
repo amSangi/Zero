@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
     auto primitive_entity = engine->InstantiatePrimitive(primitive);
     auto& primitive_material = registry.get<render::Material>(primitive_entity);
     primitive_material.wireframe_enabled_ = true;
-    primitive_material.visible_ = true;
+    primitive_material.visible_ = false;
     // endregion
 
     //////////////////////////////////////////////////
