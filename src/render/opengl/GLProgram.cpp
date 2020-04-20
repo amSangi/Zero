@@ -5,17 +5,23 @@ using namespace zero::render;
 
 std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::shared_ptr<zero::render::GLShader>>& shaders) {
 
-    if (shaders.empty()) return nullptr;
+    if (shaders.empty()) {
+        return nullptr;
+    }
 
     GLuint program_identifier = glCreateProgram();
     std::shared_ptr<GLProgram> program = std::make_shared<GLProgram>(program_identifier);
 
     for (auto& shader : shaders) {
-        if (!shader->IsCompiled()) return nullptr;
+        if (!shader->IsCompiled()) {
+            return nullptr;
+        }
         glAttachShader(program_identifier, shader->GetNativeIdentifier());
     }
 
-    if (!program->Link()) return nullptr;
+    if (!program->Link()) {
+        return nullptr;
+    }
 
     for (auto& shader : shaders) {
         glDetachShader(program_identifier, shader->GetNativeIdentifier());

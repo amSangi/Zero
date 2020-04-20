@@ -1,6 +1,7 @@
 #include "render/RenderSystem.hpp"
 #include "render/opengl/GLRenderer.hpp"
 #include "render/PrimitiveInstance.hpp"
+#include "render/VolumePropagator.hpp"
 
 using namespace zero::render;
 
@@ -9,7 +10,6 @@ RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& co
 , config_(config)
 , window_(std::make_unique<Window>(config.window_config_))
 , renderer_(std::make_unique<GLRenderer>())
-, propagator_(std::make_unique<Propagator>())
 {}
 
 void RenderSystem::Initialize() {
@@ -18,12 +18,7 @@ void RenderSystem::Initialize() {
     renderer_->Initialize(config_);
 }
 
-void RenderSystem::PreUpdate() {
-    // Propagate transform and bounding volume data
-    auto& registry = GetRegistry();
-    propagator_->PropagateTransform(registry);
-    propagator_->PropagateVolume(registry);
-}
+void RenderSystem::PreUpdate() {}
 
 void RenderSystem::Update(const TimeDelta& time_delta) {
     renderer_->Render(GetRegistry());
@@ -32,6 +27,9 @@ void RenderSystem::Update(const TimeDelta& time_delta) {
 
 void RenderSystem::PostUpdate() {
     renderer_->PostRender(GetRegistry());
+    // Propagate transform and bounding volume data
+    auto& registry = GetRegistry();
+    VolumePropagator::PropagateVolume(registry);
 }
 
 void RenderSystem::ShutDown() {

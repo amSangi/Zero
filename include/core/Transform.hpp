@@ -70,6 +70,12 @@ namespace zero {
         [[nodiscard]] math::Matrix4x4 GetLocalToWorldMatrix() const;
 
         /**
+         * @brief Get the cached transformation from local coordinates to world coordinates
+         * @return the cached transformation matrix
+         */
+        [[nodiscard]] math::Matrix4x4 GetCachedLocalToWorldMatrix() const;
+
+        /**
          * @brief Matrix that represents local coordinates relative to the parent matrix
          * @return the transformation matrix
          */
@@ -121,6 +127,55 @@ namespace zero {
         Transform& LocalScale(const Transform& parent, const math::Vec3f& scale);
 
         /**
+         * @brief Clear the cached transformation
+         */
+        void ClearCachedTransformation();
+
+        /**
+         * @brief Has the transform been modified?
+         * @return True if the transform was modified. Otherwise false.
+         */
+        [[nodiscard]] bool IsModified() const;
+
+        /**
+         * @brief Get the position in the world
+         * @return the position
+         */
+        [[nodiscard]] const math::Vec3f& GetPosition() const;
+
+        /**
+         * @brief Get the local position relative to the parent
+         * @return the local position
+         */
+        [[nodiscard]] const math::Vec3f& GetLocalPosition() const;
+
+        /**
+         * @brief Get the scale in the world
+         * @return the scale
+         */
+        [[nodiscard]] const math::Vec3f& GetScale() const;
+
+        /**
+         * @brief Get the local scale relative to the parent
+         * @return the local scale
+         */
+        [[nodiscard]] const math::Vec3f& GetLocalScale() const;
+
+        /**
+         * @brief Get the orientation in the world
+         * @return the orientation
+         */
+        [[nodiscard]] const math::Quaternion& GetOrientation() const;
+
+        /**
+         * @brief Get the local orientation relative to the parent
+         * @return the local orientation
+         */
+        [[nodiscard]] const math::Quaternion& GetLocalOrientation() const;
+
+    private:
+
+        /**
          * @brief The position in the world
          */
         math::Vec3f position_;
@@ -129,6 +184,11 @@ namespace zero {
          * @brief The position relative to the parent transform
          */
         math::Vec3f local_position_;
+
+        /**
+         * @brief The cached translation transformation
+         */
+        math::Vec3f cached_translation_;
 
         /**
          * @brief The scale relative to the world
@@ -141,6 +201,11 @@ namespace zero {
         math::Vec3f local_scale_;
 
         /**
+         * @brief The cached scale transformation
+         */
+        math::Vec3f cached_scale_;
+
+        /**
          * @brief The orientation in the world
          */
         math::Quaternion orientation_;
@@ -149,6 +214,16 @@ namespace zero {
          * @brief The orientation relative to the parent transform
          */
         math::Quaternion local_orientation_;
+
+        /**
+         * @brief The cached rotation transformation
+         */
+        math::Quaternion cached_rotation_;
+
+        /**
+         * @brief Has the transform been modified?
+         */
+        bool is_modified_;
     }; // struct Transform
 
 } // namespace zero

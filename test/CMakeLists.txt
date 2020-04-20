@@ -8,6 +8,7 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest/include
 add_executable(${PROJECT_NAME} TestMain.cpp
                                src/TestRegistry.cpp
                                src/core/TransformTests.cpp
+                               src/core/TransformPropagatorTests.cpp
                                src/math/AngleTests.cpp
                                src/math/BoxTests.cpp
                                src/math/IntersectionTests.cpp
@@ -19,7 +20,7 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/math/VectorTests.cpp
                                src/render/CameraTests.cpp
                                src/render/OrthographicViewVolumeTests.cpp
-                               src/render/PropagatorTests.cpp
+                               src/render/VolumePropagatorTests.cpp
                                src/render/PerspectiveViewVolumeTests.cpp
                                src/render/ShapeTests.cpp
                                src/render/opengl/GLCompilerTests.cpp

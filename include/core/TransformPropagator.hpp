@@ -1,19 +1,13 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "core/Component.hpp"
 #include "core/Transform.hpp"
-#include "math/Matrix4x4.hpp"
 
-namespace zero::render {
+namespace zero {
 
-    /**
-     * @brief Propagates Transform, Volume, and Hierarchy information to child/parent components
-     */
-    class Propagator {
+    class TransformPropagator {
     public:
-
-        Propagator() = default;
+        TransformPropagator() = delete;
 
         /**
          * @brief Remove a child from a parent Transform
@@ -21,41 +15,45 @@ namespace zero::render {
          * @param parent the parent entity
          * @param child the child entity
          */
-        void RemoveChild(entt::registry& registry, Component::Entity parent, Component::Entity child) const;
+        static void RemoveChild(entt::registry& registry, Component::Entity parent, Component::Entity child);
 
         /**
-         * @brief Detach all of the children of a parent Transform
+         * @brief Remove all the children from a parent Transform
          * @param registry the registry containing the entities and their components
          * @param parent the parent entity
          */
-        void DetachChildrenTransform(entt::registry& registry, Component::Entity parent) const;
+        static void RemoveChildren(entt::registry& registry, Component::Entity parent);
 
         /**
          * @brief Detach an entity from its parent Transform
          * @param registry the registry containing the entities and their components
          * @param entity the entity
          */
-        void DetachFromParentTransform(entt::registry& registry, Component::Entity entity) const;
+        static void RemoveParent(entt::registry& registry, Component::Entity entity);
 
         /**
          * @brief All entities that are marked for destruction have their children marked for destruction
          * if keep_children_alive_ is set to false.
          * @param registry the registry containing the entities and their components
          */
-        void PropagateMarkForDestruction(entt::registry& registry) const;
+        static void PropagateMarkForDestruction(entt::registry& registry);
 
         /**
          * @brief Propagate transform data and update bounding volume position
          * @param registry the registry containing the entities and their components
          */
-        void PropagateTransform(entt::registry& registry) const;
+        static void PropagateTransform(entt::registry& registry);
 
         /**
-         * @brief Propagate bounding volume up and expand/contract
+         * @brief Clear the cached transformations
+         *
+         * This is cleared after the cached transformations have been applied to all child transforms and
+         * all systems that wish to use the cached transform have been updated.
+         *
          * @param registry the registry containing the entities and their components
          */
-        void PropagateVolume(entt::registry& registry) const;
+        static void ClearCachedTransformations(entt::registry& registry);
 
-    }; // class Propagator
+    }; // class TransformPropagator
 
-} // namespace zero::render
+} // namespace zero

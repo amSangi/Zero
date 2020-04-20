@@ -1,4 +1,5 @@
 #include "core/Engine.hpp"
+#include "core/TransformPropagator.hpp"
 #include "render/PrimitiveInstance.hpp"
 
 using namespace zero;
@@ -23,14 +24,18 @@ void Engine::Tick() {
     for (const auto& system : game_systems_) {
         system->PreUpdate();
     }
+
     render_system_->Update(time_delta_);
     for (const auto& system : game_systems_) {
         system->Update(time_delta_);
     }
+
+    TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
     render_system_->PostUpdate();
     for (const auto& system : game_systems_) {
         system->PostUpdate();
     }
+    TransformPropagator::ClearCachedTransformations(engine_core_->GetRegistry());
 }
 
 void Engine::ShutDown() {

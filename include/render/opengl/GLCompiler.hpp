@@ -20,7 +20,7 @@ namespace zero::render {
         ~GLCompiler() override = default;
 
         /**
-         * @brief Create a new graphics program from a Material component
+         * @brief Create a graphics program from a Material component
          * @param material the material component
          * @return a graphics program
          */
@@ -38,11 +38,22 @@ namespace zero::render {
          */
         void ClearShaders();
 
+        /**
+         * @brief Clear the graphics program cache
+         */
+        void ClearPrograms();
+
     private:
         /**
          * @brief Filename to GLShader map
          */
         std::unordered_map<std::string, std::shared_ptr<GLShader>> shader_map_;
+
+        /**
+         * @brief Concatenated shader name to graphcis program map
+         * Graphics program caching avoids having to link shaders that have already been linked again.
+         */
+        std::unordered_map<std::string, std::shared_ptr<IProgram>> program_map_;
 
     }; // class GLCompiler
 

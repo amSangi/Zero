@@ -118,20 +118,6 @@ namespace zero::render {
         static void SetLightUniforms(std::shared_ptr<IProgram> graphics_program, const entt::registry& registry);
 
         /**
-         * @brief Get all non-culled entities that are renderable.
-         *
-         * An entity is viewable if it is not culled by the camera and if it contains either a Model mesh or Primitive
-         * mesh.
-         * Required components: Transform, Material, Volume, (ModelInstance or PrimitiveInstance)
-         *
-         * @param registry the registry containing all the entities and their components
-         * @param camera the camera render to
-         * @return all viewable entities
-         */
-        static std::vector<Component::Entity> GetViewableEntities(const entt::registry& registry,
-                                                                  const Camera& camera);
-
-        /**
          * @brief Read the shader source into the destination
          * @param filename the shader file
          * @param destination the destination

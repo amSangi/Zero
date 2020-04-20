@@ -12,6 +12,7 @@
 #include "render/ViewVolumeBuilder.hpp"
 #include "render/IViewVolume.hpp"
 #include "render/Components.hpp"
+#include "render/Optimizer.hpp"
 #include "core/Transform.hpp"
 #include <fstream>
 #include <deque>
@@ -55,6 +56,7 @@ void GLRenderer::Render(const entt::registry& registry) {
 }
 
 void GLRenderer::PostRender(entt::registry& registry) {
+    graphics_compiler_->ClearPrograms();
     texture_manager_->UnloadImages();
 }
 
@@ -136,7 +138,7 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
     UpdateGL(camera);
     const auto projection_matrix = camera.GetProjectionMatrix();
     const auto view_matrix = camera.GetViewMatrix();
-    auto viewable_entities = GetViewableEntities(registry, camera);
+    auto viewable_entities = Optimizer::ExtractRenderableEntities(camera, registry);
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
     auto model_view = registry.view<const ModelInstance>();
     auto primitive_view = registry.view<const PrimitiveInstance>();
@@ -250,56 +252,7 @@ void GLRenderer::ToggleWireframeMode(bool enable_wireframe) {
 }
 
 void GLRenderer::SetLightUniforms(std::shared_ptr<IProgram> graphics_program, const entt::registry& registry) {
-    // TODO: Finish Implementation
-}
-
-
-std::vector<zero::Component::Entity> GLRenderer::GetViewableEntities(const entt::registry& registry,
-                                                                     const Camera& camera) {
-    auto renderable_view = registry.view<const Transform,
-                                         const Material,
-                                         const Volume>();
-
-    auto culler = ViewVolumeBuilder::create(camera);
-    std::deque<Component::Entity> entities_to_cull;
-    std::vector<Component::Entity> viewable_entities;
-    // Get all root entities that are visible
-    for (auto renderable_entity : renderable_view) {
-        const auto& transform = renderable_view.get<const Transform>(renderable_entity);
-        const auto& material = renderable_view.get<const Material>(renderable_entity);
-        if (!material.visible_) {
-            continue;
-        }
-        if (transform.parent_ == Component::NullEntity) {
-            entities_to_cull.push_front(renderable_entity);
-        }
-    }
-
-    // Cull entities
-    while (!entities_to_cull.empty()) {
-        auto entity = entities_to_cull.front();
-        entities_to_cull.pop_front();
-
-        // Ignore entities that do not have a mesh
-        if (!registry.has<ModelInstance>(entity) && !registry.has<PrimitiveInstance>(entity)) {
-            continue;
-        }
-
-        // Entity and its children are culled
-        const auto& volume = renderable_view.get<const Volume>(entity);
-        if (culler->IsCulled(volume.bounding_volume_)) {
-            continue;
-        }
-
-        // Cull the children
-        const auto& transform = renderable_view.get<const Transform>(entity);
-        entities_to_cull.insert(entities_to_cull.end(), transform.children_.begin(), transform.children_.end());
-
-        // Entity is viewable and contains a mesh
-        viewable_entities.push_back(entity);
-    }
-
-    return viewable_entities;
+    // TODO: Set Light uniforms
 }
 
 void GLRenderer::ReadShaderSource(const std::string& filename, std::string& destination) {

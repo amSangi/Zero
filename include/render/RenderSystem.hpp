@@ -5,7 +5,6 @@
 #include "core/RenderSystemConfig.hpp"
 #include "core/System.hpp"
 #include "render/IRenderer.hpp"
-#include "render/Propagator.hpp"
 #include "render/Window.hpp"
 
 namespace zero::render {
@@ -91,11 +90,6 @@ namespace zero::render {
          * @brief The renderer used to draw and cull entities onto the window
          */
         std::unique_ptr<IRenderer> renderer_;
-
-        /**
-         * @brief The transform/volume parent-child propagator
-         */
-        std::unique_ptr<Propagator> propagator_;
 
     }; // class RenderSystem
 

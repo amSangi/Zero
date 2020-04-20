@@ -8,6 +8,7 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              core/Engine.cpp
                              core/System.cpp
                              core/Transform.cpp
+                             core/TransformPropagator.cpp
                              math/Box.cpp
                              math/Intersection.cpp
                              math/Matrix3x3.cpp
@@ -21,10 +22,11 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/Material.cpp
                              render/Mesh.cpp
                              render/MeshGenerator.cpp
+                             render/Optimizer.cpp
                              render/OrthographicViewVolume.cpp
                              render/PerspectiveViewVolume.cpp
                              render/PrimitiveInstance.cpp
-                             render/Propagator.cpp
+        render/VolumePropagator.cpp
                              render/RenderSystem.cpp
                              render/Shapes.cpp
                              render/ViewVolumeBuilder.cpp

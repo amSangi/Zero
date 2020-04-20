@@ -41,7 +41,7 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
             math::Box math_box{math::Vec3f::Zero(), math::Vec3f(box.width_, box.height_, box.depth_)};
             volume.bounding_volume_.center_ = math_box.Center();
             volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
-            transform.scale_ = math_box.max_;
+            transform.Scale(math_box.max_);
             break;
         }
         case PrimitiveInstance::Type::CONE:
