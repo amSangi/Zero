@@ -1,35 +1,33 @@
-#include "render/opengl/GLInstantiator.hpp"
-#include "render/opengl/GLDefaultShader.hpp"
-#include "render/opengl/GLModel.hpp"
+#include "render/Instantiator.hpp"
+#include "render/IModel.hpp"
 #include "render/Components.hpp"
-#include "core/Transform.hpp"
 #include "math/Box.hpp"
 
 using namespace zero::render;
 
-zero::Component::Entity GLInstantiator::InstantiateModel(entt::registry& registry,
-                                                         const std::shared_ptr<GLModel>& gl_model,
-                                                         Component::Entity parent) {
+zero::Component::Entity Instantiator::InstantiateModel(entt::registry& registry,
+                                                       const std::shared_ptr<IModel>& model,
+                                                       zero::Component::Entity parent) {
     auto entity = registry.create();
-    registry.assign<render::Volume>(entity, gl_model->GetVolume());
-    registry.assign<render::Material>(entity, gl_model->GetMaterial());
-    registry.assign<render::ModelInstance>(entity, gl_model->GetModelInstance());
+    registry.assign<Volume>(entity, model->GetVolume());
+    registry.assign<Material>(entity, model->GetMaterial());
+    registry.assign<ModelInstance>(entity, model->GetModelInstance());
 
-    Transform transform = gl_model->GetTransform();
+    zero::Transform transform = model->GetTransform();
     transform.parent_ = parent;
-    for (const auto& child_gl_model : gl_model->GetChildren()) {
+    for (const auto& child_gl_model : model->GetChildren()) {
         auto child_entity = InstantiateModel(registry, child_gl_model, entity);
-        if (child_entity != Component::NullEntity) {
+        if (child_entity != zero::Component::NullEntity) {
             transform.children_.push_back(child_entity);
         }
     }
 
-    registry.assign<Transform>(entity, transform);
+    registry.assign<zero::Transform>(entity, transform);
     return entity;
 }
 
-zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& registry,
-                                                             const PrimitiveInstance& primitive) {
+zero::Component::Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
+                                                           const PrimitiveInstance& primitive) {
     auto entity = registry.create();
     Transform transform{};
     Volume volume{};
@@ -86,13 +84,34 @@ zero::Component::Entity GLInstantiator::InstantiatePrimitive(entt::registry& reg
         }
     }
 
-    Material material{};
-    material.shaders_.vertex_shader_ = GLDefaultShader::kVertexShader.name_;
-    material.shaders_.fragment_shader_ = GLDefaultShader::kFragmentShader.name_;
-
     registry.assign<render::Volume>(entity, volume);
-    registry.assign<render::Material>(entity, material);
+    // use default shaders
+    registry.assign<render::Material>(entity, Material{});
     registry.assign<render::PrimitiveInstance>(entity, primitive);
     registry.assign<Transform>(entity, transform);
+    return entity;
+}
+
+zero::Component::Entity Instantiator::InstantiateLight(entt::registry& registry, const Light& light) {
+    auto entity = registry.create();
+    switch (light.GetType())
+    {
+        case Light::Type::DIRECTIONAL:
+        {
+            registry.assign<render::DirectionalLight>(entity, light.GetDirectionalLight());
+            break;
+        }
+        case Light::Type::POINT:
+        {
+            registry.assign<render::DirectionalLight>(entity, light.GetPointLight());
+            break;
+        }
+        case Light::Type::SPOT:
+        {
+            registry.assign<render::DirectionalLight>(entity, light.GetSpotLight());
+            break;
+        }
+    }
+    registry.assign<Transform>(entity, Transform{});
     return entity;
 }

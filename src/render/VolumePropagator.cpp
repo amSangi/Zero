@@ -13,12 +13,17 @@ void VolumePropagator::PropagateVolume(entt::registry& registry) {
     // Use to prevent duplicate operations
     std::set<Component::Entity> parents_to_visit;
 
-    // Retrieve leaf entities - entities that have a parent but 0 children
+    // Retrieve root entities and transform volumes
     for (auto entity : view) {
         auto& volume = view.get<Volume>(entity);
         auto& transform = view.get<Transform>(entity);
+        // Retrieve root entity
         if (transform.children_.empty() && transform.parent_ != Component::NullEntity) {
             update_queue.push(entity);
+        }
+        // Apply cached transformations to volume
+        if (transform.IsModified()) {
+            volume.Transform(transform.GetCachedLocalToWorldMatrix());
         }
     }
 
@@ -28,11 +33,6 @@ void VolumePropagator::PropagateVolume(entt::registry& registry) {
         auto& volume = view.get<Volume>(entity);
         auto& transform = view.get<Transform>(entity);
         update_queue.pop();
-
-        // Apply cached transformations to volume
-        if (transform.IsModified()) {
-            volume.Transform(transform.GetCachedLocalToWorldMatrix());
-        }
 
         if (transform.parent_ == Component::NullEntity || !registry.valid(transform.parent_)) {
             continue;

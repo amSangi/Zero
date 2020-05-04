@@ -2,6 +2,7 @@
 #include "render/opengl/GLRenderer.hpp"
 #include "render/PrimitiveInstance.hpp"
 #include "render/VolumePropagator.hpp"
+#include "render/Instantiator.hpp"
 
 using namespace zero::render;
 
@@ -26,9 +27,9 @@ void RenderSystem::Update(const TimeDelta& time_delta) {
 }
 
 void RenderSystem::PostUpdate() {
-    renderer_->PostRender(GetRegistry());
-    // Propagate transform and bounding volume data
     auto& registry = GetRegistry();
+    renderer_->PostRender(registry);
+    // Apply transforms to bounding volumes and expand parent volumes
     VolumePropagator::PropagateVolume(registry);
 }
 
@@ -37,10 +38,18 @@ void RenderSystem::ShutDown() {
     window_->Cleanup();
 }
 
-zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model) {
-    return renderer_->InstantiateModel(GetRegistry(), model);
+zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model_filename) {
+    auto model = renderer_->GetModel(model_filename);
+    if (model.expired()) {
+        return Component::NullEntity;
+    }
+    return Instantiator::InstantiateModel(GetRegistry(), model.lock());
 }
 
 zero::Component::Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive) {
-    return renderer_->InstantiatePrimitive(GetRegistry(), primitive);
+    return Instantiator::InstantiatePrimitive(GetRegistry(), primitive);
+}
+
+zero::Component::Entity RenderSystem::CreateLightInstance(const Light& light) {
+    return Instantiator::InstantiateLight(GetRegistry(), light);
 }

@@ -60,7 +60,6 @@ namespace zero::render {
         void SetUniform(const std::string& name, math::Matrix3x3 value) override;
         void SetUniform(const std::string& name, math::Vec4f value) override;
         void SetUniform(const std::string& name, math::Vec3f value) override;
-        void SetUniform(const std::string& name, uint32 value) override;
         void SetUniform(const std::string& name, int32 value) override;
         void SetUniform(const std::string& name, float value) override;
         ///@}
@@ -73,7 +72,6 @@ namespace zero::render {
         void FlushUniform(const std::string& name, math::Matrix3x3 value) override;
         void FlushUniform(const std::string& name, math::Vec4f value) override;
         void FlushUniform(const std::string& name, math::Vec3f value) override;
-        void FlushUniform(const std::string& name, uint32 value) override;
         void FlushUniform(const std::string& name, int32 value) override;
         void FlushUniform(const std::string& name, float value) override;
         ///@}
@@ -102,7 +100,6 @@ namespace zero::render {
         UniformMap<math::Matrix3x3> matrix3x3_map_;
         UniformMap<math::Vec4f> vec4f_map_;
         UniformMap<math::Vec3f> vec3f_map_;
-        UniformMap<uint32> uint32_map_;
         UniformMap<int32> int32_map_;
         UniformMap<float> float_map_;
 

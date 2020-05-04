@@ -1,6 +1,7 @@
 #include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
+#include "render/opengl/GLDefaultShader.hpp"
 #include "render/Components.hpp"
 
 using namespace zero::render;
@@ -20,12 +21,18 @@ std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
         shaders.push_back(search->second);
         shader_names += search->first;
     }
+    else {
+        // TODO: Use default vertex shader
+    }
 
     // Fragment Shader
     search = shader_map_.find(material.shaders_.fragment_shader_);
     if (search != shader_map_.end()) {
         shaders.push_back(search->second);
         shader_names += search->first;
+    }
+    else {
+        // TODO: Use default fragment shader
     }
 
     // Geometry Shader

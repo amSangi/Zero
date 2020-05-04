@@ -40,34 +40,16 @@ Material GLAssetImportWrapper::LoadMaterial(aiMaterial* ai_material) {
     // Textures
     // Only support 1 texture per texture type
     aiString path;
-    ai_material->GetTexture(aiTextureType::aiTextureType_OPACITY, 0, &path);
-    material.texture_map_.alpha_map_ = path.C_Str();
-    path.Clear();
-
-    ai_material->GetTexture(aiTextureType::aiTextureType_AMBIENT, 0, &path);
-    material.texture_map_.ambient_map_ = path.C_Str();
-    path.Clear();
-
     ai_material->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &path);
     material.texture_map_.diffuse_map_ = path.C_Str();
     path.Clear();
 
-    ai_material->GetTexture(aiTextureType::aiTextureType_DISPLACEMENT, 0, &path);
-    material.texture_map_.displacement_map_ = path.C_Str();
+    ai_material->GetTexture(aiTextureType::aiTextureType_SPECULAR, 0, &path);
+    material.texture_map_.specular_map_ = path.C_Str();
     path.Clear();
 
     ai_material->GetTexture(aiTextureType::aiTextureType_NORMALS, 0, &path);
     material.texture_map_.normal_map_ = path.C_Str();
-
-    // Color
-    ai_material->Get(AI_MATKEY_COLOR_AMBIENT, material.ambient_color_);
-    ai_material->Get(AI_MATKEY_COLOR_DIFFUSE, material.diffuse_color_);
-    ai_material->Get(AI_MATKEY_COLOR_EMISSIVE, material.emissive_color_);
-    ai_material->Get(AI_MATKEY_COLOR_SPECULAR, material.specular_color_);
-    ai_material->Get(AI_MATKEY_COLOR_TRANSPARENT, material.transparent_color_);
-    ai_material->Get(AI_MATKEY_SHININESS, material.specular_exponent_);
-
-    ai_material->Get(AI_MATKEY_OPACITY, material.opacity_);
 
     ai_material->Get(AI_MATKEY_ENABLE_WIREFRAME, material.wireframe_enabled_);
 

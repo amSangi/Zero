@@ -11,8 +11,8 @@ namespace zero::render {
      */
     struct DirectionalLight : public Component {
         math::Vec3f color_;
+        math::Vec3f direction_;
         float intensity_;
-        // TODO: Fully implement Directional Light data structure
     }; // struct DirectionalLight
 
     /**
@@ -20,8 +20,9 @@ namespace zero::render {
      */
     struct PointLight : public Component {
         math::Vec3f color_;
-        float intensity_;
-        float radius_;
+        float attenuation_constant_;
+        float attenuation_linear_;
+        float attenuation_quadratic_;
     }; // struct PointLight
 
     /**
@@ -29,9 +30,75 @@ namespace zero::render {
      */
     struct SpotLight : public Component {
         math::Vec3f color_;
-        float intensity_;
         math::Degree inner_cone_angle_;
         math::Degree outer_cone_angle_;
     }; // struct SpotLight
+
+    /**
+     * @brief Light used to instantiate a light entity
+     */
+    struct Light {
+        /**
+         * @brief The Light type
+         */
+        enum Type {
+            DIRECTIONAL,
+            POINT,
+            SPOT,
+        };
+
+        /**
+         * @brief Default constructs a point light
+         */
+        Light();
+
+        explicit Light(const DirectionalLight& directional_light);
+        explicit Light(const PointLight& point_light);
+        explicit Light(const SpotLight& spot_light);
+
+        /**
+         * @brief Get the light type
+         * @return the light type
+         */
+        [[nodiscard]] Type GetType() const;
+
+        /**
+         * @brief Get the light component.
+         *
+         * If the instance is not of the correct type, a default constructed component is returned.
+         *
+         * @return the light component data
+         */
+        ///@{
+        [[nodiscard]] DirectionalLight GetDirectionalLight() const;
+        [[nodiscard]] PointLight GetPointLight() const;
+        [[nodiscard]] SpotLight GetSpotLight() const;
+        ///@}
+
+        /**
+         * @brief Set the light type
+         */
+        ///@{
+        void SetDirectionalLight(const DirectionalLight& directional_light);
+        void SetPointLight(const PointLight& point_light);
+        void SetSpotLight(const SpotLight& spot_light);
+        ///@}
+
+    private:
+        /**
+         * @brief The underlying light union container of the different Light components.
+         */
+        union LightSource {
+            explicit LightSource(const DirectionalLight& directional_light);
+            explicit LightSource(const PointLight& point_light);
+            explicit LightSource(const SpotLight& spot_light);
+            DirectionalLight directional_light_;
+            PointLight point_light_;
+            SpotLight spot_light_;
+        };
+
+        Type type_;
+        LightSource source_;
+    };
 
 } // namespace zero::render

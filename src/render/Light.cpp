@@ -17,22 +17,22 @@ Light::LightSource::LightSource(const SpotLight& spot_light)
 
 Light::Light()
 : type_(Light::Type::POINT)
-, light_source_(PointLight())
+, source_(PointLight())
 {}
 
 Light::Light(const DirectionalLight& directional_light)
 : type_(Light::Type::DIRECTIONAL)
-, light_source_(directional_light)
+, source_(directional_light)
 {}
 
 Light::Light(const PointLight& point_light)
 : type_(Light::Type::POINT)
-, light_source_(point_light)
+, source_(point_light)
 {}
 
 Light::Light(const SpotLight& spot_light)
 : type_(Light::Type::SPOT)
-, light_source_(spot_light)
+, source_(spot_light)
 {}
 
 Light::Type Light::GetType() const {
@@ -41,31 +41,31 @@ Light::Type Light::GetType() const {
 
 DirectionalLight Light::GetDirectionalLight() const {
     if (type_ != Type::DIRECTIONAL) return DirectionalLight();
-    return light_source_.directional_light_;
+    return source_.directional_light_;
 }
 
 PointLight Light::GetPointLight() const {
     if (type_ != Type::POINT) return PointLight();
-    return light_source_.point_light_;
+    return source_.point_light_;
 }
 
 SpotLight Light::GetSpotLight() const {
     if (type_ != Type::SPOT) return SpotLight();
-    return light_source_.spot_light_;
+    return source_.spot_light_;
 }
 
-void Light::Set(const DirectionalLight& directional_light) {
+void Light::SetDirectionalLight(const DirectionalLight& directional_light) {
     type_ = Type::DIRECTIONAL;
-    light_source_.directional_light_ = directional_light;
+    source_.directional_light_ = directional_light;
 }
 
-void Light::Set(const PointLight& point_light) {
+void Light::SetPointLight(const PointLight& point_light) {
     type_ = Type::POINT;
-    light_source_.point_light_ = point_light;
+    source_.point_light_ = point_light;
 }
 
-void Light::Set(const SpotLight& spot_light) {
+void Light::SetSpotLight(const SpotLight& spot_light) {
     type_ = Type::SPOT;
-    light_source_.spot_light_ = spot_light;
+    source_.spot_light_ = spot_light;
 }
 

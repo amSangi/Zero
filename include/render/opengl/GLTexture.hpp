@@ -46,16 +46,16 @@ namespace zero::render {
         [[nodiscard]] GLuint GetIdentifier() const;
 
         /**
-         * @brief Get the uniform name
-         * @return the uniform name. Empty string if one is not set.
+         * @brief Get the name
+         * @return the name. Empty string if one is not set.
          */
-        [[nodiscard]] std::string GetUniformName() const;
+        [[nodiscard]] std::string GetName() const;
 
         /**
-         * @brief Set the uniform name of the texture
-         * @param uniform_name the uniform name
+         * @brief Set the name of the texture (e.g. `diffuse_texture`)
+         * @param name the name
          */
-        void SetUniformName(const std::string& uniform_name);
+        void SetName(const std::string& name);
 
     protected:
         /**
@@ -76,9 +76,9 @@ namespace zero::render {
         GLenum target_;
 
         /**
-         * @brief The shader uniform sampler name the texture is associated with
+         * @brief The shader sampler name the texture is associated with
          */
-        std::string uniform_name_;
+        std::string name_;
 
     }; // class GLTexture
 

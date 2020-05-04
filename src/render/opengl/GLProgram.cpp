@@ -32,6 +32,12 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::sha
 
 GLProgram::GLProgram(GLuint id)
 : id_(id)
+, matrix4x4_map_()
+, matrix3x3_map_()
+, vec4f_map_()
+, vec3f_map_()
+, int32_map_()
+, float_map_()
 {}
 
 GLProgram::~GLProgram() {
@@ -74,10 +80,6 @@ void GLProgram::SetUniform(const std::string& name, math::Vec3f value) {
     vec3f_map_[name] = value;
 }
 
-void GLProgram::SetUniform(const std::string& name, uint32 value) {
-    uint32_map_[name] = value;
-}
-
 void GLProgram::SetUniform(const std::string& name, int32 value) {
     int32_map_[name] = value;
 }
@@ -104,11 +106,6 @@ void GLProgram::FlushUniform(const std::string& name, math::Vec4f value) {
 void GLProgram::FlushUniform(const std::string& name, math::Vec3f value) {
     vec3f_map_[name] = value;
     glUniform3fv(glGetUniformLocation(id_, name.c_str()), 1, value.Data());
-}
-
-void GLProgram::FlushUniform(const std::string& name, uint32 value) {
-    uint32_map_[name] = value;
-    glUniform1ui(glGetUniformLocation(id_, name.c_str()), value);
 }
 
 void GLProgram::FlushUniform(const std::string& name, int32 value) {
@@ -140,11 +137,6 @@ void GLProgram::FlushUniforms() {
     // Flush Vec3f
     for (const auto& iter : vec3f_map_) {
         glUniform3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, (iter.second).Data());
-    }
-
-    // Flush uint32
-    for (const auto& iter : uint32_map_) {
-        glUniform1ui(glGetUniformLocation(id_, iter.first.c_str()), iter.second);
     }
 
     // Flush int32

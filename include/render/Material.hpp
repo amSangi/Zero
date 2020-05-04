@@ -39,10 +39,8 @@ namespace zero::render {
              * @brief The fully qualified texture map file name
              */
             ///@{
-            std::string alpha_map_;
-            std::string ambient_map_;
             std::string diffuse_map_;
-            std::string displacement_map_;
+            std::string specular_map_;
             std::string normal_map_;
             ///@}
 
@@ -52,41 +50,6 @@ namespace zero::render {
          * @brief The name of the material.
          */
         std::string name_;
-
-        /**
-         * @brief The ambient color. The color an object reflects when illuminated by ambient light.
-         */
-        math::Vec3f ambient_color_;
-
-        /**
-         * @brief The diffuse color. Essential color of an object under direct white light.
-         */
-        math::Vec3f diffuse_color_;
-
-        /**
-         * @brief The emissive color. This is the self-illumination color of an object.
-         */
-        math::Vec3f emissive_color_;
-
-        /**
-         * @brief The specular color. The color of the light of a specular reflection.
-         */
-        math::Vec3f specular_color_;
-
-        /**
-         * @brief The transparent color. The color to be scaled with the color of translucent light.
-         */
-        math::Vec3f transparent_color_;
-
-        /**
-         * @brief The shininess of a phong-shaded entity.
-         */
-        float specular_exponent_;
-
-        /**
-         * @brief The opacity of the entity in the range [0, 1].
-         */
-        float opacity_;
 
         /**
          * @brief The texture map.

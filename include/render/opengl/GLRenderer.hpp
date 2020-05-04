@@ -53,14 +53,9 @@ namespace zero::render {
         void ShutDown() override;
 
         /**
-         * @see IRenderer::InstantiateModel
+         * @see IRenderer::GetModel
          */
-        Component::Entity InstantiateModel(entt::registry& registry, const std::string& model) override;
-
-        /**
-         * @see IRenderer::InstantiatePrimitive
-         */
-        Component::Entity InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive) override;
+        std::weak_ptr<IModel> GetModel(const std::string& model) override;
 
     private:
         /**
@@ -115,7 +110,7 @@ namespace zero::render {
          * @param graphics_program the shader program
          * @param registry the registry containing all the entities and their components
          */
-        static void SetLightUniforms(std::shared_ptr<IProgram> graphics_program, const entt::registry& registry);
+        static void SetLightUniforms(std::shared_ptr<IProgram>& graphics_program, const entt::registry& registry);
 
         /**
          * @brief Read the shader source into the destination

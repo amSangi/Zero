@@ -354,48 +354,6 @@ TEST_F(TestTransformPropagator, PropagateTransform_ChildDeleted) {
     EXPECT_NE(child_transform.GetPosition(), prev_child_position);
 }
 
-TEST_F(TestTransformPropagator, PropagateTransform_ParentVolume_SmallerThanChild) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0F);
-    auto& body_transform = registry_.get<Transform>(body_entity);
-
-    // Copy previous child transforms
-    std::unordered_map<Component::Entity, Transform> child_map;
-    for (const auto child_entity : body_transform.children_) {
-        child_map[child_entity] = registry_.get<Transform>(child_entity);
-    }
-
-    // Apply no transformation and propagate transforms
-    TransformPropagator::PropagateTransform(registry_);
-
-    // Verify child entities have updated transforms
-    for (const auto child_entity : body_transform.children_) {
-        auto& child_transform = registry_.get<Transform>(child_entity);
-        auto& prev_child_transform = child_map[child_entity];
-        EXPECT_EQ(child_transform, prev_child_transform);
-    }
-}
-
-TEST_F(TestTransformPropagator, PropagateTransform_ParentVolume_ContainsChildren) {
-    auto body_entity = GenerateHumanoid(math::Vec3f::Zero());
-    auto& body_transform = registry_.get<Transform>(body_entity);
-
-    // Copy previous child transforms
-    std::unordered_map<Component::Entity, Transform> child_map;
-    for (const auto child_entity : body_transform.children_) {
-        child_map[child_entity] = registry_.get<Transform>(child_entity);
-    }
-
-    // Apply no transformation and propagate transforms
-    TransformPropagator::PropagateTransform(registry_);
-
-    // Verify child entities have updated transforms
-    for (const auto child_entity : body_transform.children_) {
-        auto& child_transform = registry_.get<Transform>(child_entity);
-        auto& prev_child_transform = child_map[child_entity];
-        EXPECT_EQ(child_transform, prev_child_transform);
-    }
-}
-
 TEST_F(TestTransformPropagator, PropagateTransform_ChangeParent_WorldPosition) {
     auto body_entity = GenerateHumanoid(math::Vec3f::Zero());
     auto& body_transform = registry_.get<Transform>(body_entity);

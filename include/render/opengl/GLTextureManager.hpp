@@ -47,10 +47,11 @@ namespace zero::render {
          * @brief Create a graphics texture object
          * @param filename the filename of the image to use for the graphics texture
          * @param index the texture unit to use (0 based)
-         * @param uniform_name the uniform sampler name the texture is associated with
+         * @param name the GLSL sampler2D property suffix name the texture is associated with.
+         * e.g. If GLSL uniform is `material.diffuse_texture`, the name would be `diffuse_texture`
          * @return an OpenGL graphics texture object
          */
-        std::shared_ptr<GLTexture> CreateTexture(const std::string& filename, uint8 index, const std::string& uniform_name = "");
+        std::shared_ptr<GLTexture> CreateTexture(const std::string& filename, uint8 index, const std::string& name = "");
 
         /**
          * @see ITextureManager::InitializeImage

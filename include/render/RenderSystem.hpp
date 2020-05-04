@@ -10,6 +10,7 @@
 namespace zero::render {
 
     // Forward declarations
+    class Light;
     class PrimitiveInstance;
 
     /**
@@ -59,10 +60,10 @@ namespace zero::render {
          *
          * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
-         * @param model the fully qualified 3D filename
+         * @param model_filename the fully qualified 3D filename
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
-        [[nodiscard]] Component::Entity CreateModelInstance(const std::string& model);
+        [[nodiscard]] Component::Entity CreateModelInstance(const std::string& model_filename);
 
         /**
          * @brief Create a new entity based on a primitive shape.
@@ -73,6 +74,17 @@ namespace zero::render {
          * @return the primitive entity instance.
          */
         [[nodiscard]] Component::Entity CreatePrimitiveInstance(const PrimitiveInstance& primitive);
+
+        /**
+         * @brief Create a new light entity
+         *
+         * Constructs an entity with Transform and a light components.
+         * The light component can be either a DirectionalLight, PointLight, or SpotLight.
+         *
+         * @param light the light component container
+         * @return the light entity instance
+         */
+        [[nodiscard]] Component::Entity CreateLightInstance(const Light& light);
 
     private:
 

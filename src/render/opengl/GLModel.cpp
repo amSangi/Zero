@@ -97,17 +97,17 @@ ModelInstance GLModel::GetModelInstance() const {
     return model_instance_;
 }
 
-std::shared_ptr<GLModel> GLModel::GetParent() const {
+std::shared_ptr<IModel> GLModel::GetParent() const {
     return parent_model_;
 }
 
-std::shared_ptr<GLModel> GLModel::FindChild(uint32 identifier) const {
-    for (auto& model : child_models_) {
+std::shared_ptr<IModel> GLModel::FindChild(uint32 identifier) const {
+    for (const auto& model : child_models_) {
         if (model->GetModelInstance().child_identifier_ == identifier) {
             return model;
         }
     }
-    for (auto& model : child_models_) {
+    for (const auto& model : child_models_) {
         auto search = model->FindChild(identifier);
         if (search) {
             return search;
@@ -117,7 +117,7 @@ std::shared_ptr<GLModel> GLModel::FindChild(uint32 identifier) const {
     return nullptr;
 }
 
-const std::vector<std::shared_ptr<GLModel>>& GLModel::GetChildren() const {
+const std::vector<std::shared_ptr<IModel>>& GLModel::GetChildren() const {
     return child_models_;
 }
 

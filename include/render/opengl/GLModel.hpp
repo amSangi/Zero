@@ -50,9 +50,9 @@ namespace zero::render {
         ~GLModel() override = default;
 
         /**
-         * @brief Draw the meshes
+         * @see IModel::Draw
          */
-        void Draw();
+        void Draw() override;
 
         /**
          * @see IModel::GetTransform
@@ -75,23 +75,19 @@ namespace zero::render {
         [[nodiscard]] ModelInstance GetModelInstance() const override;
 
         /**
-         * @brief Get the parent model
-         * @return the parent GLModel. Nullptr if there is no parent.
+         * @see IModel::GetParent
          */
-        [[nodiscard]] std::shared_ptr<GLModel> GetParent() const;
+        [[nodiscard]] std::shared_ptr<IModel> GetParent() const override;
 
         /**
-         * @brief Find a child model with the given identifier.
-         * @param identifier the identifier
-         * @return the child gl model. Nullptr if no child exists with the identifier.
+         * @see IModel::FindChild
          */
-        [[nodiscard]] std::shared_ptr<GLModel> FindChild(uint32 identifier) const;
+        [[nodiscard]] std::shared_ptr<IModel> FindChild(uint32 identifier) const override;
 
         /**
-         * @brief Get the child models
-         * @return the child GLModels. An empty vector if there are no children.
+         * @see IModel::GetChildren
          */
-        [[nodiscard]] const std::vector<std::shared_ptr<GLModel>>& GetChildren() const;
+        [[nodiscard]] const std::vector<std::shared_ptr<IModel>>& GetChildren() const override;
 
         /**
          * @brief Get the meshes that make up the model
@@ -109,12 +105,12 @@ namespace zero::render {
         /**
          * @brief The parent model
          */
-        std::shared_ptr<GLModel> parent_model_;
+        std::shared_ptr<IModel> parent_model_;
 
         /**
          * @brief The child models
          */
-        std::vector<std::shared_ptr<GLModel>> child_models_;
+        std::vector<std::shared_ptr<IModel>> child_models_;
 
         /**
          * @brief Transform prototype associated with the model

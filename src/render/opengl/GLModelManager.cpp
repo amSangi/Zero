@@ -39,13 +39,13 @@ void GLModelManager::ClearModels() {
     model_map_.clear();
 }
 
-std::shared_ptr<GLModel> GLModelManager::GetModel(const std::string& filename) {
+std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& filename) {
     auto model_search = model_map_.find(filename);
     if (model_search == model_map_.end()) return nullptr;
     return model_search->second;
 }
 
-std::shared_ptr<GLModel> GLModelManager::GetModel(const ModelInstance& model_instance) {
+std::shared_ptr<IModel> GLModelManager::GetModel(const ModelInstance& model_instance) {
     auto model = GetModel(model_instance.filename_);
     if (!model) {
         return nullptr;

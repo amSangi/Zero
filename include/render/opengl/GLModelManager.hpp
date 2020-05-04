@@ -12,7 +12,7 @@ class aiNode;
 namespace zero::render {
 
     // Forward Declaration
-    class GLModel;
+    class IModel;
     class ModelInstance;
 
     /**
@@ -38,24 +38,24 @@ namespace zero::render {
         void ClearModels();
 
         /**
-         * @brief Get the GLModel associated with the given filename
+         * @brief Get the IModel associated with the given filename
          * @param filename the fully qualified filename
-         * @return the GLModel. Nullptr if the model does not exist.
+         * @return the IModel. Nullptr if the model does not exist.
          */
-        std::shared_ptr<GLModel> GetModel(const std::string& filename);
+        std::shared_ptr<IModel> GetModel(const std::string& filename);
 
         /**
-         * @brief Retrieve the correct GLModel from a ModelInstance.
-         * @param model_instance the model instance of the GLModel
-         * @return the GLModel associated with the ModelInstance. Nullptr if it does not exist.
+         * @brief Retrieve the correct IModel from a ModelInstance.
+         * @param model_instance the model instance of the IModel
+         * @return the IModel associated with the ModelInstance. Nullptr if it does not exist.
          */
-        std::shared_ptr<GLModel> GetModel(const ModelInstance& model_instance);
+        std::shared_ptr<IModel> GetModel(const ModelInstance& model_instance);
 
     private:
         /**
-         * @brief Filename to GLModel map
+         * @brief Filename to IModel map
          */
-        std::unordered_map<std::string, std::shared_ptr<GLModel>> model_map_;
+        std::unordered_map<std::string, std::shared_ptr<IModel>> model_map_;
 
         /**
          * @brief Random Number Generator used to create model identifiers

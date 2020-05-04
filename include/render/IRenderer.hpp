@@ -3,11 +3,9 @@
 #include <string>
 #include <entt/entt.hpp>
 #include "core/RenderSystemConfig.hpp"
+#include "render/IModel.hpp"
 
 namespace zero::render {
-
-    // Forward declarations
-    class PrimitiveInstance;
 
     /**
      * @brief Draw primitives and objects onto the current active rendering context
@@ -42,27 +40,12 @@ namespace zero::render {
         virtual void ShutDown() = 0;
 
         /**
-         * @brief Instantiate a 3D model.
-         *
-         * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
-         *
-         * @param registry the registry containing all of the entities and their components
+         * @brief Get the IModel of a 3D model given the filename
          * @param model the fully qualified 3D filename
-         * @return the root entity associated with the 3D model. NullEntity if an error occurred.
+         * @return the IModel. Nullptr if it does not exist.
          */
-        virtual Component::Entity InstantiateModel(entt::registry& registry, const std::string& model) = 0;
+        [[nodiscard]] virtual std::weak_ptr<IModel> GetModel(const std::string& model) = 0;
 
-        /**
-         * @brief Instantiate a new primitive.
-         *
-         * Constructs an entity with Transform, Volume, Material, and PrimitiveInstance components.
-         *
-         * @param registry the registry containing all of the entities and their components
-         * @param primitive the primitive instance data.
-         * @return the primitive entity instance.
-         */
-        virtual Component::Entity InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive) = 0;
-        
     }; // class IRenderer
 
 } // namespace zero::render
