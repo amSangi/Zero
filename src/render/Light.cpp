@@ -2,6 +2,25 @@
 
 using namespace zero::render;
 
+DirectionalLight::DirectionalLight()
+: color_(math::Vec3f::One())
+, direction_(math::Vec3f::Down())
+, intensity_(1.0F)
+{}
+
+PointLight::PointLight()
+: color_(math::Vec3f::One())
+, attenuation_constant_(1.0F)
+, attenuation_linear_(0.09F)
+, attenuation_quadratic_(0.032F)
+{}
+
+SpotLight::SpotLight()
+: color_(math::Vec3f::One())
+, inner_cone_angle_(math::Degree(12.5F))
+, outer_cone_angle_(math::Degree(17.5F))
+{}
+
 Light::LightSource::LightSource(const DirectionalLight& directional_light)
 : directional_light_(directional_light)
 {}
@@ -54,17 +73,17 @@ SpotLight Light::GetSpotLight() const {
     return source_.spot_light_;
 }
 
-void Light::SetDirectionalLight(const DirectionalLight& directional_light) {
+void Light::Set(const DirectionalLight& directional_light) {
     type_ = Type::DIRECTIONAL;
     source_.directional_light_ = directional_light;
 }
 
-void Light::SetPointLight(const PointLight& point_light) {
+void Light::Set(const PointLight& point_light) {
     type_ = Type::POINT;
     source_.point_light_ = point_light;
 }
 
-void Light::SetSpotLight(const SpotLight& spot_light) {
+void Light::Set(const SpotLight& spot_light) {
     type_ = Type::SPOT;
     source_.spot_light_ = spot_light;
 }

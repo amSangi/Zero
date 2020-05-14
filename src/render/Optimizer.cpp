@@ -39,6 +39,12 @@ std::vector<zero::Component::Entity> Optimizer::GetViewableEntities(const Camera
             continue;
         }
 
+        // Entity is not visible
+        const auto& material = renderable_view.get<const Material>(entity);
+        if (!material.visible_) {
+            continue;
+        }
+
         // Entity and its children are culled
         const auto& volume = renderable_view.get<const Volume>(entity);
         if (culler->IsCulled(volume.bounding_volume_)) {

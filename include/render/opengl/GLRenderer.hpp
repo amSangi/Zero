@@ -77,11 +77,13 @@ namespace zero::render {
 
         /**
          * @brief Render the wireframe of the bounding volume
+         * @param camera the camera to render to
          * @param projection_matrix the projection matrix of the camera
          * @param view_matrix the view matrix of the camera
          * @param volume the volume to render
          */
-        void RenderVolume(const math::Matrix4x4& projection_matrix,
+        void RenderVolume(const Camera& camera,
+                          const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
 

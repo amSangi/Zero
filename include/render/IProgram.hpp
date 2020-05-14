@@ -49,7 +49,7 @@ namespace zero::render {
         virtual void SetUniform(const std::string& name, math::Matrix3x3 value) = 0;
         virtual void SetUniform(const std::string& name, math::Vec4f value) = 0;
         virtual void SetUniform(const std::string& name, math::Vec3f value) = 0;
-        virtual void SetUniform(const std::string& name, int32 value) = 0;
+        virtual void SetUniform(const std::string& name, zero::int32 value) = 0;
         virtual void SetUniform(const std::string& name, float value) = 0;
         ///@}
 
@@ -64,7 +64,7 @@ namespace zero::render {
         virtual void FlushUniform(const std::string& name, math::Matrix3x3 value) = 0;
         virtual void FlushUniform(const std::string& name, math::Vec4f value) = 0;
         virtual void FlushUniform(const std::string& name, math::Vec3f value) = 0;
-        virtual void FlushUniform(const std::string& name, int32 value) = 0;
+        virtual void FlushUniform(const std::string& name, zero::int32 value) = 0;
         virtual void FlushUniform(const std::string& name, float value) = 0;
         ///@}
 

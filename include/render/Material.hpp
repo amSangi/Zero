@@ -62,6 +62,16 @@ namespace zero::render {
         Shaders shaders_;
 
         /**
+         * @brief The diffuse color. Essential color of an object under direct white light.
+         */
+        math::Vec3f diffuse_color_;
+
+        /**
+         * @brief The shininess of a phong-shaded entity.
+         */
+        float specular_exponent_;
+
+        /**
          * @brief Is the entity in wireframe mode?
          */
         bool wireframe_enabled_;

@@ -80,7 +80,7 @@ void GLProgram::SetUniform(const std::string& name, math::Vec3f value) {
     vec3f_map_[name] = value;
 }
 
-void GLProgram::SetUniform(const std::string& name, int32 value) {
+void GLProgram::SetUniform(const std::string& name, zero::int32 value) {
     int32_map_[name] = value;
 }
 

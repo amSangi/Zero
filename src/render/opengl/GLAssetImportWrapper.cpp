@@ -51,7 +51,5 @@ Material GLAssetImportWrapper::LoadMaterial(aiMaterial* ai_material) {
     ai_material->GetTexture(aiTextureType::aiTextureType_NORMALS, 0, &path);
     material.texture_map_.normal_map_ = path.C_Str();
 
-    ai_material->Get(AI_MATKEY_ENABLE_WIREFRAME, material.wireframe_enabled_);
-
     return material;
 }

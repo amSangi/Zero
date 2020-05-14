@@ -42,16 +42,18 @@ namespace zero::render {
                                                                     const PrimitiveInstance& primitive);
 
         /**
-         * @brief Create a new light entity
+         * @brief Create a new light entity or attach a light component to an existing entity
          *
-         * Constructs an entity with Transform and a light components.
+         * If the entity exists, it attaches a light component to that entity.
+         * Otherwise, constructs an entity with Transform and a light component.
          * The light component can be either a DirectionalLight, PointLight, or SpotLight.
          *
          * @param registry the registry containing all of the entities and their components
          * @param light the light component container
+         * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
          * @return the light entity instance
          */
-        [[nodiscard]] static Component::Entity InstantiateLight(entt::registry& registry, const Light& light);
+        static Component::Entity InstantiateLight(entt::registry& registry, const Light& light, Component::Entity entity);
 
     }; // class Instantiator
 

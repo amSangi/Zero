@@ -22,7 +22,12 @@ std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
         shader_names += search->first;
     }
     else {
-        // TODO: Use default vertex shader
+        // Use the default vertex shader if the shader cannot be found
+        search = shader_map_.find(GLDefaultShader::kVertexShader.name_);
+        if (search != shader_map_.end()) {
+            shaders.push_back(search->second);
+            shader_names += search->first;
+        }
     }
 
     // Fragment Shader
@@ -32,7 +37,12 @@ std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material) {
         shader_names += search->first;
     }
     else {
-        // TODO: Use default fragment shader
+        // Use the default fragment shader if the shader cannot be found
+        search = shader_map_.find(GLDefaultShader::kFragmentShader.name_);
+        if (search != shader_map_.end()) {
+            shaders.push_back(search->second);
+            shader_names += search->first;
+        }
     }
 
     // Geometry Shader

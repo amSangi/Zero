@@ -10,6 +10,7 @@ namespace zero::render {
      * @brief Directional light component
      */
     struct DirectionalLight : public Component {
+        DirectionalLight();
         math::Vec3f color_;
         math::Vec3f direction_;
         float intensity_;
@@ -19,6 +20,7 @@ namespace zero::render {
      * @brief Point light component
      */
     struct PointLight : public Component {
+        PointLight();
         math::Vec3f color_;
         float attenuation_constant_;
         float attenuation_linear_;
@@ -29,6 +31,7 @@ namespace zero::render {
      * @brief Spot light component
      */
     struct SpotLight : public Component {
+        SpotLight();
         math::Vec3f color_;
         math::Degree inner_cone_angle_;
         math::Degree outer_cone_angle_;
@@ -79,9 +82,9 @@ namespace zero::render {
          * @brief Set the light type
          */
         ///@{
-        void SetDirectionalLight(const DirectionalLight& directional_light);
-        void SetPointLight(const PointLight& point_light);
-        void SetSpotLight(const SpotLight& spot_light);
+        void Set(const DirectionalLight& directional_light);
+        void Set(const PointLight& point_light);
+        void Set(const SpotLight& spot_light);
         ///@}
 
     private:

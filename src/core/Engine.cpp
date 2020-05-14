@@ -56,3 +56,7 @@ Component::Entity Engine::InstantiateModel(const std::string& model_filename) {
 Component::Entity Engine::InstantiatePrimitive(render::PrimitiveInstance primitive) {
     return render_system_->CreatePrimitiveInstance(primitive);
 }
+
+Component::Entity Engine::InstantiateLight(render::Light light, Component::Entity entity) {
+    return render_system_->CreateLightInstance(light, entity);
+}

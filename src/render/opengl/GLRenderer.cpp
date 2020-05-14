@@ -133,7 +133,7 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
         const auto& material = renderable_view.get<const Material>(viewable_entity);
         const auto& volume = renderable_view.get<const Volume>(viewable_entity);
         if (camera.render_bounding_volumes_) {
-            RenderVolume(projection_matrix, view_matrix, volume);
+            RenderVolume(camera, projection_matrix, view_matrix, volume);
         }
         ToggleWireframeMode(material.wireframe_enabled_);
 
@@ -146,7 +146,7 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
         }
         graphics_program->Use();
 
-        // Texture Maps
+        // Set Material Uniforms
         auto gl_textures = texture_manager_->CreateTextureMap(material);
         for (int i = 0; i < gl_textures.size(); ++i) {
             const auto& gl_texture = gl_textures[i];
@@ -155,13 +155,17 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
             gl_texture->Bind(texture_unit);
             graphics_program->SetUniform("material." + gl_texture->GetName(), i);
         }
+        graphics_program->SetUniform("material.specular_exponent", material.specular_exponent_);
+        graphics_program->SetUniform("material.diffuse_color", material.diffuse_color_);
 
         // Set lights
         SetLightUniforms(graphics_program, registry);
 
         // Set matrices and camera position uniforms
+        auto model_view_matrix = view_matrix * transform.GetLocalToWorldMatrix();
         graphics_program->SetUniform("projection_matrix", projection_matrix);
-        graphics_program->SetUniform("model_view_matrix", view_matrix * transform.GetLocalToWorldMatrix());
+        graphics_program->SetUniform("model_view_matrix", model_view_matrix);
+        graphics_program->SetUniform("normal_matrix", model_view_matrix.Inverse().Transpose().GetMatrix3x3());
         graphics_program->SetUniform("camera_position", camera.position_);
         graphics_program->FlushUniforms();
 
@@ -185,22 +189,25 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
     }
 }
 
-void GLRenderer::RenderVolume(const math::Matrix4x4& projection_matrix,
+void GLRenderer::RenderVolume(const Camera& camera,
+                              const math::Matrix4x4& projection_matrix,
                               const math::Matrix4x4& view_matrix,
                               const Volume& volume) {
-    Material default_material;
-    default_material.shaders_.vertex_shader_ = GLDefaultShader::kVertexShader.name_;
-    default_material.shaders_.fragment_shader_ = GLDefaultShader::kFragmentShader.name_;
     ToggleWireframeMode(true);
 
     auto model_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(volume.bounding_volume_.radius_))
             .Translate(volume.bounding_volume_.center_);
-    auto gl_primitive_program = graphics_compiler_->CreateProgram(default_material);
+    // use default shaders
+    auto gl_primitive_program = graphics_compiler_->CreateProgram(Material{});
     gl_primitive_program->Use();
+    auto model_view_matrix = view_matrix * model_matrix;
     gl_primitive_program->SetUniform("projection_matrix", projection_matrix);
-    gl_primitive_program->SetUniform("model_view_matrix", view_matrix * model_matrix);
-    gl_primitive_program->SetUniform("color", math::Vec3f(1.0F, 0.0F, 0.0F));
+    gl_primitive_program->SetUniform("model_view_matrix", model_view_matrix);
+    gl_primitive_program->SetUniform("normal_matrix", model_view_matrix.Inverse().Transpose().GetMatrix3x3());
+    gl_primitive_program->SetUniform("camera_position", camera.position_);
+    gl_primitive_program->SetUniform("material.specular_exponent", 32.0F);
+    gl_primitive_program->SetUniform("material.diffuse_color", math::Vec3f(1.0F, 0.0F, 0.0F));
     gl_primitive_program->FlushUniforms();
 
     PrimitiveInstance primitive_instance{};
@@ -244,11 +251,12 @@ void GLRenderer::ToggleWireframeMode(bool enable_wireframe) {
 void GLRenderer::SetLightUniforms(std::shared_ptr<IProgram>& graphics_program, const entt::registry& registry) {
     // Uniform Array Index - Always reset to 0 before each loop
     uint32 i = 0;
+    int32 light_count = 0;
 
     // Set Directional Light Uniforms
     auto directional_light_view = registry.view<const DirectionalLight>();
-    graphics_program->SetUniform("directional_light_count",
-                                 math::Min(kMaxDirectionalLights, static_cast<int32>(directional_light_view.size())));
+    light_count = static_cast<int32>(math::Min(kMaxDirectionalLights, directional_light_view.size()));
+    graphics_program->SetUniform("directional_light_count", light_count);
     for (auto entity : directional_light_view) {
         if (i >= kMaxDirectionalLights) {
             break;
@@ -266,8 +274,8 @@ void GLRenderer::SetLightUniforms(std::shared_ptr<IProgram>& graphics_program, c
     // Set Point Light Uniforms
     i = 0;
     auto point_light_view = registry.view<const Transform, const PointLight>();
-    graphics_program->SetUniform("point_light_count",
-                                 math::Min(kMaxPointLights, static_cast<int32>(point_light_view.size())));
+    light_count = static_cast<int32>(math::Min(kMaxPointLights, point_light_view.size()));
+    graphics_program->SetUniform("point_light_count", light_count);
     for (auto entity: point_light_view) {
         if (i >= kMaxPointLights) {
             break;
@@ -288,8 +296,8 @@ void GLRenderer::SetLightUniforms(std::shared_ptr<IProgram>& graphics_program, c
     // Set Spot Light Uniforms
     i = 0;
     auto spot_light_view = registry.view<const Transform, const SpotLight>();
-    graphics_program->SetUniform("spot_light_count",
-                                 math::Min(kMaxSpotLights, static_cast<int32>(spot_light_view.size())));
+    light_count = static_cast<int32>(math::Min(kMaxSpotLights, spot_light_view.size()));
+    graphics_program->SetUniform("spot_light_count", light_count);
     for (auto entity: spot_light_view) {
         if (i >= kMaxSpotLights) {
             break;

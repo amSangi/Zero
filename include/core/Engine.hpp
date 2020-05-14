@@ -70,6 +70,18 @@ namespace zero {
          */
         [[nodiscard]] Component::Entity InstantiatePrimitive(render::PrimitiveInstance primitive);
 
+        /**
+         * @brief Create a new light entity or attach a light component to an existing entity
+         *
+         * If the entity is null, constructs an entity with Transform
+         * and either DirectionalLight, PointLight, or SpotLight components.
+         *
+         * @param light the light component data container
+         * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
+         * @return the light entity instance
+         */
+        Component::Entity InstantiateLight(render::Light light, Component::Entity entity = Component::NullEntity);
+
     protected:
 
         /**

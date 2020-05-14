@@ -50,6 +50,6 @@ zero::Component::Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveIns
     return Instantiator::InstantiatePrimitive(GetRegistry(), primitive);
 }
 
-zero::Component::Entity RenderSystem::CreateLightInstance(const Light& light) {
-    return Instantiator::InstantiateLight(GetRegistry(), light);
+zero::Component::Entity RenderSystem::CreateLightInstance(const Light& light, Component::Entity entity) {
+    return Instantiator::InstantiateLight(GetRegistry(), light, entity);
 }

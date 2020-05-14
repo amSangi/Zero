@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
     camera.position_ = default_camera_position;
     camera.near_clip_ = 0.01F;
     camera.far_clip_ = 1000.0F;
-    camera.render_bounding_volumes_ = true;
+    camera.render_bounding_volumes_ = false;
 
     // Instantiate a 3D model
     auto model_entity = engine->InstantiateModel(engine_config.render_system_config_.model_files_[0]);
@@ -186,33 +186,74 @@ int main(int argc, char *argv[]) {
     model_material.texture_map_.diffuse_map_ = render_system_config.texture_files_[0];
     model_material.wireframe_enabled_ = false;
     model_material.visible_ = true;
+    model_material.specular_exponent_ = 32.0F;
     auto& transform = registry.get<Transform>(model_entity);
     transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
 
-//    // Instantiate a root primitive
-//    render::PrimitiveInstance root_primitive{};
-//    render::Box root_shape{};
-//    root_primitive.Set(root_shape);
-//    auto root_primitive_entity = engine->InstantiatePrimitive(root_primitive);
-//    auto& root_primitive_material = registry.get<render::Material>(root_primitive_entity);
-//    root_primitive_material.wireframe_enabled_ = false;
-//    root_primitive_material.visible_ = true;
-//
-//    // Instantiate a primitive
-//    render::PrimitiveInstance primitive{};
-//    render::Torus shape{};
-//    primitive.Set(shape);
-//    auto primitive_entity = engine->InstantiatePrimitive(primitive);
-//    auto& primitive_material = registry.get<render::Material>(primitive_entity);
-//    primitive_material.wireframe_enabled_ = false;
-//    primitive_material.visible_ = false;
-//    // endregion
-//
-//    auto& root_transform = registry.get<Transform>(root_primitive_entity);
-//    auto& child_transform = registry.get<Transform>(primitive_entity);
-//    root_transform.children_.push_back(primitive_entity);
-//    child_transform.parent_ = root_primitive_entity;
-//    root_transform.Translate(math::Vec3f(5.0F, 0.0F, 0.0F));
+    // Instantiate a root primitive
+    render::PrimitiveInstance root_primitive{};
+    render::Torus root_shape{};
+    root_primitive.Set(root_shape);
+    auto root_primitive_entity = engine->InstantiatePrimitive(root_primitive);
+    auto& root_primitive_material = registry.get<render::Material>(root_primitive_entity);
+    root_primitive_material.shaders_.vertex_shader_ = render_system_config.vertex_shader_files_[0];
+    root_primitive_material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[0];
+    root_primitive_material.wireframe_enabled_ = false;
+    root_primitive_material.diffuse_color_ = math::Vec3f(0.65F, 0.0F, 0.0F);
+    root_primitive_material.visible_ = true;
+
+    // Instantiate a child primitive
+    render::PrimitiveInstance primitive{};
+    render::Torus shape{};
+    primitive.Set(shape);
+    auto primitive_entity = engine->InstantiatePrimitive(primitive);
+    auto& primitive_material = registry.get<render::Material>(primitive_entity);
+    primitive_material.shaders_.vertex_shader_ = render_system_config.vertex_shader_files_[0];
+    primitive_material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[0];
+    primitive_material.wireframe_enabled_ = false;
+    primitive_material.diffuse_color_ = math::Vec3f(0.0F, 0.65F, 0.0F);
+    primitive_material.visible_ = true;
+
+    // Incorporate parent-child hierarchy
+    auto& root_transform = registry.get<Transform>(root_primitive_entity);
+    auto& child_transform = registry.get<Transform>(primitive_entity);
+    child_transform.LocalRotate(root_transform,
+                                math::Quaternion::FromAngleAxis(math::Vec3f::Up(), math::Radian::FromDegree(90.0F)));
+    child_transform.LocalTranslate(root_transform, math::Vec3f(0.0F, 1.5F, 0.0F));
+    root_transform.children_.push_back(primitive_entity);
+    child_transform.parent_ = root_primitive_entity;
+    root_transform.Translate(math::Vec3f(5.0F, 0.0F, 0.0F));
+    // endregion
+
+    // Instantiate the floor
+    render::PrimitiveInstance floor_primitive{};
+    render::Plane plane{};
+    plane.width_ = 32U;
+    plane.height_ = 32U;
+    plane.u_axis_ = math::Vec3f::Right();
+    plane.v_axis_ = math::Vec3f::Back();
+    floor_primitive.Set(plane);
+    auto floor_entity = engine->InstantiatePrimitive(floor_primitive);
+    auto& floor_material = registry.get<render::Material>(floor_entity);
+    floor_material.shaders_.vertex_shader_ = render_system_config.vertex_shader_files_[0];
+    floor_material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[0];
+    floor_material.diffuse_color_ = math::Vec3f(0.1F);
+    auto& floor_transform = registry.get<Transform>(floor_entity);
+    floor_transform.Scale(math::Vec3f(10.0F));
+    floor_transform.Translate(math::Vec3f(-10.0F, -3.0F, 10.0F));
+
+    // Instantiate directional, point, and spot lights
+    render::PrimitiveInstance light_primitive{render::Sphere{}};
+    auto light_entity = engine->InstantiatePrimitive(light_primitive);
+    render::Light light{};
+    render::SpotLight spot_light{};
+    light.Set(spot_light);
+    engine->InstantiateLight(light, light_entity);
+    auto& light_primitive_material = registry.get<render::Material>(light_entity);
+    light_primitive_material.diffuse_color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
+    auto& light_transform = registry.get<Transform>(light_entity);
+    light_transform.Scale(math::Vec3f(0.1F));
+    light_transform.Translate(math::Vec3f(2.0F, 5.0F, 0.0F));
 
     //////////////////////////////////////////////////
     ///// Engine Loop
@@ -225,7 +266,7 @@ int main(int argc, char *argv[]) {
             switch( event.type ){
                 case SDL_KEYDOWN:
                     HandleCameraMovement(camera, event.key.keysym.sym, default_camera_position);
-                    HandleEntityMovement(transform, event.key.keysym.sym);
+                    HandleEntityMovement(light_transform, event.key.keysym.sym);
                     break;
                 case SDL_QUIT:
                     quit = true;
