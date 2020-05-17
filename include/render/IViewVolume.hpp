@@ -4,12 +4,14 @@
 #include "math/Sphere.hpp"
 #include "math/Box.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief A camera view volume interface used to cull volumes
      */
-    class IViewVolume {
+    class IViewVolume
+    {
     public:
 
         virtual ~IViewVolume() = default;

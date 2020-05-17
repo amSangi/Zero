@@ -1,8 +1,11 @@
 #include "render/opengl/GLShader.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
-GLShader::GLShader(const std::string& source, IShader::Type type) : type_(type) {
+GLShader::GLShader(const std::string& source, IShader::Type type)
+: type_(type)
+{
     switch (type_)
     {
         case IShader::Type::VERTEX_SHADER:
@@ -34,32 +37,44 @@ GLShader::GLShader(const std::string& source, IShader::Type type) : type_(type) 
     glShaderSource(id_, /* Source Count */ 1, sources, lengths);
 }
 
-GLShader::~GLShader() {
+GLShader::~GLShader()
+{
     Cleanup();
 }
 
-bool GLShader::Compile() {
-    if (IsCompiled()) return true;
+bool GLShader::Compile()
+{
+    if (IsCompiled())
+    {
+        return true;
+    }
     glCompileShader(id_);
     return IsCompiled();
 }
 
-bool GLShader::IsCompiled() const {
+bool GLShader::IsCompiled() const
+{
     GLint is_compiled = GL_FALSE;
     glGetShaderiv(id_, GL_COMPILE_STATUS, &is_compiled);
     return (is_compiled == GL_TRUE);
 }
 
-IShader::Type GLShader::GetType() const {
+IShader::Type GLShader::GetType() const
+{
     return type_;
 }
 
-GLuint GLShader::GetNativeIdentifier() const {
+GLuint GLShader::GetNativeIdentifier() const
+{
     return id_;
 }
 
-void GLShader::Cleanup() {
-    if (glIsShader(id_)) {
+void GLShader::Cleanup()
+{
+    if (glIsShader(id_))
+    {
         glDeleteShader(id_);
     }
 }
+
+} // namespace zero::render

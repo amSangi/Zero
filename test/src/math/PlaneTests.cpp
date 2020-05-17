@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
 #include "math/Plane.hpp"
-#include "math/ZMath.hpp"
 
 using namespace zero::math;
 
-TEST(TestPlane, PlaneFromThreePoints) {
+TEST(TestPlane, PlaneFromThreePoints)
+{
     Vec3f origin = Vec3f::Zero();
 	Vec3f left = Vec3f::Left();
 	Vec3f right = Vec3f::Right();
@@ -30,7 +30,8 @@ TEST(TestPlane, PlaneFromThreePoints) {
 	EXPECT_EQ(Plane(origin, up, left).normal_, forward);
 }
 
-TEST(TestPlane, PlaneFromThreePoints_Distance) {
+TEST(TestPlane, PlaneFromThreePoints_Distance)
+{
     Vec3f origin = Vec3f::Zero();
     Vec3f left = Vec3f::Left();
     Vec3f right = Vec3f::Right();
@@ -60,7 +61,8 @@ TEST(TestPlane, PlaneFromThreePoints_Distance) {
     EXPECT_EQ(plane.Distance(down), 0.0F);
 }
 
-TEST(TestPlane, Intersects) {
+TEST(TestPlane, Intersects)
+{
 	Plane up_plane = Plane::Up();
 	Plane right_plane = Plane::Right();
 	Plane forward_plane = Plane::Forward();
@@ -93,7 +95,8 @@ TEST(TestPlane, Intersects) {
 	EXPECT_FALSE(forward_plane.Intersects(forward_plane.Flip()));
 }
 
-TEST(TestPlane, Reflect) {
+TEST(TestPlane, Reflect)
+{
 	Plane plane = Plane::Up();
 	EXPECT_EQ(plane.Reflect(Vec3f(1.0F, 1.0F)), Vec3f(1.0F, -1.0F));
 	EXPECT_EQ(plane.Reflect(Vec3f(-1.0F, 1.0F)), Vec3f(-1.0F, -1.0F));
@@ -107,7 +110,8 @@ TEST(TestPlane, Reflect) {
 	EXPECT_EQ(plane.Reflect(Vec3f(0.0F, 1.0F, -1.0F)), Vec3f(0.0F, 1.0F, 1.0F));
 }
 
-TEST(TestPlane, Distance) {
+TEST(TestPlane, Distance)
+{
 	Plane plane = Plane::Up();
 
 	EXPECT_EQ(plane.Distance(Vec3f::Zero()), 0.0F);

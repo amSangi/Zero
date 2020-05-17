@@ -3,7 +3,8 @@
 
 using namespace zero::render;
 
-TEST_F(TestGLCompiler, InitializeShaders) {
+TEST_F(TestGLCompiler, InitializeShaders)
+{
     EXPECT_TRUE(compiler_->InitializeShader(vertex_stage_));
     EXPECT_TRUE(compiler_->InitializeShader(fragment_stage_));
     EXPECT_TRUE(compiler_->InitializeShader(geometry_stage_));
@@ -12,7 +13,8 @@ TEST_F(TestGLCompiler, InitializeShaders) {
     EXPECT_TRUE(compiler_->InitializeShader(compute_stage_));
 }
 
-TEST_F(TestGLCompiler, CreateProgram) {
+TEST_F(TestGLCompiler, CreateProgram)
+{
     EXPECT_TRUE(compiler_->InitializeShader(vertex_stage_));
     EXPECT_TRUE(compiler_->InitializeShader(fragment_stage_));
     EXPECT_TRUE(compiler_->InitializeShader(geometry_stage_));
@@ -30,7 +32,8 @@ TEST_F(TestGLCompiler, CreateProgram) {
     EXPECT_TRUE(program->IsLinked());
 }
 
-TEST_F(TestGLCompiler, CreateProgramNoShaders) {
+TEST_F(TestGLCompiler, CreateProgramNoShaders)
+{
     Material material;
     material.shaders_.vertex_shader_ = "Vertex";
     material.shaders_.fragment_shader_ = "Fragment";

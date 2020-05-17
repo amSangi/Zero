@@ -3,12 +3,14 @@
 #include <string>
 #include "IShader.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Container for a Graphics Shader
      */
-    struct ShaderStage {
+    struct ShaderStage
+    {
 
         /**
          * @brief The Shader Type

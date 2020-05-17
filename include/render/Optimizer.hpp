@@ -3,13 +3,15 @@
 #include "core/Component.hpp"
 #include "render/Camera.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
-    class Optimizer {
+    class Optimizer
+    {
     public:
         Optimizer() = delete;
 
-        static std::vector<Component::Entity> ExtractRenderableEntities(const Camera& camera, const entt::registry& registry);
+        static std::vector<Entity> ExtractRenderableEntities(const Camera& camera, const entt::registry& registry);
 
     private:
         /**
@@ -23,7 +25,8 @@ namespace zero::render {
          * @param camera the camera render to
          * @return all viewable entities
          */
-        static std::vector<Component::Entity> GetViewableEntities(const Camera& camera, const entt::registry& registry);
+        static std::vector<Entity> GetViewableEntities(const Camera& camera, const entt::registry& registry);
+
     }; // class Optimizer
 
 } // namespace zero::render

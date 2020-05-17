@@ -1,28 +1,34 @@
 #include "render/Volume.hpp"
 #include "math/Matrix4x4.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
 Volume::Volume()
 : Component()
 , bounding_volume_()
-{}
+{
+}
 
 Volume::Volume(const math::Vec3f& position, float radius)
 : Component()
 , bounding_volume_(position, radius)
-{}
+{
+}
 
 Volume::Volume(const math::Vec3f& min, const math::Vec3f& max)
 : Component()
 , bounding_volume_(min, max)
-{}
+{
+}
 
-void Volume::Engulf(const Volume& other) {
+void Volume::Engulf(const Volume& other)
+{
     bounding_volume_.Merge(other.bounding_volume_);
 }
 
-void Volume::Transform(const zero::math::Matrix4x4& transformation) {
+void Volume::Transform(const zero::math::Matrix4x4& transformation)
+{
     math::Vec3f center = bounding_volume_.center_;
 
     // Apply transformation
@@ -38,3 +44,5 @@ void Volume::Transform(const zero::math::Matrix4x4& transformation) {
     bounding_volume_.center_ = transformed_center.XYZ();
     bounding_volume_.radius_ *= scale;
 }
+
+} // namespace zero::render

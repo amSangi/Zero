@@ -2,12 +2,14 @@
 
 #include "Vector3.hpp"
 
-namespace zero::math {
+namespace zero::math
+{
 
     /**
      * @brief A simple 3D box represented by min/max Vec3fs
      */
-    class Box {
+    class Box
+    {
     public:
         Box() = default;
         Box(const Vec3f& min, const Vec3f& max);

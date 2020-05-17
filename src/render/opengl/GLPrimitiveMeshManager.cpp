@@ -3,7 +3,8 @@
 #include "render/opengl/GLMesh.hpp"
 #include "render/Components.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
 GLPrimitiveMeshManager::GLPrimitiveMeshManager()
 : box_mesh_(nullptr)
@@ -12,9 +13,11 @@ GLPrimitiveMeshManager::GLPrimitiveMeshManager()
 , cone_mesh_(nullptr)
 , cylinder_mesh_(nullptr)
 , torus_mesh_(nullptr)
-{}
+{
+}
 
-void GLPrimitiveMeshManager::LoadPrimitives() {
+void GLPrimitiveMeshManager::LoadPrimitives()
+{
     // Cache default primitives
     PrimitiveInstance instance{};
     instance.Set(render::Box());
@@ -36,7 +39,8 @@ void GLPrimitiveMeshManager::LoadPrimitives() {
     torus_mesh_ = GLPrimitiveGenerator::Generate(instance);
 }
 
-void GLPrimitiveMeshManager::ClearPrimitives() {
+void GLPrimitiveMeshManager::ClearPrimitives()
+{
     box_mesh_.reset();
     sphere_mesh_.reset();
     plane_mesh_.reset();
@@ -45,7 +49,8 @@ void GLPrimitiveMeshManager::ClearPrimitives() {
     torus_mesh_.reset();
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::GetPrimitiveMesh(PrimitiveInstance primitive_instance) const {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::GetPrimitiveMesh(PrimitiveInstance primitive_instance) const
+{
     switch (primitive_instance.GetType())
     {
         case PrimitiveInstance::Type::SPHERE:
@@ -63,8 +68,10 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::GetPrimitiveMesh(PrimitiveInstan
     }
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Box& box) const {
-    if (box == Box()) {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Box& box) const
+{
+    if (box == Box())
+    {
         return box_mesh_;
     }
     PrimitiveInstance instance{};
@@ -72,8 +79,10 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Box& box) const {
     return GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Sphere& sphere) const {
-    if (sphere == Sphere()) {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Sphere& sphere) const
+{
+    if (sphere == Sphere())
+    {
         return sphere_mesh_;
     }
     PrimitiveInstance instance{};
@@ -81,8 +90,10 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Sphere& sphere) c
     return GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Plane& plane) const {
-    if (plane == Plane()) {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Plane& plane) const
+{
+    if (plane == Plane())
+    {
         return plane_mesh_;
     }
     PrimitiveInstance instance{};
@@ -90,8 +101,10 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Plane& plane) con
     return GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Cone& cone) const {
-    if (cone == Cone()) {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Cone& cone) const
+{
+    if (cone == Cone())
+    {
         return cone_mesh_;
     }
     PrimitiveInstance instance{};
@@ -99,8 +112,10 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Cone& cone) const
     return GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Cylinder& cylinder) const {
-    if (cylinder == Cylinder()) {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Cylinder& cylinder) const
+{
+    if (cylinder == Cylinder())
+    {
         return cylinder_mesh_;
     }
     PrimitiveInstance instance{};
@@ -108,8 +123,10 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Cylinder& cylinde
     return GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Torus& torus) const {
-    if (torus == Torus()) {
+std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Torus& torus) const
+{
+    if (torus == Torus())
+    {
         return torus_mesh_;
     }
     PrimitiveInstance instance{};
@@ -117,3 +134,4 @@ std::shared_ptr<GLMesh> GLPrimitiveMeshManager::Generate(const Torus& torus) con
     return GLPrimitiveGenerator::Generate(instance);
 }
 
+} // namespace zero::render

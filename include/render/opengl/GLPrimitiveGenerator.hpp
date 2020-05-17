@@ -2,7 +2,8 @@
 
 #include <memory>
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class GLMesh;
@@ -11,7 +12,8 @@ namespace zero::render {
     /**
      * @brief Generate the mesh data for primitives given their mathematical representations
      */
-    class GLPrimitiveGenerator {
+    class GLPrimitiveGenerator
+    {
     public:
         GLPrimitiveGenerator() = delete;
         ~GLPrimitiveGenerator() = delete;

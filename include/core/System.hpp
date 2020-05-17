@@ -4,9 +4,10 @@
 #include "EngineCore.hpp"
 #include "TimeDelta.hpp"
 
-namespace zero {
+namespace zero
+{
 
-    /* ********** Forward Declarations ********** */
+    // Forward declarations
     namespace event { class EventBus; }
     class Engine;
 
@@ -15,7 +16,8 @@ namespace zero {
      * @note Access to components is done through the registry
      * @see https://skypjack.github.io/entt/classentt_1_1Registry.html
      */
-    class System {
+    class System
+    {
     public:
 
         /**

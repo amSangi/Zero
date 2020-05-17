@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include "render/ICompiler.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class GLShader;
@@ -12,7 +13,8 @@ namespace zero::render {
     /**
      * @brief Create OpenGL graphics programs and manage GLShaders
      */
-    class GLCompiler final : public ICompiler {
+    class GLCompiler final : public ICompiler
+    {
     public:
 
         GLCompiler();

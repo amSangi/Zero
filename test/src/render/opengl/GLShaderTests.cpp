@@ -2,7 +2,8 @@
 
 using namespace zero::render;
 
-TEST_F(TestGLShader, ValidShader) {
+TEST_F(TestGLShader, ValidShader)
+{
     GLShader vertex_shader(TEST_VERTEX_SOURCE, IShader::Type::VERTEX_SHADER);
     GLShader fragment_shader(TEST_FRAGMENT_SOURCE, IShader::Type::FRAGMENT_SHADER);
     GLShader geometry_shader(TEST_GEOMETRY_SOURCE, IShader::Type::GEOMETRY_SHADER);
@@ -18,7 +19,8 @@ TEST_F(TestGLShader, ValidShader) {
     ExpectValidShader(compute_shader);
 }
 
-TEST_F(TestGLShader, InvalidShader) {
+TEST_F(TestGLShader, InvalidShader)
+{
     GLShader invalid_vertex_shader(TEST_INVALID_SOURCE, IShader::Type::VERTEX_SHADER);
     GLShader invalid_fragment_shader(TEST_INVALID_SOURCE, IShader::Type::FRAGMENT_SHADER);
     GLShader invalid_geometry_shader(TEST_INVALID_SOURCE, IShader::Type::GEOMETRY_SHADER);
@@ -34,8 +36,9 @@ TEST_F(TestGLShader, InvalidShader) {
     ExpectInvalidShader(invalid_compute_shader);
 }
 
-TEST_F(TestGLShader, Cleanup) {
-    GLuint value;
+TEST_F(TestGLShader, Cleanup)
+{
+    GLuint value = 0;
     {
         GLShader vertex_shader(TEST_VERTEX_SOURCE, IShader::Type::VERTEX_SHADER);
         value = vertex_shader.GetNativeIdentifier();
@@ -44,7 +47,8 @@ TEST_F(TestGLShader, Cleanup) {
     EXPECT_FALSE(IsShader(value));
 }
 
-TEST_F(TestGLShader, VertexGeometrySourceMismatch) {
+TEST_F(TestGLShader, VertexGeometrySourceMismatch)
+{
     GLShader shader(TEST_GEOMETRY_SOURCE, IShader::Type::VERTEX_SHADER);
     ExpectInvalidShader(shader);
 }

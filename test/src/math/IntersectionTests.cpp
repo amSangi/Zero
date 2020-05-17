@@ -5,7 +5,8 @@
 
 using namespace zero::math;
 
-TEST(TestIntersection, BoxSphereIntersect) {
+TEST(TestIntersection, BoxSphereIntersect)
+{
 	Sphere sphere(Vec3f::Zero(), 100.0F);
 	Box box(Vec3f::Zero(), Vec3f(25.0F));
 

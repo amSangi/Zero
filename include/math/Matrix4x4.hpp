@@ -4,12 +4,14 @@
 #include "ZMath.hpp"
 #include "Matrix3x3.hpp"
 
-namespace zero::math {
+namespace zero::math
+{
 
     /**
      * @brief A 4x4 Matrix
      */
-    class Matrix4x4 {
+    class Matrix4x4
+    {
     public:
         Matrix4x4() = default;
         explicit Matrix4x4(float m[4][4]);
@@ -175,14 +177,14 @@ namespace zero::math {
          * @param epsilon the tolerance
          * @return True if the det is not 0. Otherwise false.
          */
-        bool InverseUtil(Matrix4x4& out, float epsilon=1e-05f) const;
+        bool InverseUtil(Matrix4x4& out, float epsilon=1e-05F) const;
 
         /**
          * @brief Computes the inverse matrix
          * @param epsilon the tolerance
          * @return the inverse matrix of this
          */
-        [[nodiscard]] Matrix4x4 Inverse(float epsilon=1e-05f) const;
+        [[nodiscard]] Matrix4x4 Inverse(float epsilon=1e-05F) const;
 
         /**
          * @brief Computes the transpose matrix

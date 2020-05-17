@@ -4,18 +4,21 @@
 #include "math/Quaternion.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Camera component that manages properties used for displaying the world on a viewport
      * A camera can not change projection types.
      */
-    struct Camera : public Component {
+    struct Camera : public Component
+    {
 
         /**
          * @brief The projection type of the camera
          */
-        enum class ProjectionType {
+        enum class ProjectionType
+        {
             PERSPECTIVE,     ///< Perspective Projection
             ORTHOGRAPHIC     ///< Orthographic Projection
         }; // enum class ProjectionType

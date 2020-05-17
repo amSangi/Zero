@@ -7,7 +7,8 @@
 using namespace zero;
 using namespace zero::render;
 
-class TestOrthographicViewVolume : public ::testing::Test {
+class TestOrthographicViewVolume : public ::testing::Test
+{
 protected:
 
     TestOrthographicViewVolume()
@@ -17,9 +18,11 @@ protected:
     , near_top_right_()
     , far_bottom_left_()
     , far_top_right_()
-    {}
+    {
+    }
 
-    void SetUp() override {
+    void SetUp() override
+    {
         std::shared_ptr<IViewVolume> view_volume = ViewVolumeBuilder::create(camera_);
         volume_ = std::static_pointer_cast<OrthographicViewVolume>(view_volume);
         camera_.GetNearClipCoordinates(near_bottom_left_, near_top_right_);
@@ -35,20 +38,23 @@ protected:
 };
 
 
-TEST_F(TestOrthographicViewVolume, IsCulled_Point_InVolume) {
+TEST_F(TestOrthographicViewVolume, IsCulled_Point_InVolume)
+{
     EXPECT_FALSE(volume_->IsCulled(near_bottom_left_));
     EXPECT_FALSE(volume_->IsCulled(near_top_right_));
     EXPECT_FALSE(volume_->IsCulled(volume_->GetViewBox().Center()));
     EXPECT_FALSE(volume_->IsCulled(math::Vec3f(0.0F, 0.0F, (far_top_right_.z_ - near_top_right_.z_) * 0.5F)));
 }
 
-TEST_F(TestOrthographicViewVolume, IsCulled_Point_OutOfVolume) {
+TEST_F(TestOrthographicViewVolume, IsCulled_Point_OutOfVolume)
+{
     EXPECT_TRUE(volume_->IsCulled(camera_.position_));
     EXPECT_TRUE(volume_->IsCulled(far_bottom_left_));
     EXPECT_TRUE(volume_->IsCulled(far_top_right_));
 }
 
-TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_InVolume) {
+TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_InVolume)
+{
     math::Sphere sphere(1000.0F);
     EXPECT_FALSE(volume_->IsCulled(sphere));
 
@@ -63,7 +69,8 @@ TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_InVolume) {
     EXPECT_FALSE(volume_->IsCulled(sphere));
 }
 
-TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_OutOfVolume) {
+TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_OutOfVolume)
+{
     math::Sphere sphere(1.0F);
     EXPECT_TRUE(volume_->IsCulled(sphere));
 
@@ -77,7 +84,8 @@ TEST_F(TestOrthographicViewVolume, IsCulled_Sphere_OutOfVolume) {
     EXPECT_TRUE(volume_->IsCulled(sphere));
 }
 
-TEST_F(TestOrthographicViewVolume, IsCulled_Box_InVolume) {
+TEST_F(TestOrthographicViewVolume, IsCulled_Box_InVolume)
+{
     math::Box box = volume_->GetViewBox();
     EXPECT_FALSE(volume_->IsCulled(box));
 
@@ -92,7 +100,8 @@ TEST_F(TestOrthographicViewVolume, IsCulled_Box_InVolume) {
     EXPECT_FALSE(volume_->IsCulled(box));
 }
 
-TEST_F(TestOrthographicViewVolume, IsCulled_Box_OutOfVolume) {
+TEST_F(TestOrthographicViewVolume, IsCulled_Box_OutOfVolume)
+{
     math::Box box = math::Box::Unit();
     EXPECT_TRUE(volume_->IsCulled(box));
 

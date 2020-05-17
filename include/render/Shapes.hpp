@@ -2,12 +2,14 @@
 
 #include "math/Vector3.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief 3D Box data
      */
-    struct Box {
+    struct Box
+    {
         Box();
         bool operator==(const Box& other) const;
         bool operator!=(const Box& other) const;
@@ -28,7 +30,8 @@ namespace zero::render {
     /**
      * @brief 2D Plane data
      */
-    struct Plane {
+    struct Plane
+    {
         Plane();
         bool operator==(const Plane& other) const;
         bool operator!=(const Plane& other) const;
@@ -57,7 +60,8 @@ namespace zero::render {
     /**
      * @brief Cone data
      */
-    struct Cone {
+    struct Cone
+    {
         Cone();
         bool operator==(const Cone& other) const;
         bool operator!=(const Cone& other) const;
@@ -86,7 +90,8 @@ namespace zero::render {
     /**
      * @brief Cylinder data
      */
-    struct Cylinder {
+    struct Cylinder
+    {
         Cylinder();
         bool operator==(const Cylinder& other) const;
         bool operator!=(const Cylinder& other) const;
@@ -119,7 +124,8 @@ namespace zero::render {
     /**
      * @brief 3D UV-Sphere data
      */
-    struct Sphere {
+    struct Sphere
+    {
         Sphere();
         bool operator==(const Sphere& other) const;
         bool operator!=(const Sphere& other) const;
@@ -136,7 +142,8 @@ namespace zero::render {
     /**
      * @brief Torus data
      */
-    struct Torus {
+    struct Torus
+    {
         Torus();
         bool operator==(const Torus& other) const;
         bool operator!=(const Torus& other) const;

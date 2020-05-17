@@ -1,6 +1,7 @@
 #include "render/Material.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
 Material::Material()
 : name_()
@@ -10,4 +11,7 @@ Material::Material()
 , specular_exponent_(32.0F)
 , wireframe_enabled_(false)
 , visible_(true)
-{}
+{
+}
+
+} // namespace zero::render

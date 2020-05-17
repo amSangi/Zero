@@ -7,7 +7,8 @@
 class aiMesh;
 class aiMaterial;
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class GLMesh;
@@ -15,7 +16,8 @@ namespace zero::render {
     /**
      * @brief Convert AssImp objects into Zero engine specific objects
      */
-    class GLAssetImportWrapper {
+    class GLAssetImportWrapper
+    {
     public:
         GLAssetImportWrapper() = delete;
         ~GLAssetImportWrapper() = delete;

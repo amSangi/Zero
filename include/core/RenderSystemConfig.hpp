@@ -4,12 +4,14 @@
 #include <vector>
 #include "WindowConfig.hpp"
 
-namespace zero {
+namespace zero
+{
 
     /**
      * @brief RenderSystem Configuration Parameters
      */
-    struct RenderSystemConfig {
+    struct RenderSystemConfig
+    {
 
         /**
          * @brief The Window Configuration

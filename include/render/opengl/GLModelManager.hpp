@@ -9,7 +9,8 @@
 class aiScene;
 class aiNode;
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward Declaration
     class IModel;
@@ -18,7 +19,8 @@ namespace zero::render {
     /**
      * @brief Manage the loading and lifetime of GLModels
      */
-    class GLModelManager {
+    class GLModelManager
+    {
     public:
 
         GLModelManager();

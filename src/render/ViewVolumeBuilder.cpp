@@ -4,9 +4,11 @@
 #include "render/Camera.hpp"
 #include "math/Matrix4x4.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
-std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camera& camera) {
+std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camera& camera)
+{
     switch (camera.GetProjectionType() )
     {
         case Camera::ProjectionType::ORTHOGRAPHIC:
@@ -65,3 +67,5 @@ std::unique_ptr<IViewVolume> ViewVolumeBuilder::create(const zero::render::Camer
         }
     }
 }
+
+} // namespace zero::render

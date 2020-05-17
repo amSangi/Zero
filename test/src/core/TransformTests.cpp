@@ -5,7 +5,8 @@
 
 using namespace zero;
 
-TEST(TestTransform, DefaultConstructor) {
+TEST(TestTransform, DefaultConstructor)
+{
     Transform transform;
     EXPECT_EQ(transform.GetPosition(), math::Vec3f::Zero());
     EXPECT_EQ(transform.GetLocalPosition(), math::Vec3f::Zero());
@@ -13,11 +14,12 @@ TEST(TestTransform, DefaultConstructor) {
     EXPECT_EQ(transform.GetLocalOrientation(), math::Quaternion());
     EXPECT_EQ(transform.GetScale(), math::Vec3f::One());
     EXPECT_EQ(transform.GetLocalScale(), math::Vec3f::One());
-    EXPECT_TRUE(transform.parent_ == Component::NullEntity);
+    EXPECT_TRUE(transform.parent_ == NullEntity);
     EXPECT_TRUE(transform.children_.empty());
 }
 
-TEST(TestTransform, RootTransformConstructor) {
+TEST(TestTransform, RootTransformConstructor)
+{
     math::Vec3f position(1.0F, 2.0F, 3.0F);
     math::Vec3f scale(1.0F, 2.0F, 1.0F);
     math::Quaternion orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
@@ -30,11 +32,12 @@ TEST(TestTransform, RootTransformConstructor) {
     EXPECT_EQ(transform.GetLocalOrientation(), math::Quaternion());
     EXPECT_EQ(transform.GetScale(), scale);
     EXPECT_EQ(transform.GetLocalScale(), math::Vec3f::One());
-    EXPECT_TRUE(transform.parent_ == Component::NullEntity);
+    EXPECT_TRUE(transform.parent_ == NullEntity);
     EXPECT_TRUE(transform.children_.empty());
 }
 
-TEST(TestTransform, ChildTransformConstructor) {
+TEST(TestTransform, ChildTransformConstructor)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
@@ -48,7 +51,7 @@ TEST(TestTransform, ChildTransformConstructor) {
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,
@@ -63,7 +66,8 @@ TEST(TestTransform, ChildTransformConstructor) {
     EXPECT_EQ(child_transform.GetLocalScale(), local_child_scale);
 }
 
-TEST(TestTransform, WorldToLocalMatrix) {
+TEST(TestTransform, WorldToLocalMatrix)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation;
@@ -74,7 +78,7 @@ TEST(TestTransform, WorldToLocalMatrix) {
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,
@@ -91,7 +95,8 @@ TEST(TestTransform, WorldToLocalMatrix) {
                                                                        0.0F, 0.0F, 0.0F, 1.0F).Inverse());
 }
 
-TEST(TestTransform, LocalToWorldMatrix) {
+TEST(TestTransform, LocalToWorldMatrix)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation;
@@ -102,7 +107,7 @@ TEST(TestTransform, LocalToWorldMatrix) {
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,
@@ -119,7 +124,8 @@ TEST(TestTransform, LocalToWorldMatrix) {
                                                                        0.0F, 0.0F, 0.0F, 1.0F));
 }
 
-TEST(TestTransform, LocalToParentMatrix) {
+TEST(TestTransform, LocalToParentMatrix)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f parent_scale(1.0F, 2.0F, 1.0F);
     math::Quaternion parent_orientation;
@@ -130,7 +136,7 @@ TEST(TestTransform, LocalToParentMatrix) {
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,
@@ -147,14 +153,15 @@ TEST(TestTransform, LocalToParentMatrix) {
                                                                         0.0F, 0.0F, 0.0F, 1.0F));
 }
 
-TEST(TestTransform, Translate) {
+TEST(TestTransform, Translate)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
     math::Vec3f translation(10.0F, -15.0F, 5.0F);
 
     Transform parent_transform(parent_position, math::Vec3f::One(), math::Quaternion());
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,
@@ -173,14 +180,15 @@ TEST(TestTransform, Translate) {
                                                                        0.0F, 0.0F, 0.0F, 1.0F));
 }
 
-TEST(TestTransform, LocalTranslate) {
+TEST(TestTransform, LocalTranslate)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f local_child_position(1.0F, 2.0F, 3.0F);
     math::Vec3f translation(10.0F, -15.0F, 5.0F);
 
     Transform parent_transform(parent_position, math::Vec3f::One(), math::Quaternion());
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,
@@ -200,7 +208,8 @@ TEST(TestTransform, LocalTranslate) {
                                                                        0.0F, 0.0F, 0.0F, 1.0F));
 }
 
-TEST(TestTransform, Rotate) {
+TEST(TestTransform, Rotate)
+{
     math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
                                                                       math::Radian(0.0F),
                                                                       math::Radian::FromDegree(60.0F));
@@ -213,7 +222,7 @@ TEST(TestTransform, Rotate) {
 
     Transform parent_transform(math::Vec3f::Zero(), math::Vec3f::One(), parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               math::Vec3f::Zero(),
@@ -230,7 +239,8 @@ TEST(TestTransform, Rotate) {
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(rotation_matrix));
 }
 
-TEST(TestTransform, LocalRotate) {
+TEST(TestTransform, LocalRotate)
+{
     math::Quaternion parent_orientation = math::Quaternion::FromEuler(math::Radian(0.0F),
                                                                       math::Radian(0.0F),
                                                                       math::Radian::FromDegree(60.0F));
@@ -243,7 +253,7 @@ TEST(TestTransform, LocalRotate) {
 
     Transform parent_transform(math::Vec3f::Zero(), math::Vec3f::One(), parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               math::Vec3f::Zero(),
@@ -261,14 +271,15 @@ TEST(TestTransform, LocalRotate) {
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(rotation_matrix));
 }
 
-TEST(TestTransform, Scale) {
+TEST(TestTransform, Scale)
+{
     math::Vec3f parent_scale(1.0F, 2.0F, 3.0F);
     math::Vec3f local_child_scale(1.0F, 2.0F, 3.0F);
     math::Vec3f scale(10.0F, 15.0F, 5.0F);
 
     Transform parent_transform(math::Vec3f::Zero(), parent_scale, math::Quaternion());
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               math::Vec3f::Zero(),
@@ -287,14 +298,15 @@ TEST(TestTransform, Scale) {
                                                                        0.0F, 0.0F, 0.0F, 1.0F));
 }
 
-TEST(TestTransform, LocalScale) {
+TEST(TestTransform, LocalScale)
+{
     math::Vec3f parent_scale(1.0F, 2.0F, 3.0F);
     math::Vec3f local_child_scale(1.0F, 2.0F, 3.0F);
     math::Vec3f scale(10.0F, 15.0F, 5.0F);
 
     Transform parent_transform(math::Vec3f::Zero(), parent_scale, math::Quaternion());
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               math::Vec3f::Zero(),
@@ -314,7 +326,8 @@ TEST(TestTransform, LocalScale) {
                                                                        0.0F, 0.0F, 0.0F, 1.0F));
 }
 
-TEST(TestTransform, World_TRS_Transformation) {
+TEST(TestTransform, World_TRS_Transformation)
+{
     math::Vec3f parent_position(1.0F, 2.0F, 3.0F);
     math::Vec3f parent_scale(1.0F, 2.0F, 3.0F);
     math::Quaternion parent_orientation  = math::Quaternion::FromEuler(math::Radian(0.0F),
@@ -330,7 +343,7 @@ TEST(TestTransform, World_TRS_Transformation) {
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               math::Vec3f::Zero(),
@@ -362,7 +375,8 @@ TEST(TestTransform, World_TRS_Transformation) {
     EXPECT_EQ(child_transform.GetWorldToLocalMatrix(), expected_local_to_world_matrix.Inverse());
 }
 
-TEST(TestTransform, Local_TRS_Transformation) {
+TEST(TestTransform, Local_TRS_Transformation)
+{
     math::Vec3f parent_position = math::Vec3f::Zero();
     math::Vec3f parent_scale = math::Vec3f::One();
     math::Quaternion parent_orientation;
@@ -380,7 +394,7 @@ TEST(TestTransform, Local_TRS_Transformation) {
 
     Transform parent_transform(parent_position, parent_scale, parent_orientation);
 
-    auto dummy_entity = Component::NullEntity;
+    Entity dummy_entity = NullEntity;
     Transform child_transform(dummy_entity,
                               parent_transform,
                               local_child_position,

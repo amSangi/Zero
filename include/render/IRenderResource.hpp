@@ -2,12 +2,14 @@
 
 #include "core/NonCopyable.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Root base class for render resources
      */
-    class IRenderResource : public NonCopyable {
+    class IRenderResource : public NonCopyable
+    {
     public:
 
         virtual ~IRenderResource() = default;

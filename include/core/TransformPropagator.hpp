@@ -3,10 +3,13 @@
 #include <entt/entt.hpp>
 #include "core/Transform.hpp"
 
-namespace zero {
+namespace zero
+{
 
-    class TransformPropagator {
+    class TransformPropagator
+    {
     public:
+
         TransformPropagator() = delete;
 
         /**
@@ -15,21 +18,21 @@ namespace zero {
          * @param parent the parent entity
          * @param child the child entity
          */
-        static void RemoveChild(entt::registry& registry, Component::Entity parent, Component::Entity child);
+        static void RemoveChild(entt::registry& registry, Entity parent, Entity child);
 
         /**
          * @brief Remove all the children from a parent Transform
          * @param registry the registry containing the entities and their components
          * @param parent the parent entity
          */
-        static void RemoveChildren(entt::registry& registry, Component::Entity parent);
+        static void RemoveChildren(entt::registry& registry, Entity parent);
 
         /**
          * @brief Detach an entity from its parent Transform
          * @param registry the registry containing the entities and their components
          * @param entity the entity
          */
-        static void RemoveParent(entt::registry& registry, Component::Entity entity);
+        static void RemoveParent(entt::registry& registry, Entity entity);
 
         /**
          * @brief All entities that are marked for destruction have their children marked for destruction

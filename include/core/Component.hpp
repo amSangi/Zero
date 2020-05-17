@@ -1,27 +1,30 @@
-#pragma once
+ #pragma once
 
 #include <vector>
 #include <entt/entt.hpp>
 
-namespace zero {
+namespace zero
+{
+
+    using Entity = entt::entity;
+    static constexpr auto NullEntity = entt::null;
 
     /**
      * @brief The Component base in the Entity-Component-System
      */
-    struct Component {
-        using Entity = entt::entity;
-        static constexpr auto NullEntity = entt::null;
-    }; // struct Component
+    struct Component {}; // struct Component
 
     /**
      * @brief A general hierarchical component
      */
-    struct HierarchyComponent : public Component {
+    struct HierarchyComponent : public Component
+    {
 
         /**
          * @brief The state of the entity
          */
-        enum class State {
+        enum class State
+        {
             IDLE,                ///< Default entity state
             MARKED_FOR_DELETE,   ///< The entity has been marked for delete
         }; // enum class State

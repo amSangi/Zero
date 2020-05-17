@@ -5,12 +5,14 @@
 #include "input/MouseButton.hpp"
 #include "EventType.hpp"
 
-namespace zero::event {
+namespace zero::event
+{
 
     /**
      * @brief Window resize events
      */
-    struct SizeEvent {
+    struct SizeEvent
+    {
         /**
          * @brief New width, in pixels
          */
@@ -25,7 +27,8 @@ namespace zero::event {
     /**
      * @brief Keyboard events
      */
-    struct KeyEvent {
+    struct KeyEvent
+    {
         /**
          * @brief Code of the key that triggered this event
          */
@@ -52,7 +55,8 @@ namespace zero::event {
     /**
      * @brief Text input events
      */
-    struct TextEvent {
+    struct TextEvent
+    {
         /**
          * @brief UTF-32 Unicode value of the character
          */
@@ -63,7 +67,8 @@ namespace zero::event {
     /**
      * @brief Mouse move events
      */
-    struct MouseMoveEvent {
+    struct MouseMoveEvent
+    {
         /**
          * @brief X position of the mouse pointer, relative to the left of the owner window
          */
@@ -78,7 +83,8 @@ namespace zero::event {
     /**
      * @brief Mouse button events
      */
-    struct MouseButtonEvent {
+    struct MouseButtonEvent
+    {
         /**
          * @brief Mouse button that triggered this event
          */
@@ -97,7 +103,8 @@ namespace zero::event {
     /**
      * @brief Mouse wheel scroll events
      */
-    struct MouseWheelScrollEvent {
+    struct MouseWheelScrollEvent
+    {
         /**
          * @brief Wheel offset (positive is up/left, negative is down/right). High-precision mice may use floats.
          */
@@ -117,7 +124,8 @@ namespace zero::event {
      * @brief System events passed to the different systems
      * @note Ensure the type is checked before accessing the correct event
      */
-    struct Event {
+    struct Event
+    {
         /**
          * @brief The event type
          */

@@ -4,10 +4,12 @@
 #include "render/ShaderStage.hpp"
 #include "render/opengl/GLCompiler.hpp"
 
-class TestGLCompiler : public TestGLShader {
+class TestGLCompiler : public TestGLShader
+{
 protected:
 
-    void SetUp() override {
+    void SetUp() override
+    {
         using namespace zero::render;
         TestGLShader::SetUp();
         compiler_ = std::make_shared<GLCompiler>();

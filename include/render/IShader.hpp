@@ -7,13 +7,15 @@ namespace zero::render {
     /**
      * @brief A graphics shader program
      */
-    class IShader : public IRenderResource {
+    class IShader : public IRenderResource
+    {
     public:
 
         /**
          * @brief The Shader type
          */
-        enum class Type {
+        enum class Type
+        {
             UNKNOWN,                   ///< Unknown Shader
             VERTEX_SHADER,             ///< Vertex Shader
             FRAGMENT_SHADER,           ///< Fragment/Pixel Shader

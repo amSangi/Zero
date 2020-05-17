@@ -7,12 +7,14 @@
 #include "math/Vector3.hpp"
 #include "IRenderResource.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief A Graphics Program containing Shaders of different types
      */
-    class IProgram : public IRenderResource {
+    class IProgram : public IRenderResource
+    {
     public:
 
         ~IProgram() override = default;

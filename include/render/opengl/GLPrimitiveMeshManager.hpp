@@ -2,7 +2,8 @@
 
 #include <memory>
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward Declaration
     class GLMesh;
@@ -17,7 +18,8 @@ namespace zero::render {
     /**
      * @brief Manage the loading and lifetime of primitive meshes
      */
-    class GLPrimitiveMeshManager {
+    class GLPrimitiveMeshManager
+    {
     public:
         GLPrimitiveMeshManager();
         ~GLPrimitiveMeshManager() = default;

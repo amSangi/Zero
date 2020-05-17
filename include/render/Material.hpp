@@ -4,19 +4,22 @@
 #include "core/Component.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief A material component for rendering
      */
-    struct Material : public Component {
+    struct Material : public Component
+    {
 
         Material();
 
         /**
          * @brief Shader files used by the material
          */
-        struct Shaders {
+        struct Shaders
+        {
             /**
              * @brief The fully qualified shader file name
              */
@@ -33,7 +36,8 @@ namespace zero::render {
         /**
          * @brief Texture files used by the material
          */
-        struct TextureMap {
+        struct TextureMap
+        {
 
             /**
              * @brief The fully qualified texture map file name

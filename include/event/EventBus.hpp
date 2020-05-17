@@ -6,12 +6,13 @@
 #include "Event.hpp"
 #include "EventHandler.hpp"
 
-namespace zero::event {
-
+namespace zero::event
+{
     /**
      * @brief Queues events and dispatches them to subscribed event handlers
      */
-    class EventBus {
+    class EventBus
+    {
         using EventHandlerPtr = std::shared_ptr<EventHandler>;
     public:
         EventBus() = default;
@@ -22,8 +23,8 @@ namespace zero::event {
         EventBus(EventBus&&) = delete;
         EventBus& operator=(EventBus&&) = delete;
 
-        void AddEventHandler(EventHandlerPtr handler);
-        void RemoveEventHandler(EventHandlerPtr handler);
+        void AddEventHandler(const EventHandlerPtr& handler);
+        void RemoveEventHandler(const EventHandlerPtr& handler);
 
         void Post(const Event& event);
         void Dispatch(const Event& event);

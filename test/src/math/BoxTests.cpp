@@ -3,7 +3,8 @@
 
 using namespace zero::math;
 
-TEST(TestBox, ContainsBox) {
+TEST(TestBox, ContainsBox)
+{
 	Box box(Vec3f::Zero(), Vec3f(100.0F));
 
 	EXPECT_TRUE(box.Contains(box));
@@ -19,7 +20,8 @@ TEST(TestBox, ContainsBox) {
     EXPECT_TRUE(box.Contains(box));
 }
 
-TEST(TestBox, ContainsPoint) {
+TEST(TestBox, ContainsPoint)
+{
 	Box box(Vec3f::Zero(), Vec3f(100.0F));
 
 	EXPECT_TRUE(box.Contains(Vec3f::Zero()));
@@ -34,7 +36,8 @@ TEST(TestBox, ContainsPoint) {
 	EXPECT_TRUE(box.Contains(box.max_));
 }
 
-TEST(TestBox, IntersectsBox) {
+TEST(TestBox, IntersectsBox)
+{
 	Box box(Vec3f::Zero(), Vec3f(100.0F));
 
 	EXPECT_TRUE(box.Intersects(box));
@@ -47,7 +50,8 @@ TEST(TestBox, IntersectsBox) {
 	EXPECT_FALSE(box.Intersects(Box(Vec3f(-125.0F), Vec3f(-0.001F))));
 }
 
-TEST(TestBox, Merge) {
+TEST(TestBox, Merge)
+{
 	Box box(Vec3f::Zero(), Vec3f(100.0F));
 	Box other_box(Vec3f(100.0F), Vec3f(250.0F));
 
@@ -55,7 +59,8 @@ TEST(TestBox, Merge) {
 	EXPECT_EQ(Box::Merge(box, other_box), Box(Vec3f::Zero(), Vec3f(250.0F)));
 }
 
-TEST(TestBox, MergeContainingBox) {
+TEST(TestBox, MergeContainingBox)
+{
 	Box box(Vec3f(-1000.0F), Vec3f(1000.0F));
 	Box other_box(Vec3f::Zero(), Vec3f(250.0F));
 
@@ -64,7 +69,8 @@ TEST(TestBox, MergeContainingBox) {
 	EXPECT_EQ(Box::Merge(box, other_box), box);
 }
 
-TEST(TestBox, MergeInsideBox) {
+TEST(TestBox, MergeInsideBox)
+{
 	Box box(Vec3f::Zero(), Vec3f(100.0F));
 	Box other_box(Vec3f::Zero(), Vec3f(250.0F));
 
@@ -73,13 +79,15 @@ TEST(TestBox, MergeInsideBox) {
 	EXPECT_EQ(Box::Merge(box, other_box), other_box);
 }
 
-TEST(TestBox, Size) {
+TEST(TestBox, Size)
+{
 	EXPECT_EQ(Box::Unit().Size(), Vec3f::One());
 	EXPECT_EQ(Box(Vec3f::Zero(), Vec3f(100.0F)).Size(), Vec3f(100.0F));
 	EXPECT_EQ(Box(Vec3f(-25.0F), Vec3f(25.0F)).Size(), Vec3f(50.0F));
 }
 
-TEST(TestBox, Center) {
+TEST(TestBox, Center)
+{
 	EXPECT_EQ(Box::Unit().Center(), Vec3f(0.5F));
 	EXPECT_EQ(Box(Vec3f::Zero(), Vec3f(100.0F)).Center(), Vec3f(50.0F));
 	EXPECT_EQ(Box(Vec3f(-25.0F), Vec3f(25.0F)).Center(), Vec3f(0.0F));

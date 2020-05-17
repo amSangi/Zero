@@ -3,11 +3,13 @@
 #include <SDL_video.h>
 #include "core/WindowConfig.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
     /**
      * @brief SDL Window and SDL GL Context Wrapper
      */
-    class Window {
+    class Window
+    {
     public:
 
         /**
@@ -59,4 +61,4 @@ namespace zero::render {
 
     }; // class Window
 
-} // namespace render
+} // namespace zero::render

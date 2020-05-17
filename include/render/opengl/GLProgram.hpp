@@ -7,7 +7,8 @@
 #include "OpenGL.hpp"
 #include "render/IProgram.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class GLShader;
@@ -15,7 +16,8 @@ namespace zero::render {
     /**
      * @brief OpenGL graphics program wrapper
      */
-    class GLProgram final : public IProgram {
+    class GLProgram final : public IProgram
+    {
         template<class T>
         using UniformMap = std::unordered_map<std::string, T> ;
     public:

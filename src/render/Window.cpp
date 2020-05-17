@@ -3,25 +3,30 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-using namespace zero::render;
+namespace zero::render
+{
 
 Window::Window(WindowConfig config)
 : config_(std::move(config))
 , sdl_window_(nullptr)
 , sdl_gl_context_(nullptr)
-{}
+{
+}
 
-Window::~Window() {
+Window::~Window()
+{
     Cleanup();
 }
 
-void Window::Initialize() {
+void Window::Initialize()
+{
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
 
     // Get SDL window flags
     uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
-    switch (config_.window_mode_) {
+    switch (config_.window_mode_)
+    {
         case WindowMode::FULLSCREEN:
             window_flags |= SDL_WINDOW_FULLSCREEN;
             break;
@@ -33,11 +38,21 @@ void Window::Initialize() {
             break;
     }
 
-    if (config_.window_flags_ & WindowFlags::WINDOW_MAXIMIZED) window_flags |= SDL_WINDOW_MAXIMIZED;
-    if (config_.window_flags_ & WindowFlags::WINDOW_MINIMIZED) window_flags |= SDL_WINDOW_MINIMIZED;
-    if (config_.window_flags_ & WindowFlags::HIDE) window_flags |= SDL_WINDOW_HIDDEN;
+    if (config_.window_flags_ & WindowFlags::WINDOW_MAXIMIZED)
+    {
+        window_flags |= SDL_WINDOW_MAXIMIZED;
+    }
+    if (config_.window_flags_ & WindowFlags::WINDOW_MINIMIZED)
+    {
+        window_flags |= SDL_WINDOW_MINIMIZED;
+    }
+    if (config_.window_flags_ & WindowFlags::HIDE)
+    {
+        window_flags |= SDL_WINDOW_HIDDEN;
+    }
 
-    if (sdl_window_ == nullptr) {
+    if (sdl_window_ == nullptr)
+    {
         // Create Window and OpenGL Context
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
         SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
@@ -58,20 +73,23 @@ void Window::Initialize() {
         // Initialize glew after window/context creation
         glewInit();
     }
-    else {
+    else
+    {
         SDL_SetWindowSize(sdl_window_, config_.width_, config_.height_);
         SDL_SetWindowTitle(sdl_window_, config_.title_.c_str());
         SDL_SetWindowFullscreen(sdl_window_, window_flags);
     }
 
     // Window icon
-    if (!config_.window_icon_image_file_.empty()) {
+    if (!config_.window_icon_image_file_.empty())
+    {
         SDL_SetWindowIcon(sdl_window_, IMG_Load(config_.window_icon_image_file_.c_str()));
     }
 
     // Refresh rate
     int error_code = 0;
-    switch (config_.refresh_rate_) {
+    switch (config_.refresh_rate_)
+    {
         case RefreshRate::SYNCHRONIZED:
             error_code = SDL_GL_SetSwapInterval(1);
             break;
@@ -85,27 +103,37 @@ void Window::Initialize() {
     }
 
     // Default refresh rate during error
-    if (error_code) SDL_GL_SetSwapInterval(0);
+    if (error_code)
+    {
+        SDL_GL_SetSwapInterval(0);
+    }
 }
 
-void Window::Reinitialize(WindowConfig config) {
+void Window::Reinitialize(WindowConfig config)
+{
     config_ = std::move(config);
     Initialize();
 }
 
-void Window::SwapBuffers() {
+void Window::SwapBuffers()
+{
     SDL_GL_SwapWindow(sdl_window_);
 }
 
-void Window::Cleanup() {
-    if (sdl_gl_context_) {
+void Window::Cleanup()
+{
+    if (sdl_gl_context_)
+    {
         SDL_GL_DeleteContext(sdl_gl_context_);
         sdl_gl_context_ = nullptr;
     }
 
-    if (sdl_window_) {
+    if (sdl_window_)
+    {
         SDL_DestroyWindow(sdl_window_);
         sdl_window_ = nullptr;
     }
     SDL_Quit();
 }
+
+} // namespace zero::render

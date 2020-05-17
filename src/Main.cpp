@@ -1,6 +1,4 @@
 #include "core/Engine.hpp"
-#include "core/Transform.hpp"
-#include "render/Components.hpp"
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -8,7 +6,8 @@
 
 using namespace zero;
 
-WindowConfig CreateWindowConfig() {
+WindowConfig CreateWindowConfig()
+{
     WindowConfig window_config;
     window_config.window_flags_ = WindowFlags::NO_FLAGS;
     window_config.width_ = 800;
@@ -21,37 +20,46 @@ WindowConfig CreateWindowConfig() {
     return window_config;
 }
 
-RenderSystemConfig CreateRenderSystemConfig(const WindowConfig& window_config) {
+RenderSystemConfig CreateRenderSystemConfig(const WindowConfig& window_config)
+{
     RenderSystemConfig render_system_config;
     render_system_config.window_config_ = window_config;
     std::filesystem::path resources_path{std::filesystem::current_path().append("..\\resources\\")};
-    for (const auto& entry : std::filesystem::recursive_directory_iterator(resources_path)) {
-        if (entry.is_regular_file()) {
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(resources_path))
+    {
+        if (entry.is_regular_file())
+        {
             const auto& entry_path = entry.path();
             auto fully_qualified_path = entry_path.string();
             auto filename = entry_path.filename().string();
             auto folder_name = entry_path.parent_path().filename().string();
             auto extension = entry_path.extension().filename().string();
 
-            if (extension == ".obj") {
+            if (extension == ".obj")
+            {
                 std::cout << "[OBJ Model]       " << filename << std::endl;
                 render_system_config.model_files_.push_back(fully_qualified_path);
             }
-            else if (extension == ".png" || extension == ".jpg" || extension == ".jpeg") {
+            else if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
+            {
                 std::cout << "[Texture]         " << filename << std::endl;
                 render_system_config.texture_files_.push_back(fully_qualified_path);
             }
-            else if (extension == ".glsl") {
-                if (folder_name == "vertex") {
+            else if (extension == ".glsl")
+            {
+                if (folder_name == "vertex")
+                {
                     std::cout << "[Vertex Shader]   " << filename << std::endl;
                     render_system_config.vertex_shader_files_.push_back(fully_qualified_path);
                 }
-                else if (folder_name == "fragment") {
+                else if (folder_name == "fragment")
+                {
                     std::cout << "[Fragment Shader] " << filename << std::endl;
                     render_system_config.fragment_shader_files_.push_back(fully_qualified_path);
                 }
             }
-            else {
+            else
+            {
                 std::cout << "[Unknown file]    " << filename << std::endl;
             }
         }
@@ -59,7 +67,8 @@ RenderSystemConfig CreateRenderSystemConfig(const WindowConfig& window_config) {
     return render_system_config;
 }
 
-void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode, const math::Vec3f& default_position) {
+void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode, const math::Vec3f& default_position)
+{
     math::Vec3f horizontal_speed = math::Vec3f(1.0F, 0.0F, 0.0F);
     math::Vec3f vertical_speed = math::Vec3f(0.0F, 1.0F, 0.0F);
     math::Vec3f forward_speed = math::Vec3f(0.0F, 0.0F, 1.0F);
@@ -112,7 +121,8 @@ void HandleCameraMovement(render::Camera& camera, SDL_Keycode keycode, const mat
     }
 }
 
-void HandleEntityMovement(Transform& transform, SDL_Keycode keycode) {
+void HandleEntityMovement(Transform& transform, SDL_Keycode keycode)
+{
     math::Vec3f horizontal_speed = math::Vec3f(1.0F, 0.0F, 0.0F);
     math::Vec3f vertical_speed = math::Vec3f(0.0F, 1.0F, 0.0F);
     math::Vec3f forward_speed = math::Vec3f(0.0F, 0.0F, 1.0F);
@@ -147,7 +157,8 @@ void HandleEntityMovement(Transform& transform, SDL_Keycode keycode) {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     //////////////////////////////////////////////////
     ///// Engine Configuration
     //////////////////////////////////////////////////
@@ -261,9 +272,12 @@ int main(int argc, char *argv[]) {
     // region Engine Loop
     bool quit = false;
     SDL_Event event;
-    while( !quit ){
-        while( SDL_PollEvent( &event ) ){
-            switch( event.type ){
+    while( !quit )
+    {
+        while( SDL_PollEvent( &event ) )
+        {
+            switch( event.type )
+            {
                 case SDL_KEYDOWN:
                     HandleCameraMovement(camera, event.key.keysym.sym, default_camera_position);
                     HandleEntityMovement(light_transform, event.key.keysym.sym);

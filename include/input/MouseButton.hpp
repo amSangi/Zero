@@ -1,11 +1,13 @@
 #pragma once
 
-namespace zero::input {
+namespace zero::input
+{
 
     /**
      * @brief Virtual mouse buttons
      */
-    enum class MouseButton {
+    enum class MouseButton
+    {
         MB_LEFT,     ///< Left mouse button
         MB_RIGHT,    ///< Right mouse button
         MB_MIDDLE,   ///< Middle mouse button

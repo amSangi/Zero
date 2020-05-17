@@ -7,7 +7,8 @@
 #include "core/Component.hpp"
 #include "render/Components.hpp"
 
-class TestRegistry : public ::testing::Test {
+class TestRegistry : public ::testing::Test
+{
 public:
 
     void SetUp() override;
@@ -28,14 +29,14 @@ public:
      *     for testing purposes. The default radius is the minimum radius to encapsulate all child entities.
      * @return the body entity
      */
-    zero::Component::Entity GenerateHumanoid(zero::math::Vec3f position, float parent_radius = 6.0F);
+    zero::Entity GenerateHumanoid(zero::math::Vec3f position, float parent_radius = 6.0F);
 
     /**
      * @brief Does the parent volume contain all of its child volumes?
      * @param parent the parent entity
      * @return True if the parent entity encapsulates all child volumes
      */
-    [[nodiscard]] bool ParentContainsChildVolumes(zero::Component::Entity parent) const;
+    [[nodiscard]] bool ParentContainsChildVolumes(zero::Entity parent) const;
 
 protected:
     std::mt19937 random_generator_;

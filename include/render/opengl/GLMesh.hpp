@@ -3,12 +3,14 @@
 #include "OpenGL.hpp"
 #include "render/Mesh.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Mesh container with the ability to draw using OpenGL
      */
-    class GLMesh final : public Mesh {
+    class GLMesh final : public Mesh
+    {
     public:
 
         /**

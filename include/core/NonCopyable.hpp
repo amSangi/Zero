@@ -1,11 +1,13 @@
 #pragma once
 
-namespace zero {
+namespace zero
+{
 
     /*!
      * @brief Inheriting from NonCopyable prevents copying instances of the derived class
      */
-    class NonCopyable {
+    class NonCopyable
+    {
     public:
         NonCopyable(const NonCopyable&) = delete;
         NonCopyable& operator=(const NonCopyable&) = delete;

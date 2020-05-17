@@ -4,12 +4,14 @@
 #include "Shapes.hpp"
 #include "math/Box.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Static helper class to generate the mesh of primitive shapes
      */
-    class MeshGenerator {
+    class MeshGenerator
+    {
     public:
         MeshGenerator() = delete;
         ~MeshGenerator() = delete;

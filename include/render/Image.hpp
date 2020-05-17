@@ -6,13 +6,15 @@
 // Forward declarations
 class SDL_Surface;
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Stores and Removes Images from memory.
      *  Used to make SDL_Surface types given an image filename.
      */
-    class Image {
+    class Image
+    {
     public:
 
         /**

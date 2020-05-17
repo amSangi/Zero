@@ -3,12 +3,14 @@
 #include <string>
 #include "ZBase.hpp"
 
-namespace zero {
+namespace zero
+{
 
     /**
      * @brief Window mode to display as
      */
-    enum class WindowMode {
+    enum class WindowMode
+    {
         FULLSCREEN,            ///< Display the window in full screen mode
         WINDOWED,              ///< Display the window in bordered window mode
         BORDERLESS_WINDOWED    ///< Display the window in borderless windowed mode
@@ -17,14 +19,16 @@ namespace zero {
     /**
      * @brief Low Level Graphics API Types
      */
-    enum class GraphicsAPI {
+    enum class GraphicsAPI
+    {
         OPENGL,    ///< Use the OpenGL Graphics API
     }; // enum class GraphicsAPI
 
     /**
      * @brief The window refresh rate
      */
-    enum class RefreshRate {
+    enum class RefreshRate
+    {
         IMMEDIATE,         ///< Immediate updates
         SYNCHRONIZED,      ///< Updates synchronized with the vertical retrace
         ADAPTIVE_VSYNC,    ///< Swap buffers immediately if vertical retrace was missed for a given frame
@@ -34,7 +38,8 @@ namespace zero {
     /**
      * @brief Additional window flags
      */
-    enum WindowFlags {
+    enum WindowFlags
+    {
         NO_FLAGS          = 0U,        ///< No window flags
         HIDE              = 1U << 0U,  ///< Hide the window
         WINDOW_MAXIMIZED  = 1U << 1U,  ///< Maximize the window
@@ -45,7 +50,8 @@ namespace zero {
     /**
      * @brief Window configuration parameters
      */
-    struct WindowConfig {
+    struct WindowConfig
+    {
 
         /**
          * @brief Additional window flags

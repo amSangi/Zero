@@ -3,7 +3,8 @@
 #include <cmath>
 #include "core/ZBase.hpp"
 
-namespace zero::math {
+namespace zero::math
+{
 
     /* ********** Forward Declarations ********** */
     class Box;

@@ -5,12 +5,14 @@
 #include "math/Quaternion.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero {
+namespace zero
+{
 
     /**
      * @brief The transform component containing position, orientation, and scale information
      */
-    struct Transform : public HierarchyComponent {
+    struct Transform : public HierarchyComponent
+    {
 
         /**
          * @brief Default constructor

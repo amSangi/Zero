@@ -3,10 +3,13 @@
 #include "render/MeshGenerator.hpp"
 #include "render/PrimitiveInstance.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
-std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(const PrimitiveInstance& primitive) {
-    switch (primitive.GetType()) {
+std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(const PrimitiveInstance& primitive)
+{
+    switch (primitive.GetType())
+    {
         case PrimitiveInstance::Type::BOX:
             return std::make_unique<GLMesh>(MeshGenerator::GenerateBox());
         case PrimitiveInstance::Type::CONE:
@@ -23,3 +26,5 @@ std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(const PrimitiveInstance& 
             return nullptr;
     }
 }
+
+} // namespace zero::render

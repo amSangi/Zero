@@ -10,12 +10,14 @@
 #include "ZBase.hpp"
 #include "render/RenderSystem.hpp"
 
-namespace zero {
+namespace zero
+{
 
     /**
      * @brief The Game Engine
      */
-    class Engine : public NonCopyable {
+    class Engine : public NonCopyable
+    {
     public:
 
         /**
@@ -58,7 +60,7 @@ namespace zero {
          * @param model the fully qualified 3D filename
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
-        [[nodiscard]] Component::Entity InstantiateModel(const std::string& model_filename);
+        [[nodiscard]] Entity InstantiateModel(const std::string& model_filename);
 
         /**
          * @brief Create a new entity based on a primitive shape.
@@ -68,7 +70,7 @@ namespace zero {
          * @param primitive the primitive instance data.
          * @return the primitive entity instance.
          */
-        [[nodiscard]] Component::Entity InstantiatePrimitive(render::PrimitiveInstance primitive);
+        [[nodiscard]] Entity InstantiatePrimitive(render::PrimitiveInstance primitive);
 
         /**
          * @brief Create a new light entity or attach a light component to an existing entity
@@ -80,7 +82,7 @@ namespace zero {
          * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
          * @return the light entity instance
          */
-        Component::Entity InstantiateLight(render::Light light, Component::Entity entity = Component::NullEntity);
+        Entity InstantiateLight(render::Light light, Entity entity = NullEntity);
 
     protected:
 

@@ -5,10 +5,12 @@
 #include "render/Window.hpp"
 #include "core/WindowConfig.hpp"
 
-class TestWindow : public ::testing::Test {
+class TestWindow : public ::testing::Test
+{
 protected:
 
-    void SetUp() override {
+    void SetUp() override
+    {
         zero::WindowConfig window_config{zero::WindowFlags::HIDE,
                                          0,
                                          0,
@@ -19,7 +21,8 @@ protected:
         SetUp(window_config);
     }
 
-    virtual void SetUp(zero::WindowConfig config) {
+    virtual void SetUp(zero::WindowConfig config)
+    {
         test_window_ = std::make_shared<zero::render::Window>(config);
         test_window_->Initialize();
     }

@@ -4,7 +4,8 @@
 
 using namespace zero::math;
 
-TEST(TestMatrix3, ScalarOperations) {
+TEST(TestMatrix3, ScalarOperations)
+{
 	Matrix3x3 matrix = Matrix3x3::Identity();
 
 	EXPECT_EQ(matrix + 1.0F, Matrix3x3(2.0F, 1.0F, 1.0F,
@@ -45,7 +46,8 @@ TEST(TestMatrix3, ScalarOperations) {
 	                            30.0F, 30.0F, 20.0F));
 }
 
-TEST(TestMatrix3, MatrixMatrixAddition) {
+TEST(TestMatrix3, MatrixMatrixAddition)
+{
 	Matrix3x3 matrix = Matrix3x3::Identity();
 
 	EXPECT_EQ((matrix + 1.0F) + matrix, Matrix3x3(3.0F, 1.0F, 1.0F,
@@ -58,7 +60,8 @@ TEST(TestMatrix3, MatrixMatrixAddition) {
 	                            1.0F, 1.0F, 3.0F));
 }
 
-TEST(TestMatrix3, MatrixMatrixSubtraction) {
+TEST(TestMatrix3, MatrixMatrixSubtraction)
+{
 	Matrix3x3 matrix = Matrix3x3::Identity();
 
 	EXPECT_EQ((matrix - 1.0F) - matrix, Matrix3x3(-1.0F, -1.0F, -1.0F,
@@ -72,7 +75,8 @@ TEST(TestMatrix3, MatrixMatrixSubtraction) {
 	                            1.0F, 1.0F, 1.0F));
 }
 
-TEST(TestMatrix3, Hadamard) {
+TEST(TestMatrix3, Hadamard)
+{
 	Matrix3x3 m1(1.0F, 2.0F, 3.0F,
 	             4.0F, 5.0F, 6.0F,
 	             7.0F, 8.0F, 9.0F);
@@ -83,7 +87,8 @@ TEST(TestMatrix3, Hadamard) {
 	                                                 49.0F, 64.0F, 81.0F));
 }
 
-TEST(TestMatrix3, Det) {
+TEST(TestMatrix3, Det)
+{
 	Matrix3x3 m1(1.0F, 2.0F, 3.0F,
 	             4.0F, 5.0F, 6.0F,
 	             7.0F, 8.0F, 9.0F);
@@ -98,7 +103,8 @@ TEST(TestMatrix3, Det) {
 	EXPECT_EQ(m2.Det(), 2341.0F);
 }
 
-TEST(TestMatrix3, Inverse) {
+TEST(TestMatrix3, Inverse)
+{
 	Matrix3x3 matrix = Matrix3x3::Identity();
 
 	EXPECT_EQ(matrix, matrix.Inverse());
@@ -108,7 +114,8 @@ TEST(TestMatrix3, Inverse) {
 	                                               -0.25F, -0.25F, 0.75F));
 }
 
-TEST(TestMatrix3, Transpose) {
+TEST(TestMatrix3, Transpose)
+{
 	Matrix3x3 m(1.0F, 4.0F, 9.0F,
 	            16.0F, 25.0F, 36.0F,
 	            49.0F, 64.0F, 81.0F);
@@ -118,7 +125,8 @@ TEST(TestMatrix3, Transpose) {
 	                                   9.0F, 36.0F, 81.0F));
 }
 
-TEST(TestMatrix3, MatrixVectorMultiply) {
+TEST(TestMatrix3, MatrixVectorMultiply)
+{
 	Matrix3x3 matrix = Matrix3x3::Identity();
 	Vec3f vector(1.0F, 2.0F, 3.0F);
 
@@ -129,7 +137,8 @@ TEST(TestMatrix3, MatrixVectorMultiply) {
 
 }
 
-TEST(TestMatrix3, MatrixMatrixMultiply) {
+TEST(TestMatrix3, MatrixMatrixMultiply)
+{
 	Matrix3x3 m1(1.0F, 2.0F, 3.0F,
 	             4.0F, 5.0F, 6.0F,
 	             7.0F, 8.0F, 9.0F);

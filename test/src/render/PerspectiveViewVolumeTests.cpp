@@ -7,7 +7,8 @@
 using namespace zero;
 using namespace zero::render;
 
-class TestPerspectiveViewVolume : public ::testing::Test {
+class TestPerspectiveViewVolume : public ::testing::Test
+{
 protected:
 
     TestPerspectiveViewVolume()
@@ -17,9 +18,11 @@ protected:
     , near_top_right_()
     , far_bottom_left_()
     , far_top_right_()
-    {}
+    {
+    }
 
-    void SetUp() override {
+    void SetUp() override
+    {
         std::shared_ptr<IViewVolume> view_volume = ViewVolumeBuilder::create(camera_);
         volume_ = std::static_pointer_cast<PerspectiveViewVolume>(view_volume);
         camera_.GetNearClipCoordinates(near_bottom_left_, near_top_right_);
@@ -35,7 +38,8 @@ protected:
 };
 
 
-TEST_F(TestPerspectiveViewVolume, PlaneNormals) {
+TEST_F(TestPerspectiveViewVolume, PlaneNormals)
+{
     auto left_normal = volume_->GetLeftPlane().normal_;
     auto right_normal = volume_->GetRightPlane().normal_;
     auto bottom_normal = volume_->GetBottomPlane().normal_;
@@ -65,7 +69,8 @@ TEST_F(TestPerspectiveViewVolume, PlaneNormals) {
     EXPECT_LT(near_normal.z_, 0.0F);
 }
 
-TEST_F(TestPerspectiveViewVolume, IsCulled_Point_InFrustrum) {
+TEST_F(TestPerspectiveViewVolume, IsCulled_Point_InFrustrum)
+{
     EXPECT_FALSE(volume_->IsCulled(near_bottom_left_));
     EXPECT_FALSE(volume_->IsCulled(near_top_right_));
     EXPECT_FALSE(volume_->IsCulled(far_bottom_left_));
@@ -78,7 +83,8 @@ TEST_F(TestPerspectiveViewVolume, IsCulled_Point_InFrustrum) {
                                                         (far_z - near_z) * 0.5F)));
 }
 
-TEST_F(TestPerspectiveViewVolume, IsCulled_Point_OutOfFrustrum) {
+TEST_F(TestPerspectiveViewVolume, IsCulled_Point_OutOfFrustrum)
+{
     EXPECT_TRUE(volume_->IsCulled(camera_.position_));
     EXPECT_TRUE(volume_->IsCulled(math::Vec3f(camera_.position_.x_,
                                                        camera_.position_.y_,
@@ -89,7 +95,8 @@ TEST_F(TestPerspectiveViewVolume, IsCulled_Point_OutOfFrustrum) {
     EXPECT_TRUE(volume_->IsCulled(far_top_right_ + 1.0F));
 }
 
-TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_InFrustrum) {
+TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_InFrustrum)
+{
     auto near_z = near_bottom_left_.z_;
     auto far_z = far_bottom_left_.z_;
     math::Sphere sphere;
@@ -111,7 +118,8 @@ TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_InFrustrum) {
     EXPECT_FALSE(volume_->IsCulled(sphere));
 }
 
-TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_OutOfFrustrum) {
+TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_OutOfFrustrum)
+{
     math::Sphere sphere(0.75F);
     math::Vec3f offset(0.0F, 0.0F,1.0F);
 
@@ -128,12 +136,14 @@ TEST_F(TestPerspectiveViewVolume, IsCulled_Sphere_OutOfFrustrum) {
     EXPECT_TRUE(volume_->IsCulled(sphere));
 }
 
-TEST_F(TestPerspectiveViewVolume, IsCulled_Box_InFrustrum) {
+TEST_F(TestPerspectiveViewVolume, IsCulled_Box_InFrustrum)
+{
     math::Box box{near_bottom_left_, far_top_right_};
     EXPECT_FALSE(volume_->IsCulled(box));
 }
 
-TEST_F(TestPerspectiveViewVolume, IsCulled_Box_OutOfFrustrum) {
+TEST_F(TestPerspectiveViewVolume, IsCulled_Box_OutOfFrustrum)
+{
     math::Vec3f min{-100.0F, -100.0F, 100.0F};
     math::Vec3f max{-50.0F, -50.0F, 50.0F};
     math::Box box{min, max};

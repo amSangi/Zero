@@ -1,16 +1,15 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "core/Component.hpp"
-#include "core/Transform.hpp"
-#include "math/Matrix4x4.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Propagates Volume information to child/parent components
      */
-    class VolumePropagator {
+    class VolumePropagator
+    {
     public:
 
         VolumePropagator() = delete;

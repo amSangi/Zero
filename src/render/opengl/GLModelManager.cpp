@@ -4,15 +4,21 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-using namespace zero::render;
+namespace zero::render
+{
 
 GLModelManager::GLModelManager()
 : model_map_()
 , random_generator_(std::random_device()())
-{}
+{
+}
 
-bool GLModelManager::LoadModel(const std::string& filename) {
-    if (model_map_.find(filename) != model_map_.end()) return true;
+bool GLModelManager::LoadModel(const std::string& filename)
+{
+    if (model_map_.find(filename) != model_map_.end())
+    {
+        return true;
+    }
 
     Assimp::Importer importer;
 
@@ -27,7 +33,8 @@ bool GLModelManager::LoadModel(const std::string& filename) {
 
     if (!scene
     || scene->mFlags & (unsigned)AI_SCENE_FLAGS_INCOMPLETE
-    || !scene->mRootNode) {
+    || !scene->mRootNode)
+    {
         return false;
     }
 
@@ -35,23 +42,33 @@ bool GLModelManager::LoadModel(const std::string& filename) {
     return true;
 }
 
-void GLModelManager::ClearModels() {
+void GLModelManager::ClearModels()
+{
     model_map_.clear();
 }
 
-std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& filename) {
+std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& filename)
+{
     auto model_search = model_map_.find(filename);
-    if (model_search == model_map_.end()) return nullptr;
+    if (model_search == model_map_.end())
+    {
+        return nullptr;
+    }
     return model_search->second;
 }
 
-std::shared_ptr<IModel> GLModelManager::GetModel(const ModelInstance& model_instance) {
+std::shared_ptr<IModel> GLModelManager::GetModel(const ModelInstance& model_instance)
+{
     auto model = GetModel(model_instance.filename_);
-    if (!model) {
+    if (!model)
+    {
         return nullptr;
     }
-    if (model_instance.child_identifier_ != 0) {
+    if (model_instance.child_identifier_ != 0)
+    {
         model = model->FindChild(model_instance.child_identifier_);
     }
     return model;
 }
+
+} // namespace zero::render

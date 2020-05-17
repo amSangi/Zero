@@ -5,12 +5,14 @@
 #include "core/RenderSystemConfig.hpp"
 #include "render/IModel.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Draw primitives and objects onto the current active rendering context
      */
-    class IRenderer {
+    class IRenderer
+    {
     public:
 
         virtual ~IRenderer() = default;

@@ -4,12 +4,14 @@
 #include "OpenGL.hpp"
 #include "render/IShader.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief OpenGL graphics shader wrapper
      */
-    class GLShader final : public IShader {
+    class GLShader final : public IShader
+    {
     public:
 
         /**

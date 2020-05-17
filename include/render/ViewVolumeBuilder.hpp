@@ -2,7 +2,8 @@
 
 #include <memory>
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class Camera;
@@ -11,7 +12,8 @@ namespace zero::render {
     /**
      * @brief Builder used to create IViewVolume instances given a camera
      */
-    class ViewVolumeBuilder {
+    class ViewVolumeBuilder
+    {
     public:
         ViewVolumeBuilder() = delete;
         ~ViewVolumeBuilder() = delete;
@@ -24,4 +26,5 @@ namespace zero::render {
         static std::unique_ptr<IViewVolume> create(const Camera& camera);
 
     }; // class ViewVolumeBuilder
+
 } // namespace zero::render

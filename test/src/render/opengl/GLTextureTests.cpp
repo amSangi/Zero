@@ -13,7 +13,8 @@ using namespace zero::render;
 
 static zero::uint32 kMicrosecondSleepTime = 150;
 
-TEST_F(TestGLTexture, LoadImage) {
+TEST_F(TestGLTexture, LoadImage)
+{
     Image image("../resources/textures/test.png");
 
     // Load
@@ -43,26 +44,30 @@ TEST_F(TestGLTexture, LoadImage) {
     EXPECT_EQ(image.GetPixelFormat(), Image::PixelFormat::UNDEFINED);
 }
 
-TEST_F(TestGLTexture, LoadInvalidImage) {
+TEST_F(TestGLTexture, LoadInvalidImage)
+{
     Image image("");
     EXPECT_FALSE(image.Load());
     EXPECT_FALSE(image.IsLoaded());
     EXPECT_EQ(image.GetData(), nullptr);
 }
 
-TEST_F(TestGLTexture, CreateInvalidTexture) {
+TEST_F(TestGLTexture, CreateInvalidTexture)
+{
     GLTextureManager manager;
     EXPECT_FALSE(manager.InitializeImage(""));
     EXPECT_EQ(manager.CreateTexture("", 0), nullptr);
 }
 
-TEST_F(TestGLTexture, CreateTextureLargeIndex) {
+TEST_F(TestGLTexture, CreateTextureLargeIndex)
+{
     GLTextureManager manager;
     EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
     EXPECT_EQ(manager.CreateTexture(TEST_IMAGE_FILE, manager.GetTextureUnitCount()), nullptr);
 }
 
-TEST_F(TestGLTexture, SetSamplerLargeIndex) {
+TEST_F(TestGLTexture, SetSamplerLargeIndex)
+{
     GLTextureManager manager;
     auto sampler = std::make_shared<GLSampler>();
     sampler->Initialize();
@@ -74,7 +79,8 @@ TEST_F(TestGLTexture, SetSamplerLargeIndex) {
     EXPECT_EQ(glGetError(), 0);
 }
 
-TEST_F(TestGLTexture, SetValidSampler) {
+TEST_F(TestGLTexture, SetValidSampler)
+{
     GLTextureManager manager;
     auto sampler = std::make_shared<GLSampler>();
     sampler->Initialize();
@@ -86,7 +92,8 @@ TEST_F(TestGLTexture, SetValidSampler) {
     EXPECT_EQ(glGetError(), 0);
 }
 
-TEST_F(TestGLTexture, CreateValidTexture) {
+TEST_F(TestGLTexture, CreateValidTexture)
+{
     GLTextureManager manager;
     EXPECT_GT(manager.GetTextureUnitCount(), 0);
     EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
@@ -94,7 +101,8 @@ TEST_F(TestGLTexture, CreateValidTexture) {
     EXPECT_NE(texture, nullptr);
 }
 
-TEST_F(TestGLTexture, TextureWithShader) {
+TEST_F(TestGLTexture, TextureWithShader)
+{
     // Create Shaders
     std::vector<std::shared_ptr<GLShader>> shaders;
     auto vertex_shader = std::make_shared<GLShader>(TEST_VERTEX_SOURCE, IShader::Type::VERTEX_SHADER);
@@ -110,23 +118,25 @@ TEST_F(TestGLTexture, TextureWithShader) {
     ASSERT_NE(program, nullptr);
 
     // Test vertices
-    GLfloat vertices[] = {
+    GLfloat vertices[] =
+    {
             //  Position      Color             Texcoords
            -0.5F,  0.5F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, // Top-left
             0.5F,  0.5F, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F, // Top-right
             0.5F, -0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F, // Bottom-right
            -0.5F, -0.5F, 1.0F, 1.0F, 1.0F, 0.0F, 1.0F  // Bottom-left
     };
-    GLuint vao;
+    GLuint vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    GLuint vbo;
+    GLuint vbo = 0;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    GLuint ebo;
+    GLuint ebo = 0;
     glGenBuffers(1, &ebo);
-    GLuint elements[] = {
+    GLuint elements[] =
+    {
             0, 1, 2,
             2, 3, 0
     };

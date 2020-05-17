@@ -3,12 +3,14 @@
 #include "core/Transform.hpp"
 #include "Components.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Base class for 3D render models
      */
-    class IModel {
+    class IModel
+    {
     public:
 
         virtual ~IModel() = default;

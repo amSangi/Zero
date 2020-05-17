@@ -4,16 +4,19 @@
 #include "render/VolumePropagator.hpp"
 #include "render/Instantiator.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
 RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& config)
 : zero::System(engine_core)
 , config_(config)
 , window_(std::make_unique<Window>(config.window_config_))
 , renderer_(std::make_unique<GLRenderer>())
-{}
+{
+}
 
-void RenderSystem::Initialize() {
+void RenderSystem::Initialize()
+{
     ShutDown();
     window_->Initialize();
     renderer_->Initialize(config_);
@@ -21,35 +24,44 @@ void RenderSystem::Initialize() {
 
 void RenderSystem::PreUpdate() {}
 
-void RenderSystem::Update(const TimeDelta& time_delta) {
+void RenderSystem::Update(const TimeDelta& time_delta)
+{
     renderer_->Render(GetRegistry());
     window_->SwapBuffers();
 }
 
-void RenderSystem::PostUpdate() {
+void RenderSystem::PostUpdate()
+{
     auto& registry = GetRegistry();
     renderer_->PostRender(registry);
     // Apply transforms to bounding volumes and expand parent volumes
     VolumePropagator::PropagateVolume(registry);
 }
 
-void RenderSystem::ShutDown() {
+void RenderSystem::ShutDown()
+{
     renderer_->ShutDown();
     window_->Cleanup();
 }
 
-zero::Component::Entity RenderSystem::CreateModelInstance(const std::string& model_filename) {
+Entity RenderSystem::CreateModelInstance(const std::string& model_filename)
+{
     auto model = renderer_->GetModel(model_filename);
-    if (model.expired()) {
-        return Component::NullEntity;
+    if (model.expired())
+    {
+        return NullEntity;
     }
     return Instantiator::InstantiateModel(GetRegistry(), model.lock());
 }
 
-zero::Component::Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive) {
+Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive)
+{
     return Instantiator::InstantiatePrimitive(GetRegistry(), primitive);
 }
 
-zero::Component::Entity RenderSystem::CreateLightInstance(const Light& light, Component::Entity entity) {
+Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity)
+{
     return Instantiator::InstantiateLight(GetRegistry(), light, entity);
 }
+
+} // namespace zero::render

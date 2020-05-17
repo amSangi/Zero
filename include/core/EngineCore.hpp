@@ -3,12 +3,14 @@
 #include <entt/entt.hpp>
 #include "event/EventBus.hpp"
 
-namespace zero {
+namespace zero
+{
 
     /**
      * @brief Container for shared data and objects between different systems. Owned by the Engine.
      */
-    class EngineCore {
+    class EngineCore
+    {
     public:
 
         /**
@@ -37,4 +39,4 @@ namespace zero {
 
     }; // class EngineCore
 
-} // namespace zero::render
+} // namespace zero

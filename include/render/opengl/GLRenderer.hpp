@@ -7,7 +7,8 @@
 #include "render/IRenderer.hpp"
 #include "render/IShader.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class Camera;
@@ -23,7 +24,8 @@ namespace zero::render {
      * An entity is considered drawable if it contains Transform, Material, Volume, and Mesh components.
      * Entities with the Camera component are used to perform the rendering.
      */
-    class GLRenderer final : public IRenderer {
+    class GLRenderer final : public IRenderer
+    {
     public:
 
         GLRenderer();

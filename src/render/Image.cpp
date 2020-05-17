@@ -2,60 +2,82 @@
 #include <SDL_surface.h>
 #include <SDL_image.h>
 
-using namespace zero::render;
+namespace zero::render
+{
 
 Image::Image(std::string filename)
 : filename_(std::move(filename))
 , surface_(nullptr)
-{}
+{
+}
 
-Image::~Image() {
+Image::~Image()
+{
     Release();
 }
 
-bool Image::Load() {
-    if (surface_) return true;
+bool Image::Load()
+{
+    if (surface_)
+    {
+        return true;
+    }
     surface_ = IMG_Load(filename_.c_str());
     return surface_ != nullptr;
 }
 
-bool Image::Release() {
-    if (!surface_) return false;
+bool Image::Release()
+{
+    if (!surface_)
+    {
+        return false;
+    }
     SDL_FreeSurface(surface_);
     surface_ = nullptr;
     return true;
 }
 
-bool Image::IsLoaded() const {
+bool Image::IsLoaded() const
+{
     return surface_;
 }
 
-char* Image::GetData() const {
+char* Image::GetData() const
+{
     return surface_ ? static_cast<char*>(surface_->pixels) : nullptr;
 }
 
-zero::uint32 Image::GetWidth() const {
+zero::uint32 Image::GetWidth() const
+{
     return surface_ ? surface_->w : 0;
 }
 
-zero::uint32 Image::GetHeight() const {
+zero::uint32 Image::GetHeight() const
+{
     return surface_ ? surface_->h : 0;
 }
 
-zero::uint32 Image::GetPitch() const {
+zero::uint32 Image::GetPitch() const
+{
     return surface_ ? surface_->pitch : 0;
 }
 
-zero::uint8 Image::BitsPerPixel() const {
+zero::uint8 Image::BitsPerPixel() const
+{
     return surface_ ? surface_->format->BitsPerPixel : 0;
 }
 
-zero::uint8 Image::BytesPerPixel() const {
+zero::uint8 Image::BytesPerPixel() const
+{
     return surface_ ? surface_->format->BytesPerPixel : 0;
 }
 
-Image::PixelFormat Image::GetPixelFormat() const {
-    if (!surface_) return PixelFormat::UNDEFINED;
+Image::PixelFormat Image::GetPixelFormat() const
+{
+    if (!surface_)
+    {
+        return PixelFormat::UNDEFINED;
+    }
 
     switch (surface_->format->format)
     {
@@ -85,3 +107,5 @@ Image::PixelFormat Image::GetPixelFormat() const {
             return PixelFormat::UNDEFINED;
     }
 }
+
+} // namespace zero::render

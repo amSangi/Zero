@@ -5,7 +5,8 @@
 #include "render/ShaderStage.hpp"
 #include "render/IProgram.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class Material;
@@ -14,7 +15,8 @@ namespace zero::render {
      * @brief Stores Graphics Shaders and creates Graphics Programs. The Material component dictates the
      * shaders used during the rendering of an entity.
      */
-    class ICompiler {
+    class ICompiler
+    {
     public:
 
         virtual ~ICompiler() = default;

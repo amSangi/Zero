@@ -1,16 +1,20 @@
 #include "render/opengl/GLSampler.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
 GLSampler::GLSampler()
 : id_(0)
-{}
+{
+}
 
-GLSampler::~GLSampler() {
+GLSampler::~GLSampler()
+{
     Cleanup();
 }
 
-void GLSampler::Initialize() {
+void GLSampler::Initialize()
+{
     glGenSamplers(1, &id_);
     glSamplerParameteri(id_, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glSamplerParameteri(id_, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -19,7 +23,8 @@ void GLSampler::Initialize() {
     glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , math::Vec4f::Zero().Data());
 }
 
-void GLSampler::SetWrappingS(Wrapping s) {
+void GLSampler::SetWrappingS(Wrapping s)
+{
     switch (s)
     {
         case Wrapping::CLAMP_TO_EDGE:
@@ -37,7 +42,8 @@ void GLSampler::SetWrappingS(Wrapping s) {
     }
 }
 
-void GLSampler::SetWrappingT(Wrapping t) {
+void GLSampler::SetWrappingT(Wrapping t)
+{
     switch (t)
     {
         case Wrapping::CLAMP_TO_EDGE:
@@ -55,7 +61,8 @@ void GLSampler::SetWrappingT(Wrapping t) {
     }
 }
 
-void GLSampler::SetMinificationFilter(Filter filter) {
+void GLSampler::SetMinificationFilter(Filter filter)
+{
     switch (filter)
     {
         case Filter::LINEAR:
@@ -79,7 +86,8 @@ void GLSampler::SetMinificationFilter(Filter filter) {
     }
 }
 
-void GLSampler::SetMagnificationFilter(Filter filter) {
+void GLSampler::SetMagnificationFilter(Filter filter)
+{
     switch (filter)
     {
         case Filter::LINEAR:
@@ -91,14 +99,19 @@ void GLSampler::SetMagnificationFilter(Filter filter) {
     }
 }
 
-void GLSampler::SetBorderColour(zero::math::Vec4f colour) {
+void GLSampler::SetBorderColour(zero::math::Vec4f colour)
+{
     glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , colour.Data());
 }
 
-GLuint GLSampler::GetNativeIdentifier() const {
+GLuint GLSampler::GetNativeIdentifier() const
+{
     return id_;
 }
 
-void GLSampler::Cleanup() {
+void GLSampler::Cleanup()
+{
     glDeleteSamplers(1, &id_);
 }
+
+} // namespace zero::render

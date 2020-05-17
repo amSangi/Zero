@@ -1,11 +1,12 @@
 #pragma once
 
-namespace zero::event {
-
+namespace zero::event
+{
     /**
      * @brief Enum encapsulating all game engine event types
      */
-    enum class EventType {
+    enum class EventType
+    {
 
         /* ********** System ********** */
 

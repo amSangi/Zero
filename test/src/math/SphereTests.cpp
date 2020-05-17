@@ -5,7 +5,8 @@
 
 using namespace zero::math;
 
-TEST(TestSphere, ContainsBox) {
+TEST(TestSphere, ContainsBox)
+{
 	Sphere sphere(250.0F);
 
 	EXPECT_TRUE(sphere.Contains(Box::Unit()));
@@ -21,7 +22,8 @@ TEST(TestSphere, ContainsBox) {
 }
 
 
-TEST(TestSphere, ContainsSphere) {
+TEST(TestSphere, ContainsSphere)
+{
     Sphere big_sphere(100.0F);
     Sphere small_sphere(Vec3f(0.0F, 0.0F, 100.0F - 30.125F), 30.125F);
 
@@ -30,7 +32,8 @@ TEST(TestSphere, ContainsSphere) {
     EXPECT_FALSE(small_sphere.Contains(big_sphere));
 }
 
-TEST(TestSphere, ContainsItself) {
+TEST(TestSphere, ContainsItself)
+{
     Sphere sphere{};
 
     sphere = Sphere::Zero();
@@ -43,7 +46,8 @@ TEST(TestSphere, ContainsItself) {
     EXPECT_TRUE(sphere.Contains(sphere));
 }
 
-TEST(TestSphere, ContainsPoint) {
+TEST(TestSphere, ContainsPoint)
+{
     Sphere sphere(Vec3f::Zero(), 100.0F);
 
     EXPECT_TRUE(sphere.Contains(Vec3f(0.F, 0.0F, 25.0F)));
@@ -56,7 +60,8 @@ TEST(TestSphere, ContainsPoint) {
 	EXPECT_FALSE(sphere.Contains(Vec3f(-3420.234F, 10.0F, 234.0F)));
 }
 
-TEST(TestSphere, IntersectsSphere) {
+TEST(TestSphere, IntersectsSphere)
+{
 	Sphere big_sphere(Vec3f::Zero(), 1100.0F);
 
 	EXPECT_TRUE(big_sphere.Intersects(big_sphere));
@@ -67,7 +72,8 @@ TEST(TestSphere, IntersectsSphere) {
 	EXPECT_FALSE(big_sphere.Intersects(Sphere(Vec3f(-10000.0F, 0.0F, 0.0F), 10.0F)));
 }
 
-TEST(TestSphere, Merge) {
+TEST(TestSphere, Merge)
+{
 	Sphere s1(Vec3f::Zero(), 10.0F);
 	Sphere s2(Vec3f(25.0F, 25.0F, 25.0F), 10.0F);
 
@@ -89,7 +95,8 @@ TEST(TestSphere, Merge) {
 	EXPECT_EQ(s1, merged_sphere);
 }
 
-TEST(TestSphere, MergeItself) {
+TEST(TestSphere, MergeItself)
+{
     Sphere s1(Vec3f::Zero(), 25.5F);
 
     Sphere merged_itself = Sphere::Merge(s1, s1);
@@ -103,7 +110,8 @@ TEST(TestSphere, MergeItself) {
     EXPECT_EQ(s1, merged_itself);
 }
 
-TEST(TestSphere, MergeContainingSphere) {
+TEST(TestSphere, MergeContainingSphere)
+{
     Sphere s1(Vec3f::Zero(), 100.0F);
     Sphere s2(Vec3f::One(), 25.0F);
 
@@ -119,7 +127,8 @@ TEST(TestSphere, MergeContainingSphere) {
     EXPECT_EQ(s1, merged_sphere);
 }
 
-TEST(TestSphere, MergeInsideSphere) {
+TEST(TestSphere, MergeInsideSphere)
+{
     Sphere s1(Vec3f::Zero(), 100.0F);
     Sphere s2(Vec3f::One(), 25.0F);
 
@@ -131,7 +140,8 @@ TEST(TestSphere, MergeInsideSphere) {
     EXPECT_EQ(s2, s1);
 }
 
-TEST(TestSphere, MergeLargerSphere) {
+TEST(TestSphere, MergeLargerSphere)
+{
     Sphere s1(Vec3f::Zero(), 2.0F);
     Sphere s2(Vec3f(-1.0F, -2.0F, 0.0F), 2.0F);
 
@@ -142,7 +152,8 @@ TEST(TestSphere, MergeLargerSphere) {
     EXPECT_TRUE(s1.Contains(s2));
 }
 
-TEST(TestSphere, MergeSeveralSpheres) {
+TEST(TestSphere, MergeSeveralSpheres)
+{
     std::vector<Sphere> spheres;
     std::random_device device;
     std::mt19937 generator(device());
@@ -156,7 +167,8 @@ TEST(TestSphere, MergeSeveralSpheres) {
     float min_pos = -500.0F;
     float max_pos = 500.0F;
     std::uniform_real_distribution<float> pos_distribution(min_pos, max_pos);
-    auto generate_random_pos = [&pos_distribution, &generator]() {
+    auto generate_random_pos = [&pos_distribution, &generator]()
+    {
         return Vec3f(pos_distribution(generator),
                      pos_distribution(generator),
                      pos_distribution(generator));
@@ -164,7 +176,9 @@ TEST(TestSphere, MergeSeveralSpheres) {
 
     // Generate random spheres
     int sphere_count = 500;
-    for (int i = 0; i < sphere_count; ++i) {
+    spheres.reserve(sphere_count);
+    for (int i = 0; i < sphere_count; ++i)
+    {
         spheres.emplace_back(generate_random_pos(), radius_distribution(generator));
     }
 
@@ -172,7 +186,8 @@ TEST(TestSphere, MergeSeveralSpheres) {
     Sphere main_sphere(Vec3f::Zero(), 1.0F);
 
     // Merge all the spheres with the main sphere
-    for (int i = 0; i < sphere_count; ++i) {
+    for (int i = 0; i < sphere_count; ++i)
+    {
         auto merged_sphere = Sphere::Merge(main_sphere, spheres[i]);
         EXPECT_TRUE(merged_sphere.Contains(main_sphere));
         EXPECT_TRUE(merged_sphere.Contains(spheres[i]));
@@ -180,12 +195,14 @@ TEST(TestSphere, MergeSeveralSpheres) {
     }
 
     // Main sphere should contain all of the spheres
-    for (int i = 0; i < sphere_count; ++i) {
+    for (int i = 0; i < sphere_count; ++i)
+    {
         EXPECT_TRUE(main_sphere.Contains(spheres[i]));
     }
 }
 
-TEST(TestSphere, AABB) {
+TEST(TestSphere, AABB)
+{
     Vec3f min{};
     Vec3f max{10.0F, 15.0F, 25.0F};
 

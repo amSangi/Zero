@@ -1,18 +1,20 @@
 #include "render/opengl/GLAssetImportWrapper.hpp"
-#include <math/Box.hpp>
-#include <assimp/scene.h>
 #include "render/opengl/GLMesh.hpp"
+#include <assimp/scene.h>
 
-using namespace zero::render;
+namespace zero::render
+{
 
-std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh) {
+std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh)
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
     vertices.reserve(mesh->mNumVertices);
     indices.reserve(mesh->mNumFaces * 3);
 
     // Interleave the vertex data
-    for (uint32 i = 0; i < mesh->mNumVertices; ++i) {
+    for (uint32 i = 0; i < mesh->mNumVertices; ++i)
+    {
         Vertex vertex{};
         vertex.position_ = math::Vec3f(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
         vertex.normal_ = math::Vec3f(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
@@ -22,9 +24,11 @@ std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh) {
     }
 
     // Save the vertex index data
-    for (uint32 i = 0; i < mesh->mNumFaces; ++i) {
+    for (uint32 i = 0; i < mesh->mNumFaces; ++i)
+    {
         const aiFace& face = mesh->mFaces[i];
-        for (uint32 j = 0; j < face.mNumIndices; ++j) {
+        for (uint32 j = 0; j < face.mNumIndices; ++j)
+        {
             indices.push_back(face.mIndices[j]);
         }
     }
@@ -32,7 +36,8 @@ std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh) {
     return std::make_shared<GLMesh>(std::move(vertices), std::move(indices));
 }
 
-Material GLAssetImportWrapper::LoadMaterial(aiMaterial* ai_material) {
+Material GLAssetImportWrapper::LoadMaterial(aiMaterial* ai_material)
+{
     Material material;
 
     material.name_ = ai_material->GetName().C_Str();
@@ -53,3 +58,5 @@ Material GLAssetImportWrapper::LoadMaterial(aiMaterial* ai_material) {
 
     return material;
 }
+
+} // namespace zero::render

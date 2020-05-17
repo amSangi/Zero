@@ -4,12 +4,14 @@
 #include "core/Component.hpp"
 #include "core/ZBase.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief An instance of a 3D model.
      */
-    struct ModelInstance : public Component {
+    struct ModelInstance : public Component
+    {
 
         /**
          * @brief The fully qualified filename of the 3D model.

@@ -2,14 +2,16 @@
 
 #include "core/Component.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class IModel;
     class Light;
     class PrimitiveInstance;
 
-    class Instantiator {
+    class Instantiator
+    {
     public:
 
         Instantiator() = delete;
@@ -25,9 +27,9 @@ namespace zero::render {
          * @param parent the parent of the entity that is instantiated
          * @return the root entity associated with the 3D GLModel. NullEntity if an error occurred.
          */
-        [[nodiscard]] static Component::Entity InstantiateModel(entt::registry& registry,
-                                                                const std::shared_ptr<IModel>& model,
-                                                                Component::Entity parent = Component::NullEntity);
+        [[nodiscard]] static Entity InstantiateModel(entt::registry& registry,
+                                                     const std::shared_ptr<IModel>& model,
+                                                     Entity parent = NullEntity);
 
         /**
          * @brief Create a new entity based on a primitive.
@@ -38,8 +40,7 @@ namespace zero::render {
          * @param primitive the primitive instance data.
          * @return the entity associated with the new instantiated primitive.
          */
-        [[nodiscard]] static Component::Entity InstantiatePrimitive(entt::registry& registry,
-                                                                    const PrimitiveInstance& primitive);
+        [[nodiscard]] static Entity InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive);
 
         /**
          * @brief Create a new light entity or attach a light component to an existing entity
@@ -53,7 +54,7 @@ namespace zero::render {
          * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
          * @return the light entity instance
          */
-        static Component::Entity InstantiateLight(entt::registry& registry, const Light& light, Component::Entity entity);
+        static Entity InstantiateLight(entt::registry& registry, const Light& light, Entity entity);
 
     }; // class Instantiator
 

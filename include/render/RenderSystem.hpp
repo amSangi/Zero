@@ -7,7 +7,8 @@
 #include "render/IRenderer.hpp"
 #include "render/Window.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     // Forward declarations
     class Light;
@@ -17,7 +18,8 @@ namespace zero::render {
      * @brief The RenderingSystem uses transform, mesh, material, scene, and camera components
      * to render a scene. It is responsible for all windowing/rendering tasks.
      */
-    class RenderSystem : public System {
+    class RenderSystem : public System
+    {
     public:
 
         /**
@@ -63,7 +65,7 @@ namespace zero::render {
          * @param model_filename the fully qualified 3D filename
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
-        [[nodiscard]] Component::Entity CreateModelInstance(const std::string& model_filename);
+        [[nodiscard]] Entity CreateModelInstance(const std::string& model_filename);
 
         /**
          * @brief Create a new entity based on a primitive shape.
@@ -73,7 +75,7 @@ namespace zero::render {
          * @param primitive the primitive instance data.
          * @return the primitive entity instance.
          */
-        [[nodiscard]] Component::Entity CreatePrimitiveInstance(const PrimitiveInstance& primitive);
+        [[nodiscard]] Entity CreatePrimitiveInstance(const PrimitiveInstance& primitive);
 
         /**
          * @brief Create a new light entity or attach a light component to an existing entity
@@ -85,7 +87,7 @@ namespace zero::render {
          * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
          * @return the light entity instance
          */
-        Component::Entity CreateLightInstance(const Light& light, Component::Entity entity);
+        Entity CreateLightInstance(const Light& light, Entity entity);
 
     private:
 

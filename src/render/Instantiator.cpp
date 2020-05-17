@@ -2,21 +2,25 @@
 #include "render/IModel.hpp"
 #include "math/Box.hpp"
 
-using namespace zero::render;
+namespace zero::render
+{
 
-zero::Component::Entity Instantiator::InstantiateModel(entt::registry& registry,
-                                                       const std::shared_ptr<IModel>& model,
-                                                       zero::Component::Entity parent) {
-    auto entity = registry.create();
+Entity Instantiator::InstantiateModel(entt::registry& registry,
+                                      const std::shared_ptr<IModel>& model,
+                                      Entity parent)
+{
+    Entity entity = registry.create();
     registry.assign<Volume>(entity, model->GetVolume());
     registry.assign<Material>(entity, model->GetMaterial());
     registry.assign<ModelInstance>(entity, model->GetModelInstance());
 
     zero::Transform transform = model->GetTransform();
     transform.parent_ = parent;
-    for (const auto& child_gl_model : model->GetChildren()) {
-        auto child_entity = InstantiateModel(registry, child_gl_model, entity);
-        if (child_entity != zero::Component::NullEntity) {
+    for (const auto& child_gl_model : model->GetChildren())
+    {
+        Entity child_entity = InstantiateModel(registry, child_gl_model, entity);
+        if (child_entity != NullEntity)
+        {
             transform.children_.push_back(child_entity);
         }
     }
@@ -25,16 +29,18 @@ zero::Component::Entity Instantiator::InstantiateModel(entt::registry& registry,
     return entity;
 }
 
-zero::Component::Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
-                                                           const PrimitiveInstance& primitive) {
-    auto entity = registry.create();
+Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
+                                          const PrimitiveInstance& primitive)
+{
+    Entity entity = registry.create();
     Transform transform{};
     Volume volume{};
     // Set transform/volume values
-    switch (primitive.GetType()) {
+    switch (primitive.GetType())
+    {
         case PrimitiveInstance::Type::BOX:
         {
-            auto box = primitive.GetBox();
+            Box box = primitive.GetBox();
             math::Box math_box{math::Vec3f::Zero(), math::Vec3f(box.width_, box.height_, box.depth_)};
             volume.bounding_volume_.center_ = math_box.Center();
             volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
@@ -43,24 +49,24 @@ zero::Component::Entity Instantiator::InstantiatePrimitive(entt::registry& regis
         }
         case PrimitiveInstance::Type::CONE:
         {
-            auto cone = primitive.GetCone();
-            auto half_height = cone.height_ * 0.5F;
+            Cone cone = primitive.GetCone();
+            float half_height = cone.height_ * 0.5F;
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + cone.radius_ * cone.radius_);
             break;
         }
         case PrimitiveInstance::Type::CYLINDER:
         {
-            auto cylinder = primitive.GetCylinder();
-            auto half_height = cylinder.height_ * 0.5F;
-            auto largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
+            Cylinder cylinder = primitive.GetCylinder();
+            float half_height = cylinder.height_ * 0.5F;
+            float largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + largest_radius * largest_radius);
             break;
         }
         case PrimitiveInstance::Type::PLANE:
         {
-            auto plane = primitive.GetPlane();
-            auto half_width = plane.width_ * 0.5F;
-            auto half_height = plane.height_ * 0.5F;
+            Plane plane = primitive.GetPlane();
+            float half_width = plane.width_ * 0.5F;
+            float half_height = plane.height_ * 0.5F;
             volume.bounding_volume_.center_ = math::Vec3f(half_width,
                                                           0.0F,
                                                           half_height);
@@ -69,14 +75,13 @@ zero::Component::Entity Instantiator::InstantiatePrimitive(entt::registry& regis
         }
         case PrimitiveInstance::Type::SPHERE:
         {
-            auto sphere = primitive.GetSphere();
             // Volume slightly larger
             volume.bounding_volume_.radius_ = 1.05F;
             break;
         }
         case PrimitiveInstance::Type::TORUS:
         {
-            auto torus = primitive.GetTorus();
+            Torus torus = primitive.GetTorus();
             // Volume slightly larger
             volume.bounding_volume_.radius_ = (torus.radius_ + torus.tube_radius_) + 0.05F;
             break;
@@ -91,11 +96,13 @@ zero::Component::Entity Instantiator::InstantiatePrimitive(entt::registry& regis
     return entity;
 }
 
-zero::Component::Entity Instantiator::InstantiateLight(entt::registry& registry,
-                                                       const Light& light,
-                                                       Component::Entity entity) {
-    Component::Entity entity_to_attach = entity;
-    if (!registry.valid(entity_to_attach)) {
+Entity Instantiator::InstantiateLight(entt::registry& registry,
+                                      const Light& light,
+                                      Entity entity)
+{
+    Entity entity_to_attach = entity;
+    if (!registry.valid(entity_to_attach))
+    {
         entity_to_attach = registry.create();
     }
 
@@ -119,9 +126,12 @@ zero::Component::Entity Instantiator::InstantiateLight(entt::registry& registry,
     }
 
     // Assign a new transform if one does not exist
-    if (!registry.has<Transform>(entity_to_attach)) {
+    if (!registry.has<Transform>(entity_to_attach))
+    {
         registry.assign<Transform>(entity_to_attach, Transform{});
     }
 
     return entity_to_attach;
 }
+
+} // namespace zero::render

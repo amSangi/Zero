@@ -3,13 +3,15 @@
 #include <string>
 #include "core/ZBase.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Stores Image objects that can be loaded into Main Memory to be used to create graphics Texture objects.
      * The Material component dictates the textures used during the rendering of an entity.
      */
-    class ITextureManager {
+    class ITextureManager
+    {
     public:
 
         virtual ~ITextureManager() = default;

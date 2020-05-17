@@ -3,17 +3,20 @@
 #include "core/Component.hpp"
 #include "Shapes.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief An instance of a primitive.
      */
-    struct PrimitiveInstance : public Component {
+    struct PrimitiveInstance : public Component
+    {
 
         /**
          * @brief The primitive type
          */
-        enum class Type {
+        enum class Type
+        {
             BOX,
             CONE,
             CYLINDER,
@@ -75,7 +78,8 @@ namespace zero::render {
         /**
          * @brief The primitive data
          */
-        union Primitive {
+        union Primitive
+        {
             /**
              * @brief Construct a primitive of a given type
              */

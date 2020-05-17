@@ -4,12 +4,14 @@
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Interleaved Mesh Vertex
      */
-    struct Vertex {
+    struct Vertex
+    {
         /**
          * @brief The vertex position
          */
@@ -27,7 +29,8 @@ namespace zero::render {
     /**
      * @brief Interleaved Mesh Container
      */
-    class Mesh {
+    class Mesh
+    {
     public:
         /**
          * @brief Constructor

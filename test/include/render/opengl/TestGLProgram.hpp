@@ -3,9 +3,11 @@
 #include "TestGLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
 
-class TestGLProgram : public TestGLShader {
+class TestGLProgram : public TestGLShader
+{
 protected:
-    void SetUp() override {
+    void SetUp() override
+    {
         using namespace zero::render;
         TestGLShader::SetUp();
         vertex_shader_ = std::make_shared<zero::render::GLShader>(TEST_VERTEX_SOURCE, IShader::Type::VERTEX_SHADER);

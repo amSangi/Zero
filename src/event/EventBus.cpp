@@ -1,13 +1,16 @@
 #include <algorithm>
 #include "event/EventBus.hpp"
 
-using namespace zero::event;
+namespace zero::event
+{
 
-void EventBus::AddEventHandler(EventBus::EventHandlerPtr handler) {
+void EventBus::AddEventHandler(const EventHandlerPtr& handler)
+{
 	handlers_.push_back(handler);
 }
 
-void EventBus::RemoveEventHandler(EventBus::EventHandlerPtr handler) {
+void EventBus::RemoveEventHandler(const EventHandlerPtr& handler)
+{
 	handlers_.erase(std::remove(handlers_.begin(),
 	                            handlers_.end(),
 	                            handler),
@@ -19,15 +22,20 @@ void EventBus::Post(const Event& event) {
 }
 
 void EventBus::Dispatch(const Event& event) {
-	for (const auto& handler : handlers_) {
+	for (const auto& handler : handlers_)
+	{
 		handler->OnEvent(event);
 	}
 }
 
-void EventBus::DispatchEvents() {
-	while (!event_queue_.empty()) {
+void EventBus::DispatchEvents()
+{
+	while (!event_queue_.empty())
+	{
 		Event event = event_queue_.front();
 		event_queue_.pop_front();
 		Dispatch(event);
 	}
 }
+
+} // namespace zero::event

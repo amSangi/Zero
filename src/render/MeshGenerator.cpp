@@ -1,9 +1,10 @@
 #include "render/MeshGenerator.hpp"
-#include <array>
 
-using namespace zero::render;
+namespace zero::render
+{
 
-Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
+Mesh MeshGenerator::GenerateSphere(const Sphere& sphere)
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
     std::vector<Vertex> temp_vertices;
@@ -14,13 +15,15 @@ Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
     float longitude_step = math::kTwoPi / longitude_count;
 
     // Generate vertices
-    for (uint32 i = 0; i <= latitude_count; ++i) {
+    for (uint32 i = 0; i <= latitude_count; ++i)
+    {
         // starting from pi/2 to -pi/2
         float latitude_angle = math::kHalfPi - i * latitude_step;
         float xz = math::Cos(latitude_angle);       // r * cos(u)
         float y = math::Sin(latitude_angle);        // r * sin(u)
 
-        for (uint32 j = 0; j <= longitude_count; ++j) {
+        for (uint32 j = 0; j <= longitude_count; ++j)
+        {
             // starting from 0 to 2pi
             float longitude_angle = static_cast<float>(j) * longitude_step;
 
@@ -37,12 +40,14 @@ Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
 
     // Generate indices
     uint32 index = 0;
-    for (uint32 i = 0; i < latitude_count; ++i) {
+    for (uint32 i = 0; i < latitude_count; ++i)
+    {
 
         uint32 vi1 = i * (longitude_count + 1);
         uint32 vi2 = (i + 1) * (longitude_count + 1);
 
-        for (uint32 j = 0; j < longitude_count; ++j, ++vi1, ++vi2) {
+        for (uint32 j = 0; j < longitude_count; ++j, ++vi1, ++vi2)
+        {
             // get 4 vertices per sector
             //  v1--v3
             //  |    |
@@ -52,7 +57,8 @@ Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
             auto& v3 = temp_vertices[vi1 + 1];
             auto& v4 = temp_vertices[vi2 + 1];
 
-            if (i == 0) {
+            if (i == 0)
+            {
                 vertices.push_back(v1);
                 vertices.push_back(v2);
                 vertices.push_back(v4);
@@ -63,7 +69,8 @@ Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
 
                 index += 3;
             }
-            else if (i == (latitude_count - 1)) {
+            else if (i == (latitude_count - 1))
+            {
                 vertices.push_back(v1);
                 vertices.push_back(v2);
                 vertices.push_back(v3);
@@ -74,7 +81,8 @@ Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
 
                 index += 3;
             }
-            else {
+            else
+            {
                 vertices.push_back(v1);
                 vertices.push_back(v2);
                 vertices.push_back(v3);
@@ -96,7 +104,8 @@ Mesh MeshGenerator::GenerateSphere(const Sphere& sphere) {
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GeneratePlane(const Plane& plane) {
+Mesh MeshGenerator::GeneratePlane(const Plane& plane)
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
     vertices.reserve((plane.width_ + 1) * (plane.height_ + 1));
@@ -107,10 +116,12 @@ Mesh MeshGenerator::GeneratePlane(const Plane& plane) {
 
     // Generate vertices
     auto normal = math::Vec3f::Normalize(math::Vec3f::Cross(v_axis, u_axis));
-    for (uint32 i = 0; i <= plane.width_; ++i) {
+    for (uint32 i = 0; i <= plane.width_; ++i)
+    {
         auto u_component = u_axis * i;
         float u_texture_coordinate = static_cast<float>(i) / plane.width_;
-        for (uint32 j = 0; j <= plane.height_; ++j) {
+        for (uint32 j = 0; j <= plane.height_; ++j)
+        {
             Vertex vertex{};
             vertex.position_ = u_component + (v_axis * j);
             vertex.normal_ = normal;
@@ -120,8 +131,10 @@ Mesh MeshGenerator::GeneratePlane(const Plane& plane) {
     }
 
     // Generate indices
-    for (uint32 ti = 0, vi = 0, i = 0; i < plane.width_; i++, vi++) {
-        for (uint32 j = 0; j < plane.height_; j++, ti += 6, vi++) {
+    for (uint32 ti = 0, vi = 0, i = 0; i < plane.width_; i++, vi++)
+    {
+        for (uint32 j = 0; j < plane.height_; j++, ti += 6, vi++)
+        {
             indices[ti] = vi;
             indices[ti + 3] = indices[ti + 2] = vi + 1;
             indices[ti + 4] = indices[ti + 1] = vi + plane.height_ + 1;
@@ -132,7 +145,8 @@ Mesh MeshGenerator::GeneratePlane(const Plane& plane) {
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GenerateBox() {
+Mesh MeshGenerator::GenerateBox()
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
     vertices.reserve(24);
@@ -217,7 +231,8 @@ Mesh MeshGenerator::GenerateBox() {
     vertices.push_back(v6); vertices.push_back(v7);
 
     // Generate indices
-    for (uint32 i = 0; i < 6; ++i) {
+    for (uint32 i = 0; i < 6; ++i)
+    {
         indices.push_back(3 + 4 * i); indices.push_back(1 + 4 * i); indices.push_back(0 + 4 * i);
         indices.push_back(3 + 4 * i); indices.push_back(2 + 4 * i); indices.push_back(1 + 4 * i);
     }
@@ -225,7 +240,8 @@ Mesh MeshGenerator::GenerateBox() {
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
+Mesh MeshGenerator::GenerateTorus(const Torus& torus)
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
 
@@ -237,13 +253,15 @@ Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
     indices.reserve((radial_segments + 1) * (tubular_segments + 1) * 6);
 
     // Generate vertices
-    for (uint32 i = 0; i <= radial_segments; ++i) {
+    for (uint32 i = 0; i <= radial_segments; ++i)
+    {
         float v = static_cast<float>(i) / radial_segments;
         float radial_segment = v * math::kTwoPi;
         float cos_radial_segment = math::Cos(radial_segment);
         float sin_radial_segment = math::Sin(radial_segment);
 
-        for (uint32 j = 0; j <= tubular_segments; ++j) {
+        for (uint32 j = 0; j <= tubular_segments; ++j)
+        {
             float u = static_cast<float>(j) / tubular_segments;
             float tubular_segment = u * math::kTwoPi;
             float cos_tubular_segment = math::Cos(tubular_segment);
@@ -260,8 +278,10 @@ Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
     }
 
     // Generate indices
-    for (uint32 i = 1; i <= radial_segments; ++i) {
-        for (uint32 j = 1; j <= tubular_segments; ++j) {
+    for (uint32 i = 1; i <= radial_segments; ++i)
+    {
+        for (uint32 j = 1; j <= tubular_segments; ++j)
+        {
             uint32 a = (tubular_segments + 1) * i + j - 1;
             uint32 b = (tubular_segments + 1) * (i - 1) + j - 1;
             uint32 c = (tubular_segments + 1) * (i - 1) + j;
@@ -276,11 +296,12 @@ Mesh MeshGenerator::GenerateTorus(const Torus& torus) {
             indices.push_back(d);
         }
     }
-    
+
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GenerateCone(const Cone& cone) {
+Mesh MeshGenerator::GenerateCone(const Cone& cone)
+{
     Cylinder cylinder{};
     cylinder.top_radius_ = 0.0F;
     cylinder.bottom_radius_ = cone.radius_;
@@ -291,7 +312,8 @@ Mesh MeshGenerator::GenerateCone(const Cone& cone) {
     return MeshGenerator::GenerateCylinder(cylinder);
 }
 
-Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder) {
+Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder)
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
 
@@ -304,12 +326,15 @@ Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder) {
     float half_height = cylinder.height_ * 0.5F;
     uint32 index = 0;
     std::vector<std::vector<uint32>> index_matrix;
+
     // Vertices
-    for (uint32 y = 0; y <= cylinder.height_segments_; ++y) {
+    for (uint32 y = 0; y <= cylinder.height_segments_; ++y)
+    {
         float v = static_cast<float>(y) / cylinder.height_segments_;
         float radius = v * (bottom_radius - top_radius) + top_radius;
         std::vector<uint32> index_row;
-        for (uint32 x = 0; x <= cylinder.radial_segments_; ++x) {
+        for (uint32 x = 0; x <= cylinder.radial_segments_; ++x)
+        {
             float u = static_cast<float>(x) / cylinder.radial_segments_;
             float theta = u * theta_length + theta_start;
             float sin_theta = math::Sin(theta);
@@ -327,8 +352,10 @@ Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder) {
     }
 
     // Indices
-    for (uint32 x = 0; x < cylinder.radial_segments_; ++x) {
-        for (uint32 y = 0; y < cylinder.height_segments_; ++y) {
+    for (uint32 x = 0; x < cylinder.radial_segments_; ++x)
+    {
+        for (uint32 y = 0; y < cylinder.height_segments_; ++y)
+        {
             uint32 a = index_matrix[y][x];
             uint32 b = index_matrix[y + 1][x];
             uint32 c = index_matrix[y + 1][x + 1];
@@ -345,15 +372,18 @@ Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder) {
     }
 
     // Generate and append cap meshes
-    if (!cylinder.is_open_ended_) {
-        if (cylinder.top_radius_ > 0.0F) {
+    if (!cylinder.is_open_ended_)
+    {
+        if (cylinder.top_radius_ > 0.0F)
+        {
             auto top_cap_mesh = GenerateCylinderCap(cylinder, index, true);
             const auto& top_cap_vertices = top_cap_mesh.GetVertices();
             const auto& top_cap_indices = top_cap_mesh.GetIndices();
             vertices.insert(vertices.end(), top_cap_vertices.begin(), top_cap_vertices.end());
             indices.insert(indices.end(), top_cap_indices.begin(),top_cap_indices.end());
         }
-        if (cylinder.bottom_radius_ > 0.0F) {
+        if (cylinder.bottom_radius_ > 0.0F)
+        {
             auto bottom_cap_mesh = GenerateCylinderCap(cylinder, index, false);
             const auto& bottom_cap_vertices = bottom_cap_mesh.GetVertices();
             const auto& bottom_cap_indices = bottom_cap_mesh.GetIndices();
@@ -365,7 +395,8 @@ Mesh MeshGenerator::GenerateCylinder(const Cylinder& cylinder) {
     return Mesh(std::move(vertices), std::move(indices));
 }
 
-Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index, bool isTopCap){
+Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index, bool isTopCap)
+{
     std::vector<Vertex> vertices;
     std::vector<uint32> indices;
 
@@ -374,7 +405,8 @@ Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index,
     float sign = isTopCap ? 1.0F : -1.0F;
     uint32 start_center_index = index;
     // Generate center vertex data
-    for (uint32 x = 1; x <= cylinder.radial_segments_; ++x) {
+    for (uint32 x = 1; x <= cylinder.radial_segments_; ++x)
+    {
         Vertex vertex{};
         vertex.position_ = math::Vec3f(0.0F, half_height * sign, 0.0F);
         vertex.normal_ = math::Vec3f(0.0F, sign, 0.0F);
@@ -386,7 +418,8 @@ Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index,
     uint32 end_center_index = index;
 
     // Generate surrounding vertices
-    for (uint32 x = 0; x <= cylinder.radial_segments_; ++x) {
+    for (uint32 x = 0; x <= cylinder.radial_segments_; ++x)
+    {
         float u = static_cast<float>(x) / cylinder.radial_segments_;
         float theta = u * math::kTwoPi;
         float cos_theta = math::Cos(theta);
@@ -403,15 +436,18 @@ Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index,
     }
 
     // Generate indices
-    for (uint32 x = 0; x < cylinder.radial_segments_; ++x) {
+    for (uint32 x = 0; x < cylinder.radial_segments_; ++x)
+    {
         uint32 c = start_center_index + x;
         uint32 i = end_center_index + x;
-        if (isTopCap) {
+        if (isTopCap)
+        {
             indices.push_back(i);
             indices.push_back(i + 1);
             indices.push_back(c);
         }
-        else {
+        else
+        {
             indices.push_back(i + 1);
             indices.push_back(i);
             indices.push_back(c);
@@ -420,3 +456,5 @@ Mesh MeshGenerator::GenerateCylinderCap(const Cylinder& cylinder, uint32& index,
 
     return Mesh(std::move(vertices), std::move(indices));
 }
+
+} // namespace zero::render

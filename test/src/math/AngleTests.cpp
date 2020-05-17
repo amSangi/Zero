@@ -3,7 +3,8 @@
 
 using namespace zero::math;
 
-TEST(TestAngle, RadianToDegree) {
+TEST(TestAngle, RadianToDegree)
+{
 	EXPECT_EQ(Radian(0.0F).ToDegree(), Degree(0.0F));
     EXPECT_EQ(Radian(kPi / 4.0F).ToDegree(), Degree(45.0F));
     EXPECT_EQ(Radian(kHalfPi).ToDegree(), Degree(90.0F));
@@ -11,7 +12,8 @@ TEST(TestAngle, RadianToDegree) {
     EXPECT_EQ(Radian(kPi * 2.0F).ToDegree(), Degree(360.0F));
 }
 
-TEST(TestAngle, DegreeToRadian) {
+TEST(TestAngle, DegreeToRadian)
+{
     EXPECT_EQ(Degree(0.0F).ToRadian(), Radian(0.0F));
     EXPECT_EQ(Degree(45.0F).ToRadian(), Radian(kPi / 4.0F));
     EXPECT_EQ(Degree(90.0F).ToRadian(), Radian(kHalfPi));
@@ -19,7 +21,8 @@ TEST(TestAngle, DegreeToRadian) {
     EXPECT_EQ(Degree(360.0F).ToRadian(), Radian(kPi * 2.0F));
 }
 
-TEST(TestAngle, RadianDegreeEquality) {
+TEST(TestAngle, RadianDegreeEquality)
+{
     EXPECT_EQ(Radian(0.0F), Degree(0.0F));
     EXPECT_EQ(Radian(kPi / 4.0F), Degree(45.0F));
     EXPECT_EQ(Radian(kHalfPi), Degree(90.0F));

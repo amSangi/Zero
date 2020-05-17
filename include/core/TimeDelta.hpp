@@ -1,8 +1,10 @@
 #pragma once
 
-namespace zero {
+namespace zero
+{
 
-    struct TimeDelta {
+    struct TimeDelta
+    {
         /**
          * @brief The time since last frame (seconds)
          */

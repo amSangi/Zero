@@ -1,16 +1,17 @@
 #include "math/Matrix4x4.hpp"
-#include "math/Matrix3x3.hpp"
 #include "math/Vector4.hpp"
-#include "math/Vector3.hpp"
 #include "math/Quaternion.hpp"
 
-using namespace zero::math;
+namespace zero::math
+{
 
 Matrix4x4::Matrix4x4(float m[4][4])
 : matrix_()
 {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] = m[i][j];
         }
     }
@@ -19,8 +20,10 @@ Matrix4x4::Matrix4x4(float m[4][4])
 Matrix4x4::Matrix4x4(float value)
 : matrix_()
 {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] = value;
         }
     }
@@ -63,10 +66,14 @@ Matrix4x4::Matrix4x4(float e00, float e01, float e02, float e03,
     matrix_[3][0] = e30; matrix_[3][1] = e31; matrix_[3][2] = e32; matrix_[3][3] = e33;
 }
 
-bool Matrix4x4::operator==(const Matrix4x4& o) const {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            if (!Equal(matrix_[i][j], o.matrix_[i][j])) {
+bool Matrix4x4::operator==(const Matrix4x4& o) const
+{
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
+            if (!Equal(matrix_[i][j], o.matrix_[i][j]))
+            {
                 return false;
             }
         }
@@ -75,116 +82,149 @@ bool Matrix4x4::operator==(const Matrix4x4& o) const {
     return true;
 }
 
-bool Matrix4x4::operator!=(const Matrix4x4& o) const {
+bool Matrix4x4::operator!=(const Matrix4x4& o) const
+{
     return !(operator==(o));
 }
 
-float Matrix4x4::operator()(size_t row, size_t col) const {
+float Matrix4x4::operator()(size_t row, size_t col) const
+{
     return matrix_[row][col];
 }
 
-float Matrix4x4::operator()(size_t row, size_t col) {
+float Matrix4x4::operator()(size_t row, size_t col)
+{
     return matrix_[row][col];
 }
 
-const float* Matrix4x4::operator[](size_t index) const {
+const float* Matrix4x4::operator[](size_t index) const
+{
     return matrix_[index];
 }
 
-float* Matrix4x4::operator[](size_t index) {
+float* Matrix4x4::operator[](size_t index)
+{
     return matrix_[index];
 }
 
-Matrix4x4 Matrix4x4::operator+(float scalar) const {
+Matrix4x4 Matrix4x4::operator+(float scalar) const
+{
     return Matrix4x4(*this) += scalar;
 }
 
-Matrix4x4 Matrix4x4::operator-(float scalar) const {
+Matrix4x4 Matrix4x4::operator-(float scalar) const
+{
     return Matrix4x4(*this) -= scalar;
 }
 
-Matrix4x4 Matrix4x4::operator*(float scalar) const {
+Matrix4x4 Matrix4x4::operator*(float scalar) const
+{
     return Matrix4x4(*this) *= scalar;
 }
 
-Matrix4x4 Matrix4x4::operator/(float scalar) const {
+Matrix4x4 Matrix4x4::operator/(float scalar) const
+{
     return Matrix4x4(*this) /= scalar;
 }
 
-Matrix4x4& Matrix4x4::operator+=(float scalar) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+Matrix4x4& Matrix4x4::operator+=(float scalar)
+{
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] += scalar;
         }
     }
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator-=(float scalar) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+Matrix4x4& Matrix4x4::operator-=(float scalar)
+{
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] -= scalar;
         }
     }
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator*=(float scalar) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+Matrix4x4& Matrix4x4::operator*=(float scalar)
+{
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] *= scalar;
         }
     }
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator/=(float scalar) {
+Matrix4x4& Matrix4x4::operator/=(float scalar)
+{
     float inv_scalar = 1.0F / scalar;
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] *= inv_scalar;
         }
     }
     return *this;
 }
 
-Matrix4x4 Matrix4x4::Hadamard(const Matrix4x4& lhs, const Matrix4x4& rhs) {
+Matrix4x4 Matrix4x4::Hadamard(const Matrix4x4& lhs, const Matrix4x4& rhs)
+{
     Matrix4x4 m{};
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             m.matrix_[i][j] = lhs.matrix_[i][j] * rhs.matrix_[i][j];
         }
     }
     return m;
 }
 
-Matrix4x4 Matrix4x4::operator+(const Matrix4x4& rhs) const {
+Matrix4x4 Matrix4x4::operator+(const Matrix4x4& rhs) const
+{
     return Matrix4x4(*this) += rhs;
 }
 
-Matrix4x4 Matrix4x4::operator-(const Matrix4x4& rhs) const {
+Matrix4x4 Matrix4x4::operator-(const Matrix4x4& rhs) const
+{
     return Matrix4x4(*this) -= rhs;
 }
 
-Matrix4x4& Matrix4x4::operator+=(const Matrix4x4& rhs) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+Matrix4x4& Matrix4x4::operator+=(const Matrix4x4& rhs)
+{
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] += rhs.matrix_[i][j];
         }
     }
     return *this;
 }
 
-Matrix4x4& Matrix4x4::operator-=(const Matrix4x4& rhs) {
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+Matrix4x4& Matrix4x4::operator-=(const Matrix4x4& rhs)
+{
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             matrix_[i][j] -= rhs.matrix_[i][j];
         }
     }
     return *this;
 }
 
-float Matrix4x4::Det() const {
+float Matrix4x4::Det() const
+{
     float A2323 = matrix_[2][2] * matrix_[3][3] - matrix_[2][3] * matrix_[3][2];
     float A1323 = matrix_[2][1] * matrix_[3][3] - matrix_[2][3] * matrix_[3][1];
     float A1223 = matrix_[2][1] * matrix_[3][2] - matrix_[2][2] * matrix_[3][1];
@@ -197,7 +237,8 @@ float Matrix4x4::Det() const {
          - matrix_[0][3] * ( matrix_[1][0] * A1223 - matrix_[1][1] * A0223 + matrix_[1][2] * A0123 ) ;
 }
 
-bool Matrix4x4::InverseUtil(Matrix4x4& out, float epsilon) const {
+bool Matrix4x4::InverseUtil(Matrix4x4& out, float epsilon) const
+{
     float A2323 = matrix_[2][2] * matrix_[3][3] - matrix_[2][3] * matrix_[3][2];
     float A1323 = matrix_[2][1] * matrix_[3][3] - matrix_[2][3] * matrix_[3][1];
     float A1223 = matrix_[2][1] * matrix_[3][2] - matrix_[2][2] * matrix_[3][1];
@@ -222,7 +263,10 @@ bool Matrix4x4::InverseUtil(Matrix4x4& out, float epsilon) const {
                 + matrix_[0][2] * ( matrix_[1][0] * A1323 - matrix_[1][1] * A0323 + matrix_[1][3] * A0123 )
                 - matrix_[0][3] * ( matrix_[1][0] * A1223 - matrix_[1][1] * A0223 + matrix_[1][2] * A0123 ) ;
 
-    if (Abs(det) <= epsilon) return false;
+    if (Abs(det) <= epsilon)
+    {
+        return false;
+    }
 
     float inv_det = 1.0F / det;
 
@@ -249,23 +293,28 @@ bool Matrix4x4::InverseUtil(Matrix4x4& out, float epsilon) const {
     return true;
 }
 
-Matrix4x4 Matrix4x4::Inverse(float epsilon) const {
+Matrix4x4 Matrix4x4::Inverse(float epsilon) const
+{
     Matrix4x4 m{};
     InverseUtil(m, epsilon);
     return m;
 }
 
-Matrix4x4 Matrix4x4::Transpose() const {
+Matrix4x4 Matrix4x4::Transpose() const
+{
     Matrix4x4 m{};
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             m.matrix_[i][j] = matrix_[j][i];
         }
     }
     return m;
 }
 
-Vec4f Matrix4x4::operator*(const Vec4f& rhs) const {
+Vec4f Matrix4x4::operator*(const Vec4f& rhs) const
+{
     float x = matrix_[0][0] * rhs.x_ + matrix_[0][1] * rhs.y_ + matrix_[0][2] * rhs.z_ + matrix_[0][3] * rhs.w_;
     float y = matrix_[1][0] * rhs.x_ + matrix_[1][1] * rhs.y_ + matrix_[1][2] * rhs.z_ + matrix_[1][3] * rhs.w_;
     float z = matrix_[2][0] * rhs.x_ + matrix_[2][1] * rhs.y_ + matrix_[2][2] * rhs.z_ + matrix_[2][3] * rhs.w_;
@@ -273,13 +322,17 @@ Vec4f Matrix4x4::operator*(const Vec4f& rhs) const {
     return Vec4f(x, y, z, w);
 }
 
-Matrix4x4 Matrix4x4::operator*(const Matrix4x4& rhs) const {
+Matrix4x4 Matrix4x4::operator*(const Matrix4x4& rhs) const
+{
     Matrix4x4 m{};
 
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
+    for (uint32 i = 0; i < 4; ++i)
+    {
+        for (uint32 j = 0; j < 4; ++j)
+        {
             m.matrix_[i][j] = 0;
-            for (int k = 0; k < 4; ++k) {
+            for (uint32 k = 0; k < 4; ++k)
+            {
                 m.matrix_[i][j] += (matrix_[i][k] * rhs.matrix_[k][j]);
             }
         }
@@ -288,56 +341,70 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& rhs) const {
     return m;
 }
 
-Matrix4x4& Matrix4x4::Translate(const Vec3f& translation) {
-    for (int i = 0; i < 3; ++i) {
+Matrix4x4& Matrix4x4::Translate(const Vec3f& translation)
+{
+    for (int i = 0; i < 3; ++i)
+    {
         matrix_[i][3] += translation[i];
     }
     return *this;
 }
 
-Matrix4x4& Matrix4x4::Rotate(const Quaternion& rotation) {
+Matrix4x4& Matrix4x4::Rotate(const Quaternion& rotation)
+{
     auto result = rotation.GetRotationMatrix() * GetMatrix3x3();
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
+    for (uint32 i = 0; i < 3; ++i)
+    {
+        for (uint32 j = 0; j < 3; ++j)
+        {
             matrix_[i][j] = result[i][j];
         }
     }
     return *this;
 }
 
-Matrix4x4& Matrix4x4::Scale(const Vec3f& scale) {
-    for (int i = 0; i < 3; ++i) {
+Matrix4x4& Matrix4x4::Scale(const Vec3f& scale)
+{
+    for (uint32 i = 0; i < 3; ++i)
+    {
         matrix_[i][i] *= scale[i];
     }
     return *this;
 }
 
-Vec3f Matrix4x4::GetTranslation() const {
+Vec3f Matrix4x4::GetTranslation() const
+{
     return Vec3f(matrix_[0][3],
                  matrix_[1][3],
                  matrix_[2][3]);
 }
 
-Quaternion Matrix4x4::GetRotation() const {
+Quaternion Matrix4x4::GetRotation() const
+{
     return Quaternion::FromMatrix3(GetMatrix3x3()).Unit();
 }
 
-Vec3f Matrix4x4::GetScale() const {
+Vec3f Matrix4x4::GetScale() const
+{
     auto sx = Vec3f(matrix_[0][0], matrix_[1][0], matrix_[2][0]).Magnitude();
     auto sy = Vec3f(matrix_[0][1], matrix_[1][1], matrix_[2][1]).Magnitude();
     auto sz = Vec3f(matrix_[0][2], matrix_[1][2], matrix_[2][2]).Magnitude();
     return Vec3f(sx, sy, sz);
 }
 
-Matrix3x3 Matrix4x4::GetMatrix3x3() const {
+Matrix3x3 Matrix4x4::GetMatrix3x3() const
+{
     return Matrix3x3(matrix_[0][0], matrix_[0][1], matrix_[0][2],
                      matrix_[1][0], matrix_[1][1], matrix_[1][2],
                      matrix_[2][0], matrix_[2][1], matrix_[2][2]);
 }
 
-Matrix4x4 Matrix4x4::Identity() {
+Matrix4x4 Matrix4x4::Identity()
+{
     return Matrix4x4(1.0F, 0.0F, 0.0F, 0.0F,
                      0.0F, 1.0F, 0.0F, 0.0F,
                      0.0F, 0.0F, 1.0F, 0.0F,
                      0.0F, 0.0F, 0.0F, 1.0F);
 }
+
+} // namespace zero::math

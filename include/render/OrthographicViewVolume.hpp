@@ -3,12 +3,14 @@
 #include "IViewVolume.hpp"
 #include "math/Box.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Orthographic view volume represented using a Box
      */
-    class OrthographicViewVolume : public IViewVolume {
+    class OrthographicViewVolume : public IViewVolume
+    {
     public:
 
         OrthographicViewVolume(const math::Vec3f& min, const math::Vec3f& max);

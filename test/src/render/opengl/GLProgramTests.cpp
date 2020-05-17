@@ -2,13 +2,15 @@
 
 using namespace zero::render;
 
-TEST_F(TestGLProgram, LinkEmptyProgram) {
+TEST_F(TestGLProgram, LinkEmptyProgram)
+{
     std::vector<std::shared_ptr<GLShader>> shaders;
     auto program = GLProgram::CreateGLProgram(shaders);
     ASSERT_EQ(program, nullptr);
 }
 
-TEST_F(TestGLProgram, LinkSingleVertexFragmentShaderProgram) {
+TEST_F(TestGLProgram, LinkSingleVertexFragmentShaderProgram)
+{
     // Vertex
     std::vector<std::shared_ptr<GLShader>> shaders;
     shaders.push_back(vertex_shader_);
@@ -24,7 +26,8 @@ TEST_F(TestGLProgram, LinkSingleVertexFragmentShaderProgram) {
     EXPECT_TRUE(program->IsLinked());
 }
 
-TEST_F(TestGLProgram, LinkVertexFragmentProgram) {
+TEST_F(TestGLProgram, LinkVertexFragmentProgram)
+{
     std::vector<std::shared_ptr<GLShader>> shaders;
     shaders.push_back(vertex_shader_);
     shaders.push_back(fragment_shader_);

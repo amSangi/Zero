@@ -4,12 +4,14 @@
 #include "OpenGL.hpp"
 #include "render/IRenderResource.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief OpenGL graphics texture wrapper
      */
-    class GLTexture final : public IRenderResource {
+    class GLTexture final : public IRenderResource
+    {
     public:
 
         /**

@@ -4,7 +4,8 @@
 
 using namespace zero::math;
 
-TEST(TestQuaternion, ScalarOperations) {
+TEST(TestQuaternion, ScalarOperations)
+{
 	Quaternion quat = Quaternion::Identity();
 
 	EXPECT_EQ(quat + 1.0F, Quaternion(2.0F, 1.0F, 1.0F, 1.0F));
@@ -22,7 +23,8 @@ TEST(TestQuaternion, ScalarOperations) {
 	EXPECT_EQ(quat, Quaternion(0.0F, -1.0F, -1.0F, -1.0F));
 }
 
-TEST(TestQuaternion, QuaternionQuaternionOperations) {
+TEST(TestQuaternion, QuaternionQuaternionOperations)
+{
 	Quaternion quat1 = Quaternion::Identity();
 	Quaternion quat2(2.5F, 3.5F, 1.0F, 5.0F);
 
@@ -59,9 +61,11 @@ TEST(TestQuaternion, QuaternionQuaternionOperations) {
 	EXPECT_EQ(q2, Quaternion(-60.0F, 20.0F, 14.0F, 32.0F));
 }
 
-TEST(TestQuaternion, QuaternionVectorOperations) {
+TEST(TestQuaternion, QuaternionVectorOperations)
+{
 	Quaternion identity = Quaternion::Identity();
-	Vec3f expected, actual;
+	Vec3f expected{};
+	Vec3f actual{};
 
 	Vec3f vector(1.0F, 2.0F, 3.0F);
 	expected = vector;
@@ -83,15 +87,19 @@ TEST(TestQuaternion, QuaternionVectorOperations) {
 
 }
 
-TEST(TestQuaternion, Norm) {
+TEST(TestQuaternion, Norm)
+{
 	EXPECT_EQ(Quaternion::Zero().Norm(), 0.0F);
 	EXPECT_EQ(Quaternion::Identity().Norm(), 1.0F);
 	EXPECT_EQ(Quaternion(1.0F, 23.0F, 44.0F, 33.0F).Norm(), 3.0F * Sqrt(395.0F));
 	EXPECT_EQ(Quaternion(1.0F, -3.0F, 44.0F, -33.0F).Norm(), Sqrt(3035.0F));
 }
 
-TEST(TestQuaternion, UnitNorm) {
-	Quaternion expected, actual, quat;
+TEST(TestQuaternion, UnitNorm)
+{
+	Quaternion expected{};
+	Quaternion actual{};
+	Quaternion quat{};
 
 	EXPECT_EQ(Quaternion::Identity().Unit(), Quaternion::Identity());
 
@@ -106,13 +114,17 @@ TEST(TestQuaternion, UnitNorm) {
     EXPECT_EQ(actual, expected);
 }
 
-TEST(TestQuaternion, Conjugate) {
+TEST(TestQuaternion, Conjugate)
+{
 	EXPECT_EQ(Quaternion::Identity().Conjugate(), Quaternion::Identity());
 	EXPECT_EQ(Quaternion(1.0F, 3.0F, -4.5F, -13.3F).Conjugate(), Quaternion(1.0F, -3.0F, 4.5F, 13.3F));
 }
 
-TEST(TestQuaternion, Inverse) {
-	Quaternion expected, actual, quat;
+TEST(TestQuaternion, Inverse)
+{
+	Quaternion expected{};
+	Quaternion actual{};
+	Quaternion quat{};
 
 	quat = Quaternion::Identity();
 	expected = quat;
@@ -131,22 +143,27 @@ TEST(TestQuaternion, Inverse) {
 
 }
 
-TEST(TestQuaternion, Negate) {
+TEST(TestQuaternion, Negate)
+{
 	EXPECT_EQ(Quaternion::Identity().Negate(), Quaternion::Identity() * -1.0F);
 	EXPECT_EQ(Quaternion(-1.0F, 3.0F, 4.5F, -5.0F).Negate(), Quaternion(1.0F, -3.0F, -4.5F, 5.0F));
 }
 
-TEST(TestQuaternion, Dot) {
+TEST(TestQuaternion, Dot)
+{
 	EXPECT_EQ(Quaternion::Dot(Quaternion::Identity(), Quaternion::Identity()), 1.0F);
 	float dot = Quaternion::Dot(Quaternion(1.0F, 3.0F, 23.0F, 113.0F), Quaternion(32.0F, 13.0F, 2.0F, 3.0F));
 	EXPECT_EQ(dot, 456.0F);
 }
 
-TEST(TestQuaternion, FromAngleAxis) {
-	Quaternion expected, actual;
+TEST(TestQuaternion, FromAngleAxis)
+{
+	Quaternion expected{};
+	Quaternion actual{};
 
 	// Round to nearest tenth and check
-	auto CHECK_FLT_EQ = [] (Quaternion a, Quaternion e) {
+	auto CHECK_FLT_EQ = [] (Quaternion a, Quaternion e)
+    {
 		EXPECT_EQ(Floor(a.w_ * 10.0F + 0.50F) / 10.0F, e.w_);
 		EXPECT_EQ(Floor(a.x_ * 10.0F + 0.50F) / 10.0F, e.x_);
 		EXPECT_EQ(Floor(a.y_ * 10.0F + 0.50F) / 10.0F, e.y_);
@@ -186,12 +203,14 @@ TEST(TestQuaternion, FromAngleAxis) {
     CHECK_FLT_EQ(actual, expected);
 }
 
-TEST(TestQuaternion, LookRotation) {
+TEST(TestQuaternion, LookRotation)
+{
 	EXPECT_EQ(Quaternion::LookRotation(Vec3f::Right()).GetEulerAngles(),
               Vec3f(0.0F, 90.0F * kDegreeToRadian, 0.0F));
 }
 
-TEST(TestQuaternion, FromToRotation) {
+TEST(TestQuaternion, FromToRotation)
+{
 	EXPECT_EQ(Quaternion::FromToRotation(Vec3f::Right(), Vec3f::Up()).GetEulerAngles(),
               Vec3f(0.0F, 90.0F * kDegreeToRadian, 0.0F));
 }

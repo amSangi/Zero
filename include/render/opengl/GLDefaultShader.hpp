@@ -2,12 +2,14 @@
 
 #include "render/ShaderStage.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Static container of default GLSL shader programs
      */
-    class GLDefaultShader {
+    class GLDefaultShader
+    {
     public:
         GLDefaultShader() = delete;
         ~GLDefaultShader() = delete;

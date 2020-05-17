@@ -6,24 +6,29 @@
 #include "render/opengl/GLShader.hpp"
 
 
-class TestGLShader : public TestWindow {
+class TestGLShader : public TestWindow
+{
 protected:
 
-    void SetUp() override {
+    void SetUp() override
+    {
         TestWindow::SetUp();
     }
 
-    static bool IsShader(GLuint id) {
+    static bool IsShader(GLuint id)
+    {
         return (glIsShader(id) == GL_TRUE);
     }
 
-    static void ExpectValidShader(zero::render::GLShader& shader) {
+    static void ExpectValidShader(zero::render::GLShader& shader)
+    {
         EXPECT_TRUE(shader.GetNativeIdentifier() != 0);
         EXPECT_TRUE(IsShader(shader.GetNativeIdentifier()));
         EXPECT_TRUE(shader.Compile());
     }
 
-    static void ExpectInvalidShader(zero::render::GLShader& shader) {
+    static void ExpectInvalidShader(zero::render::GLShader& shader)
+    {
         EXPECT_TRUE(shader.GetNativeIdentifier() != 0);
         EXPECT_TRUE(IsShader(shader.GetNativeIdentifier()));
         EXPECT_FALSE(shader.Compile());

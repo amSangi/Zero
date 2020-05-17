@@ -3,12 +3,14 @@
 #include "Angle.hpp"
 #include "ZMath.hpp"
 
-namespace zero::math {
+namespace zero::math
+{
 
     /**
      * @brief A 3x3 Matrix
      */
-    class Matrix3x3 {
+    class Matrix3x3
+    {
     public:
         Matrix3x3() = default;
         explicit Matrix3x3(float m[3][3]);

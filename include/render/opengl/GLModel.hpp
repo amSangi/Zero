@@ -11,12 +11,14 @@ class aiNode;
 class aiScene;
 class aiMesh;
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Model containing OpenGL objects
      */
-    class GLModel final : public IModel {
+    class GLModel final : public IModel
+    {
     public:
 
         /**

@@ -1,6 +1,7 @@
 #include "core/Transform.hpp"
 
-using namespace zero;
+namespace zero
+{
 
 Transform::Transform()
 : HierarchyComponent()
@@ -13,7 +14,9 @@ Transform::Transform()
 , orientation_()
 , local_orientation_()
 , cached_rotation_()
-{}
+, is_modified_(false)
+{
+}
 
 Transform::Transform(const math::Vec3f& position,
                      const math::Vec3f& scale,
@@ -28,7 +31,9 @@ Transform::Transform(const math::Vec3f& position,
 , orientation_(orientation.UnitCopy())
 , local_orientation_()
 , cached_rotation_()
-{}
+, is_modified_(false)
+{
+}
 
 Transform::Transform(Entity parent,
                      const Transform& parent_transform,
@@ -45,16 +50,20 @@ Transform::Transform(Entity parent,
 , orientation_((parent_transform.orientation_ * local_orientation).Unit())
 , local_orientation_(local_orientation.UnitCopy())
 , cached_rotation_()
-{}
+, is_modified_(false)
+{
+}
 
-Transform Transform::FromMatrix4x4(const math::Matrix4x4& transformation) {
+Transform Transform::FromMatrix4x4(const math::Matrix4x4& transformation)
+{
     Transform transform;
     return transform.Scale(transformation.GetScale())
                     .Rotate(transformation.GetRotation())
                     .Translate(transformation.GetTranslation());
 }
 
-bool Transform::operator==(const Transform& other) const {
+bool Transform::operator==(const Transform& other) const
+{
     return (position_ == other.position_)
         && (local_position_ == other.local_position_)
         && (scale_ == other.scale_)
@@ -63,54 +72,62 @@ bool Transform::operator==(const Transform& other) const {
         && (local_orientation_ == other.local_orientation_);
 }
 
-bool Transform::operator!=(const Transform& other) const {
+bool Transform::operator!=(const Transform& other) const
+{
     return !(operator==(other));
 }
 
-math::Matrix4x4 Transform::GetWorldToLocalMatrix() const {
+math::Matrix4x4 Transform::GetWorldToLocalMatrix() const
+{
     return GetLocalToWorldMatrix().Inverse();
 }
 
-math::Matrix4x4 Transform::GetLocalToWorldMatrix() const {
+math::Matrix4x4 Transform::GetLocalToWorldMatrix() const
+{
     return math::Matrix4x4::Identity()
             .Scale(scale_)
             .Rotate(orientation_)
             .Translate(position_);
 }
 
-math::Matrix4x4 Transform::GetCachedLocalToWorldMatrix() const {
+math::Matrix4x4 Transform::GetCachedLocalToWorldMatrix() const
+{
     return math::Matrix4x4::Identity()
             .Scale(cached_scale_)
             .Rotate(cached_rotation_)
             .Translate(cached_translation_);
 }
 
-math::Matrix4x4 Transform::GetLocalToParentMatrix() const {
+math::Matrix4x4 Transform::GetLocalToParentMatrix() const
+{
     return math::Matrix4x4::Identity()
             .Scale(local_scale_)
             .Rotate(local_orientation_)
             .Translate(local_position_);
 }
 
-Transform& Transform::Translate(const math::Vec3f& translation) {
+Transform& Transform::Translate(const math::Vec3f& translation)
+{
     position_ += translation;
     cached_translation_ += translation;
     is_modified_ = true;
     return *this;
 }
 
-Transform& Transform::LocalTranslate(const Transform& parent, const math::Vec3f& translation) {
+Transform& Transform::LocalTranslate(const Transform& parent, const math::Vec3f& translation)
+{
     local_position_ += translation;
 
     // Update world position using parent transform
-    auto parent_matrix = parent.GetLocalToWorldMatrix();
+    math::Matrix4x4 parent_matrix = parent.GetLocalToWorldMatrix();
     math::Vec4f homogeneous_local_pos = math::Vec4f(local_position_.x_, local_position_.y_, local_position_.z_, 1.0F);
     position_ = (parent_matrix * homogeneous_local_pos).XYZ();
 
     return *this;
 }
 
-Transform& Transform::Rotate(const math::Quaternion& rotation) {
+Transform& Transform::Rotate(const math::Quaternion& rotation)
+{
     orientation_ *= rotation;
     orientation_.Unit();
 
@@ -121,19 +138,21 @@ Transform& Transform::Rotate(const math::Quaternion& rotation) {
     return *this;
 }
 
-Transform& Transform::LocalRotate(const Transform& parent, const math::Quaternion& rotation) {
+Transform& Transform::LocalRotate(const Transform& parent, const math::Quaternion& rotation)
+{
     local_orientation_ *= rotation;
     local_orientation_.Unit();
 
     // Update world orientation using parent transform
-    auto parent_matrix = parent.GetLocalToWorldMatrix();
+    math::Matrix4x4 parent_matrix = parent.GetLocalToWorldMatrix();
     parent_matrix.Rotate(local_orientation_);
     orientation_ = parent_matrix.GetRotation();
 
     return *this;
 }
 
-Transform& Transform::Scale(const math::Vec3f& scale) {
+Transform& Transform::Scale(const math::Vec3f& scale)
+{
     scale_ *= scale;
     cached_scale_ *= scale;
 
@@ -141,48 +160,59 @@ Transform& Transform::Scale(const math::Vec3f& scale) {
     return *this;
 }
 
-Transform& Transform::LocalScale(const Transform& parent, const math::Vec3f& scale) {
+Transform& Transform::LocalScale(const Transform& parent, const math::Vec3f& scale)
+{
     local_scale_ *= scale;
 
     // Update the world scale using the parent transform
-    auto parent_matrix = parent.GetLocalToWorldMatrix();
+    math::Matrix4x4 parent_matrix = parent.GetLocalToWorldMatrix();
     parent_matrix.Scale(local_scale_);
     scale_ = parent_matrix.GetScale();
 
     return *this;
 }
 
-void Transform::ClearCachedTransformation() {
+void Transform::ClearCachedTransformation()
+{
     cached_translation_ = math::Vec3f::Zero();
     cached_rotation_ = math::Quaternion::Identity();
     cached_scale_ = math::Vec3f::One();
     is_modified_ = false;
 }
 
-bool Transform::IsModified() const {
+bool Transform::IsModified() const
+{
     return is_modified_;
 }
 
-const math::Vec3f& Transform::GetPosition() const {
+const math::Vec3f& Transform::GetPosition() const
+{
     return position_;
 }
 
-const math::Vec3f& Transform::GetLocalPosition() const {
+const math::Vec3f& Transform::GetLocalPosition() const
+{
     return local_position_;
 }
 
-const math::Vec3f& Transform::GetScale() const {
+const math::Vec3f& Transform::GetScale() const
+{
     return scale_;
 }
 
-const math::Vec3f& Transform::GetLocalScale() const {
+const math::Vec3f& Transform::GetLocalScale() const
+{
     return local_scale_;
 }
 
-const math::Quaternion& Transform::GetOrientation() const {
+const math::Quaternion& Transform::GetOrientation() const
+{
     return orientation_;
 }
 
-const math::Quaternion& Transform::GetLocalOrientation() const {
+const math::Quaternion& Transform::GetLocalOrientation() const
+{
     return local_orientation_;
 }
+
+} // namespace zero

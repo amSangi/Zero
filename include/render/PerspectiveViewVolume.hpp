@@ -3,12 +3,14 @@
 #include "IViewVolume.hpp"
 #include "math/Plane.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief Perspective view volume represented by 6 planes
      */
-    class PerspectiveViewVolume : public IViewVolume {
+    class PerspectiveViewVolume : public IViewVolume
+    {
     public:
 
         PerspectiveViewVolume(const math::Plane& left,

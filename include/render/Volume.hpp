@@ -4,12 +4,14 @@
 #include "math/Sphere.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief A volume component encapsulating an entity
      */
-    struct Volume : public Component {
+    struct Volume : public Component
+    {
 
         /**
          * @brief Default constructor

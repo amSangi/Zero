@@ -4,14 +4,16 @@
 using namespace zero;
 using namespace zero::render;
 
-TEST(TestCamera, LookAt) {
+TEST(TestCamera, LookAt)
+{
     Camera camera;
     EXPECT_EQ(camera.GetViewDirection(), math::Vec3f::Back());
     camera.LookAt(math::Vec3f::Up());
     EXPECT_EQ(camera.GetViewDirection(), math::Vec3f::Up());
 }
 
-TEST(TestCamera, LookAt_MoveAndLookLeft) {
+TEST(TestCamera, LookAt_MoveAndLookLeft)
+{
     Camera camera;
     camera.position_ = math::Vec3f::Forward();
     camera.LookAt(math::Vec3f::Left());
@@ -19,7 +21,8 @@ TEST(TestCamera, LookAt_MoveAndLookLeft) {
     EXPECT_EQ(camera.position_, math::Vec3f::Forward());
 }
 
-TEST(TestCamera, GetVerticalFieldOfView) {
+TEST(TestCamera, GetVerticalFieldOfView)
+{
     Camera camera;
     camera.viewport_.width_ = 1920;
     camera.viewport_.height_ = 1080;

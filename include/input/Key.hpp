@@ -1,11 +1,13 @@
 #pragma once
 
-namespace zero::input {
+namespace zero::input
+{
 
     /**
      * @brief Virtual keyboard keys
      */
-    enum class Key {
+    enum class Key
+    {
         /* ********** Alphabet ********** */
         KEY_A,
         KEY_B,

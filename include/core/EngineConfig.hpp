@@ -2,12 +2,14 @@
 
 #include "core/RenderSystemConfig.hpp"
 
-namespace zero {
+namespace zero
+{
 
     /**
      * @brief The Engine configuration data
      */
-    struct EngineConfig {
+    struct EngineConfig
+    {
 
         /**
          * @brief The RenderingSystem configuration data

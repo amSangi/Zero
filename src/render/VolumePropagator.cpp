@@ -4,37 +4,43 @@
 #include "core/Transform.hpp"
 #include "render/Volume.hpp"
 
-using namespace zero::math;
-using namespace zero::render;
+namespace zero::render
+{
 
-void VolumePropagator::PropagateVolume(entt::registry& registry) {
+void VolumePropagator::PropagateVolume(entt::registry& registry)
+{
     auto view = registry.view<Volume, Transform>();
-    std::queue<Component::Entity> update_queue;
+    std::queue<Entity> update_queue;
     // Use to prevent duplicate operations
-    std::set<Component::Entity> parents_to_visit;
+    std::set<Entity> parents_to_visit;
 
     // Retrieve root entities and transform volumes
-    for (auto entity : view) {
+    for (Entity entity : view)
+    {
         auto& volume = view.get<Volume>(entity);
         auto& transform = view.get<Transform>(entity);
         // Retrieve root entity
-        if (transform.children_.empty() && transform.parent_ != Component::NullEntity) {
+        if (transform.children_.empty() && transform.parent_ != NullEntity)
+        {
             update_queue.push(entity);
         }
         // Apply cached transformations to volume
-        if (transform.IsModified()) {
+        if (transform.IsModified())
+        {
             volume.Transform(transform.GetCachedLocalToWorldMatrix());
         }
     }
 
     // Begin upward propagation
-    while (!update_queue.empty()) {
-        auto entity = update_queue.front();
+    while (!update_queue.empty())
+    {
+        Entity entity = update_queue.front();
         auto& volume = view.get<Volume>(entity);
         auto& transform = view.get<Transform>(entity);
         update_queue.pop();
 
-        if (transform.parent_ == Component::NullEntity || !registry.valid(transform.parent_)) {
+        if (transform.parent_ == NullEntity || !registry.valid(transform.parent_))
+        {
             continue;
         }
 
@@ -43,9 +49,12 @@ void VolumePropagator::PropagateVolume(entt::registry& registry) {
         parent_volume.Engulf(volume);
 
         // Add parent to queue if it hasn't already been added
-        if (parents_to_visit.find(transform.parent_) == parents_to_visit.end()) {
+        if (parents_to_visit.find(transform.parent_) == parents_to_visit.end())
+        {
             parents_to_visit.insert(transform.parent_);
             update_queue.push(transform.parent_);
         }
     }
 }
+
+} // namespace zero::render

@@ -3,13 +3,15 @@
 #include <math/Box.hpp>
 #include <assimp/scene.h>
 
-using namespace zero::render;
+namespace zero::render
+{
 
 std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename,
                                                 std::minstd_rand0 rng,
                                                 uint32 identifier,
                                                 const aiNode* node,
-                                                const aiScene* scene) {
+                                                const aiScene* scene)
+{
     std::vector<std::shared_ptr<GLMesh>> meshes;
     meshes.reserve(node->mNumMeshes);
 
@@ -17,11 +19,13 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename,
 
     Material material;
     // Use the first material for the entire model
-    if (scene->mNumMaterials > 0) {
+    if (scene->mNumMaterials > 0)
+    {
         material = GLAssetImportWrapper::LoadMaterial(scene->mMaterials[0]);
     }
 
-    for (uint32 i = 0; i < node->mNumMeshes; ++i) {
+    for (uint32 i = 0; i < node->mNumMeshes; ++i)
+    {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(GLAssetImportWrapper::LoadMesh(mesh));
 
@@ -52,7 +56,8 @@ std::shared_ptr<GLModel> GLModel::CreateGLModel(const std::string& filename,
 
     // Create Child GLModels
     std::vector<std::shared_ptr<GLModel>> children;
-    for (uint32 i = 0; i < node->mNumChildren; ++i) {
+    for (uint32 i = 0; i < node->mNumChildren; ++i)
+    {
         auto child_model = GLModel::CreateGLModel(filename, rng, rng(), node->mChildren[i], scene);
         child_model->parent_model_ = root_model;
         root_model->child_models_.push_back(std::move(child_model));
@@ -73,43 +78,56 @@ GLModel::GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,
 , material_(std::move(material))
 , volume_(volume)
 , model_instance_(std::move(model_instance))
-{}
+{
+}
 
-void GLModel::Draw() {
-    for (const auto& mesh : meshes_) {
+void GLModel::Draw()
+{
+    for (const auto& mesh : meshes_)
+    {
         mesh->Draw();
     }
 }
 
-zero::Transform GLModel::GetTransform() const {
+zero::Transform GLModel::GetTransform() const
+{
     return transform_;
 }
 
-Material GLModel::GetMaterial() const {
+Material GLModel::GetMaterial() const
+{
     return material_;
 }
 
-Volume GLModel::GetVolume() const {
+Volume GLModel::GetVolume() const
+{
     return volume_;
 }
 
-ModelInstance GLModel::GetModelInstance() const {
+ModelInstance GLModel::GetModelInstance() const
+{
     return model_instance_;
 }
 
-std::shared_ptr<IModel> GLModel::GetParent() const {
+std::shared_ptr<IModel> GLModel::GetParent() const
+{
     return parent_model_;
 }
 
-std::shared_ptr<IModel> GLModel::FindChild(uint32 identifier) const {
-    for (const auto& model : child_models_) {
-        if (model->GetModelInstance().child_identifier_ == identifier) {
+std::shared_ptr<IModel> GLModel::FindChild(uint32 identifier) const
+{
+    for (const auto& model : child_models_)
+    {
+        if (model->GetModelInstance().child_identifier_ == identifier)
+        {
             return model;
         }
     }
-    for (const auto& model : child_models_) {
+    for (const auto& model : child_models_)
+    {
         auto search = model->FindChild(identifier);
-        if (search) {
+        if (search)
+        {
             return search;
         }
     }
@@ -117,10 +135,14 @@ std::shared_ptr<IModel> GLModel::FindChild(uint32 identifier) const {
     return nullptr;
 }
 
-const std::vector<std::shared_ptr<IModel>>& GLModel::GetChildren() const {
+const std::vector<std::shared_ptr<IModel>>& GLModel::GetChildren() const
+{
     return child_models_;
 }
 
-const std::vector<std::shared_ptr<GLMesh>>& GLModel::GetMeshes() const {
+const std::vector<std::shared_ptr<GLMesh>>& GLModel::GetMeshes() const
+{
     return meshes_;
 }
+
+} // namespace zero::render

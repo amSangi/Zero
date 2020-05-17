@@ -3,12 +3,14 @@
 #include "OpenGL.hpp"
 #include "render/ISampler.hpp"
 
-namespace zero::render {
+namespace zero::render
+{
 
     /**
      * @brief OpenGL texture sampler wrapper
      */
-    class GLSampler final : public ISampler {
+    class GLSampler final : public ISampler
+    {
     public:
 
         GLSampler();
