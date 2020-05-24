@@ -27,7 +27,7 @@ zero::uint8 GLTextureManager::GetTextureUnitCount() const
     return count;
 }
 
-void GLTextureManager::SetSampler(const std::shared_ptr<GLSampler>& sampler, uint8 index)
+void GLTextureManager::SetSampler(const std::shared_ptr<GLSampler>& sampler, uint8 index) const
 {
     if (index >= GetTextureUnitCount() || !sampler)
     {

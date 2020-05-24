@@ -2,7 +2,7 @@
 
 #include <string>
 #include "OpenGL.hpp"
-#include "render/IRenderResource.hpp"
+#include "core/NonCopyable.hpp"
 
 namespace zero::render
 {
@@ -10,7 +10,7 @@ namespace zero::render
     /**
      * @brief OpenGL graphics texture wrapper
      */
-    class GLTexture final : public IRenderResource
+    class GLTexture final : public NonCopyable
     {
     public:
 
@@ -21,7 +21,7 @@ namespace zero::render
          */
         GLTexture(GLuint id, GLenum target);
 
-        ~GLTexture() override;
+        ~GLTexture();
 
         /**
          * @brief Bind the texture object to the given texture unit
@@ -59,13 +59,12 @@ namespace zero::render
          */
         void SetName(const std::string& name);
 
-    protected:
+    private:
+
         /**
          * @brief Destroy the texture resources
          */
-        void Cleanup() override;
-
-    private:
+        void Cleanup();
 
         /**
          * @brief OpenGL texture identifier

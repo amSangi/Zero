@@ -47,7 +47,8 @@ add_library(${PROJECT_NAME}  event/EventBus.cpp
                              render/opengl/GLSampler.cpp
                              render/opengl/GLShader.cpp
                              render/opengl/GLTexture.cpp
-                             render/opengl/GLTextureManager.cpp)
+                             render/opengl/GLTextureManager.cpp
+                             render/opengl/GLUniformManager.cpp)
 
 
 ## Link Libraries ##

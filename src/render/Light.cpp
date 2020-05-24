@@ -20,6 +20,7 @@ PointLight::PointLight()
 
 SpotLight::SpotLight()
 : color_(math::Vec3f::One())
+, direction_(math::Vec3f::Down())
 , inner_cone_angle_(math::Degree(12.5F))
 , outer_cone_angle_(math::Degree(17.5F))
 {

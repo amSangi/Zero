@@ -36,7 +36,7 @@ namespace zero::render
          * @param sampler the texture sampler to assign
          * @param texture_unit the texture unit to assign the sampler to. Range from [0, GetTextureUnitCount).
          */
-        void SetSampler(const std::shared_ptr<GLSampler>& sampler, uint8 texture_unit);
+        void SetSampler(const std::shared_ptr<GLSampler>& sampler, uint8 texture_unit) const;
 
         /**
          * @brief Create a series of

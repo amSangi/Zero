@@ -16,6 +16,7 @@ namespace zero::render
     class GLModelManager;
     class GLPrimitiveMeshManager;
     class GLTextureManager;
+    class GLUniformManager;
     class IProgram;
     class Volume;
 
@@ -107,16 +108,6 @@ namespace zero::render
         static void ToggleWireframeMode(bool enable_wireframe);
 
         /**
-         * @brief Set the light uniforms in the shader program
-         *
-         * Queries the registry for all entities with Transform and Light components
-         *
-         * @param graphics_program the shader program
-         * @param registry the registry containing all the entities and their components
-         */
-        static void SetLightUniforms(std::shared_ptr<IProgram>& graphics_program, const entt::registry& registry);
-
-        /**
          * @brief Read the shader source into the destination
          * @param filename the shader file
          * @param destination the destination
@@ -142,6 +133,11 @@ namespace zero::render
          * @brief Manage texture image usage
          */
         std::unique_ptr<GLTextureManager> texture_manager_;
+
+        /**
+         * @brief Manage uniform buffer objects
+         */
+        std::unique_ptr<GLUniformManager> uniform_manager_;
 
     }; // class GLRenderer
 

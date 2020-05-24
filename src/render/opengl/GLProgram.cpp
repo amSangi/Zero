@@ -190,7 +190,17 @@ GLint GLProgram::GetAttribLocation(const std::string& name) const
     return glGetAttribLocation(id_, name.c_str());
 }
 
-void GLProgram::Cleanup()
+GLuint GLProgram::GetUniformBlockIndex(const std::string& uniform_name) const
+{
+    return glGetUniformBlockIndex(id_, uniform_name.c_str());
+}
+
+void GLProgram::BindBlockIndex(GLuint block_index, GLuint block_binding) const
+{
+    glUniformBlockBinding(id_, block_index, block_binding);
+}
+
+void GLProgram::Cleanup() const
 {
     if (glIsProgram(id_))
     {

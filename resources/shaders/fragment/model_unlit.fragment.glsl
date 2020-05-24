@@ -1,34 +1,53 @@
 #version 450
 precision highp float;
 
+// -------------------- Camera Uniforms ----------------------- //
+layout (std140) uniform Camera
+{
+    mat4 u_projection_matrix;
+    mat4 u_view_matrix;
+    vec4 u_camera_position;
+};
+
+// -------------------- Model Uniforms ----------------------- //
+layout (std140) uniform Model
+{
+    mat4 u_model_matrix;
+    mat4 u_normal_matrix;
+};
+
 // -------------------- Material Uniforms -------------------- //
-struct Material {
+layout (std140) uniform Material
+{
+    vec4 u_diffuse_color;
+    float u_specular_exponent;
+};
+
+// -------------------- Texture Uniforms -------------------- //
+struct TextureMap
+{
     sampler2D diffuse_texture;
     sampler2D specular_texuture;
     sampler2D normal_texture;
-    vec3 diffuse_color;
-    float specular_exponent;
 };
 
-uniform Material material;
-
-// -------------------- Model Uniforms ----------------------- //
-uniform mat4 projection_matrix;
-uniform mat4 model_view_matrix;
-uniform mat3 normal_matrix;
-uniform vec3 camera_position;
+uniform TextureMap u_texture_map;
 
 // -------------------- Vertex IN variables ------------------ //
-in vec3 model_view_position;
-in vec3 transformed_normal;
-in vec2 texture_coord;
+in VertexData
+{
+    vec3 position;
+    vec3 normal;
+    vec2 texture_coordinate;
+} i;
 
 // -------------------- OUT variables ------------------ //
-out vec4 final_color;
+out vec4 out_color;
 
 // -------------------- Main --------------------------------- //
-void main() {
-    vec3 texture_color = texture2D(material.diffuse_texture, texture_coord).xyz;
-    vec3 object_color = texture_color + material.diffuse_color;
-    final_color = vec4(object_color, 1.0);
+void main()
+{
+    vec3 texture_color = texture(u_texture_map.diffuse_texture, i.texture_coordinate).xyz;
+    vec3 object_color = texture_color + u_diffuse_color.xyz;
+    out_color = vec4(object_color, 1.0);
 }

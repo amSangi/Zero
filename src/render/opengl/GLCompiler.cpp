@@ -2,7 +2,8 @@
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
 #include "render/opengl/GLDefaultShader.hpp"
-#include "render/Components.hpp"
+#include "render/Material.hpp"
+#include "render/ShaderStage.hpp"
 
 namespace zero::render
 {
@@ -12,7 +13,7 @@ GLCompiler::GLCompiler()
 {
 }
 
-std::shared_ptr<IProgram> GLCompiler::CreateProgram(const Material& material)
+std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
 {
     std::vector<std::shared_ptr<GLShader>> shaders;
 

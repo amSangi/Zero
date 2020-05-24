@@ -1,24 +1,43 @@
 #version 450
 precision highp float;
 
-uniform mat4 projection_matrix;
-uniform mat4 model_view_matrix;
-uniform mat3 normal_matrix;
-uniform vec3 camera_position;
+// -------------------- Camera Uniforms ----------------------- //
+layout (std140) uniform Camera
+{
+    mat4 u_projection_matrix;
+    mat4 u_view_matrix;
+    vec4 u_camera_position;
+};
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 normal;
-layout (location = 2) in vec2 texture_coordinate;
+// -------------------- Model Uniforms ----------------------- //
+layout (std140) uniform Model
+{
+    mat4 u_model_matrix;
+    mat4 u_normal_matrix;
+};
 
-out vec3 model_view_position;
-out vec3 transformed_normal;
-out vec2 texture_coord;
+// -------------------- IN variables ------------------ //
+layout (location = 0) in vec3 in_position;
+layout (location = 1) in vec3 in_normal;
+layout (location = 2) in vec2 in_texture_coordinate;
 
-void main() {
-    texture_coord = texture_coordinate;
-    
-    vec4 mv_position = model_view_matrix * vec4(position, 1.0);
-    model_view_position = mv_position.xyz;
-    transformed_normal = normal_matrix * normal;
-    gl_Position = projection_matrix * mv_position;
+// -------------------- OUT variables ------------------ //
+out VertexData
+{
+    vec3 model_position;
+    vec3 normal;
+    vec2 texture_coordinate;
+} o;
+
+void main()
+{
+    o.texture_coordinate = in_texture_coordinate;
+
+    vec4 model_position_4D = (u_model_matrix * vec4(in_position, 1));
+    o.model_position = model_position_4D.xyz;
+
+    mat3 normal_matrix_3 = mat3(u_normal_matrix[0].xyz, u_normal_matrix[1].xyz, u_normal_matrix[2].xyz);
+    o.normal = normal_matrix_3 * in_normal;
+
+    gl_Position = (u_projection_matrix * (u_view_matrix * model_position_4D));
 }

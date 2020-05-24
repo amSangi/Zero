@@ -15,11 +15,6 @@ GLTexture::~GLTexture()
     Cleanup();
 }
 
-void GLTexture::Cleanup()
-{
-    glDeleteTextures(1, &id_);
-}
-
 void GLTexture::Bind(GLenum texture_unit) const
 {
     glActiveTexture(texture_unit);
@@ -51,6 +46,11 @@ std::string GLTexture::GetName() const
 void GLTexture::SetName(const std::string& name)
 {
     name_ = name;
+}
+
+void GLTexture::Cleanup()
+{
+    glDeleteTextures(1, &id_);
 }
 
 } // namespace zero::render

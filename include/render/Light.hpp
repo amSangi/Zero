@@ -37,6 +37,7 @@ namespace zero::render
     {
         SpotLight();
         math::Vec3f color_;
+        math::Vec3f direction_;
         math::Degree inner_cone_angle_;
         math::Degree outer_cone_angle_;
     }; // struct SpotLight

@@ -1,39 +1,42 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include "render/ICompiler.hpp"
 
 namespace zero::render
 {
 
     // Forward declarations
+    class GLProgram;
     class GLShader;
+    class Material;
+    class ShaderStage;
 
     /**
-     * @brief Create OpenGL graphics programs and manage GLShaders
+     * @brief Create OpenGL graphics programs and manages GLShaders
      */
-    class GLCompiler final : public ICompiler
+    class GLCompiler
     {
     public:
 
         GLCompiler();
 
-        ~GLCompiler() override = default;
+        ~GLCompiler() = default;
 
         /**
          * @brief Create a graphics program from a Material component
          * @param material the material component
          * @return a graphics program
          */
-        std::shared_ptr<IProgram> CreateProgram(const Material& material) override;
+        std::shared_ptr<GLProgram> CreateProgram(const Material& material);
 
         /**
          * @brief Initialize a new shader into the shader map
          * @param stage the shader description
          * @return true if the initialization was successful. Otherwise false.
          */
-        bool InitializeShader(const ShaderStage& stage) override;
+        bool InitializeShader(const ShaderStage& stage);
 
         /**
          * @brief Clear the shader map
@@ -52,10 +55,10 @@ namespace zero::render
         std::unordered_map<std::string, std::shared_ptr<GLShader>> shader_map_;
 
         /**
-         * @brief Concatenated shader name to graphcis program map
+         * @brief Concatenated shader name to graphics program map
          * Graphics program caching avoids having to link shaders that have already been linked again.
          */
-        std::unordered_map<std::string, std::shared_ptr<IProgram>> program_map_;
+        std::unordered_map<std::string, std::shared_ptr<GLProgram>> program_map_;
 
     }; // class GLCompiler
 

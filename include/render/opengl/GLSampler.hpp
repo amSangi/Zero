@@ -53,13 +53,12 @@ namespace zero::render
          */
         [[nodiscard]] GLuint GetNativeIdentifier() const;
 
-    protected:
+    private:
+
         /**
          * @brief Destroy the sampler resources
          */
-        void Cleanup() override;
-
-    private:
+        void Cleanup();
 
         /**
          * @brief The OpenGL sampler id

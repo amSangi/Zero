@@ -90,13 +90,27 @@ namespace zero::render
          */
         [[nodiscard]] GLint GetAttribLocation(const std::string& name) const;
 
-    protected:
+        /**
+         * @brief Get the uniform block index of a named uniform block
+         * @param uniform_name the uniform name
+         * @return the block index
+         */
+        [[nodiscard]] GLuint GetUniformBlockIndex(const std::string& uniform_name) const;
+
+        /**
+         * @brief Bind the index of the shader program to the associated binding point
+         * @param block_index the index in the shader program
+         * @param block_binding the binding point to bind the index to
+         */
+        void BindBlockIndex(GLuint block_index, GLuint block_binding) const;
+
+    private:
+
         /**
          * @brief Destroy the program resources
          */
-        void Cleanup() override;
+        void Cleanup() const;
 
-    private:
         GLuint id_;
         UniformMap<math::Matrix4x4> matrix4x4_map_;
         UniformMap<math::Matrix3x3> matrix3x3_map_;

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "math/Vector4.hpp"
-#include "render/IRenderResource.hpp"
+#include "core/NonCopyable.hpp"
 
 namespace zero::render {
 
-    class ISampler : public IRenderResource
+    class ISampler : public NonCopyable
     {
     public:
 
@@ -38,7 +38,7 @@ namespace zero::render {
         /**
          * @brief Default destructor.
          */
-        ~ISampler() override = default;
+        virtual ~ISampler() = default;
 
         /**
          * @brief Initialize the sampler

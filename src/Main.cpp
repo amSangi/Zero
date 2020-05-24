@@ -257,11 +257,16 @@ int main(int argc, char *argv[])
     render::PrimitiveInstance light_primitive{render::Sphere{}};
     auto light_entity = engine->InstantiatePrimitive(light_primitive);
     render::Light light{};
-    render::SpotLight spot_light{};
-    light.Set(spot_light);
+    render::DirectionalLight directional_light{};
+    directional_light.intensity_ = 1.35F;
+    directional_light.direction_ = math::Vec3f::Normalize(math::Vec3f(0.0F, -1.0F, -1.0F));
+    light.Set(directional_light);
     engine->InstantiateLight(light, light_entity);
     auto& light_primitive_material = registry.get<render::Material>(light_entity);
+    light_primitive_material.shaders_.vertex_shader_ = render_system_config.vertex_shader_files_[0];
+    light_primitive_material.shaders_.fragment_shader_ = render_system_config.fragment_shader_files_[1];
     light_primitive_material.diffuse_color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
+    light_primitive_material.visible_ = false;
     auto& light_transform = registry.get<Transform>(light_entity);
     light_transform.Scale(math::Vec3f(0.1F));
     light_transform.Translate(math::Vec3f(2.0F, 5.0F, 0.0F));

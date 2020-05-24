@@ -69,7 +69,7 @@ GLuint GLShader::GetNativeIdentifier() const
     return id_;
 }
 
-void GLShader::Cleanup()
+void GLShader::Cleanup() const
 {
     if (glIsShader(id_))
     {

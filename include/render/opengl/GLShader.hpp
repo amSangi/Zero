@@ -44,13 +44,12 @@ namespace zero::render
          */
         [[nodiscard]] GLuint GetNativeIdentifier() const;
 
-    protected:
+    private:
+
         /**
          * @brief Destroy the shader resources
          */
-        void Cleanup() override;
-
-    private:
+        void Cleanup() const;
 
         /**
          * @brief OpenGL shader identifier

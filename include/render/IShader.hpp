@@ -1,13 +1,13 @@
 #pragma once
 
-#include "IRenderResource.hpp"
+#include "core/NonCopyable.hpp"
 
 namespace zero::render {
 
     /**
      * @brief A graphics shader program
      */
-    class IShader : public IRenderResource
+    class IShader : public NonCopyable
     {
     public:
 
@@ -25,7 +25,7 @@ namespace zero::render {
             COMPUTE_SHADER             ///< Compute Shader
         }; // enum class Type
 
-        ~IShader() override = default;
+        virtual ~IShader() = default;
 
         /**
          * @brief Compile the Shader program

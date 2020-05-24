@@ -1,12 +1,13 @@
 #include "render/opengl/GLRenderer.hpp"
 #include "render/opengl/GLCompiler.hpp"
+#include "render/opengl/GLDefaultShader.hpp"
+#include "render/opengl/GLModel.hpp"
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLPrimitiveMeshManager.hpp"
-#include "render/opengl/GLTextureManager.hpp"
-#include "render/opengl/GLModel.hpp"
-#include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLSampler.hpp"
-#include "render/opengl/GLDefaultShader.hpp"
+#include "render/opengl/GLTexture.hpp"
+#include "render/opengl/GLTextureManager.hpp"
+#include "render/opengl/GLUniformManager.hpp"
 #include "render/MeshGenerator.hpp"
 #include "render/Optimizer.hpp"
 #include <fstream>
@@ -16,16 +17,20 @@
 namespace zero::render
 {
 
-// Lighting Constants
-constexpr zero::uint32 kMaxDirectionalLights = 8;
-constexpr zero::uint32 kMaxPointLights = 8;
-constexpr zero::uint32 kMaxSpotLights = 8;
+void GLMessageCallback(GLenum source,
+                       GLenum type,
+                       GLuint id,
+                       GLenum severity,
+                       GLsizei length,
+                       const GLchar* message,
+                       const void* userParam);
 
 GLRenderer::GLRenderer()
 : graphics_compiler_(std::make_unique<GLCompiler>())
 , model_manager_(std::make_unique<GLModelManager>())
 , primitive_manager_(std::make_unique<GLPrimitiveMeshManager>())
 , texture_manager_(std::make_unique<GLTextureManager>())
+, uniform_manager_(std::make_unique<GLUniformManager>())
 {
 }
 
@@ -34,6 +39,9 @@ GLRenderer::~GLRenderer()
     ShutDown();
 }
 
+//////////////////////////////////////////////////
+///// IRenderer Implementation
+//////////////////////////////////////////////////
 void GLRenderer::Initialize(const RenderSystemConfig& config)
 {
     ShutDown();
@@ -42,10 +50,14 @@ void GLRenderer::Initialize(const RenderSystemConfig& config)
     InitializeModels(config);
     InitializeImages(config);
     primitive_manager_->LoadPrimitives();
+    uniform_manager_->Initialize();
 }
 
 void GLRenderer::Render(const entt::registry& registry)
 {
+    uniform_manager_->UpdateLightUniforms(registry);
+
+    // Render entities for each camera/viewport
     auto camera_view = registry.view<const Camera>();
     for (Entity camera_entity : camera_view)
     {
@@ -74,8 +86,25 @@ std::weak_ptr<IModel> GLRenderer::GetModel(const std::string& model)
 }
 
 //////////////////////////////////////////////////
-///// Helpers
+///// Initialization
 //////////////////////////////////////////////////
+void GLRenderer::InitializeGL()
+{
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+
+    glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
+
+    glDepthFunc(GL_LEQUAL);
+
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(GLMessageCallback, nullptr);
+}
+
 void GLRenderer::InitializeShaders(const RenderSystemConfig& config)
 {
     InitializeShaderFiles(config.vertex_shader_files_, IShader::Type::VERTEX_SHADER);
@@ -138,15 +167,22 @@ void GLRenderer::InitializeImages(const RenderSystemConfig& config)
     }
 }
 
+//////////////////////////////////////////////////
+///// Render
+//////////////////////////////////////////////////
 void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& registry)
 {
     UpdateGL(camera);
     const auto projection_matrix = camera.GetProjectionMatrix();
     const auto view_matrix = camera.GetViewMatrix();
+    uniform_manager_->UpdateCameraUniforms(projection_matrix, view_matrix, camera.position_);
+
     auto viewable_entities = Optimizer::ExtractRenderableEntities(camera, registry);
+
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
     auto model_view = registry.view<const ModelInstance>();
     auto primitive_view = registry.view<const PrimitiveInstance>();
+
     for (Entity viewable_entity : viewable_entities)
     {
         const auto& transform = renderable_view.get<const Transform>(viewable_entity);
@@ -158,7 +194,6 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
         }
         ToggleWireframeMode(material.wireframe_enabled_);
 
-        // Shader Program
         auto graphics_program = graphics_compiler_->CreateProgram(material);
         if (!graphics_program)
         {
@@ -166,30 +201,15 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
             std::cout << "Failed to create graphics program" << std::endl;
             continue;
         }
+        GLUniformManager::BindGraphicsProgram(graphics_program);
         graphics_program->Use();
 
-        // Set Material Uniforms
+        // Update uniforms
         auto gl_textures = texture_manager_->CreateTextureMap(material);
-        for (int i = 0; i < gl_textures.size(); ++i)
-        {
-            const auto& gl_texture = gl_textures[i];
-            GLenum texture_unit = GL_TEXTURE0 + i;
-            gl_texture->GenerateMipMap(texture_unit);
-            gl_texture->Bind(texture_unit);
-            graphics_program->SetUniform("material." + gl_texture->GetName(), i);
-        }
-        graphics_program->SetUniform("material.specular_exponent", material.specular_exponent_);
-        graphics_program->SetUniform("material.diffuse_color", material.diffuse_color_);
-
-        // Set lights
-        SetLightUniforms(graphics_program, registry);
-
-        // Set matrices and camera position uniforms
-        math::Matrix4x4 model_view_matrix = view_matrix * transform.GetLocalToWorldMatrix();
-        graphics_program->SetUniform("projection_matrix", projection_matrix);
-        graphics_program->SetUniform("model_view_matrix", model_view_matrix);
-        graphics_program->SetUniform("normal_matrix", model_view_matrix.Inverse().Transpose().GetMatrix3x3());
-        graphics_program->SetUniform("camera_position", camera.position_);
+        GLUniformManager::UpdateSamplerUniforms(graphics_program, gl_textures);
+        math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
+        uniform_manager_->UpdateModelUniforms(model_matrix, (view_matrix * model_matrix).Inverse());
+        uniform_manager_->UpdateMaterialUniforms(material);
         graphics_program->FlushUniforms();
 
         // Draw Mesh
@@ -246,22 +266,8 @@ void GLRenderer::RenderVolume(const Camera& camera,
 }
 
 //////////////////////////////////////////////////
-///// Static Helpers
+///// OpenGL Helpers
 //////////////////////////////////////////////////
-void GLRenderer::InitializeGL()
-{
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_TEXTURE_2D);
-
-    glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-    glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-
-    glDepthFunc(GL_LEQUAL);
-}
-
 void GLRenderer::UpdateGL(const Camera& camera)
 {
     glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
@@ -281,81 +287,9 @@ void GLRenderer::ToggleWireframeMode(bool enable_wireframe)
     }
 }
 
-void GLRenderer::SetLightUniforms(std::shared_ptr<IProgram>& graphics_program, const entt::registry& registry)
-{
-    // Uniform Array Index - Always reset to 0 before each loop
-    uint32 i = 0;
-    int32 light_count = 0;
-
-    // Set Directional Light Uniforms
-    auto directional_light_view = registry.view<const DirectionalLight>();
-    light_count = static_cast<int32>(math::Min(kMaxDirectionalLights, directional_light_view.size()));
-    graphics_program->SetUniform("directional_light_count", light_count);
-    for (Entity entity : directional_light_view)
-    {
-        if (i >= kMaxDirectionalLights)
-        {
-            break;
-        }
-        const auto& directional_light = directional_light_view.get(entity);
-        // Set Directional Light Uniform
-        std::string prefix = "directional_lights[" + std::to_string(i) + "].";
-        graphics_program->SetUniform(prefix + "color", directional_light.color_);
-        graphics_program->SetUniform(prefix + "direction", directional_light.direction_);
-        graphics_program->SetUniform(prefix + "intensity", directional_light.intensity_);
-
-        ++i;
-    }
-
-    // Set Point Light Uniforms
-    i = 0;
-    auto point_light_view = registry.view<const Transform, const PointLight>();
-    light_count = static_cast<int32>(math::Min(kMaxPointLights, point_light_view.size()));
-    graphics_program->SetUniform("point_light_count", light_count);
-    for (Entity entity: point_light_view)
-    {
-        if (i >= kMaxPointLights)
-        {
-            break;
-        }
-        const auto& transform = point_light_view.get<const Transform>(entity);
-        const auto& point_light = point_light_view.get<const PointLight>(entity);
-        // Set Point Light Uniform
-        std::string prefix = "point_lights[" + std::to_string(i) + "].";
-        graphics_program->SetUniform(prefix + "color", point_light.color_);
-        graphics_program->SetUniform(prefix + "position", transform.GetPosition());
-        graphics_program->SetUniform(prefix + "attenuation_constant", point_light.attenuation_constant_);
-        graphics_program->SetUniform(prefix + "attenuation_linear", point_light.attenuation_linear_);
-        graphics_program->SetUniform(prefix + "attenuation_quadratic", point_light.attenuation_quadratic_);
-
-        ++i;
-    }
-
-    // Set Spot Light Uniforms
-    i = 0;
-    auto spot_light_view = registry.view<const Transform, const SpotLight>();
-    light_count = static_cast<int32>(math::Min(kMaxSpotLights, spot_light_view.size()));
-    graphics_program->SetUniform("spot_light_count", light_count);
-    for (Entity entity: spot_light_view)
-    {
-        if (i >= kMaxSpotLights)
-        {
-            break;
-        }
-        const auto& transform = spot_light_view.get<const Transform>(entity);
-        const auto& spot_light = spot_light_view.get<const SpotLight>(entity);
-        // Set Spot Light Uniform
-        std::string prefix = "spot_lights[" + std::to_string(i) + "].";
-        graphics_program->SetUniform(prefix + "color", spot_light.color_);
-        graphics_program->SetUniform(prefix + "position", transform.GetPosition());
-        graphics_program->SetUniform(prefix + "direction", transform.GetOrientation() * math::Vec3f::Down());
-        graphics_program->SetUniform(prefix + "inner_cosine", math::Cos(spot_light.inner_cone_angle_.ToRadian().rad_));
-        graphics_program->SetUniform(prefix + "outer_cosine", math::Cos(spot_light.outer_cone_angle_.ToRadian().rad_));
-
-        ++i;
-    }
-}
-
+//////////////////////////////////////////////////
+///// Miscellaneous Helpers
+//////////////////////////////////////////////////
 void GLRenderer::ReadShaderSource(const std::string& filename, std::string& destination)
 {
     std::ifstream input_file(filename);
@@ -366,6 +300,29 @@ void GLRenderer::ReadShaderSource(const std::string& filename, std::string& dest
     std::stringstream buffer;
     buffer << input_file.rdbuf();
     destination = buffer.str();
+}
+
+void GLMessageCallback(GLenum source,
+                       GLenum type,
+                       GLuint id,
+                       GLenum severity,
+                       GLsizei length,
+                       const GLchar* message,
+                       const void* userParam)
+{
+    if (type == GL_DEBUG_TYPE_ERROR)
+    {
+        std::cerr << "OpenGL Error - Type: 0x" << std::hex << type
+                  << " - Severity: 0x" << std::hex << severity
+                  << " - Message: " << message << std::endl;
+
+    }
+    else
+    {
+        std::cout << "OpenGL Log - Type: 0x" << std::hex << type
+                  << " - Severity: 0x" << std::hex << severity
+                  << " - Message: " << message << std::endl;
+    }
 }
 
 } // namespace zero::render
