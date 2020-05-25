@@ -16,9 +16,14 @@ namespace zero::render
         OrthographicViewVolume(const math::Vec3f& min, const math::Vec3f& max);
         ~OrthographicViewVolume() override = default;
 
+        /**
+         * @see IViewVolume
+         */
+        ///@{
         [[nodiscard]] bool IsCulled(const math::Vec3f& point) const override;
         [[nodiscard]] bool IsCulled(const math::Sphere& sphere) const override;
         [[nodiscard]] bool IsCulled(const math::Box& box) const override;
+        ///@}
 
         [[nodiscard]] const math::Box& GetViewBox() const;
 

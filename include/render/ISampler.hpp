@@ -5,6 +5,9 @@
 
 namespace zero::render {
 
+    /**
+     * @brief An ISampler describes how graphics textures should be sampled
+     */
     class ISampler : public NonCopyable
     {
     public:

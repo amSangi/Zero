@@ -10,6 +10,9 @@ namespace zero::render
     class Light;
     class PrimitiveInstance;
 
+    /**
+     * @brief Instantiate a game entity with a set of components
+     */
     class Instantiator
     {
     public:

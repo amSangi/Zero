@@ -21,9 +21,14 @@ namespace zero::render
                               const math::Plane& far);
         ~PerspectiveViewVolume() override = default;
 
+        /**
+         * @see IViewVolume
+         */
+        ///@{
         [[nodiscard]] bool IsCulled(const math::Vec3f& point) const override;
         [[nodiscard]] bool IsCulled(const math::Sphere& sphere) const override;
         [[nodiscard]] bool IsCulled(const math::Box& box) const override;
+        ///@}
 
         [[nodiscard]] const math::Plane& GetLeftPlane() const;
         [[nodiscard]] const math::Plane& GetRightPlane() const;
