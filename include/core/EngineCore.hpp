@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 #include "event/EventBus.hpp"
+#include "core/Logger.hpp"
 
 namespace zero
 {
@@ -12,6 +13,13 @@ namespace zero
     class EngineCore
     {
     public:
+
+        EngineCore()
+        : event_bus_()
+        , registry_()
+        , logger_()
+        {
+        }
 
         /**
          * @brief Get the event bus
@@ -25,6 +33,12 @@ namespace zero
          */
         inline entt::registry& GetRegistry()        { return registry_; }
 
+        /**
+         * @brief Get the Logger
+         * @return the logger
+         */
+        inline Logger& GetLogger()                  { return logger_;   }
+
     private:
         /**
          * @brief The event bus that manages all events. Used for registering events and event handlers.
@@ -36,6 +50,11 @@ namespace zero
          * @see https://github.com/skypjack/entt
          */
         entt::registry registry_;
+
+        /**
+         * @brief The logger used to log messages throughout the engine
+         */
+        Logger logger_;
 
     }; // class EngineCore
 

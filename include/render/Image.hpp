@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "core/ZBase.hpp"
+#include "core/ZeroBase.hpp"
 
 // Forward declarations
 class SDL_Surface;

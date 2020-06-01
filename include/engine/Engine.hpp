@@ -2,12 +2,12 @@
 
 #include <memory>
 #include <vector>
-#include "EngineCore.hpp"
-#include "EngineConfig.hpp"
-#include "NonCopyable.hpp"
-#include "System.hpp"
-#include "TimeDelta.hpp"
-#include "ZBase.hpp"
+#include "core/EngineCore.hpp"
+#include "engine/EngineConfig.hpp"
+#include "core/NonCopyable.hpp"
+#include "core/System.hpp"
+#include "core/TimeDelta.hpp"
+#include "core/ZeroBase.hpp"
 #include "render/RenderSystem.hpp"
 
 namespace zero
@@ -85,6 +85,11 @@ namespace zero
         Entity InstantiateLight(render::Light light, Entity entity = NullEntity);
 
     protected:
+
+        /**
+         * @brief The log title
+         */
+        static const char* kTitle;
 
         /**
          * @brief The engine configuration.

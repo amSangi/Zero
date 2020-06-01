@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include "WindowConfig.hpp"
+#include "engine/WindowConfig.hpp"
 
 namespace zero
 {

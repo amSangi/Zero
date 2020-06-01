@@ -1,5 +1,6 @@
 #include "render/opengl/TestGLCompiler.hpp"
 #include "render/Components.hpp"
+#include "render/opengl/GLProgram.hpp"
 
 using namespace zero::render;
 

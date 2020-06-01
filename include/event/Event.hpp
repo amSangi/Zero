@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/ZBase.hpp"
+#include "core/ZeroBase.hpp"
 #include "input/Key.hpp"
 #include "input/MouseButton.hpp"
 #include "EventType.hpp"

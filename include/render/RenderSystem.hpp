@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "core/Component.hpp"
-#include "core/RenderSystemConfig.hpp"
+#include "engine/RenderSystemConfig.hpp"
 #include "core/System.hpp"
 #include "render/IRenderer.hpp"
 #include "render/Window.hpp"
@@ -90,6 +90,11 @@ namespace zero::render
         Entity CreateLightInstance(const Light& light, Entity entity);
 
     private:
+
+        /**
+         * @brief The log title
+         */
+        static const char* kTitle;
 
         /**
          * @brief The RenderSystem configuration

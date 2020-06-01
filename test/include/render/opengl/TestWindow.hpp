@@ -3,7 +3,7 @@
 #include <memory>
 #include <gtest/gtest.h>
 #include "render/Window.hpp"
-#include "core/WindowConfig.hpp"
+#include "engine/WindowConfig.hpp"
 
 class TestWindow : public ::testing::Test
 {

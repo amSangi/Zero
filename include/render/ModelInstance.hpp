@@ -2,7 +2,7 @@
 
 #include <string>
 #include "core/Component.hpp"
-#include "core/ZBase.hpp"
+#include "core/ZeroBase.hpp"
 
 namespace zero::render
 {

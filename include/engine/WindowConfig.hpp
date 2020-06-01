@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "ZBase.hpp"
+#include "core/ZeroBase.hpp"
 
 namespace zero
 {

@@ -7,7 +7,12 @@
 #include "render/IRenderer.hpp"
 #include "render/IShader.hpp"
 
-namespace zero::render
+namespace zero
+{
+    // Forward declarations
+    class EngineCore;
+
+namespace render
 {
 
     // Forward declarations
@@ -29,7 +34,7 @@ namespace zero::render
     {
     public:
 
-        GLRenderer();
+        explicit GLRenderer(EngineCore* engine_core);
 
         ~GLRenderer() override;
 
@@ -42,13 +47,12 @@ namespace zero::render
         /**
          * @see IRenderer::Render
          */
-        void Render(const entt::registry& registry) override;
+        void Render() override;
 
         /**
          * @brief Release the images in the TextureManager from main memory
-         * @param registry the registry containing all the entities and their components
          */
-        void PostRender(entt::registry& registry) override;
+        void PostRender() override;
 
         /**
          * @brief Clear the Compiler of shaders, the ModelManager of models, and TextureManager of textures
@@ -65,6 +69,7 @@ namespace zero::render
          * @brief Initialization helper
          */
         ///@{
+        void InitializeGL();
         void InitializeShaders(const RenderSystemConfig& config);
         void InitializeShaderFiles(const std::vector<std::string>& shaders, IShader::Type shader_type);
         void InitializeModels(const RenderSystemConfig& config);
@@ -91,11 +96,6 @@ namespace zero::render
                           const Volume& volume);
 
         /**
-         * @brief Initialize OpenGL for rendering (e.g. enable depth testing)
-         */
-        static void InitializeGL();
-
-        /**
          * @brief Update all OpenGL settings (e.g. Set viewport, clear color buffers, etc)
          * @param camera the camera being rendered to
          */
@@ -115,6 +115,11 @@ namespace zero::render
         static void ReadShaderSource(const std::string& filename, std::string& destination);
 
         /**
+         * @brief The log title
+         */
+        static const char* kTitle;
+
+        /**
          * @brief Manage shader and graphics program usage
          */
         std::unique_ptr<GLCompiler> graphics_compiler_;
@@ -123,7 +128,7 @@ namespace zero::render
          * @brief Manage model meshes
          */
         std::unique_ptr<GLModelManager> model_manager_;
-        
+
         /**
          * @brief Manage primitive meshes
          */
@@ -139,6 +144,12 @@ namespace zero::render
          */
         std::unique_ptr<GLUniformManager> uniform_manager_;
 
+        /**
+         * @brief
+         */
+        EngineCore *engine_core_;
+
     }; // class GLRenderer
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

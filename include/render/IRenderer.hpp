@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-#include <entt/entt.hpp>
-#include "core/RenderSystemConfig.hpp"
+#include "engine/RenderSystemConfig.hpp"
 #include "render/IModel.hpp"
 
 namespace zero::render
@@ -26,15 +25,13 @@ namespace zero::render
         /**
          * @brief Render all entities in the registry with Transform, Volume, Material, and either
          * ModelInstance or PrimitiveInstance components using the active cameras in the world.
-         * @param registry the registry containing all of the entities and their components
          */
-        virtual void Render(const entt::registry& registry) = 0;
+        virtual void Render() = 0;
 
         /**
          * @brief Perform post-rendering cleanup
-         * @param registry the registry containing all of the entities and their components
          */
-        virtual void PostRender(entt::registry& registry) = 0;
+        virtual void PostRender() = 0;
 
         /**
          * @brief Clear all texture images, shaders, and models

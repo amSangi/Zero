@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cmath>
-#include "core/ZBase.hpp"
+#include "core/ZeroBase.hpp"
 
 namespace zero::math
 {
