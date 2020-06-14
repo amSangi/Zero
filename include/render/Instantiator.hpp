@@ -1,14 +1,13 @@
 #pragma once
 
-#include "core/Component.hpp"
+#include "components/Light.hpp"
+#include "components/PrimitiveInstance.hpp"
 
 namespace zero::render
 {
 
     // Forward declarations
     class IModel;
-    class Light;
-    class PrimitiveInstance;
 
     /**
      * @brief Instantiate a game entity with a set of components

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <string>
-#include "core/Component.hpp"
+#include "components/Component.hpp"
 #include "core/ZeroBase.hpp"
 
-namespace zero::render
+namespace zero
 {
 
     /**
@@ -25,4 +25,4 @@ namespace zero::render
 
     }; // struct ModelInstance
 
-} // namespace zero::render
+} // namespace zero

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "IShader.hpp"
+#include "render/IShader.hpp"
 
 namespace zero::render
 {

@@ -88,10 +88,10 @@ Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
         }
     }
 
-    registry.assign<render::Volume>(entity, volume);
+    registry.assign<Volume>(entity, volume);
     // Use default shaders
-    registry.assign<render::Material>(entity, Material{});
-    registry.assign<render::PrimitiveInstance>(entity, primitive);
+    registry.assign<Material>(entity, Material{});
+    registry.assign<PrimitiveInstance>(entity, primitive);
     registry.assign<Transform>(entity, transform);
     return entity;
 }
@@ -110,17 +110,17 @@ Entity Instantiator::InstantiateLight(entt::registry& registry,
     {
         case Light::Type::DIRECTIONAL:
         {
-            registry.assign<render::DirectionalLight>(entity_to_attach, light.GetDirectionalLight());
+            registry.assign<DirectionalLight>(entity_to_attach, light.GetDirectionalLight());
             break;
         }
         case Light::Type::POINT:
         {
-            registry.assign<render::PointLight>(entity_to_attach, light.GetPointLight());
+            registry.assign<PointLight>(entity_to_attach, light.GetPointLight());
             break;
         }
         case Light::Type::SPOT:
         {
-            registry.assign<render::SpotLight>(entity_to_attach, light.GetSpotLight());
+            registry.assign<SpotLight>(entity_to_attach, light.GetSpotLight());
             break;
         }
     }

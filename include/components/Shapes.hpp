@@ -1,8 +1,9 @@
 #pragma once
 
+#include "core/ZeroBase.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render
+namespace zero
 {
 
     /**
@@ -165,4 +166,4 @@ namespace zero::render
         uint32 tubular_segments_;
     }; // struct Torus
 
-} // namespace zero::render
+} // namespace zero

@@ -4,11 +4,19 @@ set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
 
 
 ## Create Library ##
-add_library(${PROJECT_NAME}  engine/Engine.cpp
-                             event/EventBus.cpp
+add_library(${PROJECT_NAME}  components/Camera.cpp
+                             components/Light.cpp
+                             components/Material.cpp
+                             components/PrimitiveInstance.cpp
+                             components/Shapes.cpp
+                             components/Transform.cpp
+                             components/Volume.cpp
+                             core/EventBus.cpp
+                             core/Input.cpp
                              core/Logger.cpp
-                             core/Transform.cpp
                              core/TransformPropagator.cpp
+                             engine/Engine.cpp
+                             engine/EntityInstantiator.cpp
                              math/Box.cpp
                              math/Intersection.cpp
                              math/Matrix3x3.cpp
@@ -17,22 +25,16 @@ add_library(${PROJECT_NAME}  engine/Engine.cpp
                              math/Quaternion.cpp
                              math/Radian.cpp
                              math/Sphere.cpp
-                             render/Camera.cpp
                              render/Image.cpp
                              render/Instantiator.cpp
-                             render/Light.cpp
-                             render/Material.cpp
                              render/Mesh.cpp
                              render/MeshGenerator.cpp
                              render/Optimizer.cpp
                              render/OrthographicViewVolume.cpp
                              render/PerspectiveViewVolume.cpp
-                             render/PrimitiveInstance.cpp
-                             render/VolumePropagator.cpp
                              render/RenderSystem.cpp
-                             render/Shapes.cpp
                              render/ViewVolumeBuilder.cpp
-                             render/Volume.cpp
+                             render/VolumePropagator.cpp
                              render/Window.cpp
                              render/opengl/GLAssetImportWrapper.cpp
                              render/opengl/GLCompiler.cpp

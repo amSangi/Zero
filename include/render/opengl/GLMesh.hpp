@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OpenGL.hpp"
 #include "render/Mesh.hpp"
+#include "render/opengl/OpenGL.hpp"
 
 namespace zero::render
 {

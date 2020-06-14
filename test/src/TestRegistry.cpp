@@ -1,4 +1,5 @@
-#include "core/Transform.hpp"
+#include "components/Transform.hpp"
+#include "components/Volume.hpp"
 #include "TestRegistry.hpp"
 
 using namespace zero;
@@ -24,7 +25,7 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
     Entity body_entity = registry_.create();
     Transform body_transform(position, math::Vec3f::One(), math::Quaternion());
     registry_.assign<Transform>(body_entity, body_transform);
-    registry_.assign<render::Volume>(body_entity, position, parent_radius);
+    registry_.assign<Volume>(body_entity, position, parent_radius);
 
     // Head - 4 units above body
     Entity head_entity = registry_.create();
@@ -35,7 +36,7 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
                                 head_offset,
                                 math::Vec3f::One(),
                                 math::Quaternion());
-    registry_.assign<render::Volume>(head_entity,
+    registry_.assign<Volume>(head_entity,
                                      position + head_offset,
                                      2.0F);
 
@@ -48,7 +49,7 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
                                 left_arm_offset,
                                 math::Vec3f::One(),
                                 math::Quaternion());
-    registry_.assign<render::Volume>(left_arm_entity,
+    registry_.assign<Volume>(left_arm_entity,
                                      position + left_arm_offset,
                                      2.0F);
 
@@ -61,7 +62,7 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
                                 right_arm_offset,
                                 math::Vec3f::One(),
                                 math::Quaternion());
-    registry_.assign<render::Volume>(right_arm_entity,
+    registry_.assign<Volume>(right_arm_entity,
                                      position + right_arm_offset,
                                      2.0F);
 
@@ -74,7 +75,7 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
                                 left_leg_offset,
                                 math::Vec3f::One(),
                                 math::Quaternion());
-    registry_.assign<render::Volume>(left_leg_entity,
+    registry_.assign<Volume>(left_leg_entity,
                                      position + left_leg_offset,
                                      2.0F);
 
@@ -87,7 +88,7 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
                                 right_leg_offset,
                                 math::Vec3f::One(),
                                 math::Quaternion());
-    registry_.assign<render::Volume>(right_leg_entity,
+    registry_.assign<Volume>(right_leg_entity,
                                      position + right_leg_offset,
                                      2.0F);
 
@@ -104,11 +105,11 @@ Entity TestRegistry::GenerateHumanoid(math::Vec3f position, float parent_radius)
 
 bool TestRegistry::ParentContainsChildVolumes(Entity parent) const
 {
-    auto &&[parent_transform, parent_volume] = registry_.get<Transform, render::Volume>(parent);
+    auto &&[parent_transform, parent_volume] = registry_.get<Transform, Volume>(parent);
 
     for (Entity child_entity : parent_transform.children_)
     {
-        const auto& child_volume = registry_.get<render::Volume>(child_entity);
+        const auto& child_volume = registry_.get<Volume>(child_entity);
         if (!parent_volume.bounding_volume_.Contains(child_volume.bounding_volume_)
         || !ParentContainsChildVolumes(child_entity))
         {

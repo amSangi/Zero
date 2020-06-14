@@ -11,6 +11,7 @@
 #include "render/MeshGenerator.hpp"
 #include "render/Optimizer.hpp"
 #include "core/EngineCore.hpp"
+#include "components/Camera.hpp"
 #include <fstream>
 #include <vector>
 
@@ -47,7 +48,6 @@ GLRenderer::~GLRenderer()
 //////////////////////////////////////////////////
 void GLRenderer::Initialize(const RenderSystemConfig& config)
 {
-    ShutDown();
     InitializeGL();
     InitializeShaders(config);
     InitializeModels(config);
@@ -301,7 +301,7 @@ void GLRenderer::RenderVolume(const Camera& camera,
     gl_primitive_program->FlushUniforms();
 
     PrimitiveInstance primitive_instance{};
-    primitive_instance.Set(render::Sphere());
+    primitive_instance.Set(Sphere());
     std::shared_ptr<GLMesh> gl_primitive = primitive_manager_->GetPrimitiveMesh(primitive_instance);
     gl_primitive->Draw();
     gl_primitive_program->Finish();

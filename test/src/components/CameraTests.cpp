@@ -1,8 +1,7 @@
-#include "render/Components.hpp"
+#include "components/Camera.hpp"
 #include <gtest/gtest.h>
 
 using namespace zero;
-using namespace zero::render;
 
 TEST(TestCamera, LookAt)
 {

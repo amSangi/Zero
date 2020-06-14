@@ -1,12 +1,12 @@
 #pragma once
 
 #include <memory>
+#include "components/Camera.hpp"
 
 namespace zero::render
 {
 
     // Forward declarations
-    class Camera;
     class IViewVolume;
 
     /**

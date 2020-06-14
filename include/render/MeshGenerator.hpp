@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Mesh.hpp"
-#include "Shapes.hpp"
+#include "components/Shapes.hpp"
 #include "math/Box.hpp"
+#include "render/Mesh.hpp"
 
 namespace zero::render
 {

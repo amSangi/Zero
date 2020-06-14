@@ -1,7 +1,6 @@
 #include "render/opengl/GLPrimitiveMeshManager.hpp"
 #include "render/opengl/GLPrimitiveGenerator.hpp"
 #include "render/opengl/GLMesh.hpp"
-#include "render/Components.hpp"
 
 namespace zero::render
 {
@@ -20,22 +19,22 @@ void GLPrimitiveMeshManager::LoadPrimitives()
 {
     // Cache default primitives
     PrimitiveInstance instance{};
-    instance.Set(render::Box());
+    instance.Set(Box());
     box_mesh_ = GLPrimitiveGenerator::Generate(instance);
 
-    instance.Set(render::Sphere());
+    instance.Set(Sphere());
     sphere_mesh_ = GLPrimitiveGenerator::Generate(instance);
 
-    instance.Set(render::Plane());
+    instance.Set(Plane());
     plane_mesh_ = GLPrimitiveGenerator::Generate(instance);
 
-    instance.Set(render::Cone());
+    instance.Set(Cone());
     cone_mesh_ = GLPrimitiveGenerator::Generate(instance);
 
-    instance.Set(render::Cylinder());
+    instance.Set(Cylinder());
     cylinder_mesh_ = GLPrimitiveGenerator::Generate(instance);
 
-    instance.Set(render::Torus());
+    instance.Set(Torus());
     torus_mesh_ = GLPrimitiveGenerator::Generate(instance);
 }
 

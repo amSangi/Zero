@@ -1,11 +1,11 @@
 #pragma once
 
 #include <string>
+#include "core/NonCopyable.hpp"
 #include "math/Matrix4x4.hpp"
 #include "math/Matrix3x3.hpp"
 #include "math/Vector4.hpp"
 #include "math/Vector3.hpp"
-#include "core/NonCopyable.hpp"
 
 namespace zero::render
 {

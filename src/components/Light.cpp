@@ -1,6 +1,6 @@
-#include "render/Light.hpp"
+#include "components/Light.hpp"
 
-namespace zero::render
+namespace zero
 {
 
 DirectionalLight::DirectionalLight()
@@ -116,4 +116,4 @@ void Light::Set(const SpotLight& spot_light)
     source_.spot_light_ = spot_light;
 }
 
-} // namespace zero::render
+} // namespace zero

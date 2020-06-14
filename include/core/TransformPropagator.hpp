@@ -1,7 +1,7 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "core/Transform.hpp"
+#include "components/Transform.hpp"
 
 namespace zero
 {

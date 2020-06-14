@@ -1,8 +1,12 @@
 #include "render/Optimizer.hpp"
-#include "render/Components.hpp"
+#include "components/Camera.hpp"
+#include "components/Material.hpp"
+#include "components/ModelInstance.hpp"
+#include "components/PrimitiveInstance.hpp"
+#include "components/Transform.hpp"
+#include "components/Volume.hpp"
 #include "render/ViewVolumeBuilder.hpp"
 #include "render/IViewVolume.hpp"
-#include "core/Transform.hpp"
 #include <deque>
 
 namespace zero::render

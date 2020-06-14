@@ -3,8 +3,8 @@
 #include <memory>
 #include <random>
 #include <vector>
-#include "GLMesh.hpp"
 #include "render/IModel.hpp"
+#include "render/opengl/GLMesh.hpp"
 
 // Forward Declarations
 class aiNode;

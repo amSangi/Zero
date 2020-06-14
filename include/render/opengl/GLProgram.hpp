@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "OpenGL.hpp"
 #include "render/IProgram.hpp"
+#include "render/opengl/OpenGL.hpp"
 
 namespace zero::render
 {

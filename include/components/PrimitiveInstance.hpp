@@ -1,11 +1,10 @@
 #pragma once
 
-#include "core/Component.hpp"
-#include "Shapes.hpp"
+#include "components/Component.hpp"
+#include "components/Shapes.hpp"
 
-namespace zero::render
+namespace zero
 {
-
     /**
      * @brief An instance of a primitive.
      */
@@ -105,4 +104,4 @@ namespace zero::render
 
     }; // struct PrimitiveInstance
 
-} // namespace zero::render
+} // namespace zero

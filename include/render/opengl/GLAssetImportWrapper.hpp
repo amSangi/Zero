@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "render/Components.hpp"
+#include "components/Material.hpp"
 
 // Forward declarations
 class aiMesh;

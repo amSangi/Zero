@@ -40,7 +40,7 @@ namespace zero
             LEVEL_WARN = 2,       ///< Harmful situations that may indicate potential problems with the application.
             LEVEL_DEBUG = 3,      ///< Broad information about a subsystem. E.g. Number of entities that will be rendered.
             LEVEL_VERBOSE = 4,    ///< Highly detailed tracing of program execution. E.g. Calling an API.
-        };
+        }; // enum class Level
 
         Logger();
         ~Logger() = default;

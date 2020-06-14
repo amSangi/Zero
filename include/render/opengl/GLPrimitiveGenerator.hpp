@@ -2,12 +2,16 @@
 
 #include <memory>
 
-namespace zero::render
+namespace zero
+{
+    // Forward declarations
+    class PrimitiveInstance;
+
+namespace render
 {
 
     // Forward declarations
     class GLMesh;
-    class PrimitiveInstance;
 
     /**
      * @brief Generate the mesh data for primitives given their mathematical representations
@@ -26,4 +30,5 @@ namespace zero::render
         static std::unique_ptr<GLMesh> Generate(const PrimitiveInstance& primitive);
     }; // class GLPrimitiveGenerator
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

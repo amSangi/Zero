@@ -6,13 +6,17 @@
 #include <vector>
 #include "render/ITextureManager.hpp"
 
-namespace zero::render
+namespace zero
+{
+    // Forward declarations
+    class Material;
+
+namespace render
 {
 
     // Forward Declarations
     class GLTexture;
     class GLSampler;
-    class Material;
     class Image;
 
     /**
@@ -79,4 +83,5 @@ namespace zero::render
 
     }; // class GLTextureManager
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

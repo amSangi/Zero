@@ -1,17 +1,19 @@
 #pragma once
 
-#include "OpenGL.hpp"
-#include "GLProgram.hpp"
-#include "core/NonCopyable.hpp"
-#include "core/Transform.hpp"
-#include "math/Matrix4x4.hpp"
-#include "math/Vector3.hpp"
-#include "render/Camera.hpp"
-#include "render/Material.hpp"
 #include <entt/entt.hpp>
 #include <vector>
+#include "core/NonCopyable.hpp"
+#include "math/Matrix4x4.hpp"
+#include "math/Vector3.hpp"
+#include "render/opengl/OpenGL.hpp"
+#include "render/opengl/GLProgram.hpp"
 
-namespace zero::render
+namespace zero
+{
+    // Forward declarations
+    class Material;
+
+namespace render
 {
 
     // Forward declarations
@@ -109,4 +111,5 @@ namespace zero::render
 
     }; // class GLUniformManager
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

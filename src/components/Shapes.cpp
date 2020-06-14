@@ -1,6 +1,6 @@
-#include "render/Shapes.hpp"
+#include "components/Shapes.hpp"
 
-namespace zero::render
+namespace zero
 {
 
 /**
@@ -134,4 +134,4 @@ bool Torus::operator!=(const Torus& other) const
     return !(operator==(other));
 }
 
-} // namespace zero::render
+} // namespace zero

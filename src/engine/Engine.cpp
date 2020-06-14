@@ -1,5 +1,6 @@
 #include "engine/Engine.hpp"
 #include "core/TransformPropagator.hpp"
+#include <SDL_events.h>
 
 namespace zero
 {
@@ -12,6 +13,8 @@ Engine::Engine(EngineConfig  engine_config)
 , engine_core_(std::make_unique<EngineCore>())
 , render_system_(std::make_unique<render::RenderSystem>(GetEngineCore(), engine_config_.render_system_config_))
 , game_systems_()
+, entity_instantiator_(std::make_unique<EntityInstantiator>(render_system_.get()))
+, is_done_(false)
 {
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Engine instance constructed")
 }
@@ -34,6 +37,8 @@ void Engine::Tick() {
         system->PreUpdate();
     }
 
+    TickEvents();
+
     render_system_->Update(time_delta_);
     for (const auto& system : game_systems_)
     {
@@ -42,11 +47,13 @@ void Engine::Tick() {
 
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Propagating entity transforms")
     TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
+
     render_system_->PostUpdate();
     for (const auto& system : game_systems_)
     {
         system->PostUpdate();
     }
+
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Clearing cached entity transformations")
     TransformPropagator::ClearCachedTransformations(engine_core_->GetRegistry());
 
@@ -63,27 +70,28 @@ void Engine::ShutDown()
     render_system_->ShutDown();
 }
 
+bool Engine::IsDone() const
+{
+    return is_done_;
+}
+
 EngineCore* Engine::GetEngineCore() const
 {
     return engine_core_.get();
 }
 
-Entity Engine::InstantiateModel(const std::string& model_filename)
+void Engine::TickEvents()
 {
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, std::string("Instantiating 3D Model: ") + model_filename)
-    return render_system_->CreateModelInstance(model_filename);
-}
-
-Entity Engine::InstantiatePrimitive(render::PrimitiveInstance primitive)
-{
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Instantiating Primitive")
-    return render_system_->CreatePrimitiveInstance(primitive);
-}
-
-Entity Engine::InstantiateLight(render::Light light, Entity entity)
-{
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Instantiating Light")
-    return render_system_->CreateLightInstance(light, entity);
+    EventBus& event_bus = engine_core_->GetEventBus();
+    SDL_Event event{};
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT)
+        {
+            is_done_ = true;
+        }
+        event_bus.Dispatch(event);
+    }
 }
 
 } // namespace zero

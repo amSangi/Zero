@@ -1,6 +1,6 @@
 #include "render/opengl/TestGLCompiler.hpp"
-#include "render/Components.hpp"
 #include "render/opengl/GLProgram.hpp"
+#include "components/Material.hpp"
 
 using namespace zero::render;
 
@@ -23,7 +23,7 @@ TEST_F(TestGLCompiler, CreateProgram)
     EXPECT_TRUE(compiler_->InitializeShader(tess_eval_stage_));
     EXPECT_TRUE(compiler_->InitializeShader(compute_stage_));
 
-    Material material;
+    zero::Material material;
     material.shaders_.vertex_shader_ = "Vertex";
     material.shaders_.fragment_shader_ = "Fragment";
     material.shaders_.compute_shader_ = "Unknown Compute Shader";
@@ -35,7 +35,7 @@ TEST_F(TestGLCompiler, CreateProgram)
 
 TEST_F(TestGLCompiler, CreateProgramNoShaders)
 {
-    Material material;
+    zero::Material material;
     material.shaders_.vertex_shader_ = "Vertex";
     material.shaders_.fragment_shader_ = "Fragment";
 

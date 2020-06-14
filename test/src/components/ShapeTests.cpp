@@ -1,7 +1,7 @@
-#include "render/Shapes.hpp"
+#include "components/Shapes.hpp"
 #include <gtest/gtest.h>
 
-using namespace zero::render;
+using namespace zero;
 
 TEST(TestShapes, Box_Equality_Equal)
 {

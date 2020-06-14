@@ -1,19 +1,19 @@
 #pragma once
 
 #include <memory>
-#include "core/Component.hpp"
 #include "engine/RenderSystemConfig.hpp"
 #include "core/System.hpp"
 #include "render/IRenderer.hpp"
 #include "render/Window.hpp"
 
-namespace zero::render
+namespace zero
 {
-
     // Forward declarations
     class Light;
     class PrimitiveInstance;
 
+namespace render
+{
     /**
      * @brief The RenderingSystem uses transform, mesh, material, scene, and camera components
      * to render a scene. It is responsible for all windowing/rendering tasks.
@@ -113,4 +113,5 @@ namespace zero::render
 
     }; // class RenderSystem
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

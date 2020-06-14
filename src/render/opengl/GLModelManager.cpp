@@ -1,5 +1,6 @@
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLModel.hpp"
+#include "components/ModelInstance.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "OpenGL.hpp"
 #include "core/NonCopyable.hpp"
+#include "render/opengl/OpenGL.hpp"
 
 namespace zero::render
 {

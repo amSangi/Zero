@@ -1,10 +1,10 @@
 #pragma once
 
 #include <string>
-#include "core/Component.hpp"
+#include "components/Component.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render
+namespace zero
 {
 
     /**
@@ -87,4 +87,4 @@ namespace zero::render
 
     }; // struct Material
 
-} // namespace zero::render
+} // namespace zero

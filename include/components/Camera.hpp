@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/Component.hpp"
+#include "components/Component.hpp"
 #include "math/Quaternion.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render
+namespace zero
 {
 
     /**
@@ -255,4 +255,4 @@ namespace zero::render
 
     }; // struct Camera
 
-} // namespace zero::render
+} // namespace zero

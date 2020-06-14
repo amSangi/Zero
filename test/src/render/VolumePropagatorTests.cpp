@@ -1,4 +1,4 @@
-#include "render/Components.hpp"
+#include "components/Volume.hpp"
 #include "TestVolumePropagator.hpp"
 
 using namespace zero;
@@ -23,7 +23,7 @@ TEST_F(TestVolumePropagator, PropagateVolume_ChildDeleted)
 {
     Entity body_entity = GenerateHumanoid(math::Vec3f::Zero(), 2.0F);
     auto& transform = registry_.get<Transform>(body_entity);
-    auto& volume = registry_.get<render::Volume>(body_entity);
+    auto& volume = registry_.get<Volume>(body_entity);
     registry_.destroy(transform.children_[0]);
     render::VolumePropagator::PropagateVolume(registry_);
 

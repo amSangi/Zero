@@ -1,7 +1,7 @@
-#include "render/Camera.hpp"
+#include "components/Camera.hpp"
 #include "math/Matrix4x4.hpp"
 
-namespace zero::render
+namespace zero
 {
 
 constexpr float kDefaultNearClip = 0.1F;
@@ -223,4 +223,4 @@ zero::math::Matrix4x4 Camera::Orthographic(float left,
     return orthographic_matrix;
 }
 
-} // namespace zero::render
+} // namespace zero

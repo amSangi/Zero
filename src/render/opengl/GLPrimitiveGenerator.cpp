@@ -1,7 +1,7 @@
 #include "render/opengl/GLPrimitiveGenerator.hpp"
 #include "render/opengl/GLMesh.hpp"
 #include "render/MeshGenerator.hpp"
-#include "render/PrimitiveInstance.hpp"
+#include "components/PrimitiveInstance.hpp"
 
 namespace zero::render
 {

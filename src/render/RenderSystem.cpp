@@ -19,7 +19,6 @@ RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& co
 
 void RenderSystem::Initialize()
 {
-    ShutDown();
     LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Initializing window")
     window_->Initialize();
     LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Initializing renderer")
@@ -62,16 +61,19 @@ Entity RenderSystem::CreateModelInstance(const std::string& model_filename)
         LOG_WARN(GetCore()->GetLogger(), kTitle, "Instantiating a model that has expired. Model: " + model_filename)
         return NullEntity;
     }
+    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Instantiating a new 3D model instance")
     return Instantiator::InstantiateModel(GetCore()->GetRegistry(), model.lock());
 }
 
 Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive)
 {
+    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Instantiating a new primitive instance")
     return Instantiator::InstantiatePrimitive(GetCore()->GetRegistry(), primitive);
 }
 
 Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity)
 {
+    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Instantiating a new light instance")
     return Instantiator::InstantiateLight(GetCore()->GetRegistry(), light, entity);
 }
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/Component.hpp"
+#include "components/Component.hpp"
 #include "math/Sphere.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render
+namespace zero
 {
 
     /**
@@ -50,4 +50,4 @@ namespace zero::render
         math::Sphere bounding_volume_;
     }; // struct Volume
 
-} // namespace zero::render
+} // namespace zero

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "EngineCore.hpp"
-#include "TimeDelta.hpp"
+#include "core/EngineCore.hpp"
+#include "core/TimeDelta.hpp"
+#include "core/EventHandler.hpp"
 
 namespace zero
 {
@@ -11,7 +12,7 @@ namespace zero
      * @note Access to components is done through the registry, which is owned by the EngineCore
      * @see https://skypjack.github.io/entt/classentt_1_1Registry.html
      */
-    class System
+    class System : public EventHandler
     {
     public:
 
@@ -27,7 +28,7 @@ namespace zero
         /**
          * @brief Default Virtual Destructor
          */
-        virtual ~System() = default;
+        ~System() override = default;
 
         /**
          * @brief Initialize the system. Called once before any updates have been performed.

@@ -1,9 +1,13 @@
 #pragma once
 
-#include "core/Component.hpp"
-#include "render/Camera.hpp"
+#include "components/Component.hpp"
 
-namespace zero::render
+namespace zero
+{
+    // Forward declarations
+    class Camera;
+
+namespace render
 {
 
     /**
@@ -38,4 +42,5 @@ namespace zero::render
 
     }; // class Optimizer
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

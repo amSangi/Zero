@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "core/Transform.hpp"
+#include "components/Transform.hpp"
 #include "math/Matrix4x4.hpp"
 #include "math/Vector3.hpp"
 

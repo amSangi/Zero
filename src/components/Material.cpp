@@ -1,6 +1,6 @@
-#include "render/Material.hpp"
+#include "components/Material.hpp"
 
-namespace zero::render
+namespace zero
 {
 
 Material::Material()
@@ -14,4 +14,4 @@ Material::Material()
 {
 }
 
-} // namespace zero::render
+} // namespace zero

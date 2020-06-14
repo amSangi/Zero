@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "core/Transform.hpp"
+#include "components/Transform.hpp"
 #include "TestTransformPropagator.hpp"
 
 using namespace zero;

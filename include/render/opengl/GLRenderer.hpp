@@ -3,27 +3,26 @@
 #include <memory>
 #include <entt/entt.hpp>
 #include "core/TimeDelta.hpp"
-#include "core/Transform.hpp"
 #include "render/IRenderer.hpp"
 #include "render/IShader.hpp"
 
 namespace zero
 {
     // Forward declarations
+    class Camera;
     class EngineCore;
+    class Volume;
 
 namespace render
 {
 
     // Forward declarations
-    class Camera;
     class GLCompiler;
     class GLModelManager;
     class GLPrimitiveMeshManager;
     class GLTextureManager;
     class GLUniformManager;
     class IProgram;
-    class Volume;
 
     /**
      * @brief Render all drawable entities in the game using OpenGL.

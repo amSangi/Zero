@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/Component.hpp"
+#include "components/Component.hpp"
 #include "math/Angle.hpp"
 #include "math/Vector3.hpp"
 
-namespace zero::render
+namespace zero
 {
 
     /**
@@ -110,6 +110,6 @@ namespace zero::render
 
         Type type_;
         LightSource source_;
-    };
+    }; // struct Light
 
-} // namespace zero::render
+} // namespace zero

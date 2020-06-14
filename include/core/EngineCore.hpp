@@ -1,22 +1,21 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "event/EventBus.hpp"
+#include "core/EventBus.hpp"
 #include "core/Logger.hpp"
 
 namespace zero
 {
 
     /**
-     * @brief Container for shared data and objects between different systems. Owned by the Engine.
+     * @brief Container for shared data and objects between different systems.
      */
     class EngineCore
     {
     public:
 
         EngineCore()
-        : event_bus_()
-        , registry_()
+        : registry_()
         , logger_()
         {
         }
@@ -25,7 +24,7 @@ namespace zero
          * @brief Get the event bus
          * @return the event bus
          */
-        inline event::EventBus& GetEventBus()       { return event_bus_; }
+        inline EventBus& GetEventBus()              { return event_bus_; }
 
         /**
          * @brief Get the game registry
@@ -43,7 +42,7 @@ namespace zero
         /**
          * @brief The event bus that manages all events. Used for registering events and event handlers.
          */
-        event::EventBus event_bus_;
+        EventBus event_bus_;
 
         /**
          * @brief The registry containing the game entities and their components.

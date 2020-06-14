@@ -1,19 +1,13 @@
 #pragma once
 
 #include <memory>
+#include "components/PrimitiveInstance.hpp"
 
 namespace zero::render
 {
 
     // Forward Declaration
     class GLMesh;
-    class PrimitiveInstance;
-    class Box;
-    class Sphere;
-    class Plane;
-    class Cone;
-    class Cylinder;
-    class Torus;
 
     /**
      * @brief Manage the loading and lifetime of primitive meshes

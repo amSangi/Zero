@@ -4,13 +4,17 @@
 #include <string>
 #include <unordered_map>
 
-namespace zero::render
+namespace zero
+{
+    // Forward declarations
+    class Material;
+
+namespace render
 {
 
     // Forward declarations
     class GLProgram;
     class GLShader;
-    class Material;
     class ShaderStage;
 
     /**
@@ -62,4 +66,5 @@ namespace zero::render
 
     }; // class GLCompiler
 
-} // namespace zero::render
+} // namespace render
+} // namespace zero

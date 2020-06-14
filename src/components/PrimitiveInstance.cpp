@@ -1,6 +1,6 @@
-#include "render/PrimitiveInstance.hpp"
+#include "components/PrimitiveInstance.hpp"
 
-namespace zero::render
+namespace zero
 {
 
 PrimitiveInstance::Primitive::Primitive(const Box& box)
@@ -169,4 +169,4 @@ Torus PrimitiveInstance::GetTorus() const
     return primitive_.torus_;
 }
 
-} // namespace zero::render
+} // namespace zero

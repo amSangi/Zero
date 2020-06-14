@@ -1,7 +1,7 @@
-#include "render/Volume.hpp"
+#include "components/Volume.hpp"
 #include "math/Matrix4x4.hpp"
 
-namespace zero::render
+namespace zero
 {
 
 Volume::Volume()
@@ -45,4 +45,4 @@ void Volume::Transform(const zero::math::Matrix4x4& transformation)
     bounding_volume_.radius_ *= scale;
 }
 
-} // namespace zero::render
+} // namespace zero

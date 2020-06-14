@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IViewVolume.hpp"
+#include "render/IViewVolume.hpp"
 #include "math/Box.hpp"
 
 namespace zero::render
