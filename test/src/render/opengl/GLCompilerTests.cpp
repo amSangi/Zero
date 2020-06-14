@@ -1,6 +1,6 @@
 #include "render/opengl/TestGLCompiler.hpp"
 #include "render/opengl/GLProgram.hpp"
-#include "components/Material.hpp"
+#include "component/Material.hpp"
 
 using namespace zero::render;
 

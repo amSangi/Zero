@@ -4,7 +4,7 @@
 #include <entt/entt.hpp>
 #include <random>
 #include <vector>
-#include "components/Component.hpp"
+#include "component/Component.hpp"
 
 class TestRegistry : public ::testing::Test
 {

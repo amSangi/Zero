@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/Shapes.hpp"
+#include "component/Shapes.hpp"
 #include "math/Box.hpp"
 #include "render/Mesh.hpp"
 

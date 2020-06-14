@@ -2,7 +2,7 @@
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
 #include "render/opengl/GLDefaultShader.hpp"
-#include "components/Material.hpp"
+#include "component/Material.hpp"
 
 namespace zero::render
 {

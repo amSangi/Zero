@@ -1,4 +1,4 @@
-#include "components/Camera.hpp"
+#include "component/Camera.hpp"
 #include "math/Matrix4x4.hpp"
 
 namespace zero

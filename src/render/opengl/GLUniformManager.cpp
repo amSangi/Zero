@@ -1,8 +1,8 @@
 #include "render/opengl/GLUniformManager.hpp"
 #include "render/opengl/GLTexture.hpp"
-#include "components/Light.hpp"
-#include "components/Material.hpp"
-#include "components/Transform.hpp"
+#include "component/Light.hpp"
+#include "component/Material.hpp"
+#include "component/Transform.hpp"
 
 namespace zero::render
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "components/Light.hpp"
-#include "components/PrimitiveInstance.hpp"
+#include "component/Light.hpp"
+#include "component/PrimitiveInstance.hpp"
 
 namespace zero::render
 {

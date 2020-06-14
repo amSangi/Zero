@@ -1,5 +1,5 @@
-#include "components/Transform.hpp"
-#include "components/Volume.hpp"
+#include "component/Transform.hpp"
+#include "component/Volume.hpp"
 #include "TestRegistry.hpp"
 
 using namespace zero;

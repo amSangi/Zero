@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "components/PrimitiveInstance.hpp"
+#include "component/PrimitiveInstance.hpp"
 
 namespace zero::render
 {

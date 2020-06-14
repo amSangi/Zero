@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "components/Component.hpp"
+#include "component/Component.hpp"
 #include "math/Vector3.hpp"
 
 namespace zero

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "components/Component.hpp"
-#include "components/Shapes.hpp"
+#include "component/Component.hpp"
+#include "component/Shapes.hpp"
 
 namespace zero
 {

@@ -1,4 +1,4 @@
-#include "components/Material.hpp"
+#include "component/Material.hpp"
 
 namespace zero
 {

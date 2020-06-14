@@ -1,7 +1,7 @@
 #include "engine/Engine.hpp"
-#include "components/Camera.hpp"
-#include "components/Light.hpp"
-#include "components/PrimitiveInstance.hpp"
+#include "component/Camera.hpp"
+#include "component/Light.hpp"
+#include "component/PrimitiveInstance.hpp"
 #include <filesystem>
 #include <iostream>
 #include <memory>

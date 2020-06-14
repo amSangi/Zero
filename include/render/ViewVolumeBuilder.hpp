@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "components/Camera.hpp"
+#include "component/Camera.hpp"
 
 namespace zero::render
 {

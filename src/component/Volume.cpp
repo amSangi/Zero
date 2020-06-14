@@ -1,4 +1,4 @@
-#include "components/Volume.hpp"
+#include "component/Volume.hpp"
 #include "math/Matrix4x4.hpp"
 
 namespace zero

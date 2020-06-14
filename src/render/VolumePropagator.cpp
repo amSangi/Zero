@@ -1,8 +1,8 @@
 #include "render/VolumePropagator.hpp"
+#include "component/Transform.hpp"
+#include "component/Volume.hpp"
 #include <set>
 #include <queue>
-#include "components/Transform.hpp"
-#include "components/Volume.hpp"
 
 namespace zero::render
 {

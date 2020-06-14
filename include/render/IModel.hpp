@@ -1,9 +1,9 @@
 #pragma once
 
-#include "components/Transform.hpp"
-#include "components/Material.hpp"
-#include "components/ModelInstance.hpp"
-#include "components/Volume.hpp"
+#include "component/Transform.hpp"
+#include "component/Material.hpp"
+#include "component/ModelInstance.hpp"
+#include "component/Volume.hpp"
 
 namespace zero::render
 {

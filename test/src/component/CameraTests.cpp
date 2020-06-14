@@ -1,4 +1,4 @@
-#include "components/Camera.hpp"
+#include "component/Camera.hpp"
 #include <gtest/gtest.h>
 
 using namespace zero;

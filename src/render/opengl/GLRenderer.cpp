@@ -11,7 +11,7 @@
 #include "render/MeshGenerator.hpp"
 #include "render/Optimizer.hpp"
 #include "core/EngineCore.hpp"
-#include "components/Camera.hpp"
+#include "component/Camera.hpp"
 #include <fstream>
 #include <vector>
 

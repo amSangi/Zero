@@ -1,7 +1,7 @@
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLSampler.hpp"
-#include "components/Material.hpp"
+#include "component/Material.hpp"
 #include "render/Image.hpp"
 
 namespace zero::render

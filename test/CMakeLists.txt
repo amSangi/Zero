@@ -7,9 +7,9 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/googletest/googletest/include
 
 add_executable(${PROJECT_NAME} TestMain.cpp
                                src/TestRegistry.cpp
-                               src/components/CameraTests.cpp
-                               src/components/ShapeTests.cpp
-                               src/components/TransformTests.cpp
+                               src/component/CameraTests.cpp
+                               src/component/ShapeTests.cpp
+                               src/component/TransformTests.cpp
                                src/core/TransformPropagatorTests.cpp
                                src/math/AngleTests.cpp
                                src/math/BoxTests.cpp

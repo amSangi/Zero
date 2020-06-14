@@ -1,4 +1,4 @@
-#include "components/Light.hpp"
+#include "component/Light.hpp"
 
 namespace zero
 {

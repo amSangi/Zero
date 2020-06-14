@@ -1,4 +1,4 @@
-#include "components/Volume.hpp"
+#include "component/Volume.hpp"
 #include "TestVolumePropagator.hpp"
 
 using namespace zero;

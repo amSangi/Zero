@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components/Component.hpp"
+#include "component/Component.hpp"
 #include "math/Quaternion.hpp"
 #include "math/Vector3.hpp"
 

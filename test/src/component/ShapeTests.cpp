@@ -1,4 +1,4 @@
-#include "components/Shapes.hpp"
+#include "component/Shapes.hpp"
 #include <gtest/gtest.h>
 
 using namespace zero;
