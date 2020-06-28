@@ -1,11 +1,13 @@
 #include "engine/EntityInstantiator.hpp"
 #include "render/RenderSystem.hpp"
+#include "component/SkyDome.hpp"
 
 namespace zero
 {
 
-EntityInstantiator::EntityInstantiator(render::RenderSystem* render_system)
-: render_system_(render_system)
+EntityInstantiator::EntityInstantiator(entt::registry& registry, render::RenderSystem* render_system)
+: registry_(registry)
+, render_system_(render_system)
 {
 }
 
@@ -22,6 +24,13 @@ Entity EntityInstantiator::InstantiatePrimitive(const PrimitiveInstance& primiti
 Entity EntityInstantiator::InstantiateLight(const Light& light, Entity entity)
 {
     return render_system_->CreateLightInstance(light, entity);
+}
+
+Entity EntityInstantiator::InstantiateSkyDome(const SkyDome& sky_dome)
+{
+    Entity entity = registry_.create();
+    registry_.assign<SkyDome>(entity, sky_dome);
+    return entity;
 }
 
 } // namespace zero

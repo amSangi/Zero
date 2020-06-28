@@ -8,6 +8,7 @@ namespace zero
     // Forward declarations
     class Light;
     class PrimitiveInstance;
+    class SkyDome;
 
     class IEntityInstantiator
     {
@@ -16,14 +17,14 @@ namespace zero
         virtual ~IEntityInstantiator() = default;
 
         /**
-         * @brief Create a new entity based on a 3D model.
+         * @brief Create a new entity based on a model.
          *
          * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
-         * @param model the fully qualified 3D filename
+         * @param model the model name
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
-        [[nodiscard]] virtual Entity InstantiateModel(const std::string& model_filename) = 0;
+        [[nodiscard]] virtual Entity InstantiateModel(const std::string& model_name) = 0;
 
         /**
          * @brief Create a new entity based on a primitive shape.
@@ -46,6 +47,14 @@ namespace zero
          * @return the light entity instance
          */
         virtual Entity InstantiateLight(const Light& light, Entity entity) = 0;
+
+        /**
+         * @brief Create a new sky dome entity
+         * @param registry the registry containing all of the entities and their components
+         * @param sky_dome the sky dome component to instantiate into an entity
+         * @return the sky dome entity instance
+         */
+        [[nodiscard]] virtual Entity InstantiateSkyDome(const SkyDome& sky_dome) = 0;
     };
 
 } // namespace zero

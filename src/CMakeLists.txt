@@ -12,6 +12,7 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             component/Transform.cpp
                             component/Volume.cpp
                             core/EventBus.cpp
+                            core/FileManager.cpp
                             core/Input.cpp
                             core/Logger.cpp
                             core/TransformPropagator.cpp
@@ -38,7 +39,6 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             render/Window.cpp
                             render/opengl/GLAssetImportWrapper.cpp
                             render/opengl/GLCompiler.cpp
-                            render/opengl/GLDefaultShader.cpp
                             render/opengl/GLMesh.cpp
                             render/opengl/GLModel.cpp
                             render/opengl/GLModelManager.cpp

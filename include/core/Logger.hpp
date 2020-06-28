@@ -2,6 +2,7 @@
 
 #include "core/ZeroBase.hpp"
 #include <string_view>
+#include <mutex>
 
 #if LOGGING_ENABLED
 #define LOG_FATAL(logger, title, message) logger.Log(Logger::Level::LEVEL_FATAL, title, message);
@@ -59,7 +60,7 @@ namespace zero
          * @brief Get the severity level
          * @return the severity level
          */
-        [[nodiscard]] Level GetFilter() const;
+        [[nodiscard]] Level GetFilter();
 
         /**
          * @brief Log a message
@@ -67,10 +68,11 @@ namespace zero
          * @param title the title of the log (e.g. 'RenderSystem')
          * @param message the message to log
          */
-        void Log(Level level, std::string_view title, std::string_view message) const;
+        void Log(Level level, std::string_view title, std::string_view message);
 
     private:
         Level severity_filter_;
+        std::mutex mutex_;
 
     }; // class Logger
 

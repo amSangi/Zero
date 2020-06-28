@@ -8,6 +8,7 @@ namespace zero
 {
     // Forward declarations
     class Material;
+    class SkyDome;
 
 namespace render
 {
@@ -34,6 +35,13 @@ namespace render
          * @return a graphics program
          */
         std::shared_ptr<GLProgram> CreateProgram(const Material& material);
+
+        /**
+         * @brief Create a graphics program from a SkyDome component
+         * @param sky_dome the sky dome component
+         * @return a graphics program
+         */
+        std::shared_ptr<GLProgram> CreateProgram(const SkyDome& sky_dome);
 
         /**
          * @brief Initialize a new shader into the shader map

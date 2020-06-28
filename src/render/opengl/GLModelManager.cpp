@@ -14,9 +14,9 @@ GLModelManager::GLModelManager()
 {
 }
 
-bool GLModelManager::LoadModel(const std::string& filename)
+bool GLModelManager::LoadModel(const std::string& model_name, const std::string& filename)
 {
-    if (model_map_.find(filename) != model_map_.end())
+    if (model_map_.find(model_name) != model_map_.end())
     {
         return true;
     }
@@ -39,7 +39,7 @@ bool GLModelManager::LoadModel(const std::string& filename)
         return false;
     }
 
-    model_map_.emplace(filename, GLModel::CreateGLModel(filename, random_generator_, 0, scene->mRootNode, scene));
+    model_map_.emplace(model_name, GLModel::CreateGLModel(model_name, random_generator_, 0, scene->mRootNode, scene));
     return true;
 }
 
@@ -48,9 +48,9 @@ void GLModelManager::ClearModels()
     model_map_.clear();
 }
 
-std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& filename)
+std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& model_name)
 {
-    auto model_search = model_map_.find(filename);
+    auto model_search = model_map_.find(model_name);
     if (model_search == model_map_.end())
     {
         return nullptr;
@@ -60,7 +60,7 @@ std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& filename)
 
 std::shared_ptr<IModel> GLModelManager::GetModel(const ModelInstance& model_instance)
 {
-    auto model = GetModel(model_instance.filename_);
+    auto model = GetModel(model_instance.model_name_);
     if (!model)
     {
         return nullptr;

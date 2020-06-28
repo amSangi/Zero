@@ -11,6 +11,7 @@ namespace zero
     // Forward declarations
     class Camera;
     class EngineCore;
+    class SkyDome;
     class Volume;
 
 namespace render
@@ -39,9 +40,8 @@ namespace render
 
         /**
          * @brief Load all OpenGL shaders, models, and textures
-         * @param config the configuration containing the respective assets
          */
-        void Initialize(const RenderSystemConfig& config) override;
+        void Initialize() override;
 
         /**
          * @see IRenderer::Render
@@ -69,11 +69,22 @@ namespace render
          */
         ///@{
         void InitializeGL();
-        void InitializeShaders(const RenderSystemConfig& config);
-        void InitializeShaderFiles(const std::vector<std::string>& shaders, IShader::Type shader_type);
-        void InitializeModels(const RenderSystemConfig& config);
-        void InitializeImages(const RenderSystemConfig& config);
+        void InitializeShaders();
+        void InitializeModels();
+        void InitializeImages();
         ///@}
+
+        /**
+         * @brief Render the sky dome
+         * @param camera the camera to render to
+         * @param projection_matrix the projection matrix of the camera
+         * @param view_matrix the view matrix of the camera
+         * @param sky_dome the sky dome to render
+         */
+        void RenderSkyDome(const Camera &camera,
+                           const math::Matrix4x4& projection_matrix,
+                           const math::Matrix4x4& view_matrix,
+                           const SkyDome& sky_dome);
 
         /**
          * @brief Render all viewable entities with a mesh
@@ -108,7 +119,7 @@ namespace render
 
         /**
          * @brief Read the shader source into the destination
-         * @param filename the shader file
+         * @param filename the fully qualified shader file
          * @param destination the destination
          */
         static void ReadShaderSource(const std::string& filename, std::string& destination);

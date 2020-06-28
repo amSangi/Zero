@@ -1,6 +1,5 @@
 #include "render/opengl/GLRenderer.hpp"
 #include "render/opengl/GLCompiler.hpp"
-#include "render/opengl/GLDefaultShader.hpp"
 #include "render/opengl/GLModel.hpp"
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLPrimitiveMeshManager.hpp"
@@ -10,8 +9,10 @@
 #include "render/opengl/GLUniformManager.hpp"
 #include "render/MeshGenerator.hpp"
 #include "render/Optimizer.hpp"
+#include "render/ShaderStage.hpp"
 #include "core/EngineCore.hpp"
 #include "component/Camera.hpp"
+#include "component/SkyDome.hpp"
 #include <fstream>
 #include <vector>
 
@@ -46,12 +47,12 @@ GLRenderer::~GLRenderer()
 //////////////////////////////////////////////////
 ///// IRenderer Implementation
 //////////////////////////////////////////////////
-void GLRenderer::Initialize(const RenderSystemConfig& config)
+void GLRenderer::Initialize()
 {
     InitializeGL();
-    InitializeShaders(config);
-    InitializeModels(config);
-    InitializeImages(config);
+    InitializeShaders();
+    InitializeModels();
+    InitializeImages();
     LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading primitives")
     primitive_manager_->LoadPrimitives();
     LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Setting up uniform buffer objects")
@@ -121,66 +122,81 @@ void GLRenderer::InitializeGL()
     glDebugMessageCallback(GLMessageCallback, &engine_core_->GetLogger());
 }
 
-void GLRenderer::InitializeShaders(const RenderSystemConfig& config)
+void GLRenderer::InitializeShaders()
 {
+    FileManager& file_manager = engine_core_->GetFileManager();
 
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL vertex shaders. Shader count: " + std::to_string(config.vertex_shader_files_.size()))
-    InitializeShaderFiles(config.vertex_shader_files_, IShader::Type::VERTEX_SHADER);
-
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fragment shaders. Shader count: " + std::to_string(config.fragment_shader_files_.size()))
-    InitializeShaderFiles(config.fragment_shader_files_, IShader::Type::FRAGMENT_SHADER);
-
-    if (!graphics_compiler_->InitializeShader(GLDefaultShader::kVertexShader))
-    {
-        LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize default vertex shader")
-
-    }
-
-    if (!graphics_compiler_->InitializeShader(GLDefaultShader::kFragmentShader))
-    {
-        LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize default fragment shader")
-    }
-}
-
-void GLRenderer::InitializeShaderFiles(const std::vector<std::string>& shaders, IShader::Type shader_type)
-{
-    for (const auto& shader_file : shaders)
+    // Initialize vertex shaders
+    const std::vector<std::string>& vertex_shaders = file_manager.GetVertexFiles();
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL vertex shaders. Shader count: " + std::to_string(vertex_shaders.size()))
+    for (const auto& vertex_shader_file : vertex_shaders)
     {
         ShaderStage stage;
-        stage.type_ = shader_type;
-        stage.name_ = shader_file;
+        stage.type_ = IShader::Type::VERTEX_SHADER;
+        stage.name_ = vertex_shader_file;
 
-        // Read source
-        ReadShaderSource(shader_file, stage.source_);
+        // Read source from fully qualified file
+        std::string fully_qualified_file = file_manager.GetVertexShaderFilePath(vertex_shader_file);
+        ReadShaderSource(fully_qualified_file, stage.source_);
         if (stage.source_.empty())
         {
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to read vertex shader source: " + fully_qualified_file)
             continue;
         }
 
         if (!graphics_compiler_->InitializeShader(stage))
         {
-            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + shader_file)
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + fully_qualified_file)
+        }
+    }
+
+    // Initialize fragment shaders
+    const std::vector<std::string>& fragment_shaders = file_manager.GetFragmentFiles();
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fragment shaders. Shader count: " + std::to_string(fragment_shaders.size()))
+    for (const auto& fragment_shader_file : fragment_shaders)
+    {
+        ShaderStage stage;
+        stage.type_ = IShader::Type::FRAGMENT_SHADER;
+        stage.name_ = fragment_shader_file;
+
+        // Read source from fully qualified file
+        std::string fully_qualified_file = file_manager.GetFragmentShaderFilePath(fragment_shader_file);
+        ReadShaderSource(fully_qualified_file, stage.source_);
+        if (stage.source_.empty())
+        {
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to read fragment shader source: " + fully_qualified_file)
+            continue;
+        }
+
+        if (!graphics_compiler_->InitializeShader(stage))
+        {
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + fully_qualified_file)
         }
     }
 }
 
-void GLRenderer::InitializeModels(const RenderSystemConfig& config)
+void GLRenderer::InitializeModels()
 {
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading models. Model count: " + std::to_string(config.model_files_.size()))
+    FileManager& file_manager = engine_core_->GetFileManager();
 
-    for (const auto& model_file : config.model_files_)
+    const std::vector<std::string>& model_files = file_manager.GetModelFiles();
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading models. Model count: " + std::to_string(model_files.size()))
+    for (const auto& model_file : model_files)
     {
-        model_manager_->LoadModel(model_file);
+        model_manager_->LoadModel(model_file, file_manager.GetModelFilePath(model_file));
     }
 }
 
-void GLRenderer::InitializeImages(const RenderSystemConfig& config)
+void GLRenderer::InitializeImages()
 {
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading textures. Texture count: " + std::to_string(config.texture_files_.size()))
+    FileManager& file_manager = engine_core_->GetFileManager();
 
-    for (const auto& texture_file : config.texture_files_)
+    const std::vector<std::string>& texture_files = engine_core_->GetFileManager().GetTextureFiles();
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading textures. Texture count: " + std::to_string(texture_files.size()))
+
+    for (const auto& texture_file : texture_files)
     {
-        texture_manager_->InitializeImage(texture_file);
+        texture_manager_->InitializeImage(texture_file, file_manager.GetTextureFilePath(texture_file));
     }
 
     LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Setting up OpenGL texture sampler")
@@ -211,14 +227,25 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
     LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating camera uniforms")
     uniform_manager_->UpdateCameraUniforms(projection_matrix, view_matrix, camera.position_);
 
+    // Render the first active sky dome
+    auto sky_dome_view = registry.view<const SkyDome>();
+    for (Entity sky_dome_entity : sky_dome_view)
+    {
+        const SkyDome& sky_dome = sky_dome_view.get(sky_dome_entity);
+        if (sky_dome.is_active_)
+        {
+            RenderSkyDome(camera, projection_matrix, view_matrix, sky_dome);
+            break;
+        }
+    }
+
+    // Render all renderable game entities
     LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Retrieving all renderable entities")
     auto viewable_entities = Optimizer::ExtractRenderableEntities(camera, registry);
     LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Viewable entity count: " + std::to_string(viewable_entities.size()))
-
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
     auto model_view = registry.view<const ModelInstance>();
     auto primitive_view = registry.view<const PrimitiveInstance>();
-
     LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Beginning entity rendering process")
     for (Entity viewable_entity : viewable_entities)
     {
@@ -278,6 +305,31 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
     }
 }
 
+void GLRenderer::RenderSkyDome(const Camera &camera,
+                               const math::Matrix4x4& projection_matrix,
+                               const math::Matrix4x4& view_matrix,
+                               const SkyDome& sky_dome)
+{
+    ToggleWireframeMode(true);
+    math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
+            .Scale(math::Vec3f(100.0F))
+            .Translate(camera.position_);
+
+    std::shared_ptr<IProgram> sky_dome_program = graphics_compiler_->CreateProgram(sky_dome);
+    sky_dome_program->Use();
+    sky_dome_program->SetUniform("u_projection_matrix", projection_matrix);
+    sky_dome_program->SetUniform("u_view_matrix", view_matrix);
+    sky_dome_program->SetUniform("u_model_matrix", model_matrix);
+    sky_dome_program->SetUniform("u_camera_position", camera.position_);
+    sky_dome_program->FlushUniforms();
+
+    PrimitiveInstance primitive_instance{};
+    primitive_instance.Set(Sphere());
+    std::shared_ptr<GLMesh> gl_sphere = primitive_manager_->GetPrimitiveMesh(primitive_instance);
+    gl_sphere->Draw();
+    sky_dome_program->Finish();
+}
+
 void GLRenderer::RenderVolume(const Camera& camera,
                               const math::Matrix4x4& projection_matrix,
                               const math::Matrix4x4& view_matrix,
@@ -285,7 +337,7 @@ void GLRenderer::RenderVolume(const Camera& camera,
 {
     ToggleWireframeMode(true);
 
-    auto model_matrix = math::Matrix4x4::Identity()
+    math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(volume.bounding_volume_.radius_))
             .Translate(volume.bounding_volume_.center_);
     // use default shaders

@@ -13,13 +13,15 @@ Engine::Engine(EngineConfig  engine_config)
 , engine_core_(std::make_unique<EngineCore>())
 , render_system_(std::make_unique<render::RenderSystem>(GetEngineCore(), engine_config_.render_system_config_))
 , game_systems_()
-, entity_instantiator_(std::make_unique<EntityInstantiator>(render_system_.get()))
+, entity_instantiator_(std::make_unique<EntityInstantiator>(engine_core_->GetRegistry(), render_system_.get()))
 , is_done_(false)
 {
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Engine instance constructed")
 }
 
-void Engine::Initialize() {
+void Engine::Initialize()
+{
+    engine_core_->GetFileManager().Initialize();
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Initializing systems")
     render_system_->Initialize();
     for (const auto& system : game_systems_)
@@ -28,7 +30,8 @@ void Engine::Initialize() {
     }
 }
 
-void Engine::Tick() {
+void Engine::Tick()
+{
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Tick Begin")
 
     render_system_->PreUpdate();

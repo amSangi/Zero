@@ -3,6 +3,7 @@
 #include <entt/entt.hpp>
 #include "core/EventBus.hpp"
 #include "core/Logger.hpp"
+#include "core/FileManager.hpp"
 
 namespace zero
 {
@@ -17,6 +18,7 @@ namespace zero
         EngineCore()
         : registry_()
         , logger_()
+        , file_manager_()
         {
         }
 
@@ -38,6 +40,12 @@ namespace zero
          */
         inline Logger& GetLogger()                  { return logger_;   }
 
+        /**
+         * @brief Get the file manager
+         * @return the file manager
+         */
+        inline FileManager& GetFileManager()        { return file_manager_; }
+
     private:
         /**
          * @brief The event bus that manages all events. Used for registering events and event handlers.
@@ -54,6 +62,11 @@ namespace zero
          * @brief The logger used to log messages throughout the engine
          */
         Logger logger_;
+
+        /**
+         * @brief The file manager that manages the file locations of images, shaders, models, etc.
+         */
+        FileManager file_manager_;
 
     }; // class EngineCore
 

@@ -58,7 +58,7 @@ std::vector<std::shared_ptr<GLTexture>> GLTextureManager::CreateTextureMap(const
 }
 
 
-std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& filename,
+std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& image_name,
                                                            uint8 index,
                                                            const std::string& name)
 {
@@ -67,7 +67,7 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& fi
         return nullptr;
     }
 
-    auto search = image_map_.find(filename);
+    auto search = image_map_.find(image_name);
     if (search == image_map_.end())
     {
         return nullptr;
@@ -124,9 +124,9 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& fi
     return gl_texture;
 }
 
-bool GLTextureManager::InitializeImage(const std::string& filename)
+bool GLTextureManager::InitializeImage(const std::string& image_name, const std::string& filename)
 {
-    if (image_map_.find(filename) != image_map_.end())
+    if (image_map_.find(image_name) != image_map_.end())
     {
         return true;
     }
@@ -138,7 +138,7 @@ bool GLTextureManager::InitializeImage(const std::string& filename)
     }
 
     image->Release();
-    image_map_[filename] = std::move(image);
+    image_map_.emplace(image_name, std::move(image));
     return true;
 }
 

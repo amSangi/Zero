@@ -6,10 +6,6 @@
 
 namespace zero
 {
-    // Forward declaration
-    class Light;
-    class PrimitiveInstance;
-
 namespace render
 {
     // Forward declaration
@@ -22,7 +18,7 @@ namespace render
     class EntityInstantiator : public IEntityInstantiator
     {
     public:
-        explicit EntityInstantiator(render::RenderSystem* render_system);
+        EntityInstantiator(entt::registry& registry, render::RenderSystem* render_system);
         ~EntityInstantiator() override = default;
 
         /**
@@ -40,7 +36,13 @@ namespace render
          */
         Entity InstantiateLight(const Light& light, Entity entity) override;
 
+        /**
+         * @see IEntityInstantiator::InstantiateSkyDome
+         */
+        Entity InstantiateSkyDome(const SkyDome& sky_dome) override;
+
     private:
+        entt::registry& registry_;
         render::RenderSystem* render_system_;
 
     }; // class EntityInstantiator

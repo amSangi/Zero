@@ -29,6 +29,9 @@ namespace render
          */
         RenderSystem(EngineCore* engine_core, const RenderSystemConfig& config);
 
+        /**
+         * @brief Default destructor
+         */
         ~RenderSystem() override = default;
 
         /**
@@ -58,14 +61,14 @@ namespace render
         void ShutDown() override;
 
         /**
-         * @brief Create a new entity based on a 3D model.
+         * @brief Create a new entity based on a model name.
          *
          * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
-         * @param model_filename the fully qualified 3D filename
-         * @return the root entity associated with the 3D model. NullEntity if an error occurred.
+         * @param model_name the model name
+         * @return the root entity associated with the model. NullEntity if an error occurred.
          */
-        [[nodiscard]] Entity CreateModelInstance(const std::string& model_filename);
+        [[nodiscard]] Entity CreateModelInstance(const std::string& model_name);
 
         /**
          * @brief Create a new entity based on a primitive shape.

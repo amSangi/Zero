@@ -14,9 +14,9 @@ namespace zero
     {
 
         /**
-         * @brief The fully qualified filename of the 3D model.
+         * @brief The name of the model
          */
-        std::string filename_;
+        std::string model_name_;
 
         /**
          * @brief Identifier for a child of a 3D model. 0 for root models.

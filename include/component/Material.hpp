@@ -21,7 +21,7 @@ namespace zero
         struct Shaders
         {
             /**
-             * @brief The fully qualified shader file name
+             * @brief The shader file name
              */
             ///@{
             std::string vertex_shader_;
@@ -40,7 +40,7 @@ namespace zero
         {
 
             /**
-             * @brief The fully qualified texture map file name
+             * @brief The texture map file name
              */
             ///@{
             std::string diffuse_map_;
@@ -71,7 +71,7 @@ namespace zero
         math::Vec3f diffuse_color_;
 
         /**
-         * @brief The shininess of a phong-shaded entity.
+         * @brief The shininess of an entity.
          */
         float specular_exponent_;
 

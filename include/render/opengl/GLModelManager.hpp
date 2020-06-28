@@ -32,11 +32,12 @@ namespace render
         ~GLModelManager() = default;
 
         /**
-         * @brief Load a model from a 3D file. A single 3D file may contain multiple sub models.
-         * @param filename the fully qualified filename of the 3D model
+         * @brief Load a model from a file. A single model may contain multiple sub models.
+         * @param model_name the name of the model
+         * @param filename the fully qualified filename of the model
          * @return true if the model was loaded successfully. Otherwise false.
          */
-        bool LoadModel(const std::string& filename);
+        bool LoadModel(const std::string& model_name, const std::string& filename);
 
         /**
          * @brief Clear all the models
@@ -44,11 +45,11 @@ namespace render
         void ClearModels();
 
         /**
-         * @brief Get the IModel associated with the given filename
-         * @param filename the fully qualified filename
+         * @brief Get the IModel associated with the given model name
+         * @param model_name the name of the model
          * @return the IModel. Nullptr if the model does not exist.
          */
-        std::shared_ptr<IModel> GetModel(const std::string& filename);
+        std::shared_ptr<IModel> GetModel(const std::string& model_name);
 
         /**
          * @brief Retrieve the correct IModel from a ModelInstance.
@@ -59,7 +60,7 @@ namespace render
 
     private:
         /**
-         * @brief Filename to IModel map
+         * @brief Model name to IModel map
          */
         std::unordered_map<std::string, std::shared_ptr<IModel>> model_map_;
 

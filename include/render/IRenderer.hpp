@@ -18,9 +18,8 @@ namespace zero::render
 
         /**
          * @brief Initialize all the texture images, shaders, and models
-         * @param config the render system configuration details
          */
-        virtual void Initialize(const RenderSystemConfig& config) = 0;
+        virtual void Initialize() = 0;
 
         /**
          * @brief Render all entities in the registry with Transform, Volume, Material, and either
@@ -39,8 +38,8 @@ namespace zero::render
         virtual void ShutDown() = 0;
 
         /**
-         * @brief Get the IModel of a 3D model given the filename
-         * @param model the fully qualified 3D filename
+         * @brief Get the IModel
+         * @param model the model filename
          * @return the IModel. Nullptr if it does not exist.
          */
         [[nodiscard]] virtual std::weak_ptr<IModel> GetModel(const std::string& model) = 0;

@@ -24,21 +24,26 @@ constexpr const char* LogLevelAsString(Logger::Level level)
 
 Logger::Logger()
 : severity_filter_(Level::LEVEL_DEBUG)
+, mutex_()
 {
 }
 
 void Logger::SetFilter(Level level)
 {
+    std::lock_guard<std::mutex> guard{mutex_};
     severity_filter_ = level;
 }
 
-Logger::Level Logger::GetFilter() const
+Logger::Level Logger::GetFilter()
 {
+    std::lock_guard<std::mutex> guard{mutex_};
     return severity_filter_;
 }
 
-void Logger::Log(Level level, std::string_view title, std::string_view message) const
+void Logger::Log(Level level, std::string_view title, std::string_view message)
 {
+    std::lock_guard<std::mutex> guard{mutex_};
+
     if (static_cast<int32_t>(level) > static_cast<int32_t>(severity_filter_))
     {
         return;

@@ -1,8 +1,9 @@
 #include "render/opengl/GLCompiler.hpp"
 #include "render/opengl/GLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
-#include "render/opengl/GLDefaultShader.hpp"
+#include "render/ShaderStage.hpp"
 #include "component/Material.hpp"
+#include "component/SkyDome.hpp"
 
 namespace zero::render
 {
@@ -15,25 +16,14 @@ GLCompiler::GLCompiler()
 std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
 {
     std::vector<std::shared_ptr<GLShader>> shaders;
-
-    std::string shader_names;
+    std::string program_hash;
 
     // Vertex Shader
     auto search = shader_map_.find(material.shaders_.vertex_shader_);
     if (search != shader_map_.end())
     {
         shaders.push_back(search->second);
-        shader_names += search->first;
-    }
-    else
-    {
-        // Use the default vertex shader if the shader cannot be found
-        search = shader_map_.find(GLDefaultShader::kVertexShader.name_);
-        if (search != shader_map_.end())
-        {
-            shaders.push_back(search->second);
-            shader_names += search->first;
-        }
+        program_hash += search->first;
     }
 
     // Fragment Shader
@@ -41,17 +31,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
     if (search != shader_map_.end())
     {
         shaders.push_back(search->second);
-        shader_names += search->first;
-    }
-    else
-    {
-        // Use the default fragment shader if the shader cannot be found
-        search = shader_map_.find(GLDefaultShader::kFragmentShader.name_);
-        if (search != shader_map_.end())
-        {
-            shaders.push_back(search->second);
-            shader_names += search->first;
-        }
+        program_hash += search->first;
     }
 
     // Geometry Shader
@@ -59,7 +39,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
     if (search != shader_map_.end())
     {
         shaders.push_back(search->second);
-        shader_names += search->first;
+        program_hash += search->first;
     }
 
     // Tessellation Control Shader
@@ -67,7 +47,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
     if (search != shader_map_.end())
     {
         shaders.push_back(search->second);
-        shader_names += search->first;
+        program_hash += search->first;
     }
 
     // Tessellation Evaluation Shader
@@ -75,7 +55,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
     if (search != shader_map_.end())
     {
         shaders.push_back(search->second);
-        shader_names += search->first;
+        program_hash += search->first;
     }
 
     // Compute Shader
@@ -83,21 +63,54 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
     if (search != shader_map_.end())
     {
         shaders.push_back(search->second);
-        shader_names += search->first;
+        program_hash += search->first;
     }
 
-    // Return cached program
-    auto program_search = program_map_.find(shader_names);
+    // Check program cache
+    auto program_search = program_map_.find(program_hash);
     if (program_search != program_map_.end())
     {
         return program_search->second;
     }
 
-    // Cache program
+    // Cache a new program
     auto program = GLProgram::CreateGLProgram(shaders);
-    program_map_[shader_names] = program;
+    program_map_.emplace(program_hash, program);
     return program;
 }
+
+std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const SkyDome& sky_dome)
+{
+    std::vector<std::shared_ptr<GLShader>> shaders;
+    std::string program_hash;
+
+    auto search = shader_map_.find(sky_dome.vertex_shader_);
+    if (search != shader_map_.end())
+    {
+        shaders.push_back(search->second);
+        program_hash += search->first;
+    }
+
+    search = shader_map_.find(sky_dome.fragment_shader_);
+    if (search != shader_map_.end())
+    {
+        shaders.push_back(search->second);
+        program_hash += search->first;
+    }
+
+    // Check program cache
+    auto program_search = program_map_.find(program_hash);
+    if (program_search != program_map_.end())
+    {
+        return program_search->second;
+    }
+
+    // Cache a new program
+    auto program = GLProgram::CreateGLProgram(shaders);
+    program_map_.emplace(program_hash, program);
+    return program;
+}
+
 
 bool GLCompiler::InitializeShader(const ShaderStage& stage)
 {
