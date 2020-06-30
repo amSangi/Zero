@@ -20,6 +20,7 @@ protected:
     }
 
 protected:
-    std::string TEST_IMAGE_FILE = "../resources/textures/test.png";
+    std::string kTestImageFile = "../resources/textures/test.png";
+    std::string kTestImageName = "test.png";
 
 }; // class TestGLTexture

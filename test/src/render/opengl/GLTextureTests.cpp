@@ -55,15 +55,15 @@ TEST_F(TestGLTexture, LoadInvalidImage)
 TEST_F(TestGLTexture, CreateInvalidTexture)
 {
     GLTextureManager manager;
-    EXPECT_FALSE(manager.InitializeImage(""));
+    EXPECT_FALSE(manager.InitializeImage("", ""));
     EXPECT_EQ(manager.CreateTexture("", 0), nullptr);
 }
 
 TEST_F(TestGLTexture, CreateTextureLargeIndex)
 {
     GLTextureManager manager;
-    EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
-    EXPECT_EQ(manager.CreateTexture(TEST_IMAGE_FILE, manager.GetTextureUnitCount()), nullptr);
+    EXPECT_TRUE(manager.InitializeImage(kTestImageName, kTestImageFile));
+    EXPECT_EQ(manager.CreateTexture(kTestImageFile, manager.GetTextureUnitCount()), nullptr);
 }
 
 TEST_F(TestGLTexture, SetSamplerLargeIndex)
@@ -96,8 +96,8 @@ TEST_F(TestGLTexture, CreateValidTexture)
 {
     GLTextureManager manager;
     EXPECT_GT(manager.GetTextureUnitCount(), 0);
-    EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
-    auto texture = manager.CreateTexture(TEST_IMAGE_FILE, 0);
+    EXPECT_TRUE(manager.InitializeImage(kTestImageName, kTestImageFile));
+    auto texture = manager.CreateTexture(kTestImageName, 0);
     EXPECT_NE(texture, nullptr);
 }
 
@@ -172,8 +172,8 @@ TEST_F(TestGLTexture, TextureWithShader)
     manager.SetSampler(sampler, index);
 
     // Create texture
-    EXPECT_TRUE(manager.InitializeImage(TEST_IMAGE_FILE));
-    auto texture = manager.CreateTexture(TEST_IMAGE_FILE, index);
+    EXPECT_TRUE(manager.InitializeImage(kTestImageName, kTestImageFile));
+    auto texture = manager.CreateTexture(kTestImageName, index);
     ASSERT_NE(texture, nullptr);
     texture->GenerateMipMap(GL_TEXTURE0 + index);
     texture->Bind(GL_TEXTURE0 + index);

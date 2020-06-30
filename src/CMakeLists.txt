@@ -9,6 +9,7 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             component/Material.cpp
                             component/PrimitiveInstance.cpp
                             component/Shapes.cpp
+                            component/SkyDome.cpp
                             component/Transform.cpp
                             component/Volume.cpp
                             core/EventBus.cpp

@@ -123,7 +123,7 @@ namespace zero
     }; // struct Cylinder
 
     /**
-     * @brief 3D UV-Sphere data
+     * @brief UV-Sphere data
      */
     struct Sphere
     {

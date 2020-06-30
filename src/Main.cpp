@@ -151,6 +151,8 @@ private:
         sky_dome.is_active_ = true;
         sky_dome.vertex_shader_ = vertex_shaders[1];
         sky_dome.fragment_shader_ = fragment_shaders[2];
+        sky_dome.apex_color_ = math::Vec3f(0.0F, 0.15F, 0.66F);
+        sky_dome.center_color_ = math::Vec3f(0.3F, 0.45F, 0.96F);
     }
     void SetupModel()
     {

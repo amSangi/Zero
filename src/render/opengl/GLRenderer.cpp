@@ -310,7 +310,7 @@ void GLRenderer::RenderSkyDome(const Camera &camera,
                                const math::Matrix4x4& view_matrix,
                                const SkyDome& sky_dome)
 {
-    ToggleWireframeMode(true);
+    ToggleWireframeMode(false);
     math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(100.0F))
             .Translate(camera.position_);
@@ -321,6 +321,8 @@ void GLRenderer::RenderSkyDome(const Camera &camera,
     sky_dome_program->SetUniform("u_view_matrix", view_matrix);
     sky_dome_program->SetUniform("u_model_matrix", model_matrix);
     sky_dome_program->SetUniform("u_camera_position", camera.position_);
+    sky_dome_program->SetUniform("u_apex_color", sky_dome.apex_color_);
+    sky_dome_program->SetUniform("u_center_color", sky_dome.center_color_);
     sky_dome_program->FlushUniforms();
 
     PrimitiveInstance primitive_instance{};
