@@ -37,7 +37,7 @@ GLRenderer::GLRenderer(EngineCore* engine_core)
 , uniform_manager_(std::make_unique<GLUniformManager>())
 , engine_core_(engine_core)
 {
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "GLRenderer instance constructed")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "GLRenderer instance constructed");
 }
 
 GLRenderer::~GLRenderer()
@@ -53,21 +53,21 @@ void GLRenderer::Initialize()
     InitializeShaders();
     InitializeModels();
     InitializeImages();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading primitives")
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading primitives");
     primitive_manager_->LoadPrimitives();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Setting up uniform buffer objects")
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Setting up uniform buffer objects");
     uniform_manager_->Initialize();
 }
 
 void GLRenderer::Render()
 {
     entt::registry& registry = engine_core_->GetRegistry();
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating light uniforms")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating light uniforms");
     uniform_manager_->UpdateLightUniforms(registry);
 
     // Render entities for each camera/viewport
     auto camera_view = registry.view<const Camera>();
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Rendering to cameras. Camera count: " + std::to_string(camera_view.size()))
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Rendering to cameras. Camera count: " + std::to_string(camera_view.size()));
     for (Entity camera_entity : camera_view)
     {
         const auto& camera = camera_view.get(camera_entity);
@@ -77,21 +77,21 @@ void GLRenderer::Render()
 
 void GLRenderer::PostRender()
 {
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Clearing cached graphics programs")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Clearing cached graphics programs");
     graphics_compiler_->ClearPrograms();
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Unloading all textures from main memory")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Unloading all textures from main memory");
     texture_manager_->UnloadImages();
 }
 
 void GLRenderer::ShutDown()
 {
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all shaders")
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all shaders");
     graphics_compiler_->ClearShaders();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all models")
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all models");
     model_manager_->ClearModels();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all primitives")
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all primitives");
     primitive_manager_->ClearPrimitives();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all textures")
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Clearing all textures");
     texture_manager_->ClearImages();
 }
 
@@ -105,7 +105,7 @@ std::weak_ptr<IModel> GLRenderer::GetModel(const std::string& model)
 //////////////////////////////////////////////////
 void GLRenderer::InitializeGL()
 {
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fields")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fields");
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
@@ -128,7 +128,7 @@ void GLRenderer::InitializeShaders()
 
     // Initialize vertex shaders
     const std::vector<std::string>& vertex_shaders = file_manager.GetVertexFiles();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL vertex shaders. Shader count: " + std::to_string(vertex_shaders.size()))
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL vertex shaders. Shader count: " + std::to_string(vertex_shaders.size()));
     for (const auto& vertex_shader_file : vertex_shaders)
     {
         ShaderStage stage;
@@ -140,19 +140,19 @@ void GLRenderer::InitializeShaders()
         ReadShaderSource(fully_qualified_file, stage.source_);
         if (stage.source_.empty())
         {
-            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to read vertex shader source: " + fully_qualified_file)
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to read vertex shader source: " + fully_qualified_file);
             continue;
         }
 
         if (!graphics_compiler_->InitializeShader(stage))
         {
-            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + fully_qualified_file)
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + fully_qualified_file);
         }
     }
 
     // Initialize fragment shaders
     const std::vector<std::string>& fragment_shaders = file_manager.GetFragmentFiles();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fragment shaders. Shader count: " + std::to_string(fragment_shaders.size()))
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fragment shaders. Shader count: " + std::to_string(fragment_shaders.size()));
     for (const auto& fragment_shader_file : fragment_shaders)
     {
         ShaderStage stage;
@@ -164,13 +164,13 @@ void GLRenderer::InitializeShaders()
         ReadShaderSource(fully_qualified_file, stage.source_);
         if (stage.source_.empty())
         {
-            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to read fragment shader source: " + fully_qualified_file)
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to read fragment shader source: " + fully_qualified_file);
             continue;
         }
 
         if (!graphics_compiler_->InitializeShader(stage))
         {
-            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + fully_qualified_file)
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to initialize shader: " + fully_qualified_file);
         }
     }
 }
@@ -180,7 +180,7 @@ void GLRenderer::InitializeModels()
     FileManager& file_manager = engine_core_->GetFileManager();
 
     const std::vector<std::string>& model_files = file_manager.GetModelFiles();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading models. Model count: " + std::to_string(model_files.size()))
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading models. Model count: " + std::to_string(model_files.size()));
     for (const auto& model_file : model_files)
     {
         model_manager_->LoadModel(model_file, file_manager.GetModelFilePath(model_file));
@@ -192,15 +192,15 @@ void GLRenderer::InitializeImages()
     FileManager& file_manager = engine_core_->GetFileManager();
 
     const std::vector<std::string>& texture_files = engine_core_->GetFileManager().GetTextureFiles();
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading textures. Texture count: " + std::to_string(texture_files.size()))
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Pre-loading textures. Texture count: " + std::to_string(texture_files.size()));
 
     for (const auto& texture_file : texture_files)
     {
         texture_manager_->InitializeImage(texture_file, file_manager.GetTextureFilePath(texture_file));
     }
 
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Setting up OpenGL texture sampler")
-    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Texture unit count: " + std::to_string(texture_manager_->GetTextureUnitCount()))
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Setting up OpenGL texture sampler");
+    LOG_DEBUG(engine_core_->GetLogger(), kTitle, "Texture unit count: " + std::to_string(texture_manager_->GetTextureUnitCount()));
 
     auto texture_sampler = std::make_shared<GLSampler>();
     texture_sampler->Initialize();
@@ -219,12 +219,12 @@ void GLRenderer::InitializeImages()
 //////////////////////////////////////////////////
 void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& registry)
 {
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating OpenGL display settings")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating OpenGL display settings");
 
     UpdateGL(camera);
     const auto projection_matrix = camera.GetProjectionMatrix();
     const auto view_matrix = camera.GetViewMatrix();
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating camera uniforms")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating camera uniforms");
     uniform_manager_->UpdateCameraUniforms(projection_matrix, view_matrix, camera.position_);
 
     // Render the first active sky dome
@@ -240,13 +240,13 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
     }
 
     // Render all renderable game entities
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Retrieving all renderable entities")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Retrieving all renderable entities");
     auto viewable_entities = Optimizer::ExtractRenderableEntities(camera, registry);
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Viewable entity count: " + std::to_string(viewable_entities.size()))
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Viewable entity count: " + std::to_string(viewable_entities.size()));
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
     auto model_view = registry.view<const ModelInstance>();
     auto primitive_view = registry.view<const PrimitiveInstance>();
-    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Beginning entity rendering process")
+    LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Beginning entity rendering process");
     for (Entity viewable_entity : viewable_entities)
     {
         const auto& transform = renderable_view.get<const Transform>(viewable_entity);
@@ -261,21 +261,21 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
         auto graphics_program = graphics_compiler_->CreateProgram(material);
         if (!graphics_program)
         {
-            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to create/load graphics program for the entity")
+            LOG_ERROR(engine_core_->GetLogger(), kTitle, "Failed to create/load graphics program for the entity");
             continue;
         }
-        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Binding graphics program and uniform buffer objects together")
+        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Binding graphics program and uniform buffer objects together");
         GLUniformManager::BindGraphicsProgram(graphics_program);
         graphics_program->Use();
 
         // Update uniforms
         auto gl_textures = texture_manager_->CreateTextureMap(material);
-        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating sampler uniforms")
+        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating sampler uniforms");
         GLUniformManager::UpdateSamplerUniforms(graphics_program, gl_textures);
         math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
-        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating model uniforms")
+        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating model uniforms");
         uniform_manager_->UpdateModelUniforms(model_matrix, (view_matrix * model_matrix).Inverse());
-        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating material uniforms")
+        LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Updating material uniforms");
         uniform_manager_->UpdateMaterialUniforms(material);
         graphics_program->FlushUniforms();
 
@@ -286,7 +286,7 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
             auto model = model_manager_->GetModel(model_instance);
             if (model)
             {
-                LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Drawing model")
+                LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Drawing model");
                 model->Draw();
             }
         }
@@ -296,7 +296,7 @@ void GLRenderer::RenderEntities(const Camera& camera, const entt::registry& regi
             auto primitive = primitive_manager_->GetPrimitiveMesh(primitive_instance);
             if (primitive)
             {
-                LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Drawing primitive")
+                LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Drawing primitive");
                 primitive->Draw();
             }
         }
@@ -414,11 +414,11 @@ void GLMessageCallback(GLenum /* source */,
     auto* logger = (Logger*)(userParam);
     if (type == GL_DEBUG_TYPE_ERROR)
     {
-        LOG_ERROR((*logger), "OpenGL", std::string(message, length))
+        LOG_ERROR((*logger), "OpenGL", std::string(message, length));
     }
     else
     {
-        LOG_DEBUG((*logger), "OpenGL", std::string(message, length))
+        LOG_DEBUG((*logger), "OpenGL", std::string(message, length));
     }
 }
 

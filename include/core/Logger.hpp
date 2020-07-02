@@ -5,11 +5,11 @@
 #include <mutex>
 
 #if LOGGING_ENABLED
-#define LOG_FATAL(logger, title, message) logger.Log(Logger::Level::LEVEL_FATAL, title, message);
-#define LOG_ERROR(logger, title, message) logger.Log(Logger::Level::LEVEL_ERROR, title, message);
-#define LOG_WARN(logger, title, message) logger.Log(Logger::Level::LEVEL_WARN, title, message);
-#define LOG_DEBUG(logger, title, message) logger.Log(Logger::Level::LEVEL_DEBUG, title, message);
-#define LOG_VERBOSE(logger, title, message) logger.Log(Logger::Level::LEVEL_VERBOSE, title, message);
+#define LOG_FATAL(logger, title, message) logger.Log(Logger::Level::LEVEL_FATAL, title, message)
+#define LOG_ERROR(logger, title, message) logger.Log(Logger::Level::LEVEL_ERROR, title, message)
+#define LOG_WARN(logger, title, message) logger.Log(Logger::Level::LEVEL_WARN, title, message)
+#define LOG_DEBUG(logger, title, message) logger.Log(Logger::Level::LEVEL_DEBUG, title, message)
+#define LOG_VERBOSE(logger, title, message) logger.Log(Logger::Level::LEVEL_VERBOSE, title, message)
 #else
 #define LOG_FATAL(logger, title, message)
 #define LOG_ERROR(logger, title, message)

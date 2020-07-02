@@ -228,7 +228,7 @@ private:
         auto& floor_material = registry.get<Material>(floor_entity);
         floor_material.shaders_.vertex_shader_ = vertex_shaders[0];
         floor_material.shaders_.fragment_shader_ = fragment_shaders[0];
-        floor_material.diffuse_color_ = math::Vec3f(0.1F);
+        floor_material.diffuse_color_ = math::Vec3f(0.52F, 0.37F, 0.26F);
         auto& floor_transform = registry.get<Transform>(floor_entity);
         floor_transform.Scale(math::Vec3f(10.0F));
         floor_transform.Translate(math::Vec3f(-10.0F, -3.0F, 10.0F));
