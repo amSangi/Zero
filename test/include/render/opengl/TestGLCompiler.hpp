@@ -12,7 +12,7 @@ protected:
     {
         using namespace zero::render;
         TestGLShader::SetUp();
-        compiler_ = std::make_shared<GLCompiler>();
+        compiler_ = std::make_shared<GLCompiler>(test_logger_);
         vertex_stage_ = ShaderStage{IShader::Type::VERTEX_SHADER, "Vertex", TEST_VERTEX_SOURCE};
         fragment_stage_ = ShaderStage{IShader::Type::FRAGMENT_SHADER, "Fragment", TEST_FRAGMENT_SOURCE};
         geometry_stage_ = ShaderStage{IShader::Type::GEOMETRY_SHADER, "Geometry", TEST_GEOMETRY_SOURCE};
@@ -22,6 +22,7 @@ protected:
     }
 
 protected:
+    zero::Logger test_logger_;
     std::shared_ptr<zero::render::GLCompiler> compiler_;
     zero::render::ShaderStage vertex_stage_;
     zero::render::ShaderStage fragment_stage_;

@@ -164,13 +164,13 @@ zero::math::Matrix4x4 Camera::GetProjectionMatrix() const
             float bottom = -top;
             float right = top * viewport_.GetAspectRatio();
             float left = -right;
-            return Orthographic(left, right, bottom, top, near_clip_, far_clip_);
+            return math::Matrix4x4::Orthographic(left, right, bottom, top, near_clip_, far_clip_);
         }
         default:
-            return Perspective(GetVerticalFieldOfView(),
-                               viewport_.GetAspectRatio(),
-                               near_clip_,
-                               far_clip_);
+            return math::Matrix4x4::Perspective(GetVerticalFieldOfView(),
+                                                viewport_.GetAspectRatio(),
+                                                near_clip_,
+                                                far_clip_);
     }
 }
 
@@ -182,45 +182,6 @@ zero::math::Matrix4x4 Camera::GetViewMatrix() const
 zero::math::Matrix4x4 Camera::GetCameraToWorldMatrix() const
 {
     return math::Matrix4x4::Identity().Translate(position_).Rotate(orientation_);
-}
-
-zero::math::Matrix4x4 Camera::Perspective(math::Radian vertical_fov,
-                                          float aspect_ratio,
-                                          float near,
-                                          float far)
-{
-
-    math::Matrix4x4 perspective_matrix(0.0F);
-
-    float tan_half_vertical_fov = math::Tan(vertical_fov.rad_ / 2.0F);
-    perspective_matrix[0][0] = 1.0F / (aspect_ratio * tan_half_vertical_fov);
-    perspective_matrix[1][1] = 1.0F / (tan_half_vertical_fov);
-    perspective_matrix[2][2] = -(far + near) / (far - near);
-    perspective_matrix[2][3] = -(2.0F * far * near) / (far - near);
-    perspective_matrix[3][2] = -1.0F;
-
-    return perspective_matrix;
-}
-
-zero::math::Matrix4x4 Camera::Orthographic(float left,
-                                           float right,
-                                           float bottom,
-                                           float top,
-                                           float near,
-                                           float far)
-{
-
-    math::Matrix4x4 orthographic_matrix(0.0F);
-
-    orthographic_matrix[0][0] = 2.0F / (right - left);
-    orthographic_matrix[1][1] = 2.0F / (top - bottom);
-    orthographic_matrix[2][2] = -2.0F / (far - near);
-    orthographic_matrix[0][3] = -(right + left) / (right - left);
-    orthographic_matrix[1][3] = -(top + bottom) / (top - bottom);
-    orthographic_matrix[2][3] = -(far + near) / (far - near);
-    orthographic_matrix[3][3] = 1.0F;
-
-    return orthographic_matrix;
 }
 
 } // namespace zero

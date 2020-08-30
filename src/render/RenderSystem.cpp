@@ -22,7 +22,7 @@ void RenderSystem::Initialize()
     LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Initializing window");
     window_->Initialize();
     LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Initializing renderer");
-    renderer_->Initialize();
+    renderer_->Initialize(config_);
 }
 
 void RenderSystem::PreUpdate()

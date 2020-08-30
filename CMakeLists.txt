@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Zero)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
 
 ## Output ##
 set(ZERO_LIB_OUT_PATH ${CMAKE_SOURCE_DIR}/build)

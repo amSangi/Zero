@@ -60,7 +60,8 @@ void Window::Initialize()
         SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES , 4);
         sdl_window_ = SDL_CreateWindow(config_.title_.c_str(),
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,

@@ -18,8 +18,9 @@ namespace zero::render
 
         /**
          * @brief Initialize all the texture images, shaders, and models
+         * @param config The RenderSystem configuration information
          */
-        virtual void Initialize() = 0;
+        virtual void Initialize(const RenderSystemConfig& config) = 0;
 
         /**
          * @brief Render all entities in the registry with Transform, Volume, Material, and either

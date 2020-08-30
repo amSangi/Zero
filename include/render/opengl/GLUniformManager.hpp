@@ -33,6 +33,10 @@ namespace render
          */
         void Initialize();
 
+        //////////////////////////////////////////////////
+        ///// Update Uniforms
+        //////////////////////////////////////////////////
+
         /**
          * @brief Update the camera uniforms
          * @param projection_matrix the projection matrix
@@ -42,6 +46,12 @@ namespace render
         void UpdateCameraUniforms(const math::Matrix4x4& projection_matrix,
                                   const math::Matrix4x4& view_matrix,
                                   const math::Vec3f& camera_position) const;
+
+        /**
+         * @brief Update the material uniforms
+         * @param material the material component of an entity
+         */
+        void UpdateMaterialUniforms(const Material& material) const;
 
         /**
          * @brief Update the model uniforms
@@ -56,25 +66,33 @@ namespace render
          */
         void UpdateLightUniforms(const entt::registry& registry) const;
 
-        /**
-         * @brief Update the material uniforms
-         * @param material the material component of an entity
-         */
-        void UpdateMaterialUniforms(const Material& material) const;
+        void UpdateShadowMapMatrix(const math::Matrix4x4& matrix) const;
+
+        //////////////////////////////////////////////////
+        ///// Bind Graphics Program Uniforms
+        //////////////////////////////////////////////////
+
+        static const char* GetShadowSamplerUniformName();
+
+        static const char* GetDiffuseSamplerName();
 
         /**
-         * @brief Update the sampler uniforms of a graphics program
+         * @brief Bind the block indices of a graphics program to their predefined binding points for a certain
+         *        group of uniforms
+         *
          * @param program the graphics program
-         * @param textures the list of graphics textures to set
          */
-        static void UpdateSamplerUniforms(const std::shared_ptr<GLProgram>& program,
-                                          const std::vector<std::shared_ptr<GLTexture>>& textures);
+        ///@{
+        static void BindCameraUniforms(const std::shared_ptr<GLProgram>& program);
+        static void BindMaterialUniforms(const std::shared_ptr<GLProgram>& program);
+        static void BindModelUniforms(const std::shared_ptr<GLProgram>& program);
+        static void BindLightUniforms(const std::shared_ptr<GLProgram>& program);
+        static void BindShadowMapUniforms(const std::shared_ptr<GLProgram>& program);
+        ///@}
 
-        /**
-         * @brief Bind the block indices of a graphics program to their predefined binding points
-         * @param program the graphics program
-         */
-        static void BindGraphicsProgram(const std::shared_ptr<GLProgram>& program);
+        //////////////////////////////////////////////////
+        ///// Get Maximum Uniform Counts
+        //////////////////////////////////////////////////
 
         /**
          * @brief Get the maximum number of directional lights used by a graphics program
@@ -100,14 +118,40 @@ namespace render
          */
         void Cleanup();
 
-        static uint32 kMaxDirectionalLights;
-        static uint32 kMaxPointLights;
-        static uint32 kMaxSpotLights;
+        void InitializeCameraUniformBuffer();
+        void InitializeMaterialUniformBuffer();
+        void InitializeModelUniformBuffer();
+        void InitializeLightInfoUniformBuffer();
+        void InitializeDirectionalLightUniformBuffer();
+        void InitializePointLightUniformBuffer();
+        void InitializeSpotLightUniformBuffer();
+        void InitializeShadowMapMatrixUniformBuffer();
+
+        void UpdateDirectionalLightUniforms(const entt::registry& registry) const;
+        void UpdatePointLightUniforms(const entt::registry& registry) const;
+        void UpdateSpotLightUniforms(const entt::registry& registry) const;
+
+        static const uint32 kMaxDirectionalLights;
+        static const uint32 kMaxPointLights;
+        static const uint32 kMaxSpotLights;
+
+        static const uint32 kCameraBindingIndex;
+        static const uint32 kMaterialBindingIndex;
+        static const uint32 kModelBindingIndex;
+        static const uint32 kLightInfoBindingIndex;
+        static const uint32 kDirectionalLightBindingIndex;
+        static const uint32 kPointLightBindingIndex;
+        static const uint32 kSpotLightBindingIndex;
+        static const uint32 kShadowMapMatrixBindingIndex;
 
         GLuint camera_buffer_id_;
+        GLuint material_buffer_id_;
         GLuint model_buffer_id_;
-        GLuint light_buffer_id_;
-        GLuint material_id_;
+        GLuint light_info_buffer_id_;
+        GLuint directional_light_buffer_id_;
+        GLuint point_light_buffer_id_;
+        GLuint spot_light_buffer_id_;
+        GLuint shadow_map_matrix_buffer_id_;
 
     }; // class GLUniformManager
 

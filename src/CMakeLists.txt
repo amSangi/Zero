@@ -2,7 +2,6 @@ project(ZeroCore)
 
 set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
 
-
 ## Create Library ##
 add_library(${PROJECT_NAME} component/Camera.cpp
                             component/Light.cpp
@@ -34,6 +33,7 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             render/Optimizer.cpp
                             render/OrthographicViewVolume.cpp
                             render/PerspectiveViewVolume.cpp
+                            render/RenderPipeline.cpp
                             render/RenderSystem.cpp
                             render/ViewVolumeBuilder.cpp
                             render/VolumePropagator.cpp
@@ -51,7 +51,10 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             render/opengl/GLShader.cpp
                             render/opengl/GLTexture.cpp
                             render/opengl/GLTextureManager.cpp
-                            render/opengl/GLUniformManager.cpp)
+                            render/opengl/GLUniformManager.cpp
+                            render/opengl/pipeline/GLEntityRenderPass.cpp
+                            render/opengl/pipeline/GLShadowMapPass.cpp
+                            render/opengl/pipeline/GLSkyDomePass.cpp)
 
 
 ## Link Libraries ##

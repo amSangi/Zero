@@ -7,20 +7,13 @@
 namespace zero::render
 {
 
-constexpr zero::uint8 kDiffuseTextureIndex = 0;
-constexpr zero::uint8 kSpecularTextureIndex = 1;
-constexpr zero::uint8 kNormalTextureIndex = 2;
-
-constexpr auto kDiffuseTextureUniformName = "diffuse_texture";
-constexpr auto kSpecularTextureUniformName = "specular_texture";
-constexpr auto kNormalTextureUniformName = "normal_texture";
-
 GLTextureManager::GLTextureManager()
 : image_map_()
+, shadow_map_texture_(nullptr)
 {
 }
 
-zero::uint8 GLTextureManager::GetTextureUnitCount() const
+uint8 GLTextureManager::GetTextureUnitCount() const
 {
     GLint count = 0;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &count);
@@ -36,44 +29,94 @@ void GLTextureManager::SetSampler(const std::shared_ptr<GLSampler>& sampler, uin
     glBindSampler(index, sampler->GetNativeIdentifier());
 }
 
-std::vector<std::shared_ptr<GLTexture>> GLTextureManager::CreateTextureMap(const Material& material)
+bool GLTextureManager::InitializeImage(const std::string& image_name, const std::string& filename)
 {
-    std::vector<std::shared_ptr<GLTexture>> gl_textures;
-    auto gl_diffuse_texture = CreateTexture(material.texture_map_.diffuse_map_, kDiffuseTextureIndex, kDiffuseTextureUniformName);
-    auto gl_specular_texture = CreateTexture(material.texture_map_.specular_map_, kSpecularTextureIndex, kSpecularTextureUniformName);
-    auto gl_normal_texture = CreateTexture(material.texture_map_.normal_map_, kNormalTextureIndex, kNormalTextureUniformName);
-    if (gl_diffuse_texture)
+    if (image_map_.find(image_name) != image_map_.end())
     {
-        gl_textures.push_back(gl_diffuse_texture);
+        return true;
     }
-    if (gl_specular_texture)
+
+    auto image = std::make_shared<Image>(filename);
+    if (!image->Load())
     {
-        gl_textures.push_back(gl_specular_texture);
+        return false;
     }
-    if (gl_normal_texture)
-    {
-        gl_textures.push_back(gl_normal_texture);
-    }
-    return gl_textures;
+
+    image->Release();
+    image_map_.emplace(image_name, std::move(image));
+    return true;
 }
 
-
-std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& image_name,
-                                                           uint8 index,
-                                                           const std::string& name)
+bool GLTextureManager::InitializeGLTextures()
 {
-    if (index >= GetTextureUnitCount())
+    for (const auto& image_pair : image_map_)
     {
-        return nullptr;
+        const std::string& image_name = image_pair.first;
+        std::shared_ptr<Image> image = image_pair.second;
+
+        std::shared_ptr<GLTexture> gl_texture = CreateTexture(image);
+
+        if (gl_texture == nullptr)
+        {
+            return false;
+        }
+        gl_texture_map_.emplace(image_name, gl_texture);
     }
 
-    auto search = image_map_.find(image_name);
-    if (search == image_map_.end())
-    {
-        return nullptr;
-    }
+    // Create 1x1 black texture for unused samplers
+    GLuint texture_id = 0;
+    glGenTextures(1, &texture_id);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    GLubyte data[] = {0, 0, 0, 0};
+    glTexImage2D(GL_TEXTURE_2D,       // Target texture.
+                 0,                   // Level of detail. Level n is the nth mipmap reduction image.
+                 GL_RGBA,             // Number of colour components in the texture.
+                 1,                   // Texture image width.
+                 1,                   // Texture image height.
+                 0,                   // Border. Must be 0.
+                 GL_RGBA,             // Format of the pixel data.
+                 GL_UNSIGNED_BYTE,    // Data type of the pixel data.
+                 data);               // Pointer to the image data in memory.
+    empty_texture_ = std::make_shared<GLTexture>(texture_id, GL_TEXTURE_2D);
+    return true;
+}
 
-    GLenum texture_unit = GL_TEXTURE0 + index;
+std::shared_ptr<GLTexture> GLTextureManager::GetGLTexture(const std::string& image_name) const
+{
+    auto search = gl_texture_map_.find(image_name);
+    if (search == gl_texture_map_.end())
+    {
+        return empty_texture_;
+    }
+    return search->second;
+}
+
+std::shared_ptr<GLTexture> GLTextureManager::GetShadowMapTexture() const
+{
+    return shadow_map_texture_;
+}
+
+void GLTextureManager::SetShadowMapTexture(std::shared_ptr<GLTexture> texture)
+{
+    shadow_map_texture_ = std::move(texture);
+}
+
+void GLTextureManager::UnloadImages()
+{
+    for (const auto& image_pair : image_map_)
+    {
+        image_pair.second->Release();
+    }
+}
+
+void GLTextureManager::UnloadGLTextures()
+{
+    gl_texture_map_.clear();
+}
+
+std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(std::shared_ptr<Image> image)
+{
+    GLenum texture_unit = GL_TEXTURE0;
     GLenum target = GL_TEXTURE_2D;
 
     GLuint texture_id = 0;
@@ -82,7 +125,6 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& im
     glBindTexture(target, texture_id);
 
     // Load image
-    auto image = search->second;
     if (!image->Load())
     {
         glDeleteTextures(1, &texture_id);
@@ -119,40 +161,13 @@ std::shared_ptr<GLTexture> GLTextureManager::CreateTexture(const std::string& im
                  GL_UNSIGNED_BYTE,    // Data type of the pixel data.
                  image->GetData());   // Pointer to the image data in memory.
 
-    auto gl_texture = std::make_shared<GLTexture>(texture_id, target);
-    gl_texture->SetName(name);
-    return gl_texture;
-}
+    glGenerateMipmap(target);
 
-bool GLTextureManager::InitializeImage(const std::string& image_name, const std::string& filename)
-{
-    if (image_map_.find(image_name) != image_map_.end())
-    {
-        return true;
-    }
+    // Unbind the texture
+    glActiveTexture(texture_unit);
+    glBindTexture(target, 0);
 
-    auto image = std::make_shared<Image>(filename);
-    if (!image->Load())
-    {
-        return false;
-    }
-
-    image->Release();
-    image_map_.emplace(image_name, std::move(image));
-    return true;
-}
-
-void GLTextureManager::ClearImages()
-{
-    image_map_.clear();
-}
-
-void GLTextureManager::UnloadImages()
-{
-    for (auto& image : image_map_)
-    {
-        image.second->Release();
-    }
+    return std::make_shared<GLTexture>(texture_id, target);
 }
 
 } // namespace zero::render

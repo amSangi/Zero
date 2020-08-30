@@ -2,6 +2,7 @@
 
 #include "TestGLShader.hpp"
 #include "render/opengl/GLProgram.hpp"
+#include "core/Logger.hpp"
 
 class TestGLProgram : public TestGLShader
 {
@@ -26,6 +27,7 @@ protected:
     }
 
 protected:
+    zero::Logger test_logger_;
     std::shared_ptr<zero::render::GLShader> vertex_shader_;
     std::shared_ptr<zero::render::GLShader> fragment_shader_;
     std::shared_ptr<zero::render::GLShader> geometry_shader_;

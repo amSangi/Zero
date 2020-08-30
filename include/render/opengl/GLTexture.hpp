@@ -24,18 +24,6 @@ namespace zero::render
         ~GLTexture();
 
         /**
-         * @brief Bind the texture object to the given texture unit
-         * @param texture_unit the texture unit to bind to
-         */
-        void Bind(GLenum texture_unit) const;
-
-        /**
-         * @brief Generate mipmaps for the texture
-         * @param texture_unit the texture unit to use
-         */
-        void GenerateMipMap(GLenum texture_unit) const;
-
-        /**
          * @brief Get the texture target type
          * @return the texture target
          */
@@ -45,19 +33,7 @@ namespace zero::render
          * @brief Get the identifier for the texture
          * @return the id
          */
-        [[nodiscard]] GLuint GetIdentifier() const;
-
-        /**
-         * @brief Get the name
-         * @return the name. Empty string if one is not set.
-         */
-        [[nodiscard]] std::string GetName() const;
-
-        /**
-         * @brief Set the name of the texture (e.g. `diffuse_texture`)
-         * @param name the name
-         */
-        void SetName(const std::string& name);
+        [[nodiscard]] GLuint GetNativeIdentifier() const;
 
     private:
 
@@ -75,11 +51,6 @@ namespace zero::render
          * @brief The OpenGL texture target
          */
         GLenum target_;
-
-        /**
-         * @brief The shader sampler name the texture is associated with
-         */
-        std::string name_;
 
     }; // class GLTexture
 

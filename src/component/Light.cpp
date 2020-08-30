@@ -3,26 +3,40 @@
 namespace zero
 {
 
+Attenuation::Attenuation()
+: constant_(1.0F)
+, linear_(0.09F)
+, quadratic_(0.032F)
+{
+}
+
 DirectionalLight::DirectionalLight()
 : color_(math::Vec3f::One())
 , direction_(math::Vec3f::Down())
-, intensity_(1.0F)
+, ambient_intensity_(1.0F)
+, diffuse_intensity_(1.0F)
+, casts_shadows_(false)
 {
 }
 
 PointLight::PointLight()
 : color_(math::Vec3f::One())
-, attenuation_constant_(1.0F)
-, attenuation_linear_(0.09F)
-, attenuation_quadratic_(0.032F)
+, ambient_intensity_(1.0F)
+, diffuse_intensity_(1.0F)
+, attenuation_()
+, casts_shadows_(false)
 {
 }
 
 SpotLight::SpotLight()
 : color_(math::Vec3f::One())
 , direction_(math::Vec3f::Down())
+, ambient_intensity_(1.0F)
+, diffuse_intensity_(1.0F)
 , inner_cone_angle_(math::Degree(12.5F))
 , outer_cone_angle_(math::Degree(17.5F))
+, attenuation_()
+, casts_shadows_(false)
 {
 }
 

@@ -215,40 +215,6 @@ namespace zero
     private:
 
         /**
-         * @brief Create a perspective projection matrix
-         *
-         * @param vertical_fov the vertical field of view
-         * @param aspect_ratio the aspect ratio of the camera viewport
-         * @param near the z-distance to the near clipping plane
-         * @param far the z-distance to the far clipping plane
-         *
-         * @return a perspective projection matrix
-         */
-        static math::Matrix4x4 Perspective(math::Radian vertical_fov,
-                                           float aspect_ratio,
-                                           float near,
-                                           float far);
-
-        /**
-         * @brief Create a orthographic projection matrix
-         *
-         * @param left the left boundary (x)
-         * @param right the right boundary (x)
-         * @param bottom the bottom boundary (y)
-         * @param top the top boundary (y)
-         * @param near the near boundary (z)
-         * @param far the far boundary (z)
-         *
-         * @return a orthographic projection matrix
-         */
-        static math::Matrix4x4 Orthographic(float left,
-                                            float right,
-                                            float bottom,
-                                            float top,
-                                            float near,
-                                            float far);
-
-        /**
          * @brief The camera projection type. Set once during construction.
          */
         ProjectionType projection_;

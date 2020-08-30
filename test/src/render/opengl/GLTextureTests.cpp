@@ -56,14 +56,12 @@ TEST_F(TestGLTexture, CreateInvalidTexture)
 {
     GLTextureManager manager;
     EXPECT_FALSE(manager.InitializeImage("", ""));
-    EXPECT_EQ(manager.CreateTexture("", 0), nullptr);
 }
 
 TEST_F(TestGLTexture, CreateTextureLargeIndex)
 {
     GLTextureManager manager;
     EXPECT_TRUE(manager.InitializeImage(kTestImageName, kTestImageFile));
-    EXPECT_EQ(manager.CreateTexture(kTestImageFile, manager.GetTextureUnitCount()), nullptr);
 }
 
 TEST_F(TestGLTexture, SetSamplerLargeIndex)
@@ -92,15 +90,6 @@ TEST_F(TestGLTexture, SetValidSampler)
     EXPECT_EQ(glGetError(), 0);
 }
 
-TEST_F(TestGLTexture, CreateValidTexture)
-{
-    GLTextureManager manager;
-    EXPECT_GT(manager.GetTextureUnitCount(), 0);
-    EXPECT_TRUE(manager.InitializeImage(kTestImageName, kTestImageFile));
-    auto texture = manager.CreateTexture(kTestImageName, 0);
-    EXPECT_NE(texture, nullptr);
-}
-
 TEST_F(TestGLTexture, TextureWithShader)
 {
     // Create Shaders
@@ -114,7 +103,7 @@ TEST_F(TestGLTexture, TextureWithShader)
     shaders.push_back(fragment_shader);
 
     // Create Graphics Program
-    auto program = GLProgram::CreateGLProgram(shaders);
+    auto program = GLProgram::CreateGLProgram(test_logger_, shaders);
     ASSERT_NE(program, nullptr);
 
     // Test vertices
@@ -173,10 +162,11 @@ TEST_F(TestGLTexture, TextureWithShader)
 
     // Create texture
     EXPECT_TRUE(manager.InitializeImage(kTestImageName, kTestImageFile));
-    auto texture = manager.CreateTexture(kTestImageName, index);
+    EXPECT_TRUE(manager.InitializeGLTextures());
+    auto texture = manager.GetGLTexture(kTestImageName);
     ASSERT_NE(texture, nullptr);
-    texture->GenerateMipMap(GL_TEXTURE0 + index);
-    texture->Bind(GL_TEXTURE0 + index);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(texture->GetTarget(), texture->GetNativeIdentifier());
 
     program->SetUniform("tex_sampler", index);
     program->FlushUniforms();

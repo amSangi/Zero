@@ -7,6 +7,14 @@
 namespace zero
 {
 
+    struct Attenuation
+    {
+        Attenuation();
+        float constant_;
+        float linear_;
+        float quadratic_;
+    };
+
     /**
      * @brief Directional light component
      */
@@ -15,7 +23,9 @@ namespace zero
         DirectionalLight();
         math::Vec3f color_;
         math::Vec3f direction_;
-        float intensity_;
+        float ambient_intensity_;
+        float diffuse_intensity_;
+        bool casts_shadows_;
     }; // struct DirectionalLight
 
     /**
@@ -25,9 +35,10 @@ namespace zero
     {
         PointLight();
         math::Vec3f color_;
-        float attenuation_constant_;
-        float attenuation_linear_;
-        float attenuation_quadratic_;
+        float ambient_intensity_;
+        float diffuse_intensity_;
+        Attenuation attenuation_;
+        bool casts_shadows_;
     }; // struct PointLight
 
     /**
@@ -38,8 +49,12 @@ namespace zero
         SpotLight();
         math::Vec3f color_;
         math::Vec3f direction_;
+        float ambient_intensity_;
+        float diffuse_intensity_;
         math::Degree inner_cone_angle_;
         math::Degree outer_cone_angle_;
+        Attenuation attenuation_;
+        bool casts_shadows_;
     }; // struct SpotLight
 
     /**

@@ -1,11 +1,11 @@
 #version 450
+precision highp sampler2DArrayShadow;
 precision highp float;
 
 // -------------------- Constants ---------------------------- //
-const int kMaxDirectionalLightCount = 8;
-const int kMaxPointLightCount = 8;
-const int kMaxSpotLightCount = 8;
-const float kAmbientStrength = 0.35;
+const uint kMaxDirectionalLightCount = 4;
+const uint kMaxPointLightCount = 4;
+const uint kMaxSpotLightCount = 4;
 
 // -------------------- Camera Uniforms ----------------------- //
 layout (std140) uniform Camera
@@ -13,6 +13,14 @@ layout (std140) uniform Camera
     mat4 u_projection_matrix;
     mat4 u_view_matrix;
     vec4 u_camera_position;
+};
+
+// -------------------- Material Uniforms -------------------- //
+layout (std140) uniform Material
+{
+    vec4 u_diffuse_color;
+    float u_specular_intensity;
+    float u_specular_exponent;
 };
 
 // -------------------- Model Uniforms ----------------------- //
@@ -27,53 +35,71 @@ struct DirectionalLight
 {
     vec4 color;
     vec4 direction;
-    float intensity;
+    float ambient_intensity;
+    float diffuse_intensity;
 };
 
 struct PointLight
 {
-    vec4 color;
     vec4 position;
+    vec4 color;
+
+    float ambient_intensity;
+    float diffuse_intensity;
     float attenuation_constant;
     float attenuation_linear;
+
     float attenuation_quadratic;
 };
 
 struct SpotLight
 {
-    vec4 color;
     vec4 position;
+    vec4 color;
     vec4 direction;
+
+    float ambient_intensity;
+    float diffuse_intensity;
     float inner_cosine;
     float outer_cosine;
+
+    float attenuation_constant;
+    float attenuation_linear;
+    float attenuation_quadratic;
 };
 
-layout (std140) uniform Lights
+layout (std140) uniform LightInformation
 {
-    int u_directional_light_count;
-    int u_point_light_count;
-    int u_spot_light_count;
+    uint u_directional_light_count;
+    uint u_point_light_count;
+    uint u_spot_light_count;
+};
+
+layout (std140) uniform DirectionalLights
+{
     DirectionalLight u_directional_lights[kMaxDirectionalLightCount];
+};
+
+layout (std140) uniform PointLights
+{
     PointLight u_point_lights[kMaxPointLightCount];
+};
+
+layout (std140) uniform SpotLights
+{
     SpotLight u_spot_lights[kMaxSpotLightCount];
 };
 
-// -------------------- Material Uniforms -------------------- //
-layout (std140) uniform Material
+// -------------------- Shadow Map Uniforms -------------------- //
+layout (std140) uniform ShadowMapMatrix
 {
-    vec4 u_diffuse_color;
-    float u_specular_exponent;
+    mat4 u_shadow_map_matrix;
 };
+uniform sampler2D u_shadow_map;
+
 
 // -------------------- Texture Uniforms -------------------- //
-struct TextureMap
-{
-    sampler2D diffuse_texture;
-    sampler2D specular_texuture;
-    sampler2D normal_texture;
-};
-
-uniform TextureMap u_texture_map;
+uniform sampler2D u_diffuse_texture;
 
 // -------------------- Vertex IN variables ------------------ //
 in VertexData
@@ -81,139 +107,135 @@ in VertexData
     vec3 model_position;
     vec3 normal;
     vec2 texture_coordinate;
-} i;
+} in_vertex_data;
+
+in vec4 shadow_coordinate;
 
 // -------------------- OUT variables ------------------ //
 out vec4 out_color;
 
-
 // -------------------- Lighting Functions ------------------- //
-vec3 ComputeDirectionalLightColor(DirectionalLight light, vec3 normal, vec3 viewing_direction)
+float ComputeShadowFactor()
 {
-    vec3 light_color = light.color.xyz;
-    vec3 light_direction = light.direction.xyz;
-
-    // Ambient shading
-    vec3 ambient_shading = kAmbientStrength * light_color;
-
-    // Diffuse shading
-    vec3 direction = normalize(-light_direction);
-    float diffuse_value = max(dot(normal, direction), 0.0);
-    vec3 diffuse_shading = diffuse_value * light_color;
-
-    // Specular shading
-    vec3 reflection_direction = reflect(-direction, normal);
-    float specular_value = pow(max(dot(viewing_direction, reflection_direction), 0.0),
-                               u_specular_exponent);
-    vec3 specular_shading = specular_value * light_color;
-
-    // Object color
-    vec3 texture_color = texture(u_texture_map.diffuse_texture, i.texture_coordinate).xyz;
-    vec3 object_color = texture_color + u_diffuse_color.xyz;
-
-    return object_color * (ambient_shading + diffuse_shading + specular_shading);
+    if (texture(u_shadow_map, shadow_coordinate.xy / shadow_coordinate.w).x < shadow_coordinate.z / shadow_coordinate.w)
+    {
+        return 0.5;
+    }
+    return 1.0;
 }
 
-vec3 ComputePointLightColor(PointLight light, vec3 normal, vec3 viewing_direction)
+vec4 ComputeBaseLightColor(vec3 light_color,
+                           vec3 light_to_vertex,
+                           vec3 vertex_to_eye,
+                           vec3 normal,
+                           float ambient_intensity,
+                           float diffuse_intensity)
 {
-    vec3 light_color = light.color.xyz;
-    vec3 light_position = light.position.xyz;
+    // Compute ambient color of the light
+    vec4 ambient_color = vec4(light_color * ambient_intensity, 1.0);
 
-    // Ambient shading
-    vec3 ambient_color = kAmbientStrength * light_color;
+    // Compute diffuse color of the light
+    float diffuse_factor = max(dot(normal, -light_to_vertex), 0.0);
+    vec4 diffuse_color = vec4(light_color * diffuse_intensity * diffuse_factor, 1.0);
 
-    // Diffuse shading
-    vec3 direction = normalize(light_position - i.model_position);
-    float diffuse_value = max(dot(normal, direction), 0.0);
-    vec3 diffuse_color = diffuse_value * light_color;
+    // Compute specular color of the light
+    vec3 reflection_direction = normalize(reflect(light_to_vertex, normal));
+    float specular_factor = pow(max(dot(vertex_to_eye, reflection_direction),
+                                    0.0),
+                                u_specular_exponent);
 
-    // Specular shading
-    vec3 reflection_direction = reflect(-direction, normal);
-    float specular_value = pow(max(dot(viewing_direction, reflection_direction), 0.0),
-                               u_specular_exponent);
-    vec3 specular_color = specular_value * light_color;
+    vec4 specular_color = vec4(light_color, 1.0) * u_specular_intensity * specular_factor;
 
-    // Attenuation
-    float distance = length(light_position - i.model_position);
-    float attenuation = 1.0 / (light.attenuation_constant
-                                + (light.attenuation_linear * distance)
-                                + (light.attenuation_quadratic * distance * distance));
-
-    ambient_color *= attenuation;
-    diffuse_color *= attenuation;
-    specular_color *= attenuation;
-
-    // Object color
-    vec3 texture_color = texture(u_texture_map.diffuse_texture, i.texture_coordinate).xyz;
-    vec3 object_color = texture_color + u_diffuse_color.xyz;
-
-    return object_color * (ambient_color + diffuse_color + specular_color);
+    return (ambient_color + (diffuse_color + specular_color));
 }
 
-vec3 ComputeSpotLightColor(SpotLight light, vec3 normal, vec3 viewing_direction)
+vec4 ComputeDirectionalLightColor(DirectionalLight light, vec3 normal, vec3 vertex_to_eye)
 {
-    vec3 light_color = light.color.xyz;
-    vec3 light_position = light.position.xyz;
-    vec3 light_direction = light.direction.xyz;
+    return ComputeBaseLightColor(light.color.xyz,
+                                 light.direction.xyz,
+                                 vertex_to_eye,
+                                 normal,
+                                 light.ambient_intensity,
+                                 light.diffuse_intensity);
+}
 
-    // Ambient shading
-    vec3 ambient_color = kAmbientStrength * light_color;
+vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
+{
+    vec3 light_to_vertex = in_vertex_data.model_position - light.position.xyz;
+    float distance = length(light_to_vertex);
+    light_to_vertex = normalize(light_to_vertex);
 
-    // Diffuse shading
-    vec3 direction = normalize(light_position - i.model_position);
-    float diffuse_value = max(dot(normal, direction), 0.0);
-    vec3 diffuse_color = diffuse_value * light_color;
+    vec4 base_light_color = ComputeBaseLightColor(light.color.xyz,
+                                                  light_to_vertex,
+                                                  vertex_to_eye,
+                                                  normal,
+                                                  light.ambient_intensity,
+                                                  light.diffuse_intensity);
 
-    // Specular shading
-    vec3 reflection_direction = reflect(-direction, normal);
-    float specular_value = pow(max(dot(viewing_direction, reflection_direction), 0.0),
-                               u_specular_exponent);
-    vec3 specular_color = specular_value * light_color;
+    float attenuation = light.attenuation_constant
+                        + (light.attenuation_linear * distance)
+                        + (light.attenuation_quadratic * distance * distance);
 
-    // Spot light intensity
-    float theta = dot(direction, normalize(-light_direction));
+    return base_light_color / attenuation;
+}
+
+vec4 ComputeSpotLightColor(SpotLight light, vec3 normal, vec3 vertex_to_eye)
+{
+    vec3 light_to_vertex = in_vertex_data.model_position - light.position.xyz;
+    float distance = length(light_to_vertex);
+    light_to_vertex = normalize(light_to_vertex);
+
+    vec4 base_light_color = ComputeBaseLightColor(light.color.xyz,
+                                                  light_to_vertex,
+                                                  vertex_to_eye,
+                                                  normal,
+                                                  light.ambient_intensity,
+                                                  light.diffuse_intensity);
+
+    float attenuation = light.attenuation_constant
+                        + (light.attenuation_linear * distance)
+                        + (light.attenuation_quadratic * distance * distance);
+
+    float theta = dot(light_to_vertex, light.direction.xyz);
     float epsilon = (light.inner_cosine - light.outer_cosine);
-    float intensity = clamp((theta - light.outer_cosine) / epsilon, 0.0, 1.0);
+    float spot_light_intensity = clamp((theta - light.outer_cosine) / epsilon, 0.0, 1.0);
 
-    diffuse_color *= intensity;
-    specular_color *= intensity;
-
-    // Object color
-    vec3 texture_color = texture(u_texture_map.diffuse_texture, i.texture_coordinate).xyz;
-    vec3 object_color = texture_color + u_diffuse_color.xyz;
-
-    return object_color * (ambient_color + diffuse_color + specular_color);
+    return (base_light_color / attenuation) * spot_light_intensity;
 }
 
-vec3 ComputeLightingColor(vec3 normal, vec3 viewing_direction)
+vec4 ComputeLightColor(vec3 normal, vec3 vertex_to_eye)
 {
-    vec3 lighting_color = vec3(0, 0, 0);
+    vec4 lighting_color = vec4(0, 0, 0, 0);
 
     // Compute Directional Light Colors
     for (int i = 0; (i < kMaxDirectionalLightCount) && (i < u_directional_light_count); ++i)
     {
-        lighting_color += ComputeDirectionalLightColor(u_directional_lights[i], normal, viewing_direction);
+        lighting_color += ComputeDirectionalLightColor(u_directional_lights[i], normal, vertex_to_eye);
     }
 
     // Compute Point Light Colors
     for (int i = 0; (i < kMaxPointLightCount) && (i < u_point_light_count); ++i)
     {
-        lighting_color += ComputePointLightColor(u_point_lights[i], normal, viewing_direction);
+        lighting_color += ComputePointLightColor(u_point_lights[i], normal, vertex_to_eye);
     }
 
     // Compute Spot Light Colors
     for (int i = 0; (i < kMaxSpotLightCount) && (i < u_spot_light_count); ++i)
     {
-        lighting_color += ComputeSpotLightColor(u_spot_lights[i], normal, viewing_direction);
+        lighting_color += ComputeSpotLightColor(u_spot_lights[i], normal, vertex_to_eye);
     }
 
-    return lighting_color;
+    return lighting_color * ComputeShadowFactor();
 }
 
 // -------------------- Main --------------------------------- //
 void main()
 {
-    vec3 normal = normalize(i.normal);
-    vec3 viewing_direction = normalize(u_camera_position.xyz - i.model_position);
-    out_color = vec4(ComputeLightingColor(normal, viewing_direction), 1.0);
+    vec3 normal = normalize(in_vertex_data.normal);
+    vec3 vertex_to_eye = normalize(u_camera_position.xyz - in_vertex_data.model_position);
+
+    vec3 texture_color = texture(u_diffuse_texture, in_vertex_data.texture_coordinate).xyz;
+    vec3 object_color = texture_color + u_diffuse_color.xyz;
+
+    out_color = vec4(object_color, 1.0) * ComputeLightColor(normal, vertex_to_eye);
 }

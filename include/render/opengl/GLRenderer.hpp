@@ -5,6 +5,7 @@
 #include "core/TimeDelta.hpp"
 #include "render/IRenderer.hpp"
 #include "render/IShader.hpp"
+#include "render/RenderPipeline.hpp"
 
 namespace zero
 {
@@ -41,7 +42,7 @@ namespace render
         /**
          * @brief Load all OpenGL shaders, models, and textures
          */
-        void Initialize() override;
+        void Initialize(const RenderSystemConfig& config) override;
 
         /**
          * @see IRenderer::Render
@@ -72,50 +73,8 @@ namespace render
         void InitializeShaders();
         void InitializeModels();
         void InitializeImages();
+        void InitializeRenderPasses(const RenderSystemConfig& config);
         ///@}
-
-        /**
-         * @brief Render the sky dome
-         * @param camera the camera to render to
-         * @param projection_matrix the projection matrix of the camera
-         * @param view_matrix the view matrix of the camera
-         * @param sky_dome the sky dome to render
-         */
-        void RenderSkyDome(const Camera &camera,
-                           const math::Matrix4x4& projection_matrix,
-                           const math::Matrix4x4& view_matrix,
-                           const SkyDome& sky_dome);
-
-        /**
-         * @brief Render all viewable entities with a mesh
-         * @param camera the camera to render to
-         * @param registry the registry containing all the entities and their components
-         */
-        void RenderEntities(const Camera& camera, const entt::registry& registry);
-
-        /**
-         * @brief Render the wireframe of the bounding volume
-         * @param camera the camera to render to
-         * @param projection_matrix the projection matrix of the camera
-         * @param view_matrix the view matrix of the camera
-         * @param volume the volume to render
-         */
-        void RenderVolume(const Camera& camera,
-                          const math::Matrix4x4& projection_matrix,
-                          const math::Matrix4x4& view_matrix,
-                          const Volume& volume);
-
-        /**
-         * @brief Update all OpenGL settings (e.g. Set viewport, clear color buffers, etc)
-         * @param camera the camera being rendered to
-         */
-        static void UpdateGL(const Camera& camera);
-
-        /**
-         * @brief Toggle wireframe mode
-         * @param enable_wireframe should wireframe be enabled?
-         */
-        static void ToggleWireframeMode(bool enable_wireframe);
 
         /**
          * @brief Read the shader source into the destination
@@ -155,9 +114,15 @@ namespace render
         std::unique_ptr<GLUniformManager> uniform_manager_;
 
         /**
-         * @brief
+         * @brief The pipeline that renders all entities to the screen by executing various render passes.
+         * The passes are added during initialization.
          */
-        EngineCore *engine_core_;
+        std::unique_ptr<RenderPipeline> render_pipeline_;
+
+        /**
+         * @brief The engine core that contains shared objects and game data.
+         */
+        EngineCore* engine_core_;
 
     }; // class GLRenderer
 

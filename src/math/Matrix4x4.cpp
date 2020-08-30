@@ -406,5 +406,60 @@ Matrix4x4 Matrix4x4::Identity()
                      0.0F, 0.0F, 1.0F, 0.0F,
                      0.0F, 0.0F, 0.0F, 1.0F);
 }
+math::Matrix4x4 Matrix4x4::LookAt(const math::Vec3f& eye, const math::Vec3f& center, const math::Vec3f& up)
+{
+    math::Vec3f a = math::Vec3f::Normalize(center - eye);
+    math::Vec3f b = math::Vec3f::Normalize(math::Vec3f::Cross(a, up));
+    math::Vec3f c = math::Vec3f::Cross(b, a);
+
+    math::Matrix4x4 matrix = Identity();
+    matrix[0][0] = b.x_;
+    matrix[1][0] = b.y_;
+    matrix[2][0] = b.z_;
+
+    matrix[0][1] = c.x_;
+    matrix[1][1] = c.y_;
+    matrix[2][1] = c.z_;
+
+    matrix[0][2] = -a.x_;
+    matrix[1][2] = -a.y_;
+    matrix[2][2] = -a.z_;
+
+    matrix[3][0] = -math::Vec3f::Dot(b, eye);
+    matrix[3][1] = -math::Vec3f::Dot(c, eye);
+    matrix[3][2] = -math::Vec3f::Dot(a, eye);
+
+    return matrix;
+}
+
+zero::math::Matrix4x4 Matrix4x4::Perspective(math::Radian vertical_fov, float aspect_ratio, float near, float far)
+{
+
+    math::Matrix4x4 perspective_matrix(0.0F);
+
+    float tan_half_vertical_fov = math::Tan(vertical_fov.rad_ / 2.0F);
+    perspective_matrix[0][0] = 1.0F / (aspect_ratio * tan_half_vertical_fov);
+    perspective_matrix[1][1] = 1.0F / (tan_half_vertical_fov);
+    perspective_matrix[2][2] = -(far + near) / (far - near);
+    perspective_matrix[2][3] = -(2.0F * far * near) / (far - near);
+    perspective_matrix[3][2] = -1.0F;
+
+    return perspective_matrix;
+}
+
+zero::math::Matrix4x4 Matrix4x4::Orthographic(float left, float right, float bottom, float top, float near, float far)
+{
+
+    math::Matrix4x4 orthographic_matrix = Identity();
+
+    orthographic_matrix[0][0] = 2.0F / (right - left);
+    orthographic_matrix[1][1] = 2.0F / (top - bottom);
+    orthographic_matrix[2][2] = -2.0F / (far - near);
+    orthographic_matrix[3][0] = -(right + left) / (right - left);
+    orthographic_matrix[3][1] = -(top + bottom) / (top - bottom);
+    orthographic_matrix[3][2] = -(far + near) / (far - near);
+
+    return orthographic_matrix;
+}
 
 } // namespace zero::math

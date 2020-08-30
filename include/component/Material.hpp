@@ -71,9 +71,20 @@ namespace zero
         math::Vec3f diffuse_color_;
 
         /**
+         * @brief How much specular contributes to the final color
+         */
+        float specular_intensity_;
+
+        /**
          * @brief The shininess of an entity.
          */
         float specular_exponent_;
+
+        /**
+         * @brief Is the entity two sided?
+         * This will disable backface culling for the entity
+         */
+        bool two_sided_;
 
         /**
          * @brief Is the entity in wireframe mode?

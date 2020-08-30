@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include "core/Logger.hpp"
 
 namespace zero
 {
@@ -25,7 +26,7 @@ namespace render
     {
     public:
 
-        GLCompiler();
+        GLCompiler(Logger& logger);
 
         ~GLCompiler() = default;
 
@@ -42,6 +43,14 @@ namespace render
          * @return a graphics program
          */
         std::shared_ptr<GLProgram> CreateProgram(const SkyDome& sky_dome);
+
+        /**
+         * @brief Create a graphics program from the vertex and fragment shader file names
+         * @param vertex_shader the vertex shader name
+         * @param fragment_shader the fragment shader name
+         * @return a graphics program
+         */
+        std::shared_ptr<GLProgram> CreateProgram(const std::string& vertex_shader, const std::string& fragment_shader);
 
         /**
          * @brief Initialize a new shader into the shader map
@@ -71,6 +80,11 @@ namespace render
          * Graphics program caching avoids having to link shaders that have already been linked again.
          */
         std::unordered_map<std::string, std::shared_ptr<GLProgram>> program_map_;
+
+        /**
+         * @brief The logger used to log OpenGL errors
+         */
+        Logger& logger_;
 
     }; // class GLCompiler
 

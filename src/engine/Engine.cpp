@@ -42,14 +42,14 @@ void Engine::Tick()
 
     TickEvents();
 
+    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Propagating entity transforms");
+    TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
     render_system_->Update(time_delta_);
+
     for (const auto& system : game_systems_)
     {
         system->Update(time_delta_);
     }
-
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Propagating entity transforms");
-    TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
 
     render_system_->PostUpdate();
     for (const auto& system : game_systems_)
@@ -59,7 +59,6 @@ void Engine::Tick()
 
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Clearing cached entity transformations");
     TransformPropagator::ClearCachedTransformations(engine_core_->GetRegistry());
-
     LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Tick End");
 }
 

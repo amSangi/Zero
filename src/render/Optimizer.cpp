@@ -1,5 +1,6 @@
 #include "render/Optimizer.hpp"
 #include "component/Camera.hpp"
+#include "component/Light.hpp"
 #include "component/Material.hpp"
 #include "component/ModelInstance.hpp"
 #include "component/PrimitiveInstance.hpp"
@@ -15,6 +16,54 @@ namespace zero::render
 std::vector<Entity> Optimizer::ExtractRenderableEntities(const Camera& camera, const entt::registry& registry)
 {
     return GetViewableEntities(camera, registry);
+}
+
+std::vector<Entity> Optimizer::ExtractPointLightShadowCasters(const Camera& camera, const entt::registry& registry)
+{
+    std::vector<Entity> point_light_entities;
+    auto point_light_view = registry.view<const Transform, const PointLight>();
+    for (Entity entity : point_light_view)
+    {
+        const PointLight& point_light = point_light_view.get<const PointLight>(entity);
+        if (point_light.casts_shadows_)
+        {
+            // TODO: Perform point light culling
+            point_light_entities.push_back(entity);
+        }
+    }
+    return point_light_entities;
+}
+
+std::vector<Entity> Optimizer::ExtractDirectionalLightShadowCasters(const Camera& camera, const entt::registry& registry)
+{
+    std::vector<Entity> directional_light_entities;
+    auto directional_light_view = registry.view<const DirectionalLight>();
+    for (Entity entity : directional_light_view)
+    {
+        const DirectionalLight& directional_light = directional_light_view.get(entity);
+        if (directional_light.casts_shadows_)
+        {
+            // Directional lights are not culled
+            directional_light_entities.push_back(entity);
+        }
+    }
+    return directional_light_entities;
+}
+
+std::vector<Entity> Optimizer::ExtractSpotLightShadowCasters(const Camera& camera, const entt::registry& registry)
+{
+    std::vector<Entity> spot_light_entities;
+    auto spot_light_view = registry.view<const Transform, const SpotLight>();
+    for (Entity entity : spot_light_view)
+    {
+        const SpotLight& spot_light = spot_light_view.get<const SpotLight>(entity);
+        if (spot_light.casts_shadows_)
+        {
+            // TODO: Perform spot light culling
+            spot_light_entities.push_back(entity);
+        }
+    }
+    return spot_light_entities;
 }
 
 std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const entt::registry& registry)

@@ -4,7 +4,7 @@
 namespace zero::render
 {
 
-std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders)
+std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(Logger& logger, const std::vector<std::shared_ptr<GLShader>>& shaders)
 {
 
     if (shaders.empty())
@@ -26,6 +26,12 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::sha
 
     if (!program->Link())
     {
+        std::string linker_error_message;
+        GLint message_length = 0;
+        glGetProgramiv(program_identifier, GL_INFO_LOG_LENGTH, &message_length);
+        linker_error_message.resize(message_length);
+        glGetProgramInfoLog(program_identifier, message_length, &message_length, linker_error_message.data());
+        LOG_ERROR(logger, "GLProgram", "Failed to link OpenGL program. Error: " + linker_error_message);
         return nullptr;
     }
 
@@ -100,7 +106,7 @@ void GLProgram::SetUniform(const std::string& name, math::Vec3f value)
     vec3f_map_[name] = value;
 }
 
-void GLProgram::SetUniform(const std::string& name, zero::int32 value)
+void GLProgram::SetUniform(const std::string& name, int32 value)
 {
     int32_map_[name] = value;
 }
