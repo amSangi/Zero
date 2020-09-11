@@ -50,15 +50,21 @@ namespace zero::render {
 
         /**
          * @brief Set the wrapping technique for the s texture coordinate axis.
-         * @param s the texture coordinate wrapping technique
+         * @param wrapping the texture coordinate wrapping technique
          */
-        virtual void SetWrappingS(Wrapping s) = 0;
+        virtual void SetWrappingS(Wrapping wrapping) = 0;
 
         /**
          * @brief Set the wrapping technique for t texture coordinate axis.
-         * @param t the texture coordinate wrapping technique
+         * @param wrapping the texture coordinate wrapping technique
          */
-        virtual void SetWrappingT(Wrapping t) = 0;
+        virtual void SetWrappingT(Wrapping wrapping) = 0;
+
+        /**
+         * @brief Set the wrapping technique for r texture coordinate axis.
+         * @param wrapping the texture coordinate wrapping technique
+         */
+        virtual void SetWrappingR(Wrapping wrapping) = 0;
 
         /**
          * @brief Set the minification texture filtering technique.

@@ -2,6 +2,8 @@
 
 #include "render/IRenderPass.hpp"
 #include "core/Logger.hpp"
+#include "component/Transform.hpp"
+#include "component/Material.hpp"
 #include "component/Volume.hpp"
 #include "math/Matrix4x4.hpp"
 #include <memory>
@@ -10,6 +12,7 @@ namespace zero::render
 {
     // Forward declarations
     class GLCompiler;
+    class GLMesh;
     class GLModelManager;
     class GLPrimitiveMeshManager;
     class GLSampler;

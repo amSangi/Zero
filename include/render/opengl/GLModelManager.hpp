@@ -65,6 +65,11 @@ namespace render
         std::unordered_map<std::string, std::shared_ptr<IModel>> model_map_;
 
         /**
+         * @brief Represents a model without a mesh
+         */
+        std::shared_ptr<IModel> empty_model_;
+
+        /**
          * @brief Random Number Generator used to create model identifiers
          */
         std::minstd_rand0 random_generator_;

@@ -408,28 +408,24 @@ Matrix4x4 Matrix4x4::Identity()
 }
 math::Matrix4x4 Matrix4x4::LookAt(const math::Vec3f& eye, const math::Vec3f& center, const math::Vec3f& up)
 {
-    math::Vec3f a = math::Vec3f::Normalize(center - eye);
-    math::Vec3f b = math::Vec3f::Normalize(math::Vec3f::Cross(a, up));
-    math::Vec3f c = math::Vec3f::Cross(b, a);
+    const math::Vec3f f(math::Vec3f::Normalize(center - eye));
+    const math::Vec3f s(math::Vec3f::Normalize(math::Vec3f::Cross(f, up)));
+    const math::Vec3f u(math::Vec3f::Cross(s, f));
 
-    math::Matrix4x4 matrix = Identity();
-    matrix[0][0] = b.x_;
-    matrix[1][0] = b.y_;
-    matrix[2][0] = b.z_;
-
-    matrix[0][1] = c.x_;
-    matrix[1][1] = c.y_;
-    matrix[2][1] = c.z_;
-
-    matrix[0][2] = -a.x_;
-    matrix[1][2] = -a.y_;
-    matrix[2][2] = -a.z_;
-
-    matrix[3][0] = -math::Vec3f::Dot(b, eye);
-    matrix[3][1] = -math::Vec3f::Dot(c, eye);
-    matrix[3][2] = -math::Vec3f::Dot(a, eye);
-
-    return matrix;
+    math::Matrix4x4 result = math::Matrix4x4::Identity();
+    result[0][0] = s.x_;
+    result[0][1] = s.y_;
+    result[0][2] = s.z_;
+    result[1][0] = u.x_;
+    result[1][1] = u.y_;
+    result[1][2] = u.z_;
+    result[2][0] = -f.x_;
+    result[2][1] = -f.y_;
+    result[2][2] = -f.z_;
+    result[0][3] = -math::Vec3f::Dot(s, eye);
+    result[1][3] = -math::Vec3f::Dot(u, eye);
+    result[2][3] = math::Vec3f::Dot(f, eye);
+    return result;
 }
 
 zero::math::Matrix4x4 Matrix4x4::Perspective(math::Radian vertical_fov, float aspect_ratio, float near, float far)
@@ -455,9 +451,9 @@ zero::math::Matrix4x4 Matrix4x4::Orthographic(float left, float right, float bot
     orthographic_matrix[0][0] = 2.0F / (right - left);
     orthographic_matrix[1][1] = 2.0F / (top - bottom);
     orthographic_matrix[2][2] = -2.0F / (far - near);
-    orthographic_matrix[3][0] = -(right + left) / (right - left);
-    orthographic_matrix[3][1] = -(top + bottom) / (top - bottom);
-    orthographic_matrix[3][2] = -(far + near) / (far - near);
+    orthographic_matrix[0][3] = -(right + left) / (right - left);
+    orthographic_matrix[1][3] = -(top + bottom) / (top - bottom);
+    orthographic_matrix[2][3] = -(far + near) / (far - near);
 
     return orthographic_matrix;
 }

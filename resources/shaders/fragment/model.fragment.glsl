@@ -91,11 +91,11 @@ layout (std140) uniform SpotLights
 };
 
 // -------------------- Shadow Map Uniforms -------------------- //
-layout (std140) uniform ShadowMapMatrix
+layout (std140) uniform ShadowMapInformation
 {
-    mat4 u_shadow_map_matrix;
+    mat4 u_light_matrix;
 };
-uniform sampler2D u_shadow_map;
+uniform sampler2DShadow u_shadow_map;
 
 
 // -------------------- Texture Uniforms -------------------- //
@@ -107,9 +107,8 @@ in VertexData
     vec3 model_position;
     vec3 normal;
     vec2 texture_coordinate;
-} in_vertex_data;
-
-in vec4 shadow_coordinate;
+    vec4 shadow_coordinate;
+} IN;
 
 // -------------------- OUT variables ------------------ //
 out vec4 out_color;
@@ -117,9 +116,10 @@ out vec4 out_color;
 // -------------------- Lighting Functions ------------------- //
 float ComputeShadowFactor()
 {
-    if (texture(u_shadow_map, shadow_coordinate.xy / shadow_coordinate.w).x < shadow_coordinate.z / shadow_coordinate.w)
+    float shadow = textureProj(u_shadow_map, IN.shadow_coordinate);
+    if (shadow == 0.0)
     {
-        return 0.5;
+        return 0.50;
     }
     return 1.0;
 }
@@ -161,7 +161,7 @@ vec4 ComputeDirectionalLightColor(DirectionalLight light, vec3 normal, vec3 vert
 
 vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
 {
-    vec3 light_to_vertex = in_vertex_data.model_position - light.position.xyz;
+    vec3 light_to_vertex = IN.model_position - light.position.xyz;
     float distance = length(light_to_vertex);
     light_to_vertex = normalize(light_to_vertex);
 
@@ -181,7 +181,7 @@ vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
 
 vec4 ComputeSpotLightColor(SpotLight light, vec3 normal, vec3 vertex_to_eye)
 {
-    vec3 light_to_vertex = in_vertex_data.model_position - light.position.xyz;
+    vec3 light_to_vertex = IN.model_position - light.position.xyz;
     float distance = length(light_to_vertex);
     light_to_vertex = normalize(light_to_vertex);
 
@@ -231,10 +231,10 @@ vec4 ComputeLightColor(vec3 normal, vec3 vertex_to_eye)
 // -------------------- Main --------------------------------- //
 void main()
 {
-    vec3 normal = normalize(in_vertex_data.normal);
-    vec3 vertex_to_eye = normalize(u_camera_position.xyz - in_vertex_data.model_position);
+    vec3 normal = normalize(IN.normal);
+    vec3 vertex_to_eye = normalize(u_camera_position.xyz - IN.model_position);
 
-    vec3 texture_color = texture(u_diffuse_texture, in_vertex_data.texture_coordinate).xyz;
+    vec3 texture_color = texture(u_diffuse_texture, IN.texture_coordinate).xyz;
     vec3 object_color = texture_color + u_diffuse_color.xyz;
 
     out_color = vec4(object_color, 1.0) * ComputeLightColor(normal, vertex_to_eye);

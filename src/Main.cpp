@@ -133,7 +133,7 @@ private:
         camera.viewport_.height_ = engine_config_.render_system_config_.window_config_.height_;
         camera.position_ = default_camera_position_;
         camera.near_clip_ = 0.01F;
-        camera.far_clip_ = 10000.0F;
+        camera.far_clip_ = 1000.0F;
         camera.render_bounding_volumes_ = false;
 
         camera_entity_ = camera_entity;
@@ -235,7 +235,7 @@ private:
             directional_light.ambient_intensity_ = 1.0F;
             directional_light.diffuse_intensity_ = 0.25F;
             directional_light.color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
-            directional_light.direction_ = math::Vec3f::Normalize(math::Vec3f(0.0F, -1.0F, -1.0F));
+            directional_light.direction_ = math::Vec3f::Normalize(math::Vec3f(1.0F, -1.0F, 0.0F));
             directional_light.casts_shadows_ = true;
             light.Set(directional_light);
             GetInstantiator()->InstantiateLight(light, NullEntity);

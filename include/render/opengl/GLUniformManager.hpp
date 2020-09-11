@@ -66,7 +66,7 @@ namespace render
          */
         void UpdateLightUniforms(const entt::registry& registry) const;
 
-        void UpdateShadowMapMatrix(const math::Matrix4x4& matrix) const;
+        void UpdateShadowMapMatrix(const math::Matrix4x4& light_matrix) const;
 
         //////////////////////////////////////////////////
         ///// Bind Graphics Program Uniforms
@@ -83,11 +83,11 @@ namespace render
          * @param program the graphics program
          */
         ///@{
-        static void BindCameraUniforms(const std::shared_ptr<GLProgram>& program);
-        static void BindMaterialUniforms(const std::shared_ptr<GLProgram>& program);
-        static void BindModelUniforms(const std::shared_ptr<GLProgram>& program);
-        static void BindLightUniforms(const std::shared_ptr<GLProgram>& program);
-        static void BindShadowMapUniforms(const std::shared_ptr<GLProgram>& program);
+        void BindCameraUniforms(const std::shared_ptr<GLProgram>& program);
+        void BindMaterialUniforms(const std::shared_ptr<GLProgram>& program);
+        void BindModelUniforms(const std::shared_ptr<GLProgram>& program);
+        void BindLightUniforms(const std::shared_ptr<GLProgram>& program);
+        void BindShadowMapUniforms(const std::shared_ptr<GLProgram>& program);
         ///@}
 
         //////////////////////////////////////////////////

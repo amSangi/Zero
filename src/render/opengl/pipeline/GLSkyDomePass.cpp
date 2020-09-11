@@ -14,7 +14,11 @@ GLSkyDomePass::GLSkyDomePass(GLCompiler* gl_compiler,
 : gl_compiler_(gl_compiler)
 , gl_primitive_mesh_manager_(gl_primitive_mesh_manager)
 , gl_uniform_manager_(gl_uniform_manager)
+, gl_sphere_(nullptr)
 {
+    PrimitiveInstance primitive_instance{};
+    primitive_instance.Set(Sphere());
+    gl_sphere_ = gl_primitive_mesh_manager_->GetPrimitiveMesh(primitive_instance);
 }
 
 void GLSkyDomePass::Execute(const Camera& camera,
@@ -60,10 +64,7 @@ void GLSkyDomePass::RenderSkyDome(const Camera& camera, const SkyDome& sky_dome)
     sky_dome_program->SetUniform("u_center_color", sky_dome.center_color_);
     sky_dome_program->FlushUniforms();
 
-    PrimitiveInstance primitive_instance{};
-    primitive_instance.Set(Sphere());
-    std::shared_ptr<GLMesh> gl_sphere = gl_primitive_mesh_manager_->GetPrimitiveMesh(primitive_instance);
-    gl_sphere->Draw();
+    gl_sphere_->Draw();
     sky_dome_program->Finish();
 }
 

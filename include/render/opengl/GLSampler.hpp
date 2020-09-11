@@ -25,12 +25,17 @@ namespace zero::render
         /**
          * @see ISampler::SetWrappingS
          */
-        void SetWrappingS(Wrapping s) override;
+        void SetWrappingS(Wrapping wrapping) override;
 
         /**
          * @see ISampler::SetWrappingT
          */
-        void SetWrappingT(Wrapping t) override;
+        void SetWrappingT(Wrapping wrapping) override;
+
+        /**
+         * @see ISampler::SetWrappingR
+         */
+        void SetWrappingR(Wrapping wrapping) override;
 
         /**
          * @see ISampler::SetMinificationFilter

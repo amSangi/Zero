@@ -47,7 +47,7 @@ namespace zero::render
                 Transform transform,
                 Material material,
                 Volume volume,
-                ModelInstance mesh_instance);
+                ModelInstance model_instance);
 
         ~GLModel() override = default;
 

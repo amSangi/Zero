@@ -68,6 +68,7 @@ std::vector<Entity> Optimizer::ExtractSpotLightShadowCasters(const Camera& camer
 
 std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const entt::registry& registry)
 {
+    // Viewable entities must have Transform, Material, and Volume components
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
 
     auto culler = ViewVolumeBuilder::create(camera);
@@ -95,7 +96,7 @@ std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const e
         Entity entity = entities_to_cull.front();
         entities_to_cull.pop_front();
 
-        // Ignore entities that do not have a mesh
+        // Ignore entities that do not have mesh data
         if (!registry.has<ModelInstance>(entity) && !registry.has<PrimitiveInstance>(entity))
         {
             continue;
@@ -119,7 +120,7 @@ std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const e
         const auto& transform = renderable_view.get<const Transform>(entity);
         entities_to_cull.insert(entities_to_cull.end(), transform.children_.begin(), transform.children_.end());
 
-        // Entity is renderable
+        // Entity is viewable
         viewable_entities.push_back(entity);
     }
 

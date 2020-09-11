@@ -7,6 +7,7 @@ namespace zero::render
 {
     // Forward declarations
     class GLCompiler;
+    class GLMesh;
     class GLPrimitiveMeshManager;
     class GLUniformManager;
 
@@ -25,6 +26,7 @@ namespace zero::render
     private:
         void RenderSkyDome(const Camera& camera, const SkyDome& sky_dome);
 
+        std::shared_ptr<GLMesh> gl_sphere_;
         GLCompiler* gl_compiler_;
         GLPrimitiveMeshManager* gl_primitive_mesh_manager_;
         GLUniformManager* gl_uniform_manager_;

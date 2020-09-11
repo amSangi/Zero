@@ -440,10 +440,10 @@ void GLUniformManager::UpdateSpotLightUniforms(const entt::registry& registry) c
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void GLUniformManager::UpdateShadowMapMatrix(const math::Matrix4x4& matrix) const
+void GLUniformManager::UpdateShadowMapMatrix(const math::Matrix4x4& light_matrix) const
 {
     glBindBuffer(GL_UNIFORM_BUFFER, shadow_map_matrix_buffer_id_);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(math::Matrix4x4), &matrix[0][0]);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(math::Matrix4x4), &light_matrix);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -486,7 +486,7 @@ void GLUniformManager::BindLightUniforms(const std::shared_ptr<GLProgram>& progr
 
 void GLUniformManager::BindShadowMapUniforms(const std::shared_ptr<GLProgram>& program)
 {
-    program->BindBlockIndex(program->GetUniformBlockIndex("ShadowMapMatrix"), kShadowMapMatrixBindingIndex);
+    program->BindBlockIndex(program->GetUniformBlockIndex("ShadowMapInformation"), kShadowMapMatrixBindingIndex);
 }
 
 //////////////////////////////////////////////////

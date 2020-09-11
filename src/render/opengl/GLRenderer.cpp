@@ -229,8 +229,8 @@ void GLRenderer::InitializeRenderPasses(const RenderSystemConfig& config)
                                                                 primitive_manager_.get(),
                                                                 texture_manager_.get(),
                                                                 uniform_manager_.get(),
-                                                                config.window_config_.width_,
-                                                                config.window_config_.height_);
+                                                                1024,
+                                                                1024);
     gl_shadow_map_pass->Initialize();
     render_pipeline_->AddRenderPass(std::move(gl_shadow_map_pass));
     render_pipeline_->AddRenderPass(std::make_unique<GLSkyDomePass>(graphics_compiler_.get(),

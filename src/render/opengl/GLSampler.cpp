@@ -23,9 +23,9 @@ void GLSampler::Initialize()
     glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , math::Vec4f::Zero().Data());
 }
 
-void GLSampler::SetWrappingS(Wrapping s)
+void GLSampler::SetWrappingS(Wrapping wrapping)
 {
-    switch (s)
+    switch (wrapping)
     {
         case Wrapping::CLAMP_TO_EDGE:
             glSamplerParameteri(id_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -42,9 +42,9 @@ void GLSampler::SetWrappingS(Wrapping s)
     }
 }
 
-void GLSampler::SetWrappingT(Wrapping t)
+void GLSampler::SetWrappingT(Wrapping wrapping)
 {
-    switch (t)
+    switch (wrapping)
     {
         case Wrapping::CLAMP_TO_EDGE:
             glSamplerParameteri(id_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -57,6 +57,25 @@ void GLSampler::SetWrappingT(Wrapping t)
             break;
         default:
             glSamplerParameteri(id_, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            break;
+    }
+}
+
+void GLSampler::SetWrappingR(Wrapping wrapping)
+{
+    switch (wrapping)
+    {
+        case Wrapping::CLAMP_TO_EDGE:
+            glSamplerParameteri(id_, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+            break;
+        case Wrapping::CLAMP_TO_BORDER:
+            glSamplerParameteri(id_, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+            break;
+        case Wrapping::MIRRORED_REPEAT:
+            glSamplerParameteri(id_, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
+            break;
+        default:
+            glSamplerParameteri(id_, GL_TEXTURE_WRAP_R, GL_REPEAT);
             break;
     }
 }

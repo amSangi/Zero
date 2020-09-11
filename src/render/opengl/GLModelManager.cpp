@@ -1,6 +1,5 @@
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLModel.hpp"
-#include "component/ModelInstance.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -11,6 +10,11 @@ namespace zero::render
 GLModelManager::GLModelManager()
 : model_map_()
 , random_generator_(std::random_device()())
+, empty_model_(std::make_shared<GLModel>(std::vector<std::shared_ptr<GLMesh>>(),
+                                         Transform{},
+                                         Material{},
+                                         Volume{},
+                                         ModelInstance{}))
 {
 }
 
@@ -53,7 +57,7 @@ std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& model_name)
     auto model_search = model_map_.find(model_name);
     if (model_search == model_map_.end())
     {
-        return nullptr;
+        return empty_model_;
     }
     return model_search->second;
 }
@@ -63,7 +67,7 @@ std::shared_ptr<IModel> GLModelManager::GetModel(const ModelInstance& model_inst
     auto model = GetModel(model_instance.model_name_);
     if (!model)
     {
-        return nullptr;
+        return empty_model_;
     }
     if (model_instance.child_identifier_ != 0)
     {
