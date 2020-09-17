@@ -2,12 +2,17 @@
 precision highp sampler2DArrayShadow;
 precision highp float;
 
-// -------------------- Constants ---------------------------- //
+//////////////////////////////////////////////////
+////////// Constants
+//////////////////////////////////////////////////
 const uint kMaxDirectionalLightCount = 4;
 const uint kMaxPointLightCount = 4;
 const uint kMaxSpotLightCount = 4;
+const uint kShadowCascadeCount = 3;
 
-// -------------------- Camera Uniforms ----------------------- //
+//////////////////////////////////////////////////
+////////// Camera Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform Camera
 {
     mat4 u_projection_matrix;
@@ -15,7 +20,9 @@ layout (std140) uniform Camera
     vec4 u_camera_position;
 };
 
-// -------------------- Material Uniforms -------------------- //
+//////////////////////////////////////////////////
+////////// Material Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform Material
 {
     vec4 u_diffuse_color;
@@ -23,14 +30,18 @@ layout (std140) uniform Material
     float u_specular_exponent;
 };
 
-// -------------------- Model Uniforms ----------------------- //
+//////////////////////////////////////////////////
+////////// Model Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform Model
 {
     mat4 u_model_matrix;
     mat4 u_normal_matrix;
 };
 
-// -------------------- Light Uniforms ----------------------- //
+//////////////////////////////////////////////////
+////////// Light Uniforms
+//////////////////////////////////////////////////
 struct DirectionalLight
 {
     vec4 color;
@@ -90,40 +101,66 @@ layout (std140) uniform SpotLights
     SpotLight u_spot_lights[kMaxSpotLightCount];
 };
 
-// -------------------- Shadow Map Uniforms -------------------- //
+//////////////////////////////////////////////////
+////////// Shadow Map Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform ShadowMapInformation
 {
-    mat4 u_light_matrix;
+    mat4 u_csm_light_matrices[kShadowCascadeCount];
+    vec4 u_cascade_end_clip_space[kShadowCascadeCount];
 };
-uniform sampler2DShadow u_shadow_map;
+uniform sampler2DShadow u_cascaded_shadow_map[kShadowCascadeCount];
 
-
-// -------------------- Texture Uniforms -------------------- //
+//////////////////////////////////////////////////
+////////// Texture Uniforms
+//////////////////////////////////////////////////
 uniform sampler2D u_diffuse_texture;
 
-// -------------------- Vertex IN variables ------------------ //
+//////////////////////////////////////////////////
+////////// IN Variables
+//////////////////////////////////////////////////
 in VertexData
 {
-    vec3 model_position;
+    vec3 world_position;
     vec3 normal;
     vec2 texture_coordinate;
-    vec4 shadow_coordinate;
+    vec4 shadow_coordinates[kShadowCascadeCount];
+    float clip_space_z_position;
 } IN;
 
-// -------------------- OUT variables ------------------ //
+//////////////////////////////////////////////////
+////////// OUT Variables
+//////////////////////////////////////////////////
 out vec4 out_color;
 
-// -------------------- Lighting Functions ------------------- //
-float ComputeShadowFactor()
+//////////////////////////////////////////////////
+////////// Shadow Function
+//////////////////////////////////////////////////
+float ComputeCascadeShadowFactor(uint cascade_index, vec4 shadow_coordinate)
 {
-    float shadow = textureProj(u_shadow_map, IN.shadow_coordinate);
-    if (shadow == 0.0)
+    float shadow_factor = textureProj(u_cascaded_shadow_map[cascade_index], shadow_coordinate);
+    if (shadow_factor == 0.0)
     {
-        return 0.50;
+        return 0.65;
     }
     return 1.0;
 }
 
+float ComputeCascadedShadowMap()
+{
+    for (uint cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
+    {
+        if (IN.clip_space_z_position <= u_cascade_end_clip_space[cascade_index].z)
+        {
+            return ComputeCascadeShadowFactor(cascade_index, IN.shadow_coordinates[cascade_index]);
+        }
+    }
+    return 1.0;
+}
+
+//////////////////////////////////////////////////
+////////// Lighting Functions
+//////////////////////////////////////////////////
 vec4 ComputeBaseLightColor(vec3 light_color,
                            vec3 light_to_vertex,
                            vec3 vertex_to_eye,
@@ -161,7 +198,7 @@ vec4 ComputeDirectionalLightColor(DirectionalLight light, vec3 normal, vec3 vert
 
 vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
 {
-    vec3 light_to_vertex = IN.model_position - light.position.xyz;
+    vec3 light_to_vertex = IN.world_position - light.position.xyz;
     float distance = length(light_to_vertex);
     light_to_vertex = normalize(light_to_vertex);
 
@@ -181,7 +218,7 @@ vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
 
 vec4 ComputeSpotLightColor(SpotLight light, vec3 normal, vec3 vertex_to_eye)
 {
-    vec3 light_to_vertex = IN.model_position - light.position.xyz;
+    vec3 light_to_vertex = IN.world_position - light.position.xyz;
     float distance = length(light_to_vertex);
     light_to_vertex = normalize(light_to_vertex);
 
@@ -225,17 +262,20 @@ vec4 ComputeLightColor(vec3 normal, vec3 vertex_to_eye)
         lighting_color += ComputeSpotLightColor(u_spot_lights[i], normal, vertex_to_eye);
     }
 
-    return lighting_color * ComputeShadowFactor();
+    return lighting_color;
 }
 
-// -------------------- Main --------------------------------- //
+//////////////////////////////////////////////////
+////////// Main
+//////////////////////////////////////////////////
 void main()
 {
     vec3 normal = normalize(IN.normal);
-    vec3 vertex_to_eye = normalize(u_camera_position.xyz - IN.model_position);
+    vec3 vertex_to_eye = normalize(u_camera_position.xyz - IN.world_position);
 
     vec3 texture_color = texture(u_diffuse_texture, IN.texture_coordinate).xyz;
-    vec3 object_color = texture_color + u_diffuse_color.xyz;
+    vec4 object_color = vec4(texture_color + u_diffuse_color.xyz, 1.0);
+    vec4 light_color = ComputeLightColor(normal, vertex_to_eye);
 
-    out_color = vec4(object_color, 1.0) * ComputeLightColor(normal, vertex_to_eye);
+    out_color = object_color * light_color * ComputeCascadedShadowMap();
 }

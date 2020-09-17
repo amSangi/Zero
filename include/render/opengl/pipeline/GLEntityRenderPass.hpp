@@ -30,6 +30,9 @@ namespace zero::render
                            Logger& logger);
         ~GLEntityRenderPass() override = default;
 
+        /**
+         * @brief IRenderPass::Execute
+         */
         void Execute(const Camera& camera,
                      entt::registry& registry,
                      const std::vector<Entity>& viewable_entities) override;

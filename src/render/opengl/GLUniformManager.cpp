@@ -8,12 +8,6 @@ namespace zero::render
 //////////////////////////////////////////////////
 ///// Constants
 //////////////////////////////////////////////////
-
-// General light type counts
-const uint32 GLUniformManager::kMaxDirectionalLights = 4U;
-const uint32 GLUniformManager::kMaxPointLights = 4U;
-const uint32 GLUniformManager::kMaxSpotLights = 4U;
-
 // Binding indices
 const uint32 GLUniformManager::kCameraBindingIndex = 0U;
 const uint32 GLUniformManager::kMaterialBindingIndex = 1U;
@@ -165,6 +159,24 @@ struct alignas(16) SpotLightData
     float padding_[1];
 };
 
+struct alignas(16) ShadowMapInformation
+{
+    ShadowMapInformation(const std::array<math::Matrix4x4, GLUniformManager::kShadowCascadeCount>& light_matrices,
+                         const std::array<float, GLUniformManager::kShadowCascadeCount>& cascade_end_clip_space)
+    : cascade_end_clip_space_()
+    , light_matrices_()
+    {
+        for (uint32 i = 0; i < GLUniformManager::kShadowCascadeCount; ++i)
+        {
+            light_matrices_[i] = light_matrices[i];
+            cascade_end_clip_space_[i].z_ = cascade_end_clip_space[i];
+        }
+    }
+
+    math::Matrix4x4 light_matrices_[GLUniformManager::kShadowCascadeCount];
+    math::Vec4f cascade_end_clip_space_[GLUniformManager::kShadowCascadeCount];
+};
+
 //////////////////////////////////////////////////
 ///// GLUniformManager
 //////////////////////////////////////////////////
@@ -257,7 +269,7 @@ void GLUniformManager::InitializeDirectionalLightUniformBuffer()
 {
     glGenBuffers(1, &directional_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, directional_light_buffer_id_);
-    uint32 buffer_size = (sizeof(DirectionalLightData) * GetMaxDirectionalLightCount());
+    uint32 buffer_size = (sizeof(DirectionalLightData) * kMaxDirectionalLights);
     glBufferData(GL_UNIFORM_BUFFER, buffer_size, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kDirectionalLightBindingIndex, directional_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -267,7 +279,7 @@ void GLUniformManager::InitializePointLightUniformBuffer()
 {
     glGenBuffers(1, &point_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, point_light_buffer_id_);
-    uint32 buffer_size = (sizeof(PointLightData) * GetMaxPointLightCount());
+    uint32 buffer_size = (sizeof(PointLightData) * kMaxPointLights);
     glBufferData(GL_UNIFORM_BUFFER, buffer_size, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kPointLightBindingIndex, point_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -277,7 +289,7 @@ void GLUniformManager::InitializeSpotLightUniformBuffer()
 {
     glGenBuffers(1, &spot_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, spot_light_buffer_id_);
-    uint32 buffer_size = (sizeof(SpotLightData) * GetMaxSpotLightCount());
+    uint32 buffer_size = (sizeof(SpotLightData) * kMaxSpotLights);
     glBufferData(GL_UNIFORM_BUFFER, buffer_size, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kSpotLightBindingIndex, spot_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -287,7 +299,7 @@ void GLUniformManager::InitializeShadowMapMatrixUniformBuffer()
 {
     glGenBuffers(1, &shadow_map_matrix_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, shadow_map_matrix_buffer_id_);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(math::Matrix4x4), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(ShadowMapInformation), nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kShadowMapMatrixBindingIndex, shadow_map_matrix_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -440,10 +452,12 @@ void GLUniformManager::UpdateSpotLightUniforms(const entt::registry& registry) c
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void GLUniformManager::UpdateShadowMapMatrix(const math::Matrix4x4& light_matrix) const
+void GLUniformManager::UpdateShadowMapMatrices(const std::array<math::Matrix4x4, kShadowCascadeCount>& light_matrices,
+                                               const std::array<float, kShadowCascadeCount>& cascade_end_clip_space) const
 {
     glBindBuffer(GL_UNIFORM_BUFFER, shadow_map_matrix_buffer_id_);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(math::Matrix4x4), &light_matrix);
+    ShadowMapInformation shadow_map_information{light_matrices, cascade_end_clip_space};
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ShadowMapInformation), &shadow_map_information);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -451,12 +465,12 @@ void GLUniformManager::UpdateShadowMapMatrix(const math::Matrix4x4& light_matrix
 ///// Bind Graphics Program Uniforms
 //////////////////////////////////////////////////
 
-const char* GLUniformManager::GetShadowSamplerUniformName()
+std::string GLUniformManager::GetShadowSamplerUniformName(int32 sampler_index)
 {
-    return "u_shadow_map";
+    return "u_cascaded_shadow_map_array[" + std::to_string(sampler_index) + "]";
 }
 
-const char* GLUniformManager::GetDiffuseSamplerName()
+std::string GLUniformManager::GetDiffuseSamplerName()
 {
     return "u_diffuse_texture";
 }
@@ -487,25 +501,6 @@ void GLUniformManager::BindLightUniforms(const std::shared_ptr<GLProgram>& progr
 void GLUniformManager::BindShadowMapUniforms(const std::shared_ptr<GLProgram>& program)
 {
     program->BindBlockIndex(program->GetUniformBlockIndex("ShadowMapInformation"), kShadowMapMatrixBindingIndex);
-}
-
-//////////////////////////////////////////////////
-///// Max Light and Shadow Caster Counts
-//////////////////////////////////////////////////
-
-uint32 GLUniformManager::GetMaxDirectionalLightCount()
-{
-    return kMaxDirectionalLights;
-}
-
-uint32 GLUniformManager::GetMaxPointLightCount()
-{
-    return kMaxPointLights;
-}
-
-uint32 GLUniformManager::GetMaxSpotLightCount()
-{
-    return kMaxSpotLights;
 }
 
 } // namespace zero::render

@@ -25,6 +25,28 @@ namespace render
     class GLUniformManager final : public NonCopyable
     {
     public:
+        //////////////////////////////////////////////////
+        ///// Maximum Uniform Counts
+        //////////////////////////////////////////////////
+
+        /**
+         * @brief The maximum directional light count
+         */
+        static constexpr uint32 kMaxDirectionalLights = 4U;
+        /**
+         * @brief The maximum point light count
+         */
+        static constexpr uint32 kMaxPointLights = 4U;
+        /**
+         * @brief The maximum spot light count
+         */
+        static constexpr uint32 kMaxSpotLights = 4U;
+        /**
+         * @brief The number of cascades used in Cascaded Shadow Mapping
+         */
+        static constexpr uint32 kShadowCascadeCount = 3U;
+
+
         GLUniformManager();
         ~GLUniformManager();
 
@@ -66,15 +88,26 @@ namespace render
          */
         void UpdateLightUniforms(const entt::registry& registry) const;
 
-        void UpdateShadowMapMatrix(const math::Matrix4x4& light_matrix) const;
+        /**
+         * @brief Update the cascaded shadow map uniforms
+         * @param light_matrices the light matrices for each cascade
+         * @param cascade_end_clip_space the end z position in clip space for each cascade
+         */
+        void UpdateShadowMapMatrices(const std::array<math::Matrix4x4, kShadowCascadeCount>& light_matrices,
+                                     const std::array<float, kShadowCascadeCount>& cascade_end_clip_space) const;
 
         //////////////////////////////////////////////////
         ///// Bind Graphics Program Uniforms
         //////////////////////////////////////////////////
 
-        static const char* GetShadowSamplerUniformName();
+        /**
+         * @brief Get the uniform name for a specific sampler2D in a list of sampler2Ds
+         * @param sampler_index the index into the list of sampler2Ds
+         * @return the indexed uniform sampler2D name
+         */
+        static std::string GetShadowSamplerUniformName(int32 sampler_index);
 
-        static const char* GetDiffuseSamplerName();
+        static std::string GetDiffuseSamplerName();
 
         /**
          * @brief Bind the block indices of a graphics program to their predefined binding points for a certain
@@ -89,28 +122,6 @@ namespace render
         void BindLightUniforms(const std::shared_ptr<GLProgram>& program);
         void BindShadowMapUniforms(const std::shared_ptr<GLProgram>& program);
         ///@}
-
-        //////////////////////////////////////////////////
-        ///// Get Maximum Uniform Counts
-        //////////////////////////////////////////////////
-
-        /**
-         * @brief Get the maximum number of directional lights used by a graphics program
-         * @return the maximum directional light count
-         */
-        static uint32 GetMaxDirectionalLightCount();
-
-        /**
-         * @brief Get the maximum number of point lights used by a graphics program
-         * @return the maximum point light count
-         */
-        static uint32 GetMaxPointLightCount();
-
-        /**
-         * @brief Get the maximum number of spot lights used by a graphics program
-         * @return the maximum spot light count
-         */
-        static uint32 GetMaxSpotLightCount();
 
     private:
         /**
@@ -130,10 +141,6 @@ namespace render
         void UpdateDirectionalLightUniforms(const entt::registry& registry) const;
         void UpdatePointLightUniforms(const entt::registry& registry) const;
         void UpdateSpotLightUniforms(const entt::registry& registry) const;
-
-        static const uint32 kMaxDirectionalLights;
-        static const uint32 kMaxPointLights;
-        static const uint32 kMaxSpotLights;
 
         static const uint32 kCameraBindingIndex;
         static const uint32 kMaterialBindingIndex;

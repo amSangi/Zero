@@ -19,6 +19,9 @@ namespace zero::render
                       GLUniformManager* gl_uniform_manager);
         ~GLSkyDomePass() override = default;
 
+        /**
+         * @brief IRenderPass::Execute
+         */
         void Execute(const Camera& camera,
                      entt::registry& registry,
                      const std::vector<Entity>& viewable_entities) override;

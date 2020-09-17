@@ -235,7 +235,7 @@ private:
             directional_light.ambient_intensity_ = 1.0F;
             directional_light.diffuse_intensity_ = 0.25F;
             directional_light.color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
-            directional_light.direction_ = math::Vec3f::Normalize(math::Vec3f(1.0F, -1.0F, 0.0F));
+            directional_light.direction_ = math::Vec3f(1.0F, -1.0F, 0.0F);
             directional_light.casts_shadows_ = true;
             light.Set(directional_light);
             GetInstantiator()->InstantiateLight(light, NullEntity);
@@ -272,7 +272,7 @@ private:
             GetInstantiator()->InstantiateLight(light, spot_light_entity);
 
             auto& light_primitive_material = registry.get<Material>(spot_light_entity);
-            light_primitive_material.shaders_.vertex_shader_ = "model_unlit.vertex.glsl";
+            light_primitive_material.shaders_.vertex_shader_ = "model.vertex.glsl";
             light_primitive_material.shaders_.fragment_shader_ = "model_unlit.fragment.glsl";
             light_primitive_material.diffuse_color_ = math::Vec3f(1.0F, 0.0F, 0.0F);
             light_primitive_material.visible_ = true;
@@ -295,7 +295,7 @@ private:
     math::Radian opposite_angle_;
 };
 
-int main(int argc, char *argv[])
+int main(int /* argc */, char** /* argv */)
 {
     //////////////////////////////////////////////////
     ///// Engine Configuration

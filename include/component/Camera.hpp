@@ -118,7 +118,7 @@ namespace zero
         void LookAt(const math::Vec3f& target);
 
         /**
-         * @brief Get the near plane coordinates
+         * @brief Get the near plane coordinates in world coordinates
          * @param bottom_left the bottom left corner of the near plane
          * @param top_right the top right corner of the near plane
          */
@@ -126,7 +126,7 @@ namespace zero
                                     math::Vec3f& top_right) const;
 
         /**
-         * @brief Get the far plane coordinates
+         * @brief Get the far plane coordinates in world coordinates
          * @param bottom_left the bottom left corner of the far plane
          * @param top_right the top right corner of the far plane
          */

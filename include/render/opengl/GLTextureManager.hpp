@@ -65,16 +65,16 @@ namespace render
         std::shared_ptr<GLTexture> GetGLTexture(const std::string& image_name) const;
 
         /**
-         * @brief Return the GLTexture that represents the shadow map
-         * @return the shadow map GLTexture
+         * @brief Return the list of shadow map textures
+         * @return the shadow map GLTextures
          */
-        std::shared_ptr<GLTexture> GetShadowMapTexture() const;
+        const std::vector<std::shared_ptr<GLTexture>>& GetShadowMapTextures() const;
 
         /**
-         * @brief Set the shadow map GLTexture
-         * @param texture the shadow map texture
+         * @brief Set the shadow map GLTextures
+         * @param texture the shadow map textures
          */
-        void SetShadowMapTexture(std::shared_ptr<GLTexture> texture);
+        void SetShadowMapTextures(const std::vector<std::shared_ptr<GLTexture>>& textures);
 
         /**
          * @brief Unload the image data from main memory
@@ -106,9 +106,9 @@ namespace render
         std::unordered_map<std::string, std::shared_ptr<GLTexture>> gl_texture_map_;
 
         /**
-         * @brief The shadow map texture
+         * @brief The shadow map textures
          */
-        std::shared_ptr<GLTexture> shadow_map_texture_;
+        std::vector<std::shared_ptr<GLTexture>> shadow_map_textures_;
 
         /**
          * @brief A 1x1 black 2D texture used for unused sampler2Ds

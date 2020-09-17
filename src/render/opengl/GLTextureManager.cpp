@@ -9,7 +9,7 @@ namespace zero::render
 
 GLTextureManager::GLTextureManager()
 : image_map_()
-, shadow_map_texture_(nullptr)
+, shadow_map_textures_()
 {
 }
 
@@ -91,14 +91,14 @@ std::shared_ptr<GLTexture> GLTextureManager::GetGLTexture(const std::string& ima
     return search->second;
 }
 
-std::shared_ptr<GLTexture> GLTextureManager::GetShadowMapTexture() const
+const std::vector<std::shared_ptr<GLTexture>>& GLTextureManager::GetShadowMapTextures() const
 {
-    return shadow_map_texture_;
+    return shadow_map_textures_;
 }
 
-void GLTextureManager::SetShadowMapTexture(std::shared_ptr<GLTexture> texture)
+void GLTextureManager::SetShadowMapTextures(const std::vector<std::shared_ptr<GLTexture>>& textures)
 {
-    shadow_map_texture_ = std::move(texture);
+    shadow_map_textures_ = textures;
 }
 
 void GLTextureManager::UnloadImages()

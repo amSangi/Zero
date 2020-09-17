@@ -49,9 +49,6 @@ void GLEntityRenderPass::Execute(const Camera& camera,
                                  entt::registry& registry,
                                  const std::vector<Entity>& viewable_entities)
 {
-    constexpr uint8 shadow_map_texture_unit_index = 0;
-    constexpr uint8 diffuse_map_texture_unit_index = 1;
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
 
@@ -65,9 +62,12 @@ void GLEntityRenderPass::Execute(const Camera& camera,
 
     for (Entity viewable_entity : viewable_entities)
     {
-        const auto& transform = renderable_view.get<const Transform>(viewable_entity);
-        const auto& material = renderable_view.get<const Material>(viewable_entity);
-        const auto& volume = renderable_view.get<const Volume>(viewable_entity);
+        assert(renderable_view.contains(viewable_entity));
+        assert(model_view.contains(viewable_entity) || primitive_view.contains(viewable_entity));
+
+        const Transform& transform = renderable_view.get<const Transform>(viewable_entity);
+        const Material& material = renderable_view.get<const Material>(viewable_entity);
+        const Volume& volume = renderable_view.get<const Volume>(viewable_entity);
         ToggleWireframeMode(material.wireframe_enabled_);
         ToggleBackfaceCulling(!material.two_sided_);
 
@@ -76,6 +76,8 @@ void GLEntityRenderPass::Execute(const Camera& camera,
         {
             continue;
         }
+
+        // Bind uniform blocks
         gl_uniform_manager_->BindCameraUniforms(graphics_program);
         gl_uniform_manager_->BindModelUniforms(graphics_program);
         gl_uniform_manager_->BindLightUniforms(graphics_program);
@@ -83,47 +85,56 @@ void GLEntityRenderPass::Execute(const Camera& camera,
         gl_uniform_manager_->BindShadowMapUniforms(graphics_program);
         graphics_program->Use();
 
-        // Update sampler uniforms
-        graphics_program->SetUniform(GLUniformManager::GetShadowSamplerUniformName(), shadow_map_texture_unit_index);
-        graphics_program->SetUniform(GLUniformManager::GetDiffuseSamplerName(), diffuse_map_texture_unit_index);
-
-        // Update uniforms
+        // Update Model and Material uniform blocks
         math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
         gl_uniform_manager_->UpdateModelUniforms(model_matrix, (view_matrix * model_matrix).Inverse());
         gl_uniform_manager_->UpdateMaterialUniforms(material);
 
+        // Textures
+        std::vector<std::shared_ptr<GLTexture>> shadow_map_textures = gl_texture_manager_->GetShadowMapTextures();
+        for (int32 texture_unit_index = 0; texture_unit_index < GLUniformManager::kShadowCascadeCount; ++texture_unit_index)
+        {
+            // Map sampler2D uniform name with the texture unit
+            graphics_program->SetUniform(GLUniformManager::GetShadowSamplerUniformName(texture_unit_index), texture_unit_index);
+
+            // Bind texture to the texture unit
+            std::shared_ptr<GLTexture> shadow_map_texture = shadow_map_textures[texture_unit_index];
+            glActiveTexture(GL_TEXTURE0 + texture_unit_index);
+            glBindTexture(shadow_map_texture->GetTarget(), shadow_map_texture->GetNativeIdentifier());
+
+            // Set texture sampler
+            gl_texture_manager_->SetSampler(shadow_map_sampler_, texture_unit_index);
+        }
+
+        int32 diffuse_texture_unit_index = GLUniformManager::kShadowCascadeCount;
+        graphics_program->SetUniform(GLUniformManager::GetDiffuseSamplerName(), diffuse_texture_unit_index);
+        std::shared_ptr<GLTexture> gl_diffuse_texture = gl_texture_manager_->GetGLTexture(material.texture_map_.diffuse_map_);
+        glActiveTexture(GL_TEXTURE0 + diffuse_texture_unit_index);
+        glBindTexture(gl_diffuse_texture->GetTarget(), gl_diffuse_texture->GetNativeIdentifier());
+        gl_texture_manager_->SetSampler(diffuse_map_sampler_, diffuse_texture_unit_index);
+
         graphics_program->FlushUniforms();
 
-        // Bind textures
-        std::shared_ptr<GLTexture> shadow_map_texture = gl_texture_manager_->GetShadowMapTexture();
-        std::shared_ptr<GLTexture> gl_diffuse_texture = gl_texture_manager_->GetGLTexture(material.texture_map_.diffuse_map_);
-        glActiveTexture(GL_TEXTURE0 + shadow_map_texture_unit_index);
-        glBindTexture(shadow_map_texture->GetTarget(), shadow_map_texture->GetNativeIdentifier());
-        glActiveTexture(GL_TEXTURE0 + diffuse_map_texture_unit_index);
-        glBindTexture(gl_diffuse_texture->GetTarget(), gl_diffuse_texture->GetNativeIdentifier());
-
-        gl_texture_manager_->SetSampler(shadow_map_sampler_, shadow_map_texture_unit_index);
-        gl_texture_manager_->SetSampler(diffuse_map_sampler_, diffuse_map_texture_unit_index);
-
-        // Draw Mesh
+        // Mesh
         if (model_view.contains(viewable_entity))
         {
             const ModelInstance& model_instance = model_view.get<const ModelInstance>(viewable_entity);
-            auto model = gl_model_manager_->GetModel(model_instance);
+            std::shared_ptr<IModel> model = gl_model_manager_->GetModel(model_instance);
             model->Draw();
         }
         else
         {
             const PrimitiveInstance& primitive_instance = primitive_view.get<const PrimitiveInstance>(viewable_entity);
-            auto primitive = gl_primitive_mesh_manager_->GetPrimitiveMesh(primitive_instance);
+            std::shared_ptr<GLMesh> primitive = gl_primitive_mesh_manager_->GetPrimitiveMesh(primitive_instance);
             primitive->Draw();
         }
 
         // Unbind textures
-        glActiveTexture(GL_TEXTURE0 + diffuse_map_texture_unit_index);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glActiveTexture(GL_TEXTURE0 + shadow_map_texture_unit_index);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        for (int32 texture_unit_index = 0; texture_unit_index < GLUniformManager::kShadowCascadeCount + 1; ++texture_unit_index)
+        {
+            glActiveTexture(GL_TEXTURE0 + texture_unit_index);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
 
         graphics_program->Finish();
     }

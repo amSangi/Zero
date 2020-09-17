@@ -1,7 +1,14 @@
 #version 450
 precision highp float;
 
-// -------------------- Camera Uniforms ----------------------- //
+//////////////////////////////////////////////////
+////////// Constants
+//////////////////////////////////////////////////
+const uint kShadowCascadeCount = 3;
+
+//////////////////////////////////////////////////
+////////// Camera Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform Camera
 {
     mat4 u_projection_matrix;
@@ -9,47 +16,64 @@ layout (std140) uniform Camera
     vec4 u_camera_position;
 };
 
-// -------------------- Model Uniforms ----------------------- //
+//////////////////////////////////////////////////
+////////// Model Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform Model
 {
     mat4 u_model_matrix;
     mat4 u_normal_matrix;
 };
 
-// -------------------- Shadow Map Uniforms -------------------- //
+//////////////////////////////////////////////////
+////////// Shadow Map Uniforms
+//////////////////////////////////////////////////
 layout (std140) uniform ShadowMapInformation
 {
-    mat4 u_light_matrix;
+    mat4 u_csm_light_matrices[kShadowCascadeCount];
+    vec4 u_cascade_end_clip_space[kShadowCascadeCount];
 };
 
-// -------------------- IN variables ------------------ //
+//////////////////////////////////////////////////
+////////// IN Variables
+//////////////////////////////////////////////////
 layout (location = 0) in vec3 in_position;
 layout (location = 1) in vec3 in_normal;
 layout (location = 2) in vec2 in_texture_coordinate;
 
-// -------------------- OUT variables ------------------ //
+//////////////////////////////////////////////////
+////////// OUT Variables
+//////////////////////////////////////////////////
 out VertexData
 {
-    vec3 model_position;
+    vec3 world_position;
     vec3 normal;
     vec2 texture_coordinate;
-    vec4 shadow_coordinate;
+    vec4 shadow_coordinates[kShadowCascadeCount];
+    float clip_space_z_position;
 } OUT;
 
+//////////////////////////////////////////////////
+////////// Main
+//////////////////////////////////////////////////
 void main()
 {
     // Compute world space position
-    vec4 model_position_4D = (u_model_matrix * vec4(in_position, 1));
+    vec4 world_position_4D = (u_model_matrix * vec4(in_position, 1));
 
     // Extract normal transformation
     mat3 normal_matrix_3 = mat3(u_normal_matrix[0].xyz, u_normal_matrix[1].xyz, u_normal_matrix[2].xyz);
 
+    // Set final vertex position
+    gl_Position = (u_projection_matrix * (u_view_matrix * world_position_4D));
+
     // Set output variables
-    OUT.model_position = model_position_4D.xyz;
+    OUT.world_position = world_position_4D.xyz;
     OUT.normal = normal_matrix_3 * in_normal;
     OUT.texture_coordinate = in_texture_coordinate;
-    OUT.shadow_coordinate = u_light_matrix * model_position_4D;
-
-    // Set final vertex position
-    gl_Position = (u_projection_matrix * (u_view_matrix * model_position_4D));
+    for (uint i = 0; i < kShadowCascadeCount; ++i)
+    {
+        OUT.shadow_coordinates[i] = u_csm_light_matrices[i] * world_position_4D;
+    }
+    OUT.clip_space_z_position = gl_Position.z;
 }
