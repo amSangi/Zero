@@ -11,17 +11,41 @@ std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(const PrimitiveInstance& 
     switch (primitive.GetType())
     {
         case PrimitiveInstance::Type::BOX:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateBox());
+        {
+            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateBox());
+            mesh->Initialize();
+            return mesh;
+        }
         case PrimitiveInstance::Type::CONE:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateCone(primitive.GetCone()));
+        {
+            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateCone(primitive.GetCone()));
+            mesh->Initialize();
+            return mesh;
+        }
         case PrimitiveInstance::Type::CYLINDER:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateCylinder(primitive.GetCylinder()));
+        {
+            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateCylinder(primitive.GetCylinder()));
+            mesh->Initialize();
+            return mesh;
+        }
         case PrimitiveInstance::Type::PLANE:
-            return std::make_unique<GLMesh>(MeshGenerator::GeneratePlane(primitive.GetPlane()));
+        {
+            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GeneratePlane(primitive.GetPlane()));
+            mesh->Initialize();
+            return mesh;
+        }
         case PrimitiveInstance::Type::SPHERE:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateSphere(primitive.GetSphere()));
+        {
+            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateSphere(primitive.GetSphere()));
+            mesh->Initialize();
+            return mesh;
+        }
         case PrimitiveInstance::Type::TORUS:
-            return std::make_unique<GLMesh>(MeshGenerator::GenerateTorus(primitive.GetTorus()));
+        {
+            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateTorus(primitive.GetTorus()));
+            mesh->Initialize();
+            return mesh;
+        }
         default:
             return nullptr;
     }

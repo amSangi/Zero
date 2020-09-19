@@ -33,7 +33,9 @@ std::shared_ptr<GLMesh> GLAssetImportWrapper::LoadMesh(aiMesh* mesh)
         }
     }
 
-    return std::make_shared<GLMesh>(std::move(vertices), std::move(indices));
+    auto gl_mesh = std::make_shared<GLMesh>(std::move(vertices), std::move(indices));
+    gl_mesh->Initialize();
+    return gl_mesh;
 }
 
 Material GLAssetImportWrapper::LoadMaterial(aiMaterial* ai_material)

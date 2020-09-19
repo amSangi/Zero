@@ -26,12 +26,22 @@ namespace zero::render
          */
         explicit GLMesh(Mesh&& mesh);
 
-        ~GLMesh() override = default;
+        ~GLMesh() override;
+
+        /**
+         * @brief Setup the Vertex Array Object and Vertex Buffer Objects for rendering
+         */
+        void Initialize();
 
         /**
          * @brief Render the mesh
          */
         void Draw();
+
+    private:
+        GLuint vao_;
+        GLuint vertex_vbo_;
+        GLuint index_vbo_;
 
     }; // class GLMesh
 
