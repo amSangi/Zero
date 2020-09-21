@@ -111,7 +111,6 @@ void GLRenderer::InitializeGL()
 {
     LOG_VERBOSE(engine_core_->GetLogger(), kTitle, "Initializing OpenGL fields");
 
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
@@ -119,8 +118,6 @@ void GLRenderer::InitializeGL()
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
     glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-
-    glDepthFunc(GL_LEQUAL);
 
     glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
 

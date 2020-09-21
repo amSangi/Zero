@@ -54,6 +54,11 @@ namespace zero::render
         void InitializeFrameBufferObject();
 
         /**
+         * @brief Update OpenGL settings prior to rendering
+         */
+        void UpdateGLSettings();
+
+        /**
          * @brief Set the shadow casting directional light
          * @param registry the registry containing all the game entities and their components
          * @param out_directional_light the directional light to set
@@ -61,7 +66,16 @@ namespace zero::render
          */
         bool GetShadowCastingDirectionalLight(entt::registry& registry, DirectionalLight& out_directional_light) const;
 
-        std::vector<math::Matrix4x4> ComputeCascadedProjectionMatrices(const Camera& camera) const;
+        /**
+         * @brief Create the different projection matrices for each cascaded shadow map
+         * @param camera the camera to render with
+         * @param light_view_matrix the light view matrix
+         * @param cascade_end_clip_spaces the end z boundaries for each cascade
+         * @return the cascaded shadow map projection matrices
+         */
+        std::vector<math::Matrix4x4> ComputeCascadedProjectionMatrices(const Camera& camera,
+                                                                       const math::Matrix4x4& light_view_matrix,
+                                                                       const std::vector<float>& cascade_end_clip_spaces) const;
 
         /**
          * @brief Render all non-culled viewable entities onto the shadow map

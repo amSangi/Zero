@@ -241,26 +241,6 @@ private:
             GetInstantiator()->InstantiateLight(light, NullEntity);
         }
 
-//        // Instantiate point light
-//        {
-//            PointLight point_light{};
-//            point_light.color_ = math::Vec3f(1.0F, 0.0F, 0.0F);
-//            point_light.casts_shadows_ = true;
-//            light.Set(point_light);
-//            auto point_light_entity = GetInstantiator()->InstantiatePrimitive(sphere_primitive);
-//            GetInstantiator()->InstantiateLight(light, point_light_entity);
-//
-//            auto& point_light_transform = registry.get<Transform>(point_light_entity);
-//            point_light_transform.Scale(math::Vec3f(0.1F));
-//            point_light_transform.Translate(math::Vec3f(4.0F, 5.0F, 0.0F));
-//
-//            auto& light_primitive_material = registry.get<Material>(point_light_entity);
-//            light_primitive_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-//            light_primitive_material.shaders_.fragment_shader_ = "model_unlit.fragment.glsl";
-//            light_primitive_material.diffuse_color_ = math::Vec3f(1.0F, 1.0F, 0.0F);
-//            light_primitive_material.visible_ = false;
-//        }
-//
         // Instantiate spot light
         {
             auto spot_light_entity = GetInstantiator()->InstantiatePrimitive(sphere_primitive);

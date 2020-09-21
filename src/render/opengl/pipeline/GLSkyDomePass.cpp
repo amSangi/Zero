@@ -26,10 +26,7 @@ void GLSkyDomePass::Execute(const Camera& camera,
                             const std::vector<Entity>& viewable_entities)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_CULL_FACE);
+    UpdateGLSettings(camera);
 
     math::Matrix4x4 projection_matrix = camera.GetProjectionMatrix();
     math::Matrix4x4 view_matrix = camera.GetViewMatrix();
@@ -46,6 +43,15 @@ void GLSkyDomePass::Execute(const Camera& camera,
             break;
         }
     }
+}
+
+void GLSkyDomePass::UpdateGLSettings(const Camera& camera)
+{
+    glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_CULL_FACE);
 }
 
 void GLSkyDomePass::RenderSkyDome(const Camera& camera, const SkyDome& sky_dome)

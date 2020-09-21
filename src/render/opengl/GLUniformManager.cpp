@@ -161,8 +161,8 @@ struct alignas(16) SpotLightData
 
 struct alignas(16) ShadowMapInformation
 {
-    ShadowMapInformation(const std::array<math::Matrix4x4, GLUniformManager::kShadowCascadeCount>& light_matrices,
-                         const std::array<float, GLUniformManager::kShadowCascadeCount>& cascade_end_clip_space)
+    ShadowMapInformation(const std::vector<math::Matrix4x4>& light_matrices,
+                         const std::vector<float>& cascade_end_clip_space)
     : cascade_end_clip_space_()
     , light_matrices_()
     {
@@ -452,11 +452,11 @@ void GLUniformManager::UpdateSpotLightUniforms(const entt::registry& registry) c
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void GLUniformManager::UpdateShadowMapMatrices(const std::array<math::Matrix4x4, kShadowCascadeCount>& light_matrices,
-                                               const std::array<float, kShadowCascadeCount>& cascade_end_clip_space) const
+void GLUniformManager::UpdateShadowMapMatrices(const std::vector<math::Matrix4x4>& light_matrices,
+                                               const std::vector<float>& cascade_end_clip_spaces) const
 {
     glBindBuffer(GL_UNIFORM_BUFFER, shadow_map_matrix_buffer_id_);
-    ShadowMapInformation shadow_map_information{light_matrices, cascade_end_clip_space};
+    ShadowMapInformation shadow_map_information{light_matrices, cascade_end_clip_spaces};
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ShadowMapInformation), &shadow_map_information);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

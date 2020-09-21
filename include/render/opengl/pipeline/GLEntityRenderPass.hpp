@@ -38,6 +38,19 @@ namespace zero::render
                      const std::vector<Entity>& viewable_entities) override;
 
     private:
+        /**
+         * @brief Update the OpenGL settings prior to rendering
+         * @param camera the camera to render with
+         */
+        void UpdateGLSettings(const Camera& camera);
+
+        /**
+         * @brief
+         * @param camera
+         * @param projection_matrix
+         * @param view_matrix
+         * @param volume
+         */
         void RenderVolume(const Camera& camera,
                           const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,

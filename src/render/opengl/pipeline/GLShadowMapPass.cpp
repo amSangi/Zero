@@ -5,6 +5,7 @@
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLUniformManager.hpp"
 #include "render/opengl/GLModel.hpp"
+#include <limits>
 
 namespace zero::render
 {
@@ -86,39 +87,55 @@ void GLShadowMapPass::Execute(const Camera& camera,
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo_id_);
-    glViewport(0, 0, shadow_map_width_, shadow_map_height_);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    UpdateGLSettings();
 
-    // Compute matrices
+    // Convert from NDC [-1, 1] to Texture Coordinates [0, 1]
     const math::Matrix4x4 coordinate_correction_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(0.5F))
             .Translate(math::Vec3f(0.5F));
-    std::vector<math::Matrix4x4> projection_matrices = ComputeCascadedProjectionMatrices(camera);
-    math::Matrix4x4 view_matrix = math::Matrix4x4::LookAt(math::Vec3f::Zero(),
-                                                          math::Vec3f::Normalize(directional_light.direction_),
-                                                          math::Vec3f(0.0F, 0.0F, 1.0F));
+    math::Matrix4x4 light_view_matrix = math::Matrix4x4::LookAt(math::Vec3f::Zero(),
+                                                                math::Vec3f::Normalize(directional_light.direction_),
+                                                                math::Vec3f(0.0F, 0.0F, 1.0F));
+    // Set the far z position for each cascade
+    float z_distance = camera.far_clip_ - camera.near_clip_;
+    // Set cascade far clip boundaries
+    // Each cascade is capped to a certain z distance
+    std::vector<float> cascade_end_clip_spaces{ math::Min(25.0F, math::Ceil(z_distance * 0.10F)), // First cascade may cover first 10% of the scene
+                                                math::Min(125.0F, math::Ceil(z_distance * 0.40F)), // Second cascade may cover the next 30% of the scene
+                                                math::Ceil(z_distance)};                           // Third cascade may cover the remaining 60% of the scene
+    std::vector<math::Matrix4x4> projection_matrices = ComputeCascadedProjectionMatrices(camera, light_view_matrix, cascade_end_clip_spaces);
 
-    std::array<math::Matrix4x4, kShadowCascadeCount> light_matrices{};
-    // TODO: Create end clip spaces
-    std::array<float, kShadowCascadeCount> cascade_end_clip_space{20.0F, 50.0F, 75.0F};
+    // Render depth maps
+    std::vector<math::Matrix4x4> light_matrices{};
+    light_matrices.reserve(kShadowCascadeCount);
     for (uint32 cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
     {
         std::shared_ptr<GLTexture> cascade_texture = shadow_map_textures_[cascade_index];
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, cascade_texture->GetNativeIdentifier(), 0);
 
         // Render cascaded shadow maps
-        gl_uniform_manager_->UpdateCameraUniforms(projection_matrices[cascade_index], view_matrix, math::Vec3f::Zero());
-        RenderEntities(view_matrix, registry, viewable_entities);
+        gl_uniform_manager_->UpdateCameraUniforms(projection_matrices[cascade_index], light_view_matrix, math::Vec3f::Zero());
+        RenderEntities(light_view_matrix, registry, viewable_entities);
 
         // Keep track of light matrix
-        math::Matrix4x4 light_matrix = (coordinate_correction_matrix * projection_matrices[cascade_index] * view_matrix);
-        light_matrices[cascade_index] = (light_matrix.Transpose());
+        math::Matrix4x4 light_matrix = (coordinate_correction_matrix * projection_matrices[cascade_index] * light_view_matrix);
+        light_matrices.push_back(light_matrix.Transpose());
     }
-    gl_uniform_manager_->UpdateShadowMapMatrices(light_matrices, cascade_end_clip_space);
+    gl_uniform_manager_->UpdateShadowMapMatrices(light_matrices, cascade_end_clip_spaces);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void GLShadowMapPass::UpdateGLSettings()
+{
+    glViewport(0, 0, shadow_map_width_, shadow_map_height_);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 }
 
 bool GLShadowMapPass::GetShadowCastingDirectionalLight(entt::registry& registry, DirectionalLight& out_directional_light) const
@@ -127,6 +144,7 @@ bool GLShadowMapPass::GetShadowCastingDirectionalLight(entt::registry& registry,
     for (Entity directional_light_entity : directional_light_view)
     {
         const DirectionalLight& directional_light = directional_light_view.get(directional_light_entity);
+        // Retrieve the first shadow casting directional light
         if (directional_light.casts_shadows_)
         {
             out_directional_light = directional_light;
@@ -136,19 +154,84 @@ bool GLShadowMapPass::GetShadowCastingDirectionalLight(entt::registry& registry,
     return false;
 }
 
-std::vector<math::Matrix4x4> GLShadowMapPass::ComputeCascadedProjectionMatrices(const Camera& camera) const
+std::vector<math::Matrix4x4> GLShadowMapPass::ComputeCascadedProjectionMatrices(const Camera& camera,
+                                                                                const math::Matrix4x4& light_view_matrix,
+                                                                                const std::vector<float>& cascade_end_clip_spaces) const
 {
     std::vector<math::Matrix4x4> projection_matrices{};
     projection_matrices.reserve(kShadowCascadeCount);
 
-    // TODO: Compute all 3 cascaded shadow maps. Replace dummy projection matrices
-    float left   = -10;    float right = 10;
-    float bottom = -10;    float top   = 10;
-    float near   = -10.0F; float far   = 20;
-    math::Matrix4x4 projection_matrix = math::Matrix4x4::Orthographic(left, right, bottom, top, near, far);
-    projection_matrices.push_back(projection_matrix);
-    projection_matrices.push_back(projection_matrix);
-    projection_matrices.push_back(projection_matrix);
+    // Compute near and far boundaries for all of the cascades
+    std::vector<float> z_boundaries{};
+    z_boundaries.reserve(kShadowCascadeCount + 1);
+    z_boundaries.push_back(camera.near_clip_);
+    for (float end_clip_space : cascade_end_clip_spaces)
+    {
+        z_boundaries.push_back(end_clip_space);
+    }
+
+    // Inverse view transform
+    math::Matrix4x4 inverse_view_transform = camera.GetCameraToWorldMatrix();
+    float aspect_ratio = camera.viewport_.GetAspectRatio();
+    float tan_half_h_fov = math::Tan(camera.horizontal_field_of_view_.ToRadian().rad_ * 0.5F);
+    float tan_half_v_fov = math::Tan(camera.horizontal_field_of_view_.ToRadian().rad_ * 0.5F * aspect_ratio);
+
+    // Compute projection matrices corners
+    constexpr uint32 kFrustrumCornerCount = 8;
+    for (uint32 i = 0; i < kShadowCascadeCount; ++i)
+    {
+        float z_near = z_boundaries[i];
+        float z_far  = z_boundaries[i + 1];
+
+        float x_near = z_near * tan_half_h_fov;
+        float x_far  = z_far * tan_half_h_fov;
+
+        float y_near = z_near * tan_half_v_fov;
+        float y_far  = z_far * tan_half_v_fov;
+
+        // Compute frustrum corners for cascade sub-frustrum
+        std::array<math::Vec4f, kFrustrumCornerCount> frustrum_corners =
+        {
+            // Near plane corners
+            math::Vec4f( x_near,  y_near, z_near, 1.0F), // Top Right
+            math::Vec4f(-x_near,  y_near, z_near, 1.0F), // Top Left
+            math::Vec4f( x_near, -y_near, z_near, 1.0F), // Bottom Right
+            math::Vec4f(-x_near, -y_near, z_near, 1.0F), // Bottom Left
+            // Far plane corners
+            math::Vec4f( x_far,  y_far, z_far, 1.0F), // Top Right
+            math::Vec4f(-x_far,  y_far, z_far, 1.0F), // Top Left
+            math::Vec4f( x_far, -y_far, z_far, 1.0F), // Bottom Right
+            math::Vec4f(-x_far, -y_far, z_far, 1.0F), // Bottom Left
+        };
+
+        float min = std::numeric_limits<float>::min();
+        float max = std::numeric_limits<float>::max();
+        float min_x = min;
+        float max_x = max;
+        float min_y = min;
+        float max_y = max;
+        float min_z = min;
+        float max_z = max;
+
+        // Compute min/max corners of the bounding box in the light view space
+        for (uint32 j = 0; j < kFrustrumCornerCount; ++j)
+        {
+            // Convert frustrum corner into world space coordinates
+            math::Vec4f world_frustrum_corner = inverse_view_transform * frustrum_corners[j];
+            // Convert world frustrum corner into light view coordinates
+            math::Vec4f light_view_frustrum_corner = light_view_matrix * world_frustrum_corner;
+
+            min_x = math::Min(min_x, light_view_frustrum_corner.x_);
+            max_x = math::Min(max_x, light_view_frustrum_corner.x_);
+            min_y = math::Min(min_y, light_view_frustrum_corner.y_);
+            max_y = math::Min(max_y, light_view_frustrum_corner.y_);
+            min_z = math::Min(min_z, light_view_frustrum_corner.z_);
+            max_z = math::Min(max_z, light_view_frustrum_corner.z_);
+        }
+
+        math::Matrix4x4 projection_matrix = math::Matrix4x4::Orthographic(min_x, max_x, min_y, max_y, min_z, max_z);
+        projection_matrices.push_back(projection_matrix);
+    }
 
     return projection_matrices;
 }

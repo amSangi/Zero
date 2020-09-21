@@ -27,6 +27,17 @@ namespace zero::render
                      const std::vector<Entity>& viewable_entities) override;
 
     private:
+        /**
+         * @brief Update the OpenGL settings prior to rendering
+         * @param camera the camera to render with
+         */
+        void UpdateGLSettings(const Camera& camera);
+
+        /**
+         * @brief Render the sky dome
+         * @param camera the camera to render with
+         * @param sky_dome the sky dome to render
+         */
         void RenderSkyDome(const Camera& camera, const SkyDome& sky_dome);
 
         std::shared_ptr<GLMesh> gl_sphere_;

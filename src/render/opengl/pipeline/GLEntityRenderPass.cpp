@@ -50,7 +50,7 @@ void GLEntityRenderPass::Execute(const Camera& camera,
                                  const std::vector<Entity>& viewable_entities)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
+    UpdateGLSettings(camera);
 
     math::Matrix4x4 projection_matrix = camera.GetProjectionMatrix();
     math::Matrix4x4 view_matrix = camera.GetViewMatrix();
@@ -138,6 +138,13 @@ void GLEntityRenderPass::Execute(const Camera& camera,
 
         graphics_program->Finish();
     }
+}
+
+void GLEntityRenderPass::UpdateGLSettings(const Camera& camera)
+{
+    glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 }
 
 void GLEntityRenderPass::RenderVolume(const Camera& camera,

@@ -91,10 +91,10 @@ namespace render
         /**
          * @brief Update the cascaded shadow map uniforms
          * @param light_matrices the light matrices for each cascade
-         * @param cascade_end_clip_space the end z position in clip space for each cascade
+         * @param cascade_end_clip_spaces the end z position in clip space for each cascade
          */
-        void UpdateShadowMapMatrices(const std::array<math::Matrix4x4, kShadowCascadeCount>& light_matrices,
-                                     const std::array<float, kShadowCascadeCount>& cascade_end_clip_space) const;
+        void UpdateShadowMapMatrices(const std::vector<math::Matrix4x4>& light_matrices,
+                                     const std::vector<float>& cascade_end_clip_spaces) const;
 
         //////////////////////////////////////////////////
         ///// Bind Graphics Program Uniforms
