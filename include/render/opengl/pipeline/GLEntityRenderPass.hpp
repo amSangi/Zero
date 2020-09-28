@@ -42,7 +42,7 @@ namespace zero::render
          * @brief Update the OpenGL settings prior to rendering
          * @param camera the camera to render with
          */
-        void UpdateGLSettings(const Camera& camera);
+        void UpdateGLSettings(const Camera& camera) const;
 
         /**
          * @brief

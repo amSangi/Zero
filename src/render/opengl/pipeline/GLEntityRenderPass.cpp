@@ -140,7 +140,7 @@ void GLEntityRenderPass::Execute(const Camera& camera,
     }
 }
 
-void GLEntityRenderPass::UpdateGLSettings(const Camera& camera)
+void GLEntityRenderPass::UpdateGLSettings(const Camera& camera) const
 {
     glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
     glEnable(GL_DEPTH_TEST);

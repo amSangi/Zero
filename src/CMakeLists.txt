@@ -26,6 +26,7 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             math/Quaternion.cpp
                             math/Radian.cpp
                             math/Sphere.cpp
+                            render/CascadedShadowMap.cpp
                             render/Image.cpp
                             render/Instantiator.cpp
                             render/Mesh.cpp

@@ -1,5 +1,4 @@
 #version 450
-precision highp sampler2DArrayShadow;
 precision highp float;
 
 //////////////////////////////////////////////////
@@ -106,8 +105,8 @@ layout (std140) uniform SpotLights
 //////////////////////////////////////////////////
 layout (std140) uniform ShadowMapInformation
 {
-    mat4 u_csm_light_matrices[kShadowCascadeCount];
-    vec4 u_cascade_end_clip_space[kShadowCascadeCount];
+    mat4 u_csm_matrices[kShadowCascadeCount];
+    vec4 u_csm_far_bounds[kShadowCascadeCount];
 };
 uniform sampler2DShadow u_cascaded_shadow_map[kShadowCascadeCount];
 
@@ -150,7 +149,7 @@ float ComputeCascadedShadowMap()
 {
     for (uint cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
     {
-        if (IN.clip_space_z_position <= u_cascade_end_clip_space[cascade_index].z)
+        if (IN.clip_space_z_position <= u_csm_far_bounds[cascade_index].z)
         {
             return ComputeCascadeShadowFactor(cascade_index, IN.shadow_coordinates[cascade_index]);
         }

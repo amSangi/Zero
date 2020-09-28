@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "render/IRenderPass.hpp"
+#include "render/CascadedShadowMap.hpp"
 #include "render/opengl/OpenGL.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "component/Camera.hpp"
@@ -56,7 +57,7 @@ namespace zero::render
         /**
          * @brief Update OpenGL settings prior to rendering
          */
-        void UpdateGLSettings();
+        void UpdateGLSettings() const;
 
         /**
          * @brief Set the shadow casting directional light
@@ -64,18 +65,7 @@ namespace zero::render
          * @param out_directional_light the directional light to set
          * @return True if a shadow casting directional light exists in the game. Otherwise false.
          */
-        bool GetShadowCastingDirectionalLight(entt::registry& registry, DirectionalLight& out_directional_light) const;
-
-        /**
-         * @brief Create the different projection matrices for each cascaded shadow map
-         * @param camera the camera to render with
-         * @param light_view_matrix the light view matrix
-         * @param cascade_end_clip_spaces the end z boundaries for each cascade
-         * @return the cascaded shadow map projection matrices
-         */
-        std::vector<math::Matrix4x4> ComputeCascadedProjectionMatrices(const Camera& camera,
-                                                                       const math::Matrix4x4& light_view_matrix,
-                                                                       const std::vector<float>& cascade_end_clip_spaces) const;
+        static bool GetShadowCastingDirectionalLight(entt::registry& registry, DirectionalLight& out_directional_light);
 
         /**
          * @brief Render all non-culled viewable entities onto the shadow map
@@ -91,6 +81,7 @@ namespace zero::render
         GLPrimitiveMeshManager* gl_primitive_mesh_manager_;
         GLTextureManager* gl_texture_manager_;
         GLUniformManager* gl_uniform_manager_;
+	    CascadedShadowMap cascaded_shadow_map_;
         uint32 shadow_map_width_;
         uint32 shadow_map_height_;
         GLuint fbo_id_;

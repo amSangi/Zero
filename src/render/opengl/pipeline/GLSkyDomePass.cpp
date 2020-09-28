@@ -45,7 +45,7 @@ void GLSkyDomePass::Execute(const Camera& camera,
     }
 }
 
-void GLSkyDomePass::UpdateGLSettings(const Camera& camera)
+void GLSkyDomePass::UpdateGLSettings(const Camera& camera) const
 {
     glViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

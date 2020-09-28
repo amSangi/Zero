@@ -30,8 +30,8 @@ layout (std140) uniform Model
 //////////////////////////////////////////////////
 layout (std140) uniform ShadowMapInformation
 {
-    mat4 u_csm_light_matrices[kShadowCascadeCount];
-    vec4 u_cascade_end_clip_space[kShadowCascadeCount];
+    mat4 u_csm_matrices[kShadowCascadeCount];
+    vec4 u_csm_far_bounds[kShadowCascadeCount];
 };
 
 //////////////////////////////////////////////////
@@ -73,7 +73,7 @@ void main()
     OUT.texture_coordinate = in_texture_coordinate;
     for (uint i = 0; i < kShadowCascadeCount; ++i)
     {
-        OUT.shadow_coordinates[i] = u_csm_light_matrices[i] * world_position_4D;
+        OUT.shadow_coordinates[i] = u_csm_matrices[i] * world_position_4D;
     }
     OUT.clip_space_z_position = gl_Position.z;
 }

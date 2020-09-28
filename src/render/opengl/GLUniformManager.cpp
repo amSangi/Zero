@@ -161,20 +161,20 @@ struct alignas(16) SpotLightData
 
 struct alignas(16) ShadowMapInformation
 {
-    ShadowMapInformation(const std::vector<math::Matrix4x4>& light_matrices,
-                         const std::vector<float>& cascade_end_clip_space)
-    : cascade_end_clip_space_()
-    , light_matrices_()
+    ShadowMapInformation(const std::vector<math::Matrix4x4>& shadow_map_matrices,
+                         const std::vector<float>& cascade_far_bounds)
+    : cascade_far_bounds_()
+    , shadow_map_matrices_()
     {
         for (uint32 i = 0; i < GLUniformManager::kShadowCascadeCount; ++i)
         {
-            light_matrices_[i] = light_matrices[i];
-            cascade_end_clip_space_[i].z_ = cascade_end_clip_space[i];
+	        shadow_map_matrices_[i] = shadow_map_matrices[i];
+	        cascade_far_bounds_[i].z_ = cascade_far_bounds[i];
         }
     }
 
-    math::Matrix4x4 light_matrices_[GLUniformManager::kShadowCascadeCount];
-    math::Vec4f cascade_end_clip_space_[GLUniformManager::kShadowCascadeCount];
+    math::Matrix4x4 shadow_map_matrices_[GLUniformManager::kShadowCascadeCount];
+    math::Vec4f cascade_far_bounds_[GLUniformManager::kShadowCascadeCount];
 };
 
 //////////////////////////////////////////////////
@@ -452,11 +452,11 @@ void GLUniformManager::UpdateSpotLightUniforms(const entt::registry& registry) c
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void GLUniformManager::UpdateShadowMapMatrices(const std::vector<math::Matrix4x4>& light_matrices,
+void GLUniformManager::UpdateShadowMapMatrices(const std::vector<math::Matrix4x4>& shadow_map_matrix,
                                                const std::vector<float>& cascade_end_clip_spaces) const
 {
     glBindBuffer(GL_UNIFORM_BUFFER, shadow_map_matrix_buffer_id_);
-    ShadowMapInformation shadow_map_information{light_matrices, cascade_end_clip_spaces};
+    ShadowMapInformation shadow_map_information{shadow_map_matrix, cascade_end_clip_spaces};
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ShadowMapInformation), &shadow_map_information);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
