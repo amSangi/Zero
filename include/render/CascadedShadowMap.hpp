@@ -13,8 +13,8 @@ namespace zero::render
      *
      * Computes:
      * - Light view matrix
+     * - Scene independent parallel splits for each cascade
      * - Projection matrices for each cascade
-     * - Far bounds for each cascade to identify which cascade a world point belongs in
      * - Texture matrices to convert world points into shadow map texture coordinates
      */
     class CascadedShadowMap
@@ -45,10 +45,10 @@ namespace zero::render
         [[nodiscard]] uint32 GetCascadeCount() const;
 
         /**
-         * @brief Get the light view matrix
-         * @return the light view matrix
+         * @brief Get the light view matrix for each cascade
+         * @return the light view matrix for each cascade
          */
-        [[nodiscard]] math::Matrix4x4 GetLightViewMatrix() const;
+        [[nodiscard]] std::vector<math::Matrix4x4> GetLightViewMatrices() const;
 
         /**
          * @brief Get the projection matrices for each cascade
@@ -65,24 +65,24 @@ namespace zero::render
          */
         [[nodiscard]] std::vector<math::Matrix4x4> GetTextureMatrices() const;
 
-        /**
-         * @brief Get the far (z) bounds for each cascade
-         *
-         * The far bounds are used during rendering to identify which cascade a world point belongs to
-         *
-         * @return the far (z) bounds
-         */
-        [[nodiscard]] std::vector<float> GetCascadeFarBounds() const;
+
+        [[nodiscard]] std::vector<float> GetViewFarBounds() const;
 
     private:
-        void UpdateProjectionMatrices(const Camera& camera);
+        void UpdateCascadeSplits(const Camera& camera);
+        void UpdateProjectionMatrices(const Camera& camera, const DirectionalLight& directional_light);
+        void UpdateTextureMatrices();
 
+        static const float kMaxCascadeZCoverage;
         const uint32 cascade_count_;
         const uint32 shadow_map_width_;
         const uint32 shadow_map_height_;
-        math::Matrix4x4 light_view_matrix_;
+        std::vector<math::Matrix4x4> light_view_matrices_;
         std::vector<math::Matrix4x4> projection_matrices_;
         std::vector<math::Matrix4x4> texture_matrices_;
-        std::vector<float> far_bounds_;
-    };
+        std::vector<float> cascade_splits_;
+        std::vector<float> view_far_bounds_;
+
+    }; // class CascadedShadowMap
+
 } // namespace zero::render

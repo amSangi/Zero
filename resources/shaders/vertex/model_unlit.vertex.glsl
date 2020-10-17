@@ -30,8 +30,8 @@ layout (std140) uniform Model
 //////////////////////////////////////////////////
 layout (std140) uniform ShadowMapInformation
 {
-    mat4 u_csm_matrices[kShadowCascadeCount];
-    vec4 u_csm_far_bounds[kShadowCascadeCount];
+    mat4 u_csm_texture_matrices[kShadowCascadeCount];
+    vec4 u_csm_view_far_bounds[kShadowCascadeCount];
 };
 
 //////////////////////////////////////////////////
@@ -47,10 +47,10 @@ layout (location = 2) in vec2 in_texture_coordinate;
 out VertexData
 {
     vec3 world_position;
+    vec3 view_position;
     vec3 normal;
     vec2 texture_coordinate;
     vec4 shadow_coordinates[kShadowCascadeCount];
-    float clip_space_z_position;
 } OUT;
 
 //////////////////////////////////////////////////
@@ -64,8 +64,8 @@ void main()
     // Extract normal transformation
     mat3 normal_matrix_3 = mat3(u_normal_matrix[0].xyz, u_normal_matrix[1].xyz, u_normal_matrix[2].xyz);
 
-    // Set final vertex position
-    gl_Position = (u_projection_matrix * (u_view_matrix * world_position_4D));
+    vec4 view_position = u_view_matrix * world_position_4D;
+    gl_Position = (u_projection_matrix * view_position);
 
     // Set output variables
     OUT.world_position = world_position_4D.xyz;
@@ -73,7 +73,7 @@ void main()
     OUT.texture_coordinate = in_texture_coordinate;
     for (uint i = 0; i < kShadowCascadeCount; ++i)
     {
-        OUT.shadow_coordinates[i] = u_csm_matrices[i] * world_position_4D;
+        OUT.shadow_coordinates[i] = u_csm_texture_matrices[i] * world_position_4D;
     }
-    OUT.clip_space_z_position = gl_Position.z;
+    OUT.view_position = view_position.xyz;
 }

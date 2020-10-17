@@ -27,20 +27,20 @@ GLShadowMapPass::GLShadowMapPass(GLCompiler* gl_compiler,
 , cascaded_shadow_map_(kShadowCascadeCount, width, height)
 , shadow_map_width_(width)
 , shadow_map_height_(height)
-, fbo_id_(0)
+, fbo_ids_(kShadowCascadeCount, 0)
 , shadow_map_textures_()
 {
 }
 
 GLShadowMapPass::~GLShadowMapPass()
 {
-    glDeleteFramebuffers(1, &fbo_id_);
+    glDeleteFramebuffers(fbo_ids_.size(), fbo_ids_.data());
 }
 
 void GLShadowMapPass::Initialize()
 {
     InitializeTextures();
-    InitializeFrameBufferObject();
+    InitializeFrameBufferObjects();
     gl_texture_manager_->SetShadowMapTextures(shadow_map_textures_);
 }
 
@@ -66,14 +66,17 @@ void GLShadowMapPass::InitializeTextures()
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GLShadowMapPass::InitializeFrameBufferObject()
+void GLShadowMapPass::InitializeFrameBufferObjects()
 {
     assert(!shadow_map_textures_.empty());
-    glGenFramebuffers(1, &fbo_id_);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id_);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadow_map_textures_[0]->GetNativeIdentifier(), 0);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
+    glGenFramebuffers(fbo_ids_.size(), fbo_ids_.data());
+    for (uint32 i = 0; i < kShadowCascadeCount; ++i)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo_ids_[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadow_map_textures_[i]->GetNativeIdentifier(), 0);
+        glDrawBuffer(GL_NONE);
+        glReadBuffer(GL_NONE);
+    }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -87,25 +90,21 @@ void GLShadowMapPass::Execute(const Camera& camera,
         return;
     }
 
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo_id_);
-    UpdateGLSettings();
-
     cascaded_shadow_map_.Update(camera, directional_light);
-    math::Matrix4x4 light_view_matrix = cascaded_shadow_map_.GetLightViewMatrix();
+    std::vector<math::Matrix4x4> light_view_matrices = cascaded_shadow_map_.GetLightViewMatrices();
     std::vector<math::Matrix4x4> light_projection_matrices = cascaded_shadow_map_.GetProjectionMatrices();
 
     // Render depth maps
     for (uint32 cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
     {
-        std::shared_ptr<GLTexture> cascade_texture = shadow_map_textures_[cascade_index];
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, cascade_texture->GetNativeIdentifier(), 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo_ids_[cascade_index]);
+        UpdateGLSettings();
 
         // Render cascaded shadow maps
-        gl_uniform_manager_->UpdateCameraUniforms(light_projection_matrices[cascade_index], light_view_matrix, math::Vec3f::Zero());
-        RenderEntities(light_view_matrix, registry, viewable_entities);
+        gl_uniform_manager_->UpdateCameraUniforms(light_projection_matrices[cascade_index], light_view_matrices[cascade_index], math::Vec3f::Zero());
+        RenderEntities(light_view_matrices[cascade_index], registry, viewable_entities);
     }
-    gl_uniform_manager_->UpdateShadowMapMatrices(cascaded_shadow_map_.GetTextureMatrices(),
-                                                 cascaded_shadow_map_.GetCascadeFarBounds());
+    gl_uniform_manager_->UpdateShadowMapMatrices(cascaded_shadow_map_.GetTextureMatrices(), cascaded_shadow_map_.GetViewFarBounds());
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

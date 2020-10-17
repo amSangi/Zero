@@ -11,11 +11,11 @@ const uint kShadowCascadeCount = 3;
 //////////////////////////////////////////////////
 in VertexData
 {
-    vec3 model_position;
+    vec3 world_position;
+    vec3 view_position;
     vec3 normal;
     vec2 texture_coordinate;
     vec4 shadow_coordinates[kShadowCascadeCount];
-    float clip_space_z_position;
 } in_vertex_data;
 
 //////////////////////////////////////////////////

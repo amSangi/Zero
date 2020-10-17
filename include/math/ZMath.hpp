@@ -33,21 +33,22 @@ namespace zero::math
     static constexpr float kEpsilon = 1e-06F;
 
     /* ********** Basic Math Functions ********** */
-    inline float Sqrt(float value)                             { return sqrtf(value);          }
-    inline float Abs(float value)                              { return fabsf(value);          }
-    inline float Sin(float value)                              { return sinf(value);           }
-    inline float Cos(float value)                              { return cosf(value);           }
-    inline float Tan(float value)                              { return tanf(value);           }
-    inline float Acos(float value)                             { return acosf(value);          }
-    inline float Asin(float value)                             { return asinf(value);          }
-    inline float Atan(float value)                             { return atanf(value);          }
-    inline float Atan2(float a, float b)                       { return atan2f(a, b);          }
-    inline float Copysign(float a, float b)                    { return copysignf(a, b);       }
-    inline float Max(float a, float b)                         { return std::fmax(a, b);       }
-    inline float Min(float a, float b)                         { return std::fmin(a, b);       }
-    inline float Ceil(float a)                                 { return std::ceil(a);          }
-    inline float Floor(float a)                                { return std::floor(a);         }
-    inline bool  Equal(float a, float b, float eps = kEpsilon) { return std::abs(a - b) < eps; }
+    inline float Sqrt(float value)                             { return sqrtf(value);             }
+    inline float Abs(float value)                              { return fabsf(value);             }
+    inline float Sin(float value)                              { return sinf(value);              }
+    inline float Cos(float value)                              { return cosf(value);              }
+    inline float Tan(float value)                              { return tanf(value);              }
+    inline float Acos(float value)                             { return acosf(value);             }
+    inline float Asin(float value)                             { return asinf(value);             }
+    inline float Atan(float value)                             { return atanf(value);             }
+    inline float Atan2(float a, float b)                       { return atan2f(a, b);             }
+    inline float Copysign(float a, float b)                    { return copysignf(a, b);          }
+    inline float Max(float a, float b)                         { return std::fmax(a, b);          }
+    inline float Min(float a, float b)                         { return std::fmin(a, b);          }
+    inline float Ceil(float a)                                 { return std::ceil(a);             }
+    inline float Floor(float a)                                { return std::floor(a);            }
+    inline bool  Equal(float a, float b, float eps = kEpsilon) { return std::abs(a - b) < eps;    }
+    inline float Pow(float base, float exponent)               { return std::pow(base, exponent); }
 
 } // namespace zero::math
 

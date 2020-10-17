@@ -168,7 +168,7 @@ struct alignas(16) ShadowMapInformation
     {
         for (uint32 i = 0; i < GLUniformManager::kShadowCascadeCount; ++i)
         {
-	        shadow_map_matrices_[i] = shadow_map_matrices[i];
+	        shadow_map_matrices_[i] = shadow_map_matrices[i].Transpose();
 	        cascade_far_bounds_[i].z_ = cascade_far_bounds[i];
         }
     }

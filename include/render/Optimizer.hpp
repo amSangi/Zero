@@ -19,8 +19,7 @@ namespace render
      * - View frustrum culling
      *
      * Techniques that need to be implemented:
-     * - Shadow caster culling via light volumes
-     * - Occlusion culling - Ignore entities in the view frustrum that are completely occluded by other entities
+     * - Occlusion culling - Ignore entities that are completely occluded by other entities
      *
      */
     class Optimizer
@@ -42,18 +41,6 @@ namespace render
          * @return a list of renderable entities
          */
         static std::vector<Entity> ExtractRenderableEntities(const Camera& camera, const entt::registry& registry);
-
-        /**
-         * @brief Retrieve all lights that cast shadows
-         * @param camera the camera to render to
-         * @param registry the registry containing all the entities and their components
-         * @return a list of entities with light components
-         */
-        ///@{
-        static std::vector<Entity> ExtractPointLightShadowCasters(const Camera& camera, const entt::registry& registry);
-        static std::vector<Entity> ExtractDirectionalLightShadowCasters(const Camera& camera, const entt::registry& registry);
-        static std::vector<Entity> ExtractSpotLightShadowCasters(const Camera& camera, const entt::registry& registry);
-        ///@}
 
     private:
         /**

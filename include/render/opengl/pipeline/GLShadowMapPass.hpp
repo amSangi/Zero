@@ -50,9 +50,9 @@ namespace zero::render
         void InitializeTextures();
 
         /**
-         * @brief Setup the frame buffer object
+         * @brief Setup the frame buffer objects
          */
-        void InitializeFrameBufferObject();
+        void InitializeFrameBufferObjects();
 
         /**
          * @brief Update OpenGL settings prior to rendering
@@ -84,7 +84,7 @@ namespace zero::render
 	    CascadedShadowMap cascaded_shadow_map_;
         uint32 shadow_map_width_;
         uint32 shadow_map_height_;
-        GLuint fbo_id_;
+        std::vector<GLuint> fbo_ids_;
         std::vector<std::shared_ptr<GLTexture>> shadow_map_textures_;
 
     }; // class GLShadowMapPass

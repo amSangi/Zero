@@ -132,7 +132,7 @@ private:
         camera.viewport_.width_ = engine_config_.render_system_config_.window_config_.width_;
         camera.viewport_.height_ = engine_config_.render_system_config_.window_config_.height_;
         camera.position_ = default_camera_position_;
-        camera.near_clip_ = 0.01F;
+        camera.near_clip_ = 1.0F;
         camera.far_clip_ = 1000.0F;
         camera.render_bounding_volumes_ = false;
 
