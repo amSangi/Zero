@@ -467,7 +467,7 @@ void GLUniformManager::UpdateShadowMapMatrices(const std::vector<math::Matrix4x4
 
 std::string GLUniformManager::GetShadowSamplerUniformName(int32 sampler_index)
 {
-    return "u_cascaded_shadow_map_array[" + std::to_string(sampler_index) + "]";
+    return "u_cascaded_shadow_map[" + std::to_string(sampler_index) + "]";
 }
 
 std::string GLUniformManager::GetDiffuseSamplerName()

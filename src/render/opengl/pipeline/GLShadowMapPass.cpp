@@ -24,7 +24,7 @@ GLShadowMapPass::GLShadowMapPass(GLCompiler* gl_compiler,
 , gl_primitive_mesh_manager_(gl_primitive_mesh_manager)
 , gl_uniform_manager_(gl_uniform_manager)
 , gl_texture_manager_(gl_texture_manager)
-, cascaded_shadow_map_(kShadowCascadeCount, width, height)
+, cascaded_shadow_map_(kShadowCascadeCount)
 , shadow_map_width_(width)
 , shadow_map_height_(height)
 , fbo_ids_(kShadowCascadeCount, 0)

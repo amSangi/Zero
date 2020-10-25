@@ -149,7 +149,7 @@ float ComputeCascadedShadowMap()
 {
     for (uint cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
     {
-        if (IN.view_position.z < u_csm_view_far_bounds[cascade_index].z)
+        if (IN.view_position.z > u_csm_view_far_bounds[cascade_index].z)
         {
             return ComputeCascadeShadowFactor(cascade_index, IN.shadow_coordinates[cascade_index]);
         }
