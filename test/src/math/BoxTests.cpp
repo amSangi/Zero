@@ -92,3 +92,43 @@ TEST(TestBox, Center)
 	EXPECT_EQ(Box(Vec3f::Zero(), Vec3f(100.0F)).Center(), Vec3f(50.0F));
 	EXPECT_EQ(Box(Vec3f(-25.0F), Vec3f(25.0F)).Center(), Vec3f(0.0F));
 }
+
+TEST(TestBox, Grow)
+{
+    Box unit_box = Box::Unit();
+    Box test_box = Box::Unit();
+
+    EXPECT_TRUE(test_box.Contains(unit_box));
+
+    test_box.Grow(1.0F);
+    EXPECT_EQ(test_box.min_, Vec3f{-1.0F});
+    EXPECT_EQ(test_box.max_, Vec3f{2.0F});
+    EXPECT_TRUE(test_box.Contains(unit_box));
+
+    Box test_box_2{Vec3f{-100.0F}, Vec3f{-50.0F}};
+    EXPECT_FALSE(test_box.Contains(test_box_2));
+
+    test_box.Grow(100.0F);
+    EXPECT_EQ(test_box.min_, Vec3f{-101.0F});
+    EXPECT_EQ(test_box.max_, Vec3f{102.0F});
+    EXPECT_TRUE(test_box.Contains(unit_box));
+    EXPECT_TRUE(test_box.Contains(test_box_2));
+}
+
+TEST(TestBox, GrowComplex)
+{
+    Box test_box{};
+    test_box.min_ = Vec3f{-100.0F, -200.0F, -300.0F};
+    test_box.max_ = Vec3f{100.0F, 200.0F, 300.0F};
+
+    EXPECT_TRUE(test_box.Contains(Box::Unit()));
+
+    test_box.Grow(100.0F);
+    EXPECT_EQ(test_box.min_, Vec3f(-200.0F, -300.0F, -400.0F));
+    EXPECT_EQ(test_box.max_, Vec3f(200.0F, 300.0F, 400.0F));
+
+    test_box.Grow(-100.0F);
+    // Negative value should be ignored
+    EXPECT_EQ(test_box.min_, Vec3f(-200.0F, -300.0F, -400.0F));
+    EXPECT_EQ(test_box.max_, Vec3f(200.0F, 300.0F, 400.0F));
+}

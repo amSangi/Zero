@@ -4,6 +4,7 @@
 #include "component/Camera.hpp"
 #include "component/Light.hpp"
 #include "math/Matrix4x4.hpp"
+#include "math/Box.hpp"
 
 namespace zero::render
 {
@@ -74,6 +75,8 @@ namespace zero::render
          */
         [[nodiscard]] std::vector<math::Matrix4x4> GetTextureMatrices() const;
 
+        [[nodiscard]] std::vector<math::Box> GetWorldBoundingBoxes() const;
+
         /**
          * @brief Get the far (z-coordinate) boundary of each cascade in camera view space
          * @return the far (z-coordinate) boundaries
@@ -99,9 +102,11 @@ namespace zero::render
 
         static const float kMaxCascadeZCoverage;
         const uint32 cascade_count_;
+        Camera cached_camera_;
         std::vector<math::Matrix4x4> light_view_matrices_;
         std::vector<math::Matrix4x4> projection_matrices_;
         std::vector<math::Matrix4x4> texture_matrices_;
+        std::vector<math::Box> world_bounding_boxes_;
         std::vector<float> cascade_splits_;
         std::vector<float> view_far_bounds_;
         float maximum_far_clip_;

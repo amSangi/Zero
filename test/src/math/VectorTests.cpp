@@ -319,3 +319,39 @@ TEST(TestVector, XYZ)
     EXPECT_EQ(three_dimension.XYZ(), three_dimension);
     EXPECT_EQ(four_dimension.XYZ(), Vec3f(1.0F, 2.0F, 3.0F));
 }
+
+TEST(TestVector, GetMinimumCoordinates)
+{
+    Vec2f lhs_2d{100.0F, -350.0F};
+    Vec2f rhs_2d{-350.0F, 750.0F};
+    Vec2f min_2d = Vec2f::GetMinimumCoordinates(lhs_2d, rhs_2d);
+    EXPECT_EQ(min_2d, Vec2f(-350.0F, -350.0F));
+
+    Vec3f lhs_3d{100.0F, -500.0F, -300.0F};
+    Vec3f rhs_3d{-350.0F, 700.0F, 900.0F};
+    Vec3f min_3d = Vec3f::GetMinimumCoordinates(lhs_3d, rhs_3d);
+    EXPECT_EQ(min_3d, Vec3f(-350.0F, -500.0F, -300.0F));
+
+    Vec4f lhs_4d{-25.0F, -350.0F, -451.0F, 300.0F};
+    Vec4f rhs_4d{-26.0F, -500.0F, -451.5F, 301.0F};
+    Vec4f min_4d = Vec4f::GetMinimumCoordinates(lhs_4d, rhs_4d);
+    EXPECT_EQ(min_4d, Vec4f(-26.0F, -500.0F, -451.5F, 300.0F));
+}
+
+TEST(TestVector, GetMaximumCoordinates)
+{
+    Vec2f lhs_2d{100.0F, -350.0F};
+    Vec2f rhs_2d{-350.0F, 750.0F};
+    Vec2f max_2d = Vec2f::GetMaximumCoordinates(lhs_2d, rhs_2d);
+    EXPECT_EQ(max_2d, Vec2f(100.0F, 750.0F));
+
+    Vec3f lhs_3d{100.0F, -500.0F, -300.0F};
+    Vec3f rhs_3d{-350.0F, 700.0F, 900.0F};
+    Vec3f max_3d = Vec3f::GetMaximumCoordinates(lhs_3d, rhs_3d);
+    EXPECT_EQ(max_3d, Vec3f(100.0F, 700.0F, 900.0F));
+
+    Vec4f lhs_4d{-25.0F, -350.0F, -451.0F, 300.0F};
+    Vec4f rhs_4d{-26.0F, -500.0F, -451.5F, 301.0F};
+    Vec4f max_4d = Vec4f::GetMaximumCoordinates(lhs_4d, rhs_4d);
+    EXPECT_EQ(max_4d, Vec4f(-25.0F, -350.0F, -451.0F, 301.0F));
+}

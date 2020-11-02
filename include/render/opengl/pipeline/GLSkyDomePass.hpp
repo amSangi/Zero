@@ -22,9 +22,7 @@ namespace zero::render
         /**
          * @brief IRenderPass::Execute
          */
-        void Execute(const Camera& camera,
-                     entt::registry& registry,
-                     const std::vector<Entity>& viewable_entities) override;
+        void Execute(const Camera& camera, const entt::registry& registry) override;
 
     private:
         /**

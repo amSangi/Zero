@@ -21,9 +21,7 @@ GLSkyDomePass::GLSkyDomePass(GLCompiler* gl_compiler,
     gl_sphere_ = gl_primitive_mesh_manager_->GetPrimitiveMesh(primitive_instance);
 }
 
-void GLSkyDomePass::Execute(const Camera& camera,
-                            entt::registry& registry,
-                            const std::vector<Entity>& viewable_entities)
+void GLSkyDomePass::Execute(const Camera& camera, const entt::registry& registry)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     UpdateGLSettings(camera);
@@ -56,8 +54,10 @@ void GLSkyDomePass::UpdateGLSettings(const Camera& camera) const
 
 void GLSkyDomePass::RenderSkyDome(const Camera& camera, const SkyDome& sky_dome)
 {
+    constexpr float sky_dome_sphere_scale = 1000.0F;
+
     math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
-            .Scale(math::Vec3f(1000.0F))
+            .Scale(math::Vec3f(sky_dome_sphere_scale))
             .Translate(camera.position_);
 
     std::shared_ptr<IProgram> sky_dome_program = gl_compiler_->CreateProgram(sky_dome);

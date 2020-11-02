@@ -8,6 +8,7 @@
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLUniformManager.hpp"
+#include "render/CullingManager.hpp"
 
 namespace zero::render
 {
@@ -45,9 +46,7 @@ GLEntityRenderPass::GLEntityRenderPass(GLCompiler* gl_compiler,
     diffuse_map_sampler_->SetWrappingT(ISampler::Wrapping::REPEAT);
 }
 
-void GLEntityRenderPass::Execute(const Camera& camera,
-                                 entt::registry& registry,
-                                 const std::vector<Entity>& viewable_entities)
+void GLEntityRenderPass::Execute(const Camera& camera, const entt::registry& registry)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     UpdateGLSettings(camera);
@@ -59,6 +58,9 @@ void GLEntityRenderPass::Execute(const Camera& camera,
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
     auto model_view      = registry.view<const Transform, const Material, const Volume, const ModelInstance>();
     auto primitive_view  = registry.view<const Transform, const Material, const Volume, const PrimitiveInstance>();
+
+    // Cull entities
+    std::vector<Entity> viewable_entities = CullingManager::GetRenderableEntities(camera, registry);
 
     for (Entity viewable_entity : viewable_entities)
     {
@@ -158,7 +160,7 @@ void GLEntityRenderPass::RenderVolume(const Camera& camera,
     math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(volume.bounding_volume_.radius_))
             .Translate(volume.bounding_volume_.center_);
-    // use default shaders
+    // Use default shaders
     std::shared_ptr<IProgram> gl_primitive_program = gl_compiler_->CreateProgram(Material{});
     gl_primitive_program->Use();
     math::Matrix4x4 model_view_matrix = view_matrix * model_matrix;

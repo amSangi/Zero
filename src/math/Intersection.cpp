@@ -10,7 +10,7 @@ bool Intersection::BoxSphereIntersect(const Box& box, const Sphere& sphere)
 	// Arvo's Box/Sphere Intersection Test
 
 	float square_distance = 0.0F;
-	float difference = 0.0F;
+	float difference;
 
 	// Get square x distance
 	if (sphere.center_.x_ < box.min_.x_)

@@ -117,7 +117,7 @@ namespace internal
          * @param index The index
          * @return the component
          */
-        T operator[](size_t index);
+        T& operator[](size_t index);
 
         /**
          * @brief Get the component at the index
@@ -382,6 +382,21 @@ namespace internal
          */
         static inline Radian Angle(const Vec& from, const Vec& to);
 
+        /**
+         * @brief Get the minimum coordinates (smallest values) of two vectors
+         * @param lhs the first vector
+         * @param rhs the second vector
+         * @return a vector containing the smallest coordinates of two vectors
+         */
+        static inline Vec GetMinimumCoordinates(const Vec& lhs, const Vec& rhs);
+
+        /**
+         * @brief Get the maximum coordinates (largest values) of two vectors
+         * @param lhs the first vector
+         * @param rhs the second vector
+         * @return a vector containing the largest coordinates of two vectors
+         */
+        static inline Vec GetMaximumCoordinates(const Vec& lhs, const Vec& rhs);
 
         /* ********** Useful Vectors ********** */
 
@@ -680,6 +695,27 @@ namespace internal
         return Radian(angle);
     }
 
+    template<uint16 dims, class T>
+    Vector<dims, T> Vector<dims, T>::GetMinimumCoordinates(const Vector<dims, T>& lhs, const Vector<dims, T>& rhs)
+    {
+        Vector<dims, T> minimum_vec{};
+        for (uint16 i = 0; i < dims; ++i)
+        {
+            minimum_vec[i] = math::Min(lhs[i], rhs[i]);
+        }
+        return minimum_vec;
+    }
+
+    template<uint16 dims, class T>
+    Vector<dims, T> Vector<dims, T>::GetMaximumCoordinates(const Vector<dims, T>& lhs, const Vector<dims, T>& rhs)
+    {
+        Vector<dims, T> maximum_vec{};
+        for (uint16 i = 0; i < dims; ++i)
+        {
+            maximum_vec[i] = math::Max(lhs[i], rhs[i]);
+        }
+        return maximum_vec;
+    }
 
     /* ********** Operator Overload Implementation ********** */
 
@@ -700,7 +736,7 @@ namespace internal
     }
 
     template<uint16 dims, class T>
-    T Vector<dims, T>::operator[](size_t index)
+    T& Vector<dims, T>::operator[](size_t index)
     {
         return Data()[index];
     }

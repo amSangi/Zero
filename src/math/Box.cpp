@@ -53,6 +53,15 @@ void Box::Merge(const Box& other)
 	max_.z_ = Max(max_.z_, other.max_.z_);
 }
 
+void Box::Grow(float amount)
+{
+    if (amount < 0.0F)
+    {
+        return;
+    }
+    min_ -= amount;
+    max_ += amount;
+}
 
 Vec3f Box::Size() const
 {

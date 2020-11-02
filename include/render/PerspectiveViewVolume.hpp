@@ -25,6 +25,7 @@ namespace zero::render
          * @see IViewVolume
          */
         ///@{
+        void SetPadding(float padding) override;
         [[nodiscard]] bool IsCulled(const math::Vec3f& point) const override;
         [[nodiscard]] bool IsCulled(const math::Sphere& sphere) const override;
         [[nodiscard]] bool IsCulled(const math::Box& box) const override;
@@ -39,6 +40,7 @@ namespace zero::render
 
     private:
         math::Plane planes_[6];
+        float padding_;
 
     }; // class PerspectiveViewVolume
 

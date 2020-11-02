@@ -4,6 +4,7 @@
 #include "render/IRenderPass.hpp"
 #include "render/CascadedShadowMap.hpp"
 #include "render/opengl/OpenGL.hpp"
+#include "render/opengl/GLSampler.hpp"
 #include "render/opengl/GLTexture.hpp"
 #include "component/Camera.hpp"
 #include "component/Light.hpp"
@@ -39,9 +40,7 @@ namespace zero::render
         /**
          * @brief IRenderPass::Execute
          */
-        void Execute(const Camera& camera,
-                     entt::registry& registry,
-                     const std::vector<Entity>& viewable_entities) override;
+        void Execute(const Camera& camera, const entt::registry& registry) override;
 
     private:
         /**
@@ -65,15 +64,15 @@ namespace zero::render
          * @param out_directional_light the directional light to set
          * @return True if a shadow casting directional light exists in the game. Otherwise false.
          */
-        static bool GetShadowCastingDirectionalLight(entt::registry& registry, DirectionalLight& out_directional_light);
+        static bool GetShadowCastingDirectionalLight(const entt::registry& registry, DirectionalLight& out_directional_light);
 
         /**
          * @brief Render all non-culled viewable entities onto the shadow map
          * @param light_view_matrix the light view matrix
+         * @param viewable_entities the list of renderable entities that are visible by the cascade
          * @param registry the registry containing all the game entities and their components
-         * @param viewable_entities the list of non-culled viewable entities
          */
-        void RenderEntities(const math::Matrix4x4& light_view_matrix, entt::registry& registry, const std::vector<Entity>& viewable_entities);
+        void RenderEntities(const math::Matrix4x4& light_view_matrix, const std::vector<Entity>& viewable_entities, const entt::registry& registry);
 
         static const uint32 kShadowCascadeCount;
         GLCompiler* gl_compiler_;
@@ -86,6 +85,7 @@ namespace zero::render
         uint32 shadow_map_height_;
         std::vector<GLuint> fbo_ids_;
         std::vector<std::shared_ptr<GLTexture>> shadow_map_textures_;
+        std::shared_ptr<GLSampler> diffuse_map_sampler_;
 
     }; // class GLShadowMapPass
 

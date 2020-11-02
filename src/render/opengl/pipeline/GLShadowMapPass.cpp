@@ -5,7 +5,7 @@
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLUniformManager.hpp"
 #include "render/opengl/GLModel.hpp"
-#include <limits>
+#include "render/CullingManager.hpp"
 
 namespace zero::render
 {
@@ -29,7 +29,13 @@ GLShadowMapPass::GLShadowMapPass(GLCompiler* gl_compiler,
 , shadow_map_height_(height)
 , fbo_ids_(kShadowCascadeCount, 0)
 , shadow_map_textures_()
+, diffuse_map_sampler_(std::make_shared<GLSampler>())
 {
+    diffuse_map_sampler_->Initialize();
+    diffuse_map_sampler_->SetMinificationFilter(ISampler::Filter::LINEAR_MIPMAP_LINEAR);
+    diffuse_map_sampler_->SetMagnificationFilter(ISampler::Filter::LINEAR);
+    diffuse_map_sampler_->SetWrappingS(ISampler::Wrapping::REPEAT);
+    diffuse_map_sampler_->SetWrappingT(ISampler::Wrapping::REPEAT);
 }
 
 GLShadowMapPass::~GLShadowMapPass()
@@ -42,6 +48,7 @@ void GLShadowMapPass::Initialize()
     InitializeTextures();
     InitializeFrameBufferObjects();
     gl_texture_manager_->SetShadowMapTextures(shadow_map_textures_);
+
 }
 
 void GLShadowMapPass::InitializeTextures()
@@ -80,9 +87,7 @@ void GLShadowMapPass::InitializeFrameBufferObjects()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GLShadowMapPass::Execute(const Camera& camera,
-                              entt::registry& registry,
-                              const std::vector<Entity>& viewable_entities)
+void GLShadowMapPass::Execute(const Camera& camera, const entt::registry& registry)
 {
     DirectionalLight directional_light{};
     if (!GetShadowCastingDirectionalLight(registry, directional_light))
@@ -93,6 +98,7 @@ void GLShadowMapPass::Execute(const Camera& camera,
     cascaded_shadow_map_.Update(camera, directional_light);
     std::vector<math::Matrix4x4> light_view_matrices = cascaded_shadow_map_.GetLightViewMatrices();
     std::vector<math::Matrix4x4> light_projection_matrices = cascaded_shadow_map_.GetProjectionMatrices();
+    std::vector<math::Box> world_bounding_boxes = cascaded_shadow_map_.GetWorldBoundingBoxes();
 
     // Render depth maps
     for (uint32 cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
@@ -100,9 +106,12 @@ void GLShadowMapPass::Execute(const Camera& camera,
         glBindFramebuffer(GL_FRAMEBUFFER, fbo_ids_[cascade_index]);
         UpdateGLSettings();
 
+        // Get renderable entities that are viewable at the given cascade
+        std::vector<Entity> viewable_entities = CullingManager::GetShadowCastingEntities(world_bounding_boxes[cascade_index], registry);
+
         // Render cascaded shadow maps
         gl_uniform_manager_->UpdateCameraUniforms(light_projection_matrices[cascade_index], light_view_matrices[cascade_index], math::Vec3f::Zero());
-        RenderEntities(light_view_matrices[cascade_index], registry, viewable_entities);
+        RenderEntities(light_view_matrices[cascade_index], viewable_entities, registry);
     }
     gl_uniform_manager_->UpdateShadowMapMatrices(cascaded_shadow_map_.GetTextureMatrices(), cascaded_shadow_map_.GetViewFarBounds());
 
@@ -121,7 +130,7 @@ void GLShadowMapPass::UpdateGLSettings() const
     glCullFace(GL_BACK);
 }
 
-bool GLShadowMapPass::GetShadowCastingDirectionalLight(entt::registry& registry, DirectionalLight& out_directional_light)
+bool GLShadowMapPass::GetShadowCastingDirectionalLight(const entt::registry& registry, DirectionalLight& out_directional_light)
 {
     auto directional_light_view = registry.view<const DirectionalLight>();
     for (Entity directional_light_entity : directional_light_view)
@@ -139,12 +148,14 @@ bool GLShadowMapPass::GetShadowCastingDirectionalLight(entt::registry& registry,
 
 
 void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
-                                     entt::registry& registry,
-                                     const std::vector<Entity>& viewable_entities)
+                                     const std::vector<Entity>& viewable_entities,
+                                     const entt::registry& registry)
 {
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
     auto model_view      = registry.view<const Transform, const Material, const Volume, const ModelInstance>();
     auto primitive_view  = registry.view<const Transform, const Material, const Volume, const PrimitiveInstance>();
+
+    gl_texture_manager_->SetSampler(diffuse_map_sampler_, 0);
 
     for (Entity viewable_entity : viewable_entities)
     {
@@ -161,6 +172,11 @@ void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
         gl_uniform_manager_->BindCameraUniforms(graphics_program);
         gl_uniform_manager_->BindModelUniforms(graphics_program);
         gl_uniform_manager_->UpdateModelUniforms(model_matrix, (light_view_matrix * model_matrix).Inverse());
+
+        // Bind the diffuse texture for alpha mapped objects
+        std::shared_ptr<GLTexture> gl_diffuse_texture = gl_texture_manager_->GetGLTexture(material.texture_map_.diffuse_map_);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(gl_diffuse_texture->GetTarget(), gl_diffuse_texture->GetNativeIdentifier());
 
         // Draw Mesh
         if (model_view.contains(viewable_entity))

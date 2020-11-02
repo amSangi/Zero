@@ -17,6 +17,16 @@ namespace zero::render
         virtual ~IViewVolume() = default;
 
         /**
+         * @brief Set the padding of the volume (margin of error)
+         *
+         * A point, sphere, or box is considered not culled if it is at most padding units outside
+         * of the volume. Padding increases the size of the volume to allow for a customizable margin of error.
+         *
+         * @param padding the padding
+         */
+        virtual void SetPadding(float padding) = 0;
+
+        /**
          * @brief Is the point outside the view volume?
          * @param point the point
          * @return true if the point is outside the view volume. Otherwise false.

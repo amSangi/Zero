@@ -27,11 +27,11 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             math/Radian.cpp
                             math/Sphere.cpp
                             render/CascadedShadowMap.cpp
+                            render/CullingManager.cpp
                             render/Image.cpp
                             render/Instantiator.cpp
                             render/Mesh.cpp
                             render/MeshGenerator.cpp
-                            render/Optimizer.cpp
                             render/OrthographicViewVolume.cpp
                             render/PerspectiveViewVolume.cpp
                             render/RenderPipeline.cpp

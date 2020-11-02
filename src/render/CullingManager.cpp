@@ -1,31 +1,50 @@
-#include "render/Optimizer.hpp"
+#include "render/CullingManager.hpp"
 #include "component/Camera.hpp"
-#include "component/Light.hpp"
 #include "component/Material.hpp"
 #include "component/ModelInstance.hpp"
 #include "component/PrimitiveInstance.hpp"
 #include "component/Transform.hpp"
 #include "component/Volume.hpp"
 #include "render/ViewVolumeBuilder.hpp"
-#include "render/IViewVolume.hpp"
+#include "render/OrthographicViewVolume.hpp"
 #include <deque>
 
 namespace zero::render
 {
 
-std::vector<Entity> Optimizer::ExtractRenderableEntities(const Camera& camera, const entt::registry& registry)
+std::vector<Entity> CullingManager::GetRenderableEntities(const Camera& camera, const entt::registry& registry)
 {
     return GetViewableEntities(camera, registry);
 }
 
-std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const entt::registry& registry)
+std::vector<Entity> CullingManager::GetShadowCastingEntities(const math::Box& box, const entt::registry& registry)
+{
+    // Allow for larger distance between bounding box and entity volume to avoid disappearing shadows
+    // when entity is not in the bounding box but the shadow is
+    constexpr float cull_border_distance = 40.0F;
+
+    OrthographicViewVolume culler{box.min_, box.max_};
+    culler.SetPadding(cull_border_distance);
+    return CullEntities(&culler, registry);
+}
+
+std::vector<Entity> CullingManager::GetViewableEntities(const Camera& camera, const entt::registry& registry)
+{
+    // Allow for small margin of error between bounding volume and entity volume to allow
+    // for smoother disappearing entities
+    constexpr float cull_border_distance = 5.0F;
+
+    auto culler = ViewVolumeBuilder::create(camera);
+    culler->SetPadding(cull_border_distance);
+    return CullEntities(culler.get(), registry);
+}
+
+std::vector<Entity> CullingManager::CullEntities(const IViewVolume* culler, const entt::registry& registry)
 {
     // Viewable entities must have Transform, Material, and Volume components
     auto renderable_view = registry.view<const Transform, const Material, const Volume>();
 
-    auto culler = ViewVolumeBuilder::create(camera);
-    std::deque<Entity> entities_to_cull;
-    std::vector<Entity> viewable_entities;
+    std::deque<Entity> entities_to_cull{};
 
     // Get all root entities that are visible
     for (Entity renderable_entity : renderable_view)
@@ -41,6 +60,8 @@ std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const e
             entities_to_cull.push_front(renderable_entity);
         }
     }
+
+    std::vector<Entity> viewable_entities{};
 
     // Cull entities
     while (!entities_to_cull.empty())
@@ -78,5 +99,6 @@ std::vector<Entity> Optimizer::GetViewableEntities(const Camera& camera, const e
 
     return viewable_entities;
 }
+
 
 } // namespace zero::render

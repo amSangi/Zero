@@ -55,13 +55,22 @@ namespace zero::math
          */
         [[nodiscard]] bool Intersects(const Box& other) const;
 
-        /* ********** Merge ********** */
+        /* ********** Expand ********** */
 
         /**
          * @brief Make this box the merger of this and the other box
          * @param other The other box
          */
         void Merge(const Box& other);
+
+        /**
+         * @brief Grow the box in all directions by the given amount
+         *
+         * Negative values are ignored
+         *
+         * @param amount the amount of units to grow the box by
+         */
+        void Grow(float amount);
 
         /* ********** Box Operations ********** */
 

@@ -9,6 +9,11 @@ OrthographicViewVolume::OrthographicViewVolume(const math::Vec3f& min, const mat
 {
 }
 
+void OrthographicViewVolume::SetPadding(float padding)
+{
+    view_box_.Grow(padding);
+}
+
 bool OrthographicViewVolume::IsCulled(const math::Vec3f& point) const
 {
     return !view_box_.Contains(point);

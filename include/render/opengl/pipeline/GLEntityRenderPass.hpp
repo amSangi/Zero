@@ -33,9 +33,7 @@ namespace zero::render
         /**
          * @brief IRenderPass::Execute
          */
-        void Execute(const Camera& camera,
-                     entt::registry& registry,
-                     const std::vector<Entity>& viewable_entities) override;
+        void Execute(const Camera& camera, const entt::registry& registry) override;
 
     private:
         /**
@@ -55,6 +53,7 @@ namespace zero::render
                           const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
+
         static void ToggleWireframeMode(bool enable_wireframe_mode);
         static void ToggleBackfaceCulling(bool enable_backface_culling);
 

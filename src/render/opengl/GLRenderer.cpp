@@ -11,7 +11,7 @@
 #include "render/opengl/pipeline/GLShadowMapPass.hpp"
 #include "render/opengl/pipeline/GLSkyDomePass.hpp"
 #include "render/MeshGenerator.hpp"
-#include "render/Optimizer.hpp"
+#include "render/CullingManager.hpp"
 #include "render/ShaderStage.hpp"
 #include "core/EngineCore.hpp"
 #include "component/SkyDome.hpp"
@@ -221,13 +221,15 @@ void GLRenderer::InitializeImages()
 
 void GLRenderer::InitializeRenderPasses(const RenderSystemConfig& config)
 {
+    constexpr uint32 shadow_map_resolution_width_height = 2048U;
+
     auto gl_shadow_map_pass = std::make_unique<GLShadowMapPass>(graphics_compiler_.get(),
                                                                 model_manager_.get(),
                                                                 primitive_manager_.get(),
                                                                 texture_manager_.get(),
                                                                 uniform_manager_.get(),
-                                                                1024,
-                                                                1024);
+                                                                shadow_map_resolution_width_height,
+                                                                shadow_map_resolution_width_height);
     gl_shadow_map_pass->Initialize();
     render_pipeline_->AddRenderPass(std::move(gl_shadow_map_pass));
     render_pipeline_->AddRenderPass(std::make_unique<GLSkyDomePass>(graphics_compiler_.get(),
