@@ -33,10 +33,5 @@ out vec4 out_color;
 //////////////////////////////////////////////////
 void main()
 {
-    float alpha = texture(u_diffuse_texture, IN.texture_coordinate).a;
-    if (alpha < 0.5)
-    {
-        discard; 
-    }
     out_color = vec4(1.0);
 }
