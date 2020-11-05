@@ -6,9 +6,10 @@ learning exercise and the use of third party libraries will be kept to a minimum
 The engine is built using cmake 3.10
 
 ## Development
-Currently working on the Rendering System
+Currently working on the Animation System
 
 ## Dependencies
+- Assimp - Asset import library
 - EnTT - Used for the entity-component system
 - SDL - Used for cross-platform windowing and input handling
 - GoogleTest - Used for Unit Testing
