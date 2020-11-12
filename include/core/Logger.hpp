@@ -5,17 +5,17 @@
 #include <mutex>
 
 #if LOGGING_ENABLED
-#define LOG_FATAL(logger, title, message) logger.Log(Logger::Level::LEVEL_FATAL, title, message)
-#define LOG_ERROR(logger, title, message) logger.Log(Logger::Level::LEVEL_ERROR, title, message)
-#define LOG_WARN(logger, title, message) logger.Log(Logger::Level::LEVEL_WARN, title, message)
-#define LOG_DEBUG(logger, title, message) logger.Log(Logger::Level::LEVEL_DEBUG, title, message)
-#define LOG_VERBOSE(logger, title, message) logger.Log(Logger::Level::LEVEL_VERBOSE, title, message)
+#define LOG_FATAL(title, message) Logger::GetLogger().Log(Logger::Level::LEVEL_FATAL, title, message)
+#define LOG_ERROR(title, message) Logger::GetLogger().Log(Logger::Level::LEVEL_ERROR, title, message)
+#define LOG_WARN(title, message) Logger::GetLogger().Log(Logger::Level::LEVEL_WARN, title, message)
+#define LOG_DEBUG(title, message) Logger::GetLogger().Log(Logger::Level::LEVEL_DEBUG, title, message)
+#define LOG_VERBOSE(title, message) Logger::GetLogger().Log(Logger::Level::LEVEL_VERBOSE, title, message)
 #else
-#define LOG_FATAL(logger, title, message)
-#define LOG_ERROR(logger, title, message)
-#define LOG_WARN(logger, title, message)
-#define LOG_DEBUG(logger, title, message)
-#define LOG_VERBOSE(logger, title, message)
+#define LOG_FATAL(title, message)
+#define LOG_ERROR(title, message)
+#define LOG_WARN(title, message)
+#define LOG_DEBUG(title, message)
+#define LOG_VERBOSE(title, message)
 #endif
 
 namespace zero
@@ -43,8 +43,8 @@ namespace zero
             LEVEL_VERBOSE = 4,    ///< Highly detailed tracing of program execution. E.g. Calling an API.
         }; // enum class Level
 
-        Logger();
-        ~Logger() = default;
+
+        static Logger& GetLogger();
 
         /**
          * @brief Set the log filter
@@ -71,6 +71,10 @@ namespace zero
         void Log(Level level, std::string_view title, std::string_view message);
 
     private:
+
+        Logger();
+        ~Logger() = default;
+
         Level severity_filter_;
         std::mutex mutex_;
 

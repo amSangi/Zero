@@ -1,6 +1,8 @@
 #include "engine/Engine.hpp"
+#include "core/Logger.hpp"
 #include "core/TransformPropagator.hpp"
 #include <SDL_events.h>
+
 
 namespace zero
 {
@@ -16,13 +18,13 @@ Engine::Engine(EngineConfig  engine_config)
 , entity_instantiator_(std::make_unique<EntityInstantiator>(engine_core_->GetRegistry(), render_system_.get()))
 , is_done_(false)
 {
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Engine instance constructed");
+    LOG_VERBOSE(kTitle, "Engine instance constructed");
 }
 
 void Engine::Initialize()
 {
-    engine_core_->GetFileManager().Initialize();
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Initializing systems");
+    engine_core_->GetAssetManager().Initialize();
+    LOG_VERBOSE(kTitle, "Initializing systems");
     render_system_->Initialize();
     for (const auto& system : game_systems_)
     {
@@ -32,7 +34,7 @@ void Engine::Initialize()
 
 void Engine::Tick()
 {
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Tick Begin");
+    LOG_VERBOSE(kTitle, "Tick Begin");
 
     render_system_->PreUpdate();
     for (const auto& system : game_systems_)
@@ -42,7 +44,7 @@ void Engine::Tick()
 
     TickEvents();
 
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Propagating entity transforms");
+    LOG_VERBOSE(kTitle, "Propagating entity transforms");
     TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
     render_system_->Update(time_delta_);
 
@@ -57,14 +59,14 @@ void Engine::Tick()
         system->PostUpdate();
     }
 
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Clearing cached entity transformations");
+    LOG_VERBOSE(kTitle, "Clearing cached entity transformations");
     TransformPropagator::ClearCachedTransformations(engine_core_->GetRegistry());
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Tick End");
+    LOG_VERBOSE(kTitle, "Tick End");
 }
 
 void Engine::ShutDown()
 {
-    LOG_VERBOSE(GetEngineCore()->GetLogger(), kTitle, "Shutting down systems");
+    LOG_VERBOSE(kTitle, "Shutting down systems");
     for (const auto& system : game_systems_)
     {
         system->ShutDown();

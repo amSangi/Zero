@@ -22,6 +22,12 @@ constexpr const char* LogLevelAsString(Logger::Level level)
     }
 }
 
+Logger& Logger::GetLogger()
+{
+    static Logger kLogger{};
+    return kLogger;
+}
+
 Logger::Logger()
 : severity_filter_(Level::LEVEL_DEBUG)
 , mutex_()

@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "core/Logger.hpp"
 
 namespace zero
 {
@@ -26,7 +25,7 @@ namespace render
     {
     public:
 
-        GLCompiler(Logger& logger);
+        GLCompiler();
 
         ~GLCompiler() = default;
 
@@ -80,11 +79,6 @@ namespace render
          * Graphics program caching avoids having to link shaders that have already been linked again.
          */
         std::unordered_map<std::string, std::shared_ptr<GLProgram>> program_map_;
-
-        /**
-         * @brief The logger used to log OpenGL errors
-         */
-        Logger& logger_;
 
     }; // class GLCompiler
 

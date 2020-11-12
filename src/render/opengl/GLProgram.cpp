@@ -1,10 +1,11 @@
 #include "render/opengl/GLProgram.hpp"
 #include "render/opengl/GLShader.hpp"
+#include "core/Logger.hpp"
 
 namespace zero::render
 {
 
-std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(Logger& logger, const std::vector<std::shared_ptr<GLShader>>& shaders)
+std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders)
 {
 
     if (shaders.empty())
@@ -31,7 +32,7 @@ std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(Logger& logger, const std:
         glGetProgramiv(program_identifier, GL_INFO_LOG_LENGTH, &message_length);
         linker_error_message.resize(message_length);
         glGetProgramInfoLog(program_identifier, message_length, &message_length, linker_error_message.data());
-        LOG_ERROR(logger, "GLProgram", "Failed to link OpenGL program. Error: " + linker_error_message);
+        LOG_ERROR("GLProgram", "Failed to link OpenGL program. Error: " + linker_error_message);
         return nullptr;
     }
 

@@ -4,13 +4,13 @@
 #include "render/ShaderStage.hpp"
 #include "component/Material.hpp"
 #include "component/SkyDome.hpp"
+#include "core/Logger.hpp"
 
 namespace zero::render
 {
 
-GLCompiler::GLCompiler(Logger& logger)
+GLCompiler::GLCompiler()
 : shader_map_()
-, logger_(logger)
 {
 }
 
@@ -67,7 +67,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const Material& material)
         return program_search->second;
     }
 
-    auto program = GLProgram::CreateGLProgram(logger_, shaders);
+    auto program = GLProgram::CreateGLProgram(shaders);
     program_map_.emplace(program_hash, program);
     return program;
 }
@@ -99,7 +99,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const SkyDome& sky_dome)
     }
 
     // Cache a new program
-    auto program = GLProgram::CreateGLProgram(logger_, shaders);
+    auto program = GLProgram::CreateGLProgram(shaders);
     program_map_.emplace(program_hash, program);
     return program;
 }
@@ -125,7 +125,7 @@ std::shared_ptr<GLProgram> GLCompiler::CreateProgram(const std::string& vertex_s
         shaders.push_back(shader_search->second);
     }
 
-    auto program = GLProgram::CreateGLProgram(logger_, shaders);
+    auto program = GLProgram::CreateGLProgram(shaders);
     program_map_.emplace(program_hash, program);
     return program;
 }
@@ -146,7 +146,7 @@ bool GLCompiler::InitializeShader(const ShaderStage& stage)
         glGetShaderiv(shader->GetNativeIdentifier(), GL_INFO_LOG_LENGTH, &message_length);
         compile_error_message.resize(message_length);
         glGetShaderInfoLog(shader->GetNativeIdentifier(), message_length, &message_length, compile_error_message.data());
-        LOG_ERROR(logger_, "GLCompiler", compile_error_message);
+        LOG_ERROR("GLCompiler", compile_error_message);
         return false;
     }
 

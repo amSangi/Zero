@@ -19,14 +19,12 @@ GLEntityRenderPass::GLEntityRenderPass(GLCompiler* gl_compiler,
                                        GLModelManager* gl_model_manager,
                                        GLPrimitiveMeshManager* gl_primitive_mesh_manager,
                                        GLTextureManager* gl_texture_manager,
-                                       GLUniformManager* gl_uniform_manager,
-                                       Logger& logger)
+                                       GLUniformManager* gl_uniform_manager)
 : gl_compiler_(gl_compiler)
 , gl_model_manager_(gl_model_manager)
 , gl_primitive_mesh_manager_(gl_primitive_mesh_manager)
 , gl_texture_manager_(gl_texture_manager)
 , gl_uniform_manager_(gl_uniform_manager)
-, logger_(logger)
 , shadow_map_sampler_(std::make_shared<GLSampler>())
 , diffuse_map_sampler_(std::make_shared<GLSampler>())
 {

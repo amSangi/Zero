@@ -1,4 +1,4 @@
-#include "core/FileManager.hpp"
+#include "core/AssetManager.hpp"
 #include <filesystem>
 
 namespace zero
@@ -11,7 +11,7 @@ constexpr auto kFragmentShaderDirectoryName = "fragment";
 constexpr auto kModelDirectoryName = "models";
 constexpr auto kTextureDirectoryName = "textures";
 
-void FileManager::Initialize()
+void AssetManager::Initialize()
 {
     std::filesystem::path current_parent_path = std::filesystem::current_path().parent_path();
     const std::filesystem::path resources_path = current_parent_path.append(kResourcesDirectoryName);
@@ -65,48 +65,48 @@ void FileManager::Initialize()
     }
 }
 
-const std::vector<std::string>& FileManager::GetVertexFiles()
+const std::vector<std::string>& AssetManager::GetVertexFiles()
 {
     return vertex_shader_files_;
 }
 
-const std::vector<std::string>& FileManager::GetFragmentFiles()
+const std::vector<std::string>& AssetManager::GetFragmentFiles()
 {
     return fragment_shader_files_;
 }
 
-const std::vector<std::string>& FileManager::GetTextureFiles()
+const std::vector<std::string>& AssetManager::GetTextureFiles()
 {
     return texture_files_;
 }
 
-const std::vector<std::string>& FileManager::GetModelFiles()
+const std::vector<std::string>& AssetManager::GetModelFiles()
 {
     return model_files_;
 }
 
-std::string FileManager::GetVertexShaderFilePath(const std::string& vertex_shader) const
+std::string AssetManager::GetVertexShaderFilePath(const std::string& vertex_shader) const
 {
     std::filesystem::path path{vertex_shader_file_path_};
     path.append(vertex_shader);
     return path.string();
 }
 
-std::string FileManager::GetFragmentShaderFilePath(const std::string& fragment_shader) const
+std::string AssetManager::GetFragmentShaderFilePath(const std::string& fragment_shader) const
 {
     std::filesystem::path path{fragment_shader_file_path_};
     path.append(fragment_shader);
     return path.string();
 }
 
-std::string FileManager::GetTextureFilePath(const std::string& texture_file) const
+std::string AssetManager::GetTextureFilePath(const std::string& texture_file) const
 {
     std::filesystem::path path{texture_file_path_};
     path.append(texture_file);
     return path.string();
 }
 
-std::string FileManager::GetModelFilePath(const std::string& model_file) const
+std::string AssetManager::GetModelFilePath(const std::string& model_file) const
 {
     std::filesystem::path path{model_file_path_};
     path.append(model_file);

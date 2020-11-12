@@ -1,7 +1,6 @@
 #pragma once
 
 #include "render/IRenderPass.hpp"
-#include "core/Logger.hpp"
 #include "component/Transform.hpp"
 #include "component/Material.hpp"
 #include "component/Volume.hpp"
@@ -26,8 +25,7 @@ namespace zero::render
                            GLModelManager* gl_model_manager,
                            GLPrimitiveMeshManager* gl_primitive_mesh_manager,
                            GLTextureManager* gl_texture_manager,
-                           GLUniformManager* gl_uniform_manager,
-                           Logger& logger);
+                           GLUniformManager* gl_uniform_manager);
         ~GLEntityRenderPass() override = default;
 
         /**
@@ -64,7 +62,6 @@ namespace zero::render
         GLPrimitiveMeshManager* gl_primitive_mesh_manager_;
         GLTextureManager* gl_texture_manager_;
         GLUniformManager* gl_uniform_manager_;
-        Logger& logger_;
         std::shared_ptr<GLSampler> shadow_map_sampler_;
         std::shared_ptr<GLSampler> diffuse_map_sampler_;
 

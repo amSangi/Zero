@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include "render/IProgram.hpp"
 #include "render/opengl/OpenGL.hpp"
-#include "core/Logger.hpp"
 
 namespace zero::render
 {
@@ -25,11 +24,10 @@ namespace zero::render
 
         /**
          * @brief Create a new GLProgram given a series of GLShaders
-         * @param logger the logger to log any OpenGL errors
          * @param shaders the shaders to use for the graphics program
          * @return a graphics program. Nullptr if an error occurred.
          */
-        static std::shared_ptr<GLProgram> CreateGLProgram(Logger& logger, const std::vector<std::shared_ptr<GLShader>>& shaders);
+        static std::shared_ptr<GLProgram> CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders);
 
         /**
          * @brief Constructor

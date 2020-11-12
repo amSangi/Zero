@@ -2,7 +2,6 @@
 
 #include "TestGLShader.hpp"
 #include "render/opengl/GLTexture.hpp"
-#include "core/Logger.hpp"
 
 class TestGLTexture : public TestGLShader
 {
@@ -21,7 +20,6 @@ protected:
     }
 
 protected:
-    zero::Logger test_logger_;
     std::string kTestImageFile = "../resources/textures/test.png";
     std::string kTestImageName = "test.png";
 

@@ -11,8 +11,8 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             component/SkyDome.cpp
                             component/Transform.cpp
                             component/Volume.cpp
+                            core/AssetManager.cpp
                             core/EventBus.cpp
-                            core/FileManager.cpp
                             core/Input.cpp
                             core/Logger.cpp
                             core/TransformPropagator.cpp

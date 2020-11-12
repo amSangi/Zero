@@ -3,6 +3,7 @@
 #include "component/Light.hpp"
 #include "component/PrimitiveInstance.hpp"
 #include "component/SkyDome.hpp"
+#include "core/Logger.hpp"
 #include <memory>
 
 using namespace zero;
@@ -30,7 +31,7 @@ public:
 
     void Initialize() override
     {
-        GetCore()->GetLogger().SetFilter(Logger::Level::LEVEL_ERROR);
+        Logger::GetLogger().SetFilter(Logger::Level::LEVEL_ERROR);
         SetupCamera();
         SetupSkyDome();
         SetupModel();

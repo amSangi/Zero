@@ -2,6 +2,7 @@
 #include "render/opengl/GLRenderer.hpp"
 #include "render/VolumePropagator.hpp"
 #include "render/Instantiator.hpp"
+#include "core/Logger.hpp"
 
 namespace zero::render
 {
@@ -14,14 +15,14 @@ RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& co
 , window_(std::make_unique<Window>(config.window_config_))
 , renderer_(std::make_unique<GLRenderer>(engine_core))
 {
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "RenderSystem instance constructed");
+    LOG_VERBOSE(kTitle, "RenderSystem instance constructed");
 }
 
 void RenderSystem::Initialize()
 {
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Initializing window");
+    LOG_VERBOSE(kTitle, "Initializing window");
     window_->Initialize();
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Initializing renderer");
+    LOG_VERBOSE(kTitle, "Initializing renderer");
     renderer_->Initialize(config_);
 }
 
@@ -31,9 +32,9 @@ void RenderSystem::PreUpdate()
 
 void RenderSystem::Update(const TimeDelta& time_delta)
 {
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Rendering entities");
+    LOG_VERBOSE(kTitle, "Rendering entities");
     renderer_->Render();
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Swapping buffers");
+    LOG_VERBOSE(kTitle, "Swapping buffers");
     window_->SwapBuffers();
 }
 
@@ -41,15 +42,15 @@ void RenderSystem::PostUpdate()
 {
     renderer_->PostRender();
     // Apply transforms to bounding volumes and expand parent volumes
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Propagating entity volumes");
+    LOG_VERBOSE(kTitle, "Propagating entity volumes");
     VolumePropagator::PropagateVolume(GetCore()->GetRegistry());
 }
 
 void RenderSystem::ShutDown()
 {
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Shutting down renderer");
+    LOG_VERBOSE(kTitle, "Shutting down renderer");
     renderer_->ShutDown();
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Cleaning up window and graphics context");
+    LOG_VERBOSE(kTitle, "Cleaning up window and graphics context");
     window_->Cleanup();
 }
 
@@ -58,22 +59,22 @@ Entity RenderSystem::CreateModelInstance(const std::string& model_filename)
     auto model = renderer_->GetModel(model_filename);
     if (model.expired())
     {
-        LOG_WARN(GetCore()->GetLogger(), kTitle, "Instantiating a model that has expired. Model: " + model_filename);
+        LOG_WARN(kTitle, "Instantiating a model that has expired. Model: " + model_filename);
         return NullEntity;
     }
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Instantiating a new 3D model instance");
+    LOG_VERBOSE(kTitle, "Instantiating a new 3D model instance");
     return Instantiator::InstantiateModel(GetCore()->GetRegistry(), model.lock());
 }
 
 Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive)
 {
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Instantiating a new primitive instance");
+    LOG_VERBOSE(kTitle, "Instantiating a new primitive instance");
     return Instantiator::InstantiatePrimitive(GetCore()->GetRegistry(), primitive);
 }
 
 Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity)
 {
-    LOG_VERBOSE(GetCore()->GetLogger(), kTitle, "Instantiating a new light instance");
+    LOG_VERBOSE(kTitle, "Instantiating a new light instance");
     return Instantiator::InstantiateLight(GetCore()->GetRegistry(), light, entity);
 }
 

@@ -9,11 +9,11 @@ namespace zero
     /**
      * @brief Manage the file path and file names of different resource files
      */
-    class FileManager
+    class AssetManager
     {
     public:
-        FileManager() = default;
-        ~FileManager() = default;
+        AssetManager() = default;
+        ~AssetManager() = default;
 
         /**
          * @brief Retrieve all the files and their fully qualified file paths
@@ -49,6 +49,7 @@ namespace zero
         std::vector<std::string> fragment_shader_files_;
         std::vector<std::string> texture_files_;
         std::vector<std::string> model_files_;
-    }; // class FileManager
+
+    }; // class AssetManager
 
 } // namespace zero

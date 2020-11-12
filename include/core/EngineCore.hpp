@@ -2,8 +2,7 @@
 
 #include <entt/entt.hpp>
 #include "core/EventBus.hpp"
-#include "core/Logger.hpp"
-#include "core/FileManager.hpp"
+#include "core/AssetManager.hpp"
 
 namespace zero
 {
@@ -17,8 +16,7 @@ namespace zero
 
         EngineCore()
         : registry_()
-        , logger_()
-        , file_manager_()
+        , asset_manager_()
         {
         }
 
@@ -35,16 +33,10 @@ namespace zero
         inline entt::registry& GetRegistry()        { return registry_; }
 
         /**
-         * @brief Get the Logger
-         * @return the logger
+         * @brief Get the asset manager
+         * @return the asset manager
          */
-        inline Logger& GetLogger()                  { return logger_;   }
-
-        /**
-         * @brief Get the file manager
-         * @return the file manager
-         */
-        inline FileManager& GetFileManager()        { return file_manager_; }
+        inline AssetManager& GetAssetManager()        { return asset_manager_; }
 
     private:
         /**
@@ -59,14 +51,9 @@ namespace zero
         entt::registry registry_;
 
         /**
-         * @brief The logger used to log messages throughout the engine
+         * @brief The asset manager that manages the file locations of images, shaders, models, etc.
          */
-        Logger logger_;
-
-        /**
-         * @brief The file manager that manages the file locations of images, shaders, models, etc.
-         */
-        FileManager file_manager_;
+        AssetManager asset_manager_;
 
     }; // class EngineCore
 

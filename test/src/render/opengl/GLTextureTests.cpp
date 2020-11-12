@@ -103,7 +103,7 @@ TEST_F(TestGLTexture, TextureWithShader)
     shaders.push_back(fragment_shader);
 
     // Create Graphics Program
-    auto program = GLProgram::CreateGLProgram(test_logger_, shaders);
+    auto program = GLProgram::CreateGLProgram(shaders);
     ASSERT_NE(program, nullptr);
 
     // Test vertices
