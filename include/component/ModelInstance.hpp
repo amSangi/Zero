@@ -19,9 +19,11 @@ namespace zero
         std::string model_name_;
 
         /**
-         * @brief Identifier for a child of a 3D model. 0 for root models.
+         * @brief The name of the model node.
+         *
+         * A 3D model may contain multiple sub-models with different node names
          */
-        uint32 child_identifier_;
+        std::string node_name_;
 
     }; // struct ModelInstance
 

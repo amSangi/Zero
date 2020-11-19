@@ -29,10 +29,10 @@ void AssimpLoader::LoadModel(const std::string& model_name, const std::string& m
         return;
     }
 
-    LoadModel(model_name, 0, scene, scene->mRootNode);
+    LoadModel(model_name, scene, scene->mRootNode);
 }
 
-std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, uint32 identifier, const aiScene* scene, const aiNode* node)
+std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, const aiScene* scene, const aiNode* node)
 {
     // Load transform prototype
     const aiMatrix4x4& mat = node->mTransformation;
@@ -78,13 +78,14 @@ std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, ui
     // Load model instance prototype and construct root model
     ModelInstance model_instance{};
     model_instance.model_name_ = model_name;
-    model_instance.child_identifier_ = identifier;
+    model_instance.node_name_ = node->mName.C_Str();
     auto root_model = model_manager_->CreateModel(model_name, meshes, transform, material, volume, model_instance);
 
     // Construct child models
     for (uint32 i = 0; i < node->mNumChildren; ++i)
     {
-        auto child_model = LoadModel(model_name, id_generator_(), scene, node->mChildren[i]);
+        aiNode* child_node = node->mChildren[i];
+        auto child_model = LoadModel(model_name, scene, child_node);
         child_model->SetParent(root_model);
         root_model->AddChild(child_model);
     }

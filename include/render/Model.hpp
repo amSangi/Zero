@@ -68,11 +68,11 @@ namespace zero::render
         void SetParent(std::shared_ptr<Model> parent_model);
 
         /**
-         * @brief Find a child model with the given identifier.
-         * @param identifier the identifier
-         * @return the child Model. Nullptr if no child exists with the identifier.
+         * @brief Find a child model with the given node name.
+         * @param node_name the node name. This matches the node name from ModelInstance.
+         * @return the child Model. Nullptr if no child exists with the given name.
          */
-        [[nodiscard]] std::shared_ptr<Model> FindChild(uint32 identifier) const;
+        [[nodiscard]] std::shared_ptr<Model> FindChild(const std::string& node_name) const;
 
         /**
          * @brief Get the child models

@@ -6,11 +6,6 @@ namespace zero::render
 
 GLModelManager::GLModelManager()
 : model_map_()
-, empty_model_(std::make_shared<GLModel>(std::vector<std::shared_ptr<GLMesh>>(),
-                                         Transform{},
-                                         Material{},
-                                         Volume{},
-                                         ModelInstance{}))
 {
 }
 
@@ -43,7 +38,7 @@ std::shared_ptr<Model> GLModelManager::GetModel(const std::string& model_name)
     auto model_search = model_map_.find(model_name);
     if (model_search == model_map_.end())
     {
-        return empty_model_;
+        return nullptr;
     }
     return model_search->second;
 }
@@ -53,13 +48,16 @@ std::shared_ptr<Model> GLModelManager::GetModel(const ModelInstance& model_insta
     auto model = GetModel(model_instance.model_name_);
     if (!model)
     {
-        return empty_model_;
+        return nullptr;
     }
-    if (model_instance.child_identifier_ != 0)
+
+    if (model->GetModelInstance().node_name_ == model_instance.node_name_)
     {
-        model = model->FindChild(model_instance.child_identifier_);
+        return model;
     }
-    return model;
+
+    // Search for the correct child node
+    return model->FindChild(model_instance.node_name_);
 }
 
 } // namespace zero::render

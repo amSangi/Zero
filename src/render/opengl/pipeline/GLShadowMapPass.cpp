@@ -189,7 +189,10 @@ void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
         {
             const ModelInstance& model_instance = model_view.get<const ModelInstance>(viewable_entity);
             std::shared_ptr<Model> model = gl_model_manager_->GetModel(model_instance);
-            model->Draw();
+            if (model)
+            {
+                model->Draw();
+            }
         }
         else
         {

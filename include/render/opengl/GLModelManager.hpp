@@ -41,15 +41,11 @@ namespace zero::render
         std::shared_ptr<Model> GetModel(const ModelInstance& model_instance) override;
 
     private:
+
         /**
          * @brief Model name to Model map
          */
         std::unordered_map<std::string, std::shared_ptr<Model>> model_map_;
-
-        /**
-         * @brief Represents a model without a mesh
-         */
-        std::shared_ptr<Model> empty_model_;
 
     }; // class GLModelManager
 

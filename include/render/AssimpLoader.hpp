@@ -1,6 +1,5 @@
 #pragma once
 
-#include <random>
 #include <string>
 #include "render/IModelManager.hpp"
 
@@ -34,12 +33,11 @@ namespace zero::render
         void LoadModel(const std::string& model_name, const std::string& model_file_path);
 
     private:
-        std::shared_ptr<Model> LoadModel(const std::string& model_name, uint32 identifier, const aiScene* scene, const aiNode* node);
+        std::shared_ptr<Model> LoadModel(const std::string& model_name, const aiScene* scene, const aiNode* node);
         Mesh LoadMesh(aiMesh* mesh) const;
 
 
         IModelManager* model_manager_;
-        std::minstd_rand0 id_generator_;
 
     }; // class AssimpLoader
 

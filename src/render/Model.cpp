@@ -44,18 +44,19 @@ void Model::SetParent(std::shared_ptr<Model> parent_model)
     parent_model_ = std::move(parent_model);
 }
 
-std::shared_ptr<Model> Model::FindChild(uint32 identifier) const
+std::shared_ptr<Model> Model::FindChild(const std::string& node_name) const
 {
+    // Recursive breadth first search for child node
     for (const auto& model : child_models_)
     {
-        if (model->GetModelInstance().child_identifier_ == identifier)
+        if (model->GetModelInstance().node_name_ == node_name)
         {
             return model;
         }
     }
     for (const auto& model : child_models_)
     {
-        auto search = model->FindChild(identifier);
+        auto search = model->FindChild(node_name);
         if (search)
         {
             return search;
