@@ -1,80 +1,56 @@
 #pragma once
 
-#include <memory>
-#include <random>
-#include <string>
 #include <unordered_map>
+#include "render/IModelManager.hpp"
 
-// Forward Declarations
-class aiScene;
-class aiNode;
-
-namespace zero
+namespace zero::render
 {
-    // Forward declarations
-    class ModelInstance;
-
-namespace render
-{
-
-    // Forward Declaration
-    class IModel;
-
     /**
      * @brief Manage the loading and lifetime of GLModels
      */
-    class GLModelManager
+    class GLModelManager final : public IModelManager
     {
     public:
 
         GLModelManager();
-
-        ~GLModelManager() = default;
-
-        /**
-         * @brief Load a model from a file. A single model may contain multiple sub models.
-         * @param model_name the name of the model
-         * @param filename the fully qualified filename of the model
-         * @return true if the model was loaded successfully. Otherwise false.
-         */
-        bool LoadModel(const std::string& model_name, const std::string& filename);
+        ~GLModelManager() override = default;
 
         /**
-         * @brief Clear all the models
+         * @see IModelManager::CreateModel
          */
-        void ClearModels();
+        std::shared_ptr<Model> CreateModel(const std::string& model_name,
+                                           const std::vector<Mesh>& meshes,
+                                           const Transform& transform,
+                                           const Material& material,
+                                           const Volume& volume,
+                                           const ModelInstance& model_instance) override;
 
         /**
-         * @brief Get the IModel associated with the given model name
-         * @param model_name the name of the model
-         * @return the IModel. Nullptr if the model does not exist.
+         * @see IModelManager::ClearModels
          */
-        std::shared_ptr<IModel> GetModel(const std::string& model_name);
+        void ClearModels() override;
 
         /**
-         * @brief Retrieve the correct IModel from a ModelInstance.
-         * @param model_instance the model instance of the IModel
-         * @return the IModel associated with the ModelInstance. Nullptr if it does not exist.
+         * @see IModelManager::GetModel
          */
-        std::shared_ptr<IModel> GetModel(const ModelInstance& model_instance);
+        std::shared_ptr<Model> GetModel(const std::string& model_name) override;
+
+        /**
+         * @see IModelManager::GetModel
+         */
+        std::shared_ptr<Model> GetModel(const ModelInstance& model_instance) override;
 
     private:
         /**
-         * @brief Model name to IModel map
+         * @brief Model name to Model map
          */
-        std::unordered_map<std::string, std::shared_ptr<IModel>> model_map_;
+        std::unordered_map<std::string, std::shared_ptr<Model>> model_map_;
 
         /**
          * @brief Represents a model without a mesh
          */
-        std::shared_ptr<IModel> empty_model_;
-
-        /**
-         * @brief Random Number Generator used to create model identifiers
-         */
-        std::minstd_rand0 random_generator_;
+        std::shared_ptr<Model> empty_model_;
 
     }; // class GLModelManager
 
-} // namespace render
-} // namespace zero
+} // namespace render::render

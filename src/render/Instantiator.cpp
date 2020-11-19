@@ -1,12 +1,12 @@
 #include "render/Instantiator.hpp"
-#include "render/IModel.hpp"
+#include "render/Model.hpp"
 #include "math/Box.hpp"
 
 namespace zero::render
 {
 
 Entity Instantiator::InstantiateModel(entt::registry& registry,
-                                      const std::shared_ptr<IModel>& model,
+                                      const std::shared_ptr<Model>& model,
                                       Entity parent)
 {
     Entity entity = registry.create();

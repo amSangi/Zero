@@ -51,13 +51,13 @@ namespace zero::render
          * @brief Get the interleaved vertices
          * @return the vertices
          */
-        [[nodiscard]] const std::vector<Vertex>& GetVertices() const;
+        const std::vector<Vertex>& GetVertices() const;
 
         /**
          * @brief Get the vertex indices
          * @return the indices
          */
-        [[nodiscard]] const std::vector<uint32>& GetIndices() const;
+        const std::vector<uint32>& GetIndices() const;
 
     protected:
         std::vector<Vertex> vertices_;

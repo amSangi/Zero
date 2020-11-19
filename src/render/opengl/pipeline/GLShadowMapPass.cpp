@@ -11,6 +11,7 @@ namespace zero::render
 {
 
 const uint32 GLShadowMapPass::kShadowCascadeCount = GLUniformManager::kShadowCascadeCount;
+const std::string GLShadowMapPass::kShadowMapFragmentShaderName = "shadow_map.fragment.glsl";
 
 GLShadowMapPass::GLShadowMapPass(GLCompiler* gl_compiler,
                                  GLModelManager* gl_model_manager,
@@ -53,6 +54,7 @@ void GLShadowMapPass::Initialize()
 
 void GLShadowMapPass::InitializeTextures()
 {
+    // Setup opengl textures
     for (uint32 i = 0; i < kShadowCascadeCount; ++i)
     {
         GLuint shadow_map_texture_id = 0;
@@ -76,6 +78,8 @@ void GLShadowMapPass::InitializeTextures()
 void GLShadowMapPass::InitializeFrameBufferObjects()
 {
     assert(!shadow_map_textures_.empty());
+
+    // Setup opengl frame buffer objects and bind to previously created textures
     glGenFramebuffers(fbo_ids_.size(), fbo_ids_.data());
     for (uint32 i = 0; i < kShadowCascadeCount; ++i)
     {
@@ -89,18 +93,20 @@ void GLShadowMapPass::InitializeFrameBufferObjects()
 
 void GLShadowMapPass::Execute(const Camera& camera, const entt::registry& registry)
 {
+    // Only perform shadow maps on one active directional light
     DirectionalLight directional_light{};
     if (!GetShadowCastingDirectionalLight(registry, directional_light))
     {
         return;
     }
 
+    // Update the cascaded shadow map data
     cascaded_shadow_map_.Update(camera, directional_light);
     std::vector<math::Matrix4x4> light_view_matrices = cascaded_shadow_map_.GetLightViewMatrices();
     std::vector<math::Matrix4x4> light_projection_matrices = cascaded_shadow_map_.GetProjectionMatrices();
     std::vector<math::Box> world_bounding_boxes = cascaded_shadow_map_.GetWorldBoundingBoxes();
 
-    // Render depth maps
+    // Render depth maps from the point of view of the directional light
     for (uint32 cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbo_ids_[cascade_index]);
@@ -109,7 +115,6 @@ void GLShadowMapPass::Execute(const Camera& camera, const entt::registry& regist
         // Get renderable entities that are viewable at the given cascade
         std::vector<Entity> viewable_entities = CullingManager::GetShadowCastingEntities(world_bounding_boxes[cascade_index], registry);
 
-        // Render cascaded shadow maps
         gl_uniform_manager_->UpdateCameraUniforms(light_projection_matrices[cascade_index], light_view_matrices[cascade_index], math::Vec3f::Zero());
         RenderEntities(light_view_matrices[cascade_index], viewable_entities, registry);
     }
@@ -136,6 +141,7 @@ bool GLShadowMapPass::GetShadowCastingDirectionalLight(const entt::registry& reg
     for (Entity directional_light_entity : directional_light_view)
     {
         const DirectionalLight& directional_light = directional_light_view.get(directional_light_entity);
+
         // Retrieve the first shadow casting directional light
         if (directional_light.casts_shadows_)
         {
@@ -167,7 +173,7 @@ void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
 
         math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
         std::shared_ptr<GLProgram> graphics_program = gl_compiler_->CreateProgram(material.shaders_.vertex_shader_,
-                                                                                  "shadow_map.fragment.glsl");
+                                                                                  kShadowMapFragmentShaderName);
         graphics_program->Use();
         gl_uniform_manager_->BindCameraUniforms(graphics_program);
         gl_uniform_manager_->BindModelUniforms(graphics_program);
@@ -178,11 +184,11 @@ void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(gl_diffuse_texture->GetTarget(), gl_diffuse_texture->GetNativeIdentifier());
 
-        // Draw Mesh
+        // Draw the mesh
         if (model_view.contains(viewable_entity))
         {
             const ModelInstance& model_instance = model_view.get<const ModelInstance>(viewable_entity);
-            std::shared_ptr<IModel> model = gl_model_manager_->GetModel(model_instance);
+            std::shared_ptr<Model> model = gl_model_manager_->GetModel(model_instance);
             model->Draw();
         }
         else

@@ -2,7 +2,7 @@
 
 #include <string>
 #include "engine/RenderSystemConfig.hpp"
-#include "render/IModel.hpp"
+#include "render/Model.hpp"
 
 namespace zero::render
 {
@@ -39,11 +39,11 @@ namespace zero::render
         virtual void ShutDown() = 0;
 
         /**
-         * @brief Get the IModel
+         * @brief Get the Model
          * @param model the model filename
-         * @return the IModel. Nullptr if it does not exist.
+         * @return the Model. Nullptr if it does not exist.
          */
-        [[nodiscard]] virtual std::weak_ptr<IModel> GetModel(const std::string& model) = 0;
+        [[nodiscard]] virtual std::weak_ptr<Model> GetModel(const std::string& model) = 0;
 
     }; // class IRenderer
 

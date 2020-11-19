@@ -56,10 +56,12 @@ void GLSkyDomePass::RenderSkyDome(const Camera& camera, const SkyDome& sky_dome)
 {
     constexpr float sky_dome_sphere_scale = 1000.0F;
 
+    // Position sky dome sphere around the camera position
     math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(sky_dome_sphere_scale))
             .Translate(camera.position_);
 
+    // Construct sky dome graphics program
     std::shared_ptr<IProgram> sky_dome_program = gl_compiler_->CreateProgram(sky_dome);
     sky_dome_program->Use();
     sky_dome_program->SetUniform("u_projection_matrix", camera.GetProjectionMatrix());
@@ -70,6 +72,7 @@ void GLSkyDomePass::RenderSkyDome(const Camera& camera, const SkyDome& sky_dome)
     sky_dome_program->SetUniform("u_center_color", sky_dome.center_color_);
     sky_dome_program->FlushUniforms();
 
+    // Render sky dome
     gl_sphere_->Draw();
     sky_dome_program->Finish();
 }

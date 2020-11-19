@@ -26,12 +26,14 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             math/Quaternion.cpp
                             math/Radian.cpp
                             math/Sphere.cpp
+                            render/AssimpLoader.cpp
                             render/CascadedShadowMap.cpp
                             render/CullingManager.cpp
                             render/Image.cpp
                             render/Instantiator.cpp
                             render/Mesh.cpp
                             render/MeshGenerator.cpp
+                            render/Model.cpp
                             render/OrthographicViewVolume.cpp
                             render/PerspectiveViewVolume.cpp
                             render/RenderPipeline.cpp
@@ -39,7 +41,6 @@ add_library(${PROJECT_NAME} component/Camera.cpp
                             render/ViewVolumeBuilder.cpp
                             render/VolumePropagator.cpp
                             render/Window.cpp
-                            render/opengl/GLAssetImportWrapper.cpp
                             render/opengl/GLCompiler.cpp
                             render/opengl/GLMesh.cpp
                             render/opengl/GLModel.cpp

@@ -1,15 +1,11 @@
 #include "render/opengl/GLModelManager.hpp"
 #include "render/opengl/GLModel.hpp"
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
 
 namespace zero::render
 {
 
 GLModelManager::GLModelManager()
 : model_map_()
-, random_generator_(std::random_device()())
 , empty_model_(std::make_shared<GLModel>(std::vector<std::shared_ptr<GLMesh>>(),
                                          Transform{},
                                          Material{},
@@ -18,33 +14,23 @@ GLModelManager::GLModelManager()
 {
 }
 
-bool GLModelManager::LoadModel(const std::string& model_name, const std::string& filename)
+std::shared_ptr<Model> GLModelManager::CreateModel(const std::string& model_name,
+                                                   const std::vector<Mesh>& meshes,
+                                                   const Transform& transform,
+                                                   const Material& material,
+                                                   const Volume& volume,
+                                                   const ModelInstance& model_instance)
 {
-    if (model_map_.find(model_name) != model_map_.end())
+    std::vector<std::shared_ptr<GLMesh>> gl_meshes{};
+    gl_meshes.reserve(meshes.size());
+    for (const Mesh& mesh : meshes)
     {
-        return true;
+        gl_meshes.push_back(std::make_shared<GLMesh>(mesh.GetVertices(), mesh.GetIndices()));
     }
 
-    Assimp::Importer importer;
-
-    auto flags = aiProcess_Triangulate
-                | aiProcess_OptimizeMeshes
-                | aiProcess_OptimizeGraph
-                | aiProcess_GenNormals
-                | aiProcess_GenBoundingBoxes
-                | aiProcess_ImproveCacheLocality
-                | aiProcess_FlipUVs;
-    const aiScene* scene = importer.ReadFile(filename.c_str(), flags);
-
-    if (!scene
-    || scene->mFlags & (unsigned)AI_SCENE_FLAGS_INCOMPLETE
-    || !scene->mRootNode)
-    {
-        return false;
-    }
-
-    model_map_.emplace(model_name, GLModel::CreateGLModel(model_name, random_generator_, 0, scene->mRootNode, scene));
-    return true;
+    auto model = std::make_shared<GLModel>(std::move(gl_meshes), transform, material, volume, model_instance);
+    model_map_.emplace(model_name, model);
+    return model;
 }
 
 void GLModelManager::ClearModels()
@@ -52,7 +38,7 @@ void GLModelManager::ClearModels()
     model_map_.clear();
 }
 
-std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& model_name)
+std::shared_ptr<Model> GLModelManager::GetModel(const std::string& model_name)
 {
     auto model_search = model_map_.find(model_name);
     if (model_search == model_map_.end())
@@ -62,7 +48,7 @@ std::shared_ptr<IModel> GLModelManager::GetModel(const std::string& model_name)
     return model_search->second;
 }
 
-std::shared_ptr<IModel> GLModelManager::GetModel(const ModelInstance& model_instance)
+std::shared_ptr<Model> GLModelManager::GetModel(const ModelInstance& model_instance)
 {
     auto model = GetModel(model_instance.model_name_);
     if (!model)

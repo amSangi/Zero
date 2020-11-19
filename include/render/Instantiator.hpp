@@ -7,7 +7,7 @@ namespace zero::render
 {
 
     // Forward declarations
-    class IModel;
+    class Model;
 
     /**
      * @brief Instantiate a game entity with a set of components
@@ -19,18 +19,18 @@ namespace zero::render
         Instantiator() = delete;
 
         /**
-         * @brief Create a new entity based on a IModel.
+         * @brief Create a new entity based on a Model.
          *
          * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          * If the model contains sub-children, they are created and added to the transform component.
          *
          * @param registry the registry containing all of the entities and their components
-         * @param model the IModel to instantiate
+         * @param model the Model to instantiate
          * @param parent the parent of the entity that is instantiated
          * @return the root entity associated with the 3D GLModel. NullEntity if an error occurred.
          */
         [[nodiscard]] static Entity InstantiateModel(entt::registry& registry,
-                                                     const std::shared_ptr<IModel>& model,
+                                                     const std::shared_ptr<Model>& model,
                                                      Entity parent = NullEntity);
 
         /**

@@ -3,6 +3,7 @@
 #include <memory>
 #include <entt/entt.hpp>
 #include "core/TimeDelta.hpp"
+#include <render/AssimpLoader.hpp>
 #include "render/IRenderer.hpp"
 #include "render/IShader.hpp"
 #include "render/RenderPipeline.hpp"
@@ -62,7 +63,7 @@ namespace render
         /**
          * @see IRenderer::GetModel
          */
-        std::weak_ptr<IModel> GetModel(const std::string& model) override;
+        std::weak_ptr<Model> GetModel(const std::string& model) override;
 
     private:
         /**
@@ -97,6 +98,11 @@ namespace render
          * @brief Manage model meshes
          */
         std::unique_ptr<GLModelManager> model_manager_;
+
+        /**
+         * @brief Load 3D models
+         */
+        std::unique_ptr<AssimpLoader> model_loader_;
 
         /**
          * @brief Manage primitive meshes

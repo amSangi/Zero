@@ -12,39 +12,27 @@ std::unique_ptr<GLMesh> GLPrimitiveGenerator::Generate(const PrimitiveInstance& 
     {
         case PrimitiveInstance::Type::BOX:
         {
-            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateBox());
-            mesh->Initialize();
-            return mesh;
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateBox());
         }
         case PrimitiveInstance::Type::CONE:
         {
-            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateCone(primitive.GetCone()));
-            mesh->Initialize();
-            return mesh;
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateCone(primitive.GetCone()));
         }
         case PrimitiveInstance::Type::CYLINDER:
         {
-            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateCylinder(primitive.GetCylinder()));
-            mesh->Initialize();
-            return mesh;
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateCylinder(primitive.GetCylinder()));
         }
         case PrimitiveInstance::Type::PLANE:
         {
-            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GeneratePlane(primitive.GetPlane()));
-            mesh->Initialize();
-            return mesh;
+            return std::make_unique<GLMesh>(MeshGenerator::GeneratePlane(primitive.GetPlane()));
         }
         case PrimitiveInstance::Type::SPHERE:
         {
-            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateSphere(primitive.GetSphere()));
-            mesh->Initialize();
-            return mesh;
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateSphere(primitive.GetSphere()));
         }
         case PrimitiveInstance::Type::TORUS:
         {
-            auto mesh = std::make_unique<GLMesh>(MeshGenerator::GenerateTorus(primitive.GetTorus()));
-            mesh->Initialize();
-            return mesh;
+            return std::make_unique<GLMesh>(MeshGenerator::GenerateTorus(primitive.GetTorus()));
         }
         default:
             return nullptr;

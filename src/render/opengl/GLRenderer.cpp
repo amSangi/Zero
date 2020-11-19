@@ -32,6 +32,7 @@ void GLMessageCallback(GLenum source,
 GLRenderer::GLRenderer(EngineCore* engine_core)
 : graphics_compiler_(std::make_unique<GLCompiler>())
 , model_manager_(std::make_unique<GLModelManager>())
+, model_loader_(std::make_unique<AssimpLoader>(model_manager_.get()))
 , primitive_manager_(std::make_unique<GLPrimitiveMeshManager>())
 , texture_manager_(std::make_unique<GLTextureManager>())
 , uniform_manager_(std::make_unique<GLUniformManager>())
@@ -97,7 +98,7 @@ void GLRenderer::ShutDown()
     texture_manager_->UnloadImages();
 }
 
-std::weak_ptr<IModel> GLRenderer::GetModel(const std::string& model)
+std::weak_ptr<Model> GLRenderer::GetModel(const std::string& model)
 {
     return model_manager_->GetModel(model);
 }
@@ -188,7 +189,8 @@ void GLRenderer::InitializeModels()
     LOG_DEBUG(kTitle, "Pre-loading models. Model count: " + std::to_string(model_files.size()));
     for (const auto& model_file : model_files)
     {
-        model_manager_->LoadModel(model_file, asset_manager.GetModelFilePath(model_file));
+        std::string model_file_path = asset_manager.GetModelFilePath(model_file);
+        model_loader_->LoadModel(model_file, model_file_path);
     }
 }
 
@@ -261,15 +263,17 @@ void GLMessageCallback(GLenum /* source */,
                        GLenum /* severity */,
                        GLsizei length,
                        const GLchar* message,
-                       const void* /* userParam */)
+                       const void* /* user_param */)
 {
+    constexpr auto kOpenGLTitle = "GLMessageCallback";
+
     if (type == GL_DEBUG_TYPE_ERROR)
     {
-        LOG_ERROR("OpenGL", std::string(message, length));
+        LOG_ERROR(kOpenGLTitle, std::string(message, length));
     }
     else
     {
-        LOG_DEBUG("OpenGL", std::string(message, length));
+        LOG_DEBUG(kOpenGLTitle, std::string(message, length));
     }
 }
 
