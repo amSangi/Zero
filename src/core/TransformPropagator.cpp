@@ -63,7 +63,7 @@ void TransformPropagator::PropagateMarkForDestruction(entt::registry& registry) 
     // Retrieve root parents
     for (Entity entity : view)
     {
-        auto& transform = view.get(entity);
+        auto& transform = view.get<Transform>(entity);
         if (transform.parent_ == NullEntity
             && ShouldPropagateDestruction(transform)) {
             update_stack.push(entity);
@@ -73,7 +73,7 @@ void TransformPropagator::PropagateMarkForDestruction(entt::registry& registry) 
     // Begin downward mark propagation
     while (!update_stack.empty())
     {
-        auto& transform = view.get(update_stack.top());
+        auto& transform = view.get<Transform>(update_stack.top());
         update_stack.pop();
 
         for (Entity child_entity : transform.children_)
@@ -83,7 +83,7 @@ void TransformPropagator::PropagateMarkForDestruction(entt::registry& registry) 
                 continue;
             }
 
-            auto& child_transform = view.get(child_entity);
+            auto& child_transform = view.get<Transform>(child_entity);
             child_transform.state_ = Transform::State::MARKED_FOR_DELETE;
 
             if (!child_transform.keep_children_alive_ && !transform.children_.empty())
@@ -101,7 +101,7 @@ void TransformPropagator::PropagateTransform(entt::registry& registry) {
     // Retrieve root parents with children
     for (Entity entity : view)
     {
-        auto& transform = view.get(entity);
+        auto& transform = view.get<Transform>(entity);
         if (transform.parent_ == NullEntity && !transform.children_.empty())
         {
             update_stack.push(entity);
@@ -111,7 +111,7 @@ void TransformPropagator::PropagateTransform(entt::registry& registry) {
     // Begin downward propagation
     while (!update_stack.empty())
     {
-        auto& transform = view.get(update_stack.top());
+        auto& transform = view.get<Transform>(update_stack.top());
         update_stack.pop();
 
         // Skip unmodified entities
@@ -133,7 +133,7 @@ void TransformPropagator::PropagateTransform(entt::registry& registry) {
             // Add child to update_stack to propagate to its children
             update_stack.push(child_entity);
 
-            auto& child_transform = view.get(child_entity);
+            auto& child_transform = view.get<Transform>(child_entity);
 
             // Set the world transform by decomposing the resulting matrix
             child_transform.Translate(parent_matrix.GetTranslation());
@@ -148,7 +148,7 @@ void TransformPropagator::ClearCachedTransformations(entt::registry& registry)
     auto view = registry.view<Transform>();
     for (Entity entity : view)
     {
-        auto& transform = view.get(entity);
+        auto& transform = view.get<Transform>(entity);
         transform.ClearCachedTransformation();
     }
 }

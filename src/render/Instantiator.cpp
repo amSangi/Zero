@@ -10,9 +10,9 @@ Entity Instantiator::InstantiateModel(entt::registry& registry,
                                       Entity parent)
 {
     Entity entity = registry.create();
-    registry.assign<Volume>(entity, model->GetVolume());
-    registry.assign<Material>(entity, model->GetMaterial());
-    registry.assign<ModelInstance>(entity, model->GetModelInstance());
+    registry.emplace<Volume>(entity, model->GetVolume());
+    registry.emplace<Material>(entity, model->GetMaterial());
+    registry.emplace<ModelInstance>(entity, model->GetModelInstance());
 
     zero::Transform transform = model->GetTransform();
     transform.parent_ = parent;
@@ -25,7 +25,7 @@ Entity Instantiator::InstantiateModel(entt::registry& registry,
         }
     }
 
-    registry.assign<zero::Transform>(entity, transform);
+    registry.emplace<zero::Transform>(entity, transform);
     return entity;
 }
 
@@ -88,11 +88,11 @@ Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
         }
     }
 
-    registry.assign<Volume>(entity, volume);
+    registry.emplace<Volume>(entity, volume);
     // Use default shaders
-    registry.assign<Material>(entity, Material{});
-    registry.assign<PrimitiveInstance>(entity, primitive);
-    registry.assign<Transform>(entity, transform);
+    registry.emplace<Material>(entity, Material{});
+    registry.emplace<PrimitiveInstance>(entity, primitive);
+    registry.emplace<Transform>(entity, transform);
     return entity;
 }
 
@@ -110,17 +110,17 @@ Entity Instantiator::InstantiateLight(entt::registry& registry,
     {
         case Light::Type::DIRECTIONAL:
         {
-            registry.assign<DirectionalLight>(entity_to_attach, light.GetDirectionalLight());
+            registry.emplace<DirectionalLight>(entity_to_attach, light.GetDirectionalLight());
             break;
         }
         case Light::Type::POINT:
         {
-            registry.assign<PointLight>(entity_to_attach, light.GetPointLight());
+            registry.emplace<PointLight>(entity_to_attach, light.GetPointLight());
             break;
         }
         case Light::Type::SPOT:
         {
-            registry.assign<SpotLight>(entity_to_attach, light.GetSpotLight());
+            registry.emplace<SpotLight>(entity_to_attach, light.GetSpotLight());
             break;
         }
     }
@@ -128,7 +128,7 @@ Entity Instantiator::InstantiateLight(entt::registry& registry,
     // Assign a new transform if one does not exist
     if (!registry.has<Transform>(entity_to_attach))
     {
-        registry.assign<Transform>(entity_to_attach, Transform{});
+        registry.emplace<Transform>(entity_to_attach, Transform{});
     }
 
     return entity_to_attach;

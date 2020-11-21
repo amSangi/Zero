@@ -34,7 +34,7 @@ void GLSkyDomePass::Execute(const Camera& camera, const entt::registry& registry
     auto sky_dome_view = registry.view<const SkyDome>();
     for (Entity sky_dome_entity : sky_dome_view)
     {
-        const SkyDome& sky_dome = sky_dome_view.get(sky_dome_entity);
+        const SkyDome& sky_dome = sky_dome_view.get<const SkyDome>(sky_dome_entity);
         if (sky_dome.is_active_)
         {
             RenderSkyDome(camera, sky_dome);

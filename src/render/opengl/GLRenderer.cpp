@@ -73,7 +73,7 @@ void GLRenderer::Render()
     LOG_VERBOSE(kTitle, "Rendering to cameras. Camera count: " + std::to_string(camera_view.size()));
     for (Entity camera_entity : camera_view)
     {
-        const auto& camera = camera_view.get(camera_entity);
+        const auto& camera = camera_view.get<const Camera>(camera_entity);
         render_pipeline_->Execute(camera, registry);
     }
 }

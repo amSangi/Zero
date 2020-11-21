@@ -128,7 +128,7 @@ private:
 
         // Instantiate the camera
         auto camera_entity = registry.create();
-        registry.assign<Camera>(camera_entity, Camera{Camera::ProjectionType::PERSPECTIVE});
+        registry.emplace<Camera>(camera_entity, Camera{Camera::ProjectionType::PERSPECTIVE});
         auto& camera = registry.get<Camera>(camera_entity);
         camera.viewport_.width_ = engine_config_.render_system_config_.window_config_.width_;
         camera.viewport_.height_ = engine_config_.render_system_config_.window_config_.height_;

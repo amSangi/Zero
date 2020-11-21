@@ -355,8 +355,8 @@ void GLUniformManager::UpdateLightUniforms(const entt::registry& registry) const
     auto spot_light_view = registry.view<const Transform, const SpotLight>();
     // Cap the number of lights
     auto directional_light_count = static_cast<uint32>(math::Min(kMaxDirectionalLights, directional_light_view.size()));
-    auto point_light_count = static_cast<uint32>(math::Min(kMaxPointLights, point_light_view.size()));
-    auto spot_light_count = static_cast<uint32>(math::Min(kMaxSpotLights, spot_light_view.size()));
+    auto point_light_count = static_cast<uint32>(math::Min(kMaxPointLights, point_light_view.size_hint()));
+    auto spot_light_count = static_cast<uint32>(math::Min(kMaxSpotLights, spot_light_view.size_hint()));
 
     // Light Metadata
     LightInformationData light_information_data{directional_light_count, point_light_count, spot_light_count};
@@ -388,7 +388,7 @@ void GLUniformManager::UpdateDirectionalLightUniforms(const entt::registry& regi
         {
             break;
         }
-        const auto& directional_light = directional_light_view.get(entity);
+        const auto& directional_light = directional_light_view.get<const DirectionalLight>(entity);
         DirectionalLightData data{directional_light};
         directional_light_data.push_back(data);
         ++i;
@@ -406,7 +406,7 @@ void GLUniformManager::UpdatePointLightUniforms(const entt::registry& registry) 
     auto point_light_view = registry.view<const Transform, const PointLight>();
 
     std::vector<PointLightData> point_light_data{};
-    point_light_data.reserve(point_light_view.size());
+    point_light_data.reserve(point_light_view.size_hint());
 
     for (Entity entity: point_light_view)
     {
@@ -433,7 +433,7 @@ void GLUniformManager::UpdateSpotLightUniforms(const entt::registry& registry) c
     auto spot_light_view = registry.view<const Transform, const SpotLight>();
 
     std::vector<SpotLightData> spot_light_data{};
-    spot_light_data.reserve(spot_light_view.size());
+    spot_light_data.reserve(spot_light_view.size_hint());
 
     for (Entity entity: spot_light_view)
     {

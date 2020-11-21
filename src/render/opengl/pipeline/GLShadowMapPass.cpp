@@ -140,7 +140,7 @@ bool GLShadowMapPass::GetShadowCastingDirectionalLight(const entt::registry& reg
     auto directional_light_view = registry.view<const DirectionalLight>();
     for (Entity directional_light_entity : directional_light_view)
     {
-        const DirectionalLight& directional_light = directional_light_view.get(directional_light_entity);
+        const DirectionalLight& directional_light = directional_light_view.get<const DirectionalLight>(directional_light_entity);
 
         // Retrieve the first shadow casting directional light
         if (directional_light.casts_shadows_)

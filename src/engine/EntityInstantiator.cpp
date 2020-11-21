@@ -29,7 +29,7 @@ Entity EntityInstantiator::InstantiateLight(const Light& light, Entity entity)
 Entity EntityInstantiator::InstantiateSkyDome(const SkyDome& sky_dome)
 {
     Entity entity = registry_.create();
-    registry_.assign<SkyDome>(entity, sky_dome);
+    registry_.emplace<SkyDome>(entity, sky_dome);
     return entity;
 }
 
