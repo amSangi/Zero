@@ -7,13 +7,39 @@
 namespace zero
 {
 
+    /**
+     * @brief Contains the constant, linear, and quadratic factors that are used to reduce the intensity of light rays
+     * over larger distances.
+     *
+     * Formula: 1.0 / (constant + (linear * distance) + (quadratic * distance * distance))
+     */
     struct Attenuation
     {
         Attenuation();
+
+        /**
+         * @brief Constant attenuation factor
+         *
+         * This is usually kept at 1.0 to ensure denominator never gets smaller than 1
+         */
         float constant_;
+
+        /**
+         * @brief Linear attenuation factor
+         *
+         * Linearly reduce light intensity
+         */
         float linear_;
+
+        /**
+         * @brief Quadratic attenuation factor
+         *
+         * Results in light quickly losing its brightness over distance until it eventually loses its brightness
+         * at a slower pace.
+         */
         float quadratic_;
-    };
+
+    }; // struct Attenuation
 
     /**
      * @brief Directional light component
@@ -21,11 +47,38 @@ namespace zero
     struct DirectionalLight : public Component
     {
         DirectionalLight();
+
+        /**
+         * @brief The color of the light with each coordinate in the range [0, 1]
+         */
         math::Vec3f color_;
+
+        /**
+         * @brief The direction of the spot light
+         *
+         * Defaults to <0, -1, 0>
+         */
         math::Vec3f direction_;
+
+        /**
+         * @brief The ambient intensity
+         *
+         * Controls the direct illumination on surfaces
+         */
         float ambient_intensity_;
+
+        /**
+         * @brief The diffuse intensity.
+         *
+         * Controls the indirect illumination on surfaces
+         */
         float diffuse_intensity_;
+
+        /**
+         * @brief Does this light source cast shadows?
+         */
         bool casts_shadows_;
+
     }; // struct DirectionalLight
 
     /**
@@ -34,11 +87,36 @@ namespace zero
     struct PointLight : public Component
     {
         PointLight();
+
+        /**
+         * @brief The color of the light with each coordinate in the range [0, 1]
+         */
         math::Vec3f color_;
+
+        /**
+         * @brief The ambient intensity
+         *
+         * Controls the direct illumination on surfaces
+         */
         float ambient_intensity_;
+
+        /**
+         * @brief The diffuse intensity.
+         *
+         * Controls the indirect illumination on surfaces
+         */
         float diffuse_intensity_;
+
+        /**
+         * @brief The attenuation of the spot light
+         */
         Attenuation attenuation_;
+
+        /**
+         * @brief Does this light source cast shadows?
+         */
         bool casts_shadows_;
+
     }; // struct PointLight
 
     /**
@@ -47,14 +125,58 @@ namespace zero
     struct SpotLight : public Component
     {
         SpotLight();
+
+        /**
+         * @brief The color of the light with each coordinate in the range [0, 1]
+         */
         math::Vec3f color_;
+
+        /**
+         * @brief The direction of the spot light
+         *
+         * Defaults to <0, -1, 0>
+         */
         math::Vec3f direction_;
+
+        /**
+         * @brief The ambient intensity
+         *
+         * Controls the direct illumination on surfaces
+         */
         float ambient_intensity_;
+
+        /**
+         * @brief The diffuse intensity.
+         *
+         * Controls the indirect illumination on surfaces
+         */
         float diffuse_intensity_;
+
+        /**
+         * @brief The angle from the direction vector
+         *
+         * This angle defines the center of the cone where the light is brightest
+         */
         math::Degree inner_cone_angle_;
+
+        /**
+         * @brief The larger angle from the direction vector
+         *
+         * This angle defines the smooth falloff radius from the inner cone angle.
+         * The larger the distance between the inner and outer angles, the smoother and larger the falloff.
+         */
         math::Degree outer_cone_angle_;
+
+        /**
+         * @brief The attenuation of the spot light
+         */
         Attenuation attenuation_;
+
+        /**
+         * @brief Does this light source cast shadows?
+         */
         bool casts_shadows_;
+
     }; // struct SpotLight
 
     /**

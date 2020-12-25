@@ -18,7 +18,7 @@ namespace zero::render
         /**
          * @brief Create and manage a new model
          * @param model_name the name of the model
-         * @param meshes the mesh data for the model
+         * @param mesh the mesh data for the model
          * @param transform the Transform prototype for the model
          * @param material the Material prototype for the model
          * @param volume the Volume prototype for the model
@@ -26,7 +26,7 @@ namespace zero::render
          * @return the newly created Model
          */
         virtual std::shared_ptr<Model> CreateModel(const std::string& model_name,
-                                                   const std::vector<Mesh>& meshes,
+                                                   const Mesh& meshes,
                                                    const Transform& transform,
                                                    const Material& material,
                                                    const Volume& volume,

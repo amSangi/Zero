@@ -27,7 +27,8 @@ namespace zero
         const std::vector<std::string>& GetVertexFiles();
         const std::vector<std::string>& GetFragmentFiles();
         const std::vector<std::string>& GetTextureFiles();
-        const std::vector<std::string>& GetModelFiles();
+        const std::vector<std::string>& GetOBJFiles();
+        const std::vector<std::string>& GetFBXFiles();
         ///@}
 
         /**
@@ -48,7 +49,8 @@ namespace zero
         std::vector<std::string> vertex_shader_files_;
         std::vector<std::string> fragment_shader_files_;
         std::vector<std::string> texture_files_;
-        std::vector<std::string> model_files_;
+        std::vector<std::string> obj_files_;
+        std::vector<std::string> fbx_files_;
 
     }; // class AssetManager
 

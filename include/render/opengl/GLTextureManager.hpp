@@ -77,6 +77,19 @@ namespace render
         void SetShadowMapTextures(const std::vector<std::shared_ptr<GLTexture>>& textures);
 
         /**
+         * @brief Bind the texture to the given texture unit index
+         * @param texture_unit_index the texture unit index in the range [0, GetTextureUnitCount()]
+         * @param gl_texture the texture to bind
+         */
+        void BindTexture(int32 texture_unit_index, std::shared_ptr<GLTexture> gl_texture);
+
+        /**
+         * @brief Unbind the texture unit
+         * @param texture_unit_index the texture unit index in the rage [0, GetTextureUnitCount()]
+         */
+        void UnbindTexture(int32 texture_unit_index);
+
+        /**
          * @brief Unload the image data from main memory
          */
         void UnloadImages();

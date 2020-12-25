@@ -35,32 +35,53 @@ void AssetManager::Initialize()
     texture_path.append(kTextureDirectoryName);
     texture_file_path_ = texture_path.string();
 
+    // Cache all vertex shaders in the path <parent_path>/shaders/vertex/...
+    // Files in directories under the given path will be cached as (e.g. `<nested directory>/shader_filename.glsl`)
     for (const auto& vertex_shader_entry : std::filesystem::recursive_directory_iterator(vertex_shader_path))
     {
         if (vertex_shader_entry.is_regular_file())
         {
-            vertex_shader_files_.push_back(vertex_shader_entry.path().filename().string());
+            std::string file_path = vertex_shader_entry.path().string();
+            vertex_shader_files_.push_back(file_path.erase(0, vertex_shader_file_path_.size() + 1));
         }
     }
+    // Cache all fragment shaders in the path <parent_path>/shaders/fragment/...
+    // Files in directories under the given path will be cached as (e.g. `<nested directory>/shader_filename.glsl`)
     for (const auto& fragment_shader_entry : std::filesystem::recursive_directory_iterator(fragment_shader_path))
     {
         if (fragment_shader_entry.is_regular_file())
         {
-            fragment_shader_files_.push_back(fragment_shader_entry.path().filename().string());
+            std::string file_path = fragment_shader_entry.path().string();
+            fragment_shader_files_.push_back(file_path.erase(0, fragment_shader_file_path_.size() + 1));
         }
     }
+    // Cache all 3D model files in the path <parent_path>/models/...
+    // Files in directories under the given path will be cached as (e.g. `<nested directory>/model_filename.obj`)
     for (const auto& model_entry : std::filesystem::recursive_directory_iterator(model_path))
     {
-        if (model_entry.is_regular_file() && model_entry.path().extension().string() == ".obj")
+        if (model_entry.is_regular_file())
         {
-            model_files_.push_back(model_entry.path().filename().string());
+            const std::string extension = model_entry.path().extension().string();
+            std::string local_file_path = model_entry.path().string();
+            local_file_path.erase(0, model_file_path_.size() + 1);
+            if (extension == ".obj")
+            {
+                obj_files_.push_back(local_file_path);
+            }
+            else if (extension == ".fbx")
+            {
+                fbx_files_.push_back(local_file_path);
+            }
         }
     }
+    // Cache all texture files in the path <parent_path>/textures/...
+    // Files in directories under the given path will be cached as (e.g. `<nested directory>/texture_filename.png`)
     for (const auto& texture_entry : std::filesystem::recursive_directory_iterator(texture_path))
     {
         if (texture_entry.is_regular_file())
         {
-            texture_files_.push_back(texture_entry.path().filename().string());
+            std::string file_path = texture_entry.path().string();
+            texture_files_.push_back(file_path.erase(0, texture_file_path_.size() + 1));
         }
     }
 }
@@ -80,9 +101,14 @@ const std::vector<std::string>& AssetManager::GetTextureFiles()
     return texture_files_;
 }
 
-const std::vector<std::string>& AssetManager::GetModelFiles()
+const std::vector<std::string>& AssetManager::GetOBJFiles()
 {
-    return model_files_;
+    return obj_files_;
+}
+
+const std::vector<std::string>& AssetManager::GetFBXFiles()
+{
+    return fbx_files_;
 }
 
 std::string AssetManager::GetVertexShaderFilePath(const std::string& vertex_shader) const

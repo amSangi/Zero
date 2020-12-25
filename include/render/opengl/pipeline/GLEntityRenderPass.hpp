@@ -1,8 +1,9 @@
 #pragma once
 
 #include "render/IRenderPass.hpp"
-#include "component/Transform.hpp"
+#include "component/Animator.hpp"
 #include "component/Material.hpp"
+#include "component/Transform.hpp"
 #include "component/Volume.hpp"
 #include "math/Matrix4x4.hpp"
 #include <memory>
@@ -14,9 +15,12 @@ namespace zero::render
     class GLMesh;
     class GLModelManager;
     class GLPrimitiveMeshManager;
+    class GLProgram;
     class GLSampler;
     class GLTextureManager;
     class GLUniformManager;
+    class IProgram;
+    class Model;
 
     class GLEntityRenderPass : public IRenderPass
     {
@@ -51,6 +55,35 @@ namespace zero::render
                           const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
+
+        void RenderAnimatedModel(std::shared_ptr<Model> model,
+                                 std::shared_ptr<IProgram> graphics_program,
+                                 const Animator& animator);
+        void RenderModel(std::shared_ptr<Model> model);
+
+        /**
+         * @brief Setup the graphic program for rendering
+         *
+         * Sets all material, texture, and matrix uniforms
+         *
+         * @param graphics_program the graphics program
+         * @param transform the transform component
+         * @param material the material component
+         * @param view_matrix the view matrix of the rendering camera
+         */
+        void SetupGraphicsProgram(std::shared_ptr<GLProgram> graphics_program,
+                                  const Transform& transform,
+                                  const Material& material,
+                                  const math::Matrix4x4& view_matrix);
+
+        /**
+         * @brief Cleanup the graphics program
+         *
+         * Unbinds all textures from the texture units
+         *
+         * @param graphics_program the graphics program
+         */
+        void CleanupGraphicsProgram(std::shared_ptr<GLProgram> graphics_program);
 
         static void ToggleWireframeMode(bool enable_wireframe_mode);
         static void ToggleBackfaceCulling(bool enable_backface_culling);

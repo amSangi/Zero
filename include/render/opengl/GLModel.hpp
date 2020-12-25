@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <vector>
+#include "render/AnimationData.hpp"
 #include "render/Model.hpp"
 #include "render/opengl/GLMesh.hpp"
 
@@ -17,9 +17,13 @@ namespace zero::render
 
         /**
          * @brief Constructor. GLModels should be created through CreateGLModel.
-         * @param meshes the different meshes that make up the model
+         * @param mesh the mesh data
+         * @param transform the Transform prototype
+         * @param material the Material prototype
+         * @param volume the Volume prototype
+         * @param model_instance the ModelInstance prototype
          */
-        GLModel(std::vector<std::shared_ptr<GLMesh>> meshes,
+        GLModel(std::shared_ptr<GLMesh> mesh,
                 Transform transform,
                 Material material,
                 Volume volume,
@@ -33,11 +37,8 @@ namespace zero::render
         void Draw() override;
 
     private:
-
-        /**
-         * @brief The different meshes that make up the model
-         */
-        std::vector<std::shared_ptr<GLMesh>> meshes_;
+        std::shared_ptr<GLMesh> mesh_;
+        std::shared_ptr<AnimationData> animation_data_;
 
     }; // class GLModel
 

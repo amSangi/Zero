@@ -32,25 +32,13 @@ namespace zero
         /**
          * @brief Default constructor
          */
-        HierarchyComponent()
-        : Component()
-        , parent_(NullEntity)
-        , children_()
-        , state_(State::IDLE)
-        , keep_children_alive_(false)
-        {}
+        HierarchyComponent();
 
         /**
          * @brief Construct with a given parent entity
          * @param parent the parent of this component
          */
-        explicit HierarchyComponent(Entity parent)
-        : Component()
-        , parent_(parent)
-        , children_()
-        , state_(State::IDLE)
-        , keep_children_alive_(false)
-        {}
+        explicit HierarchyComponent(Entity parent);
 
         /**
          * @brief The parent entity

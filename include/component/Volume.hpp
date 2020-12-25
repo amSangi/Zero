@@ -48,6 +48,7 @@ namespace zero
          * @brief The bounding sphere of the entity
          */
         math::Sphere bounding_volume_;
+
     }; // struct Volume
 
 } // namespace zero

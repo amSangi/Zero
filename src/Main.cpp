@@ -155,17 +155,36 @@ private:
     void SetupModel()
     {
         entt::registry& registry = GetCore()->GetRegistry();
-        // Instantiate a 3D model
-        auto model_entity = GetInstantiator()->InstantiateModel("IllidanLegion.obj");
-        auto& model_material = registry.get<Material>(model_entity);
-        model_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-        model_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-        model_material.texture_map_.diffuse_map_ = "IllidanLegion_illidan2.png";
-        model_material.wireframe_enabled_ = false;
-        model_material.visible_ = true;
-        model_material.specular_exponent_ = 32.0F;
-        auto& transform = registry.get<Transform>(model_entity);
-        transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
+        {
+            // Instantiate a 3D model
+            auto model_entity = GetInstantiator()->InstantiateModel("illidan\\IllidanLegion.obj");
+            auto& model_material = registry.get<Material>(model_entity);
+            model_material.shaders_.vertex_shader_ = "model.vertex.glsl";
+            model_material.shaders_.fragment_shader_ = "model.fragment.glsl";
+            model_material.texture_map_.diffuse_map_ = "IllidanLegion_illidan2.png";
+            model_material.wireframe_enabled_ = false;
+            model_material.visible_ = true;
+            model_material.specular_exponent_ = 32.0F;
+            auto& transform = registry.get<Transform>(model_entity);
+            transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
+        }
+        {
+            // Instantiate an animated 3D model
+            auto model_entity = GetInstantiator()->InstantiateModel("biped-robot\\source\\Robot.FBX");
+            if (model_entity == zero::NullEntity)
+            {
+                return;
+            }
+            auto& model_material = registry.get<Material>(model_entity);
+            model_material.shaders_.vertex_shader_ = "model.vertex.glsl";
+            model_material.shaders_.fragment_shader_ = "model.fragment.glsl";
+            model_material.wireframe_enabled_ = false;
+            model_material.visible_ = true;
+            model_material.specular_exponent_ = 32.0F;
+            auto& transform = registry.get<Transform>(model_entity);
+            transform.Translate(math::Vec3f(0.0F, -2.0F, -10.0F));
+            transform.Scale(math::Vec3f(0.10F));
+        }
     }
     void SetupPrimitives()
     {

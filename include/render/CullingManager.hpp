@@ -17,7 +17,7 @@ namespace render
      *
      * These functions perform different culling techniques on entities in the scene.
      *
-     * Current techniques employed:
+     * Current techniques performed:
      * - View frustrum culling
      *
      * Techniques that need to be implemented:
@@ -35,6 +35,12 @@ namespace render
          * Culling Strategies Performed:
          * - View frustrum culling
          *
+         * Renderable entities without the following components will be culled:
+         *     - Transform                          (Used for positioning)
+         *     - Material                           (Used for graphic program uniforms)
+         *     - Volume                             (Used for culling)
+         *     - ModelInstance or PrimitiveInstance (Used for mesh data)
+         *
          * @param camera the camera to render to
          * @param registry the registry containing all the entities and their components
          * @return a list of renderable entities
@@ -43,6 +49,12 @@ namespace render
 
         /**
          * @brief Retrieve all entities that emit shadows and are not culled by the given box
+         *
+         * Renderable entities without the following components will be culled:
+         *     - Transform                          (Used for positioning)
+         *     - Material                           (Used for graphic program uniforms)
+         *     - Volume                             (Used for culling)
+         *     - ModelInstance or PrimitiveInstance (Used for mesh data)
          *
          * @param box the boundaries of the directional light
          * @param registry the registry containing all the entities and their components

@@ -19,7 +19,7 @@ namespace zero::render
          * @see IModelManager::CreateModel
          */
         std::shared_ptr<Model> CreateModel(const std::string& model_name,
-                                           const std::vector<Mesh>& meshes,
+                                           const Mesh& meshes,
                                            const Transform& transform,
                                            const Material& material,
                                            const Volume& volume,

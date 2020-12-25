@@ -165,9 +165,6 @@ void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
 
     for (Entity viewable_entity : viewable_entities)
     {
-        assert(renderable_view.contains(viewable_entity));
-        assert(model_view.contains(viewable_entity) || primitive_view.contains(viewable_entity));
-
         const Transform& transform = renderable_view.get<const Transform>(viewable_entity);
         const Material& material = renderable_view.get<const Material>(viewable_entity);
 
@@ -181,8 +178,7 @@ void GLShadowMapPass::RenderEntities(const math::Matrix4x4& light_view_matrix,
 
         // Bind the diffuse texture for alpha mapped objects
         std::shared_ptr<GLTexture> gl_diffuse_texture = gl_texture_manager_->GetGLTexture(material.texture_map_.diffuse_map_);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(gl_diffuse_texture->GetTarget(), gl_diffuse_texture->GetNativeIdentifier());
+        gl_texture_manager_->BindTexture(0, gl_diffuse_texture);
 
         // Draw the mesh
         if (model_view.contains(viewable_entity))

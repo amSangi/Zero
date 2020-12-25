@@ -10,20 +10,17 @@ GLModelManager::GLModelManager()
 }
 
 std::shared_ptr<Model> GLModelManager::CreateModel(const std::string& model_name,
-                                                   const std::vector<Mesh>& meshes,
+                                                   const Mesh& mesh,
                                                    const Transform& transform,
                                                    const Material& material,
                                                    const Volume& volume,
                                                    const ModelInstance& model_instance)
 {
-    std::vector<std::shared_ptr<GLMesh>> gl_meshes{};
-    gl_meshes.reserve(meshes.size());
-    for (const Mesh& mesh : meshes)
-    {
-        gl_meshes.push_back(std::make_shared<GLMesh>(mesh.GetVertices(), mesh.GetIndices()));
-    }
-
-    auto model = std::make_shared<GLModel>(std::move(gl_meshes), transform, material, volume, model_instance);
+    auto model = std::make_shared<GLModel>(std::make_shared<GLMesh>(mesh.GetVertices(), mesh.GetIndices()),
+                                           transform,
+                                           material,
+                                           volume,
+                                           model_instance);
     model_map_.emplace(model_name, model);
     return model;
 }

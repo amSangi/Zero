@@ -3,7 +3,9 @@ project(ZeroCore)
 set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
 
 ## Create Library ##
-add_library(${PROJECT_NAME} component/Camera.cpp
+add_library(${PROJECT_NAME} component/Animator.cpp
+                            component/Camera.cpp
+                            component/Component.cpp
                             component/Light.cpp
                             component/Material.cpp
                             component/PrimitiveInstance.cpp

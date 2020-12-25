@@ -185,12 +185,20 @@ void GLRenderer::InitializeModels()
 {
     AssetManager& asset_manager = engine_core_->GetAssetManager();
 
-    const std::vector<std::string>& model_files = asset_manager.GetModelFiles();
-    LOG_DEBUG(kTitle, "Pre-loading models. Model count: " + std::to_string(model_files.size()));
-    for (const auto& model_file : model_files)
+    const std::vector<std::string>& obj_files = asset_manager.GetOBJFiles();
+    LOG_DEBUG(kTitle, "Loading OBJ models. Model count: " + std::to_string(obj_files.size()));
+    for (const auto& obj_file : obj_files)
     {
-        std::string model_file_path = asset_manager.GetModelFilePath(model_file);
-        model_loader_->LoadModel(model_file, model_file_path);
+        std::string model_file_path = asset_manager.GetModelFilePath(obj_file);
+        model_loader_->LoadOBJModel(obj_file, model_file_path);
+    }
+
+    const std::vector<std::string>& fbx_files = asset_manager.GetOBJFiles();
+    LOG_DEBUG(kTitle, "Loading FBX models. Model count: " + std::to_string(fbx_files.size()));
+    for (const auto& fbx_file : fbx_files)
+    {
+        std::string model_file_path = asset_manager.GetModelFilePath(fbx_file);
+        model_loader_->LoadOBJModel(fbx_file, model_file_path);
     }
 }
 

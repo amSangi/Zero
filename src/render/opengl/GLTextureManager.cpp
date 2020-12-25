@@ -101,6 +101,19 @@ void GLTextureManager::SetShadowMapTextures(const std::vector<std::shared_ptr<GL
     shadow_map_textures_ = textures;
 }
 
+void GLTextureManager::BindTexture(int32 texture_unit_index, std::shared_ptr<GLTexture> gl_texture)
+{
+    glActiveTexture(GL_TEXTURE0 + texture_unit_index);
+    glBindTexture(gl_texture->GetTarget(), gl_texture->GetNativeIdentifier());
+
+}
+
+void GLTextureManager::UnbindTexture(int32 texture_unit_index)
+{
+    glActiveTexture(GL_TEXTURE0 + texture_unit_index);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void GLTextureManager::UnloadImages()
 {
     for (const auto& image_pair : image_map_)

@@ -22,7 +22,10 @@ namespace zero::render
          * @param volume the volume component prototype
          * @param model_instance the model instance component prototype
          */
-        Model(Transform transform, Material material, Volume volume, ModelInstance model_instance);
+        Model(Transform transform,
+              Material material,
+              Volume volume,
+              ModelInstance model_instance);
 
         virtual ~Model() = default;
 

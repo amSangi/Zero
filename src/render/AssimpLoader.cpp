@@ -1,31 +1,41 @@
 #include "render/AssimpLoader.hpp"
+#include "core/Logger.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-
 namespace zero::render
 {
+
+constexpr auto kLogTitle = "AssimpLoader";
 
 AssimpLoader::AssimpLoader(IModelManager* model_manager)
 : model_manager_(model_manager)
 {
 }
 
-void AssimpLoader::LoadModel(const std::string& model_name, const std::string& model_file_path)
+void AssimpLoader::LoadOBJModel(const std::string& model_name, const std::string& obj_file_path)
 {
     Assimp::Importer importer{};
-    auto flags = aiProcess_Triangulate
-               | aiProcess_OptimizeMeshes
-               | aiProcess_OptimizeGraph
-               | aiProcess_GenNormals
-               | aiProcess_GenBoundingBoxes
-               | aiProcess_ImproveCacheLocality
-               | aiProcess_FlipUVs;
-    const aiScene* scene = importer.ReadFile(model_file_path.c_str(), flags);
+    const aiScene* scene = importer.ReadFile(obj_file_path.c_str(), GetOBJImportFlags());
 
-    if (!scene || (scene->mFlags & static_cast<unsigned>(AI_SCENE_FLAGS_INCOMPLETE)) || !scene->mRootNode)
+    if (!scene || !scene->mRootNode)
     {
+        LOG_ERROR(kLogTitle, "Failed to load Wavefront OBJ model: " + obj_file_path);
+        return;
+    }
+
+    LoadModel(model_name, scene, scene->mRootNode);
+}
+
+void AssimpLoader::LoadFBXModel(const std::string& model_name, const std::string& fbx_file_path)
+{
+    Assimp::Importer importer{};
+    const aiScene* scene = importer.ReadFile(fbx_file_path.c_str(), GetFBXImportFlags());
+
+    if (!scene || !scene->mRootNode)
+    {
+        LOG_ERROR(kLogTitle, "Failed to load FBX model: " + fbx_file_path);
         return;
     }
 
@@ -60,26 +70,20 @@ std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, co
         material.texture_map_.normal_map_  = path.C_Str();
     }
 
+    // Supports only one mesh per node
     // Load volume prototype and mesh data
+    aiMesh* ai_mesh = scene->mMeshes[node->mMeshes[0]];
     Volume volume{};
-    std::vector<Mesh> meshes{};
-    for (uint32 i = 0; i < node->mNumMeshes; ++i)
-    {
-        aiMesh* ai_mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(LoadMesh(ai_mesh));
-
-        // Expand volume
-        aiAABB& aabb = ai_mesh->mAABB;
-        math::Vec3f min{aabb.mMin.x, aabb.mMin.y, aabb.mMin.z};
-        math::Vec3f max{aabb.mMax.x, aabb.mMax.y, aabb.mMax.z};
-        volume.Engulf(Volume{min, max});
-    }
+    aiAABB& aabb = ai_mesh->mAABB;
+    math::Vec3f min{aabb.mMin.x, aabb.mMin.y, aabb.mMin.z};
+    math::Vec3f max{aabb.mMax.x, aabb.mMax.y, aabb.mMax.z};
+    volume.Engulf(Volume{min, max});
 
     // Load model instance prototype and construct root model
     ModelInstance model_instance{};
     model_instance.model_name_ = model_name;
     model_instance.node_name_ = node->mName.C_Str();
-    auto root_model = model_manager_->CreateModel(model_name, meshes, transform, material, volume, model_instance);
+    auto root_model = model_manager_->CreateModel(model_name, LoadMesh(ai_mesh), transform, material, volume, model_instance);
 
     // Construct child models
     for (uint32 i = 0; i < node->mNumChildren; ++i)
@@ -123,5 +127,30 @@ Mesh AssimpLoader::LoadMesh(aiMesh* mesh) const
 
     return Mesh{std::move(vertices), std::move(indices)};
 }
+
+uint32 AssimpLoader::GetOBJImportFlags() const
+{
+    uint32 flags = aiProcess_FlipUVs
+                 | aiProcess_GenBoundingBoxes
+                 | aiProcess_GenNormals
+                 | aiProcess_ImproveCacheLocality
+                 | aiProcess_OptimizeGraph
+                 | aiProcess_OptimizeMeshes
+                 | aiProcess_Triangulate;
+    return flags;
+}
+
+uint32 AssimpLoader::GetFBXImportFlags() const
+{
+    uint32 flags = aiProcess_FlipUVs
+                   | aiProcess_GenBoundingBoxes
+                   | aiProcess_GenNormals
+                   | aiProcess_LimitBoneWeights
+                   | aiProcess_OptimizeMeshes
+                   | aiProcess_OptimizeGraph
+                   | aiProcess_Triangulate;
+    return flags;
+}
+
 
 } // namespace zero::render
