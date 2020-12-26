@@ -73,7 +73,7 @@ TEST_F(TestTransformPropagator, RemoveChild_ValidChild)
 TEST_F(TestTransformPropagator, DetachChildren_NoChildren)
 {
     Entity entity = registry_.create();
-    auto& transform = registry_.assign<Transform>(entity);
+    auto& transform = registry_.emplace<Transform>(entity);
     EXPECT_EQ(transform.children_.size(), 0);
     TransformPropagator::RemoveChildren(registry_, entity);
     EXPECT_EQ(transform.children_.size(), 0);
