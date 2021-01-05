@@ -5,12 +5,12 @@
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLUniformManager.hpp"
 #include "render/opengl/GLModel.hpp"
+#include "render/Constants.hpp"
 #include "render/CullingManager.hpp"
 
 namespace zero::render
 {
 
-const uint32 GLShadowMapPass::kShadowCascadeCount = GLUniformManager::kShadowCascadeCount;
 const std::string GLShadowMapPass::kShadowMapFragmentShaderName = "shadow_map.fragment.glsl";
 
 GLShadowMapPass::GLShadowMapPass(GLCompiler* gl_compiler,
@@ -25,10 +25,10 @@ GLShadowMapPass::GLShadowMapPass(GLCompiler* gl_compiler,
 , gl_primitive_mesh_manager_(gl_primitive_mesh_manager)
 , gl_uniform_manager_(gl_uniform_manager)
 , gl_texture_manager_(gl_texture_manager)
-, cascaded_shadow_map_(kShadowCascadeCount)
+, cascaded_shadow_map_(Constants::kShadowCascadeCount)
 , shadow_map_width_(width)
 , shadow_map_height_(height)
-, fbo_ids_(kShadowCascadeCount, 0)
+, fbo_ids_(Constants::kShadowCascadeCount, 0)
 , shadow_map_textures_()
 , diffuse_map_sampler_(std::make_shared<GLSampler>())
 {
@@ -55,7 +55,7 @@ void GLShadowMapPass::Initialize()
 void GLShadowMapPass::InitializeTextures()
 {
     // Setup opengl textures
-    for (uint32 i = 0; i < kShadowCascadeCount; ++i)
+    for (uint32 i = 0; i < Constants::kShadowCascadeCount; ++i)
     {
         GLuint shadow_map_texture_id = 0;
         glGenTextures(1, &shadow_map_texture_id);
@@ -81,7 +81,7 @@ void GLShadowMapPass::InitializeFrameBufferObjects()
 
     // Setup opengl frame buffer objects and bind to previously created textures
     glGenFramebuffers(fbo_ids_.size(), fbo_ids_.data());
-    for (uint32 i = 0; i < kShadowCascadeCount; ++i)
+    for (uint32 i = 0; i < Constants::kShadowCascadeCount; ++i)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbo_ids_[i]);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadow_map_textures_[i]->GetNativeIdentifier(), 0);
@@ -91,7 +91,9 @@ void GLShadowMapPass::InitializeFrameBufferObjects()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GLShadowMapPass::Execute(const Camera& camera, const entt::registry& registry)
+void GLShadowMapPass::Execute(const Camera& camera,
+                              const entt::registry& registry,
+                              const TimeDelta& /* time_delta */)
 {
     // Only perform shadow maps on one active directional light
     DirectionalLight directional_light{};
@@ -107,7 +109,7 @@ void GLShadowMapPass::Execute(const Camera& camera, const entt::registry& regist
     std::vector<math::Box> world_bounding_boxes = cascaded_shadow_map_.GetWorldBoundingBoxes();
 
     // Render depth maps from the point of view of the directional light
-    for (uint32 cascade_index = 0; cascade_index < kShadowCascadeCount; ++cascade_index)
+    for (uint32 cascade_index = 0; cascade_index < Constants::kShadowCascadeCount; ++cascade_index)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbo_ids_[cascade_index]);
         UpdateGLSettings();

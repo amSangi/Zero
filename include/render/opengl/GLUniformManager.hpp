@@ -25,27 +25,6 @@ namespace render
     class GLUniformManager final : public NonCopyable
     {
     public:
-        //////////////////////////////////////////////////
-        ///// Maximum Uniform Counts
-        //////////////////////////////////////////////////
-
-        /**
-         * @brief The maximum directional light count
-         */
-        static constexpr uint32 kMaxDirectionalLights = 4U;
-        /**
-         * @brief The maximum point light count
-         */
-        static constexpr uint32 kMaxPointLights = 4U;
-        /**
-         * @brief The maximum spot light count
-         */
-        static constexpr uint32 kMaxSpotLights = 4U;
-        /**
-         * @brief The number of cascades used in Cascaded Shadow Mapping
-         */
-        static constexpr uint32 kShadowCascadeCount = 3U;
-
 
         GLUniformManager();
         ~GLUniformManager();

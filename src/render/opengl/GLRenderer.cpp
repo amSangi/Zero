@@ -62,7 +62,7 @@ void GLRenderer::Initialize(const RenderSystemConfig& config)
     InitializeRenderPasses(config);
 }
 
-void GLRenderer::Render()
+void GLRenderer::Render(const TimeDelta& time_delta)
 {
     entt::registry& registry = engine_core_->GetRegistry();
     LOG_VERBOSE(kTitle, "Updating light uniforms");
@@ -74,7 +74,7 @@ void GLRenderer::Render()
     for (Entity camera_entity : camera_view)
     {
         const auto& camera = camera_view.get<const Camera>(camera_entity);
-        render_pipeline_->Execute(camera, registry);
+        render_pipeline_->Execute(camera, registry, time_delta);
     }
 }
 

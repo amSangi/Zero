@@ -21,7 +21,9 @@ GLSkyDomePass::GLSkyDomePass(GLCompiler* gl_compiler,
     gl_sphere_ = gl_primitive_mesh_manager_->GetPrimitiveMesh(primitive_instance);
 }
 
-void GLSkyDomePass::Execute(const Camera& camera, const entt::registry& registry)
+void GLSkyDomePass::Execute(const Camera& camera,
+                            const entt::registry& registry,
+                            const TimeDelta& /* time_delta */)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     UpdateGLSettings(camera);

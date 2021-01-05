@@ -35,7 +35,7 @@ namespace zero::render
         /**
          * @brief IRenderPass::Execute
          */
-        void Execute(const Camera& camera, const entt::registry& registry) override;
+        void Execute(const Camera& camera, const entt::registry& registry, const TimeDelta& time_delta) override;
 
     private:
         /**
@@ -58,7 +58,8 @@ namespace zero::render
 
         void RenderAnimatedModel(std::shared_ptr<Model> model,
                                  std::shared_ptr<IProgram> graphics_program,
-                                 const Animator& animator);
+                                 const Animator& animator,
+                                 const TimeDelta& time_delta);
         void RenderModel(std::shared_ptr<Model> model);
 
         /**

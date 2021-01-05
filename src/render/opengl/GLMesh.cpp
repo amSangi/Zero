@@ -21,12 +21,18 @@ GLMesh::GLMesh(const std::vector<Vertex>& vertices, const std::vector<uint32>& i
     constexpr uint32 position_attribute_index = 0;
     constexpr uint32 normal_attribute_index = 1;
     constexpr uint32 uv_attribute_index = 2;
+    constexpr uint32 bone_id_attribute_index = 3;
+    constexpr uint32 bone_weight_attribute_index = 4;
     glEnableVertexAttribArray(position_attribute_index);
     glEnableVertexAttribArray(normal_attribute_index);
     glEnableVertexAttribArray(uv_attribute_index);
-    glVertexAttribPointer(position_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_)));
-    glVertexAttribPointer(normal_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal_)));
-    glVertexAttribPointer(uv_attribute_index, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, texture_coordinate_)));
+    glEnableVertexAttribArray(bone_id_attribute_index);
+    glEnableVertexAttribArray(bone_weight_attribute_index);
+    glVertexAttribPointer(position_attribute_index,    3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_)));
+    glVertexAttribPointer(normal_attribute_index,      3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal_)));
+    glVertexAttribPointer(uv_attribute_index,          2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, texture_coordinate_)));
+    glVertexAttribPointer(bone_id_attribute_index,     4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_ids_)));
+    glVertexAttribPointer(bone_weight_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_weights_)));
 
     glGenBuffers(1, &index_vbo_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_vbo_);

@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 #include "component/Camera.hpp"
+#include "core/TimeDelta.hpp"
 
 namespace zero::render
 {
@@ -25,8 +26,10 @@ namespace zero::render
          *
          * @param camera the camera to render to
          * @param registry the registry containing all the game entities and their components
+         * @param time_delta updated timing information since the last engine tick
          */
-        virtual void Execute(const Camera& camera, const entt::registry& registry) = 0;
+        virtual void Execute(const Camera& camera, const entt::registry& registry, const TimeDelta& time_delta) = 0;
+
     }; // interface IRenderPass
 
 } // namespace zero::render

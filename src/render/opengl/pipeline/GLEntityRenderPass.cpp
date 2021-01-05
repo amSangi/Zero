@@ -8,6 +8,7 @@
 #include "render/opengl/GLTexture.hpp"
 #include "render/opengl/GLTextureManager.hpp"
 #include "render/opengl/GLUniformManager.hpp"
+#include "render/Constants.hpp"
 #include "render/CullingManager.hpp"
 
 namespace zero::render
@@ -44,7 +45,9 @@ GLEntityRenderPass::GLEntityRenderPass(GLCompiler* gl_compiler,
     diffuse_map_sampler_->SetWrappingT(ISampler::Wrapping::REPEAT);
 }
 
-void GLEntityRenderPass::Execute(const Camera& camera, const entt::registry& registry)
+void GLEntityRenderPass::Execute(const Camera& camera,
+                                 const entt::registry& registry,
+                                 const TimeDelta& time_delta)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     UpdateGLSettings(camera);
@@ -90,7 +93,7 @@ void GLEntityRenderPass::Execute(const Camera& camera, const entt::registry& reg
             if (animated_model_view.contains(viewable_entity))
             {
                 const Animator& animator = animated_model_view.get<const Animator>(viewable_entity);
-                RenderAnimatedModel(model, graphics_program, animator);
+                RenderAnimatedModel(model, graphics_program, animator, time_delta);
             }
             else
             {
@@ -109,17 +112,29 @@ void GLEntityRenderPass::Execute(const Camera& camera, const entt::registry& reg
 
 void GLEntityRenderPass::RenderAnimatedModel(std::shared_ptr<Model> model,
                          std::shared_ptr<IProgram> graphics_program,
-                         const Animator& animator)
+                         const Animator& animator,
+                         const TimeDelta& time_delta)
 {
-    // TODO: Render an animated model
-    // Steps:
-    // - Interpolate bone matrices
-    // - Update bone matrices
-    // - Render model
-    if (model)
+    if (model == nullptr)
     {
-        model->Draw();
+        return;
     }
+
+    // TODO: Render an animated model
+    // Retrieve bone matrices from model for current animation
+    // std::vector<Bone> bones = model.GetAnimationData().GetBones(animator.GetCurrentAnimation());
+
+    // Interpolate bone animation transformations
+    // InterpolateAnimation(bones, time_delta);
+
+    // Set bone uniforms
+    // graphics_program->FlushUniform("bones[0]", bones[0].ToMatrix4x4());
+    // graphics_program->FlushUniform("bones[1]", bones[0].ToMatrix4x4());
+    // ...
+    // graphics_program->FlushUniform("bone_count", bones.size());
+
+    // Enable mesh bone attributes
+    // model->AnimatedDraw();
 }
 
 void GLEntityRenderPass::RenderModel(std::shared_ptr<Model> model)
@@ -188,7 +203,7 @@ void GLEntityRenderPass::SetupGraphicsProgram(std::shared_ptr<GLProgram> graphic
 
     // Set shadow map sampler uniforms
     std::vector<std::shared_ptr<GLTexture>> shadow_map_textures = gl_texture_manager_->GetShadowMapTextures();
-    for (int32 texture_unit_index = 0; texture_unit_index < GLUniformManager::kShadowCascadeCount; ++texture_unit_index)
+    for (int32 texture_unit_index = 0; texture_unit_index < Constants::kShadowCascadeCount; ++texture_unit_index)
     {
         // Map sampler2D uniform name with the texture unit
         std::shared_ptr<GLTexture> shadow_map_texture = shadow_map_textures[texture_unit_index];
@@ -199,7 +214,7 @@ void GLEntityRenderPass::SetupGraphicsProgram(std::shared_ptr<GLProgram> graphic
 
     // Set diffuse texture sampler uniform
     // Use the next available texture unit (after all shadow map texture units)
-    int32 diffuse_texture_unit_index = GLUniformManager::kShadowCascadeCount;
+    int32 diffuse_texture_unit_index = Constants::kShadowCascadeCount;
     graphics_program->SetUniform(GLUniformManager::GetDiffuseSamplerName(), diffuse_texture_unit_index);
     std::shared_ptr<GLTexture> gl_diffuse_texture = gl_texture_manager_->GetGLTexture(material.texture_map_.diffuse_map_);
     gl_texture_manager_->BindTexture(diffuse_texture_unit_index, gl_diffuse_texture);
@@ -211,7 +226,7 @@ void GLEntityRenderPass::SetupGraphicsProgram(std::shared_ptr<GLProgram> graphic
 void GLEntityRenderPass::CleanupGraphicsProgram(std::shared_ptr<GLProgram> graphics_program)
 {
     // Unbind the shadow map and diffuse textures
-    for (int32 texture_unit_index = 0; texture_unit_index < GLUniformManager::kShadowCascadeCount + 1; ++texture_unit_index)
+    for (int32 texture_unit_index = 0; texture_unit_index < Constants::kShadowCascadeCount + 1; ++texture_unit_index)
     {
         gl_texture_manager_->UnbindTexture(texture_unit_index);
     }

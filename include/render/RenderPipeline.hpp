@@ -4,6 +4,7 @@
 #include <memory>
 #include <entt/entt.hpp>
 #include "component/Camera.hpp"
+#include "core/TimeDelta.hpp"
 
 namespace zero::render
 {
@@ -31,8 +32,9 @@ namespace zero::render
          * @brief Execute the render passes sequentially
          * @param camera the camera to render to
          * @param registry the registry containing all the game entities and their components
+         * @param time_delta updated timing information since the last engine tick
          */
-        void Execute(const Camera& camera, entt::registry& registry);
+        void Execute(const Camera& camera, entt::registry& registry, const TimeDelta& time_delta);
 
     private:
         /**

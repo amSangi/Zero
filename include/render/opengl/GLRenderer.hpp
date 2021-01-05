@@ -48,7 +48,7 @@ namespace render
         /**
          * @see IRenderer::Render
          */
-        void Render() override;
+        void Render(const TimeDelta& time_delta) override;
 
         /**
          * @brief Release the images in the TextureManager from main memory

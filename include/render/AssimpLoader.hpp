@@ -41,7 +41,7 @@ namespace zero::render
 
     private:
         std::shared_ptr<Model> LoadModel(const std::string& model_name, const aiScene* scene, const aiNode* node);
-        Mesh LoadMesh(aiMesh* mesh) const;
+        Mesh LoadMesh(aiMesh* ai_mesh) const;
 
         uint32 GetOBJImportFlags() const;
         uint32 GetFBXImportFlags() const;

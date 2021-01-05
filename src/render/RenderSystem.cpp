@@ -33,7 +33,7 @@ void RenderSystem::PreUpdate()
 void RenderSystem::Update(const TimeDelta& time_delta)
 {
     LOG_VERBOSE(kTitle, "Rendering entities");
-    renderer_->Render();
+    renderer_->Render(time_delta);
     LOG_VERBOSE(kTitle, "Swapping buffers");
     window_->SwapBuffers();
 }

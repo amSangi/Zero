@@ -22,7 +22,7 @@ namespace zero::render
         /**
          * @brief IRenderPass::Execute
          */
-        void Execute(const Camera& camera, const entt::registry& registry) override;
+        void Execute(const Camera& camera, const entt::registry& registry, const TimeDelta& time_delta) override;
 
     private:
         /**

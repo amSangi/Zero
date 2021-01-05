@@ -16,7 +16,7 @@ namespace internal
      * @tparam dims The dimensions of the vector
      * @tparam T The vector element type
      */
-    template<int dims, class T>
+    template<uint16 dims, class T>
     class VectorBase
     {
     public:
@@ -111,6 +111,12 @@ namespace internal
 
         ~Vector<dims, T>() = default;
         Vector<dims, T>& operator=(const Vec& other) = default;
+
+        /**
+         * @brief Get the dimensions of the vector
+         * @return the dimensions
+         */
+        inline constexpr uint16 GetDimensions() const { return dims; }
 
         /**
          * @brief Get the component at the index

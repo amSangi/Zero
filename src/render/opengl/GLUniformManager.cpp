@@ -2,6 +2,7 @@
 #include "component/Light.hpp"
 #include "component/Material.hpp"
 #include "component/Transform.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -166,15 +167,15 @@ struct alignas(16) ShadowMapInformation
     : cascade_far_bounds_()
     , shadow_map_matrices_()
     {
-        for (uint32 i = 0; i < GLUniformManager::kShadowCascadeCount; ++i)
+        for (uint32 i = 0; i < Constants::kShadowCascadeCount; ++i)
         {
 	        shadow_map_matrices_[i] = shadow_map_matrices[i].Transpose();
 	        cascade_far_bounds_[i].z_ = cascade_far_bounds[i];
         }
     }
 
-    math::Matrix4x4 shadow_map_matrices_[GLUniformManager::kShadowCascadeCount];
-    math::Vec4f cascade_far_bounds_[GLUniformManager::kShadowCascadeCount];
+    math::Matrix4x4 shadow_map_matrices_[Constants::kShadowCascadeCount];
+    math::Vec4f cascade_far_bounds_[Constants::kShadowCascadeCount];
 };
 
 //////////////////////////////////////////////////
@@ -269,7 +270,7 @@ void GLUniformManager::InitializeDirectionalLightUniformBuffer()
 {
     glGenBuffers(1, &directional_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, directional_light_buffer_id_);
-    uint32 buffer_size = (sizeof(DirectionalLightData) * kMaxDirectionalLights);
+    uint32 buffer_size = (sizeof(DirectionalLightData) * Constants::kMaxDirectionalLights);
     glBufferData(GL_UNIFORM_BUFFER, buffer_size, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kDirectionalLightBindingIndex, directional_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -279,7 +280,7 @@ void GLUniformManager::InitializePointLightUniformBuffer()
 {
     glGenBuffers(1, &point_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, point_light_buffer_id_);
-    uint32 buffer_size = (sizeof(PointLightData) * kMaxPointLights);
+    uint32 buffer_size = (sizeof(PointLightData) * Constants::kMaxPointLights);
     glBufferData(GL_UNIFORM_BUFFER, buffer_size, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kPointLightBindingIndex, point_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -289,7 +290,7 @@ void GLUniformManager::InitializeSpotLightUniformBuffer()
 {
     glGenBuffers(1, &spot_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, spot_light_buffer_id_);
-    uint32 buffer_size = (sizeof(SpotLightData) * kMaxSpotLights);
+    uint32 buffer_size = (sizeof(SpotLightData) * Constants::kMaxSpotLights);
     glBufferData(GL_UNIFORM_BUFFER, buffer_size, nullptr, GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, kSpotLightBindingIndex, spot_light_buffer_id_);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -354,9 +355,9 @@ void GLUniformManager::UpdateLightUniforms(const entt::registry& registry) const
     auto point_light_view = registry.view<const Transform, const PointLight>();
     auto spot_light_view = registry.view<const Transform, const SpotLight>();
     // Cap the number of lights
-    auto directional_light_count = static_cast<uint32>(math::Min(kMaxDirectionalLights, directional_light_view.size()));
-    auto point_light_count = static_cast<uint32>(math::Min(kMaxPointLights, point_light_view.size_hint()));
-    auto spot_light_count = static_cast<uint32>(math::Min(kMaxSpotLights, spot_light_view.size_hint()));
+    auto directional_light_count = static_cast<uint32>(math::Min(Constants::kMaxDirectionalLights, directional_light_view.size()));
+    auto point_light_count = static_cast<uint32>(math::Min(Constants::kMaxPointLights, point_light_view.size_hint()));
+    auto spot_light_count = static_cast<uint32>(math::Min(Constants::kMaxSpotLights, spot_light_view.size_hint()));
 
     // Light Metadata
     LightInformationData light_information_data{directional_light_count, point_light_count, spot_light_count};
@@ -384,7 +385,7 @@ void GLUniformManager::UpdateDirectionalLightUniforms(const entt::registry& regi
 
     for (Entity entity : directional_light_view)
     {
-        if (i >= kMaxDirectionalLights)
+        if (i >= Constants::kMaxDirectionalLights)
         {
             break;
         }
@@ -410,7 +411,7 @@ void GLUniformManager::UpdatePointLightUniforms(const entt::registry& registry) 
 
     for (Entity entity: point_light_view)
     {
-        if (i >= kMaxPointLights)
+        if (i >= Constants::kMaxPointLights)
         {
             break;
         }
@@ -437,7 +438,7 @@ void GLUniformManager::UpdateSpotLightUniforms(const entt::registry& registry) c
 
     for (Entity entity: spot_light_view)
     {
-        if (i >= kMaxSpotLights)
+        if (i >= Constants::kMaxSpotLights)
         {
             break;
         }

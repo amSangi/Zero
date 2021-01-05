@@ -40,7 +40,7 @@ namespace zero::render
         /**
          * @brief IRenderPass::Execute
          */
-        void Execute(const Camera& camera, const entt::registry& registry) override;
+        void Execute(const Camera& camera, const entt::registry& registry, const TimeDelta& time_delta) override;
 
     private:
         /**
@@ -74,7 +74,6 @@ namespace zero::render
          */
         void RenderEntities(const math::Matrix4x4& light_view_matrix, const std::vector<Entity>& viewable_entities, const entt::registry& registry);
 
-        static const uint32 kShadowCascadeCount;
         static const std::string kShadowMapFragmentShaderName;
         GLCompiler* gl_compiler_;
         GLModelManager* gl_model_manager_;
