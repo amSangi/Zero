@@ -6,7 +6,7 @@ learning exercise and the use of third party libraries will be kept to a minimum
 The engine is built using cmake 3.10
 
 ## Development
-Currently working on the Animation System
+Currently working on the Animation and Render Systems
 
 ## Dependencies
 - Assimp - Asset import library
