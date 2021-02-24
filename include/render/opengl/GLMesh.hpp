@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/NonCopyable.hpp"
-#include "render/Mesh.hpp"
+#include "render/IMesh.hpp"
 #include "render/opengl/OpenGL.hpp"
 
 namespace zero::render

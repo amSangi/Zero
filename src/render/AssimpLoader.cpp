@@ -14,39 +14,21 @@ AssimpLoader::AssimpLoader(IModelManager* model_manager)
 {
 }
 
-void AssimpLoader::LoadOBJModel(const std::string& model_name, const std::string& obj_file_path)
+void AssimpLoader::LoadModel(const std::string& model_name, const std::string& file_path)
 {
     Assimp::Importer importer{};
-    const aiScene* scene = importer.ReadFile(obj_file_path.c_str(), GetOBJImportFlags());
+    const aiScene* scene = importer.ReadFile(file_path.c_str(), GetImportFlags());
 
     if (!scene || !scene->mRootNode)
     {
-        LOG_ERROR(kLogTitle, "Failed to load Wavefront OBJ model: " + obj_file_path);
+        LOG_ERROR(kLogTitle, "Failed to load model: " + file_path);
         return;
     }
 
     auto model = LoadModel(model_name, scene, scene->mRootNode);
     if (model == nullptr)
     {
-        LOG_ERROR(kLogTitle, "Failed to load Wavefront OBJ model: " + obj_file_path);
-    }
-}
-
-void AssimpLoader::LoadFBXModel(const std::string& model_name, const std::string& fbx_file_path)
-{
-    Assimp::Importer importer{};
-    const aiScene* scene = importer.ReadFile(fbx_file_path.c_str(), GetFBXImportFlags());
-
-    if (!scene || !scene->mRootNode)
-    {
-        LOG_ERROR(kLogTitle, "Failed to load FBX model: " + fbx_file_path);
-        return;
-    }
-
-    auto model = LoadModel(model_name, scene, scene->mRootNode);
-    if (model == nullptr)
-    {
-        LOG_ERROR(kLogTitle, "Failed to load FBX model: " + fbx_file_path);
+        LOG_ERROR(kLogTitle, "Failed to load model: " + file_path);
     }
 }
 
@@ -180,19 +162,7 @@ Mesh AssimpLoader::LoadMesh(aiMesh* ai_mesh) const
     return Mesh{std::move(vertices), std::move(indices)};
 }
 
-uint32 AssimpLoader::GetOBJImportFlags() const
-{
-    uint32 flags = aiProcess_FlipUVs
-                 | aiProcess_GenBoundingBoxes
-                 | aiProcess_GenNormals
-                 | aiProcess_ImproveCacheLocality
-                 | aiProcess_OptimizeGraph
-                 | aiProcess_OptimizeMeshes
-                 | aiProcess_Triangulate;
-    return flags;
-}
-
-uint32 AssimpLoader::GetFBXImportFlags() const
+uint32 AssimpLoader::GetImportFlags() const
 {
     uint32 flags = aiProcess_FlipUVs
                    | aiProcess_GenBoundingBoxes
@@ -203,6 +173,5 @@ uint32 AssimpLoader::GetFBXImportFlags() const
                    | aiProcess_Triangulate;
     return flags;
 }
-
 
 } // namespace zero::render

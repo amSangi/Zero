@@ -3,6 +3,7 @@
 #include <vector>
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
+#include "core/NonCopyable.hpp"
 
 namespace zero::render
 {
@@ -52,43 +53,13 @@ namespace zero::render
 
     }; // struct Vertex
 
-    /**
-     * @brief Interleaved Mesh Container
-     */
-    class Mesh
+
+    class IMesh : public NonCopyable
     {
     public:
-        /**
-         * @brief Constructor
-         * @param vertices Interleaved vertices
-         * @param indices Vertex indices
-         */
-        Mesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
-
-        /**
-         * @brief Move Constructor
-         * @param mesh the mesh
-         */
-        Mesh(Mesh&& mesh) noexcept;
-
-        virtual ~Mesh() = default;
-
-        /**
-         * @brief Get the interleaved vertices
-         * @return the vertices
-         */
-        const std::vector<Vertex>& GetVertices() const;
-
-        /**
-         * @brief Get the vertex indices
-         * @return the indices
-         */
-        const std::vector<uint32>& GetIndices() const;
-
-    protected:
-        std::vector<Vertex> vertices_;
-        std::vector<uint32> indices_;
-
-    }; // class Mesh
+        IMesh() = default;
+        virtual ~IMesh() = default;
+        virtual void Initialize(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices) = 0;
+    }; // interface IMesh
 
 } // namespace zero::render

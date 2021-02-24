@@ -26,25 +26,17 @@ namespace zero::render
         ~AssimpLoader() = default;
 
         /**
-         * @brief Load a Wavefront OBJ model
+         * @brief Load a 3D model
          * @param model_name the name of the model
-         * @param obj_file_path the fully qualified model file path
+         * @param file_path the fully qualified model file path
          */
-        void LoadOBJModel(const std::string& model_name, const std::string& obj_file_path);
-
-        /**
-         * @brief Load an FBX model
-         * @param model_name the name of the model
-         * @param fbx_file_path the fully qualified model file path
-         */
-        void LoadFBXModel(const std::string& model_name, const std::string& fbx_file_path);
+        void LoadModel(const std::string& model_name, const std::string& file_path);
 
     private:
         std::shared_ptr<Model> LoadModel(const std::string& model_name, const aiScene* scene, const aiNode* node);
         Mesh LoadMesh(aiMesh* ai_mesh) const;
 
-        uint32 GetOBJImportFlags() const;
-        uint32 GetFBXImportFlags() const;
+        uint32 GetImportFlags() const;
 
         IModelManager* model_manager_;
 

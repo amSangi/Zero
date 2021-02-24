@@ -64,13 +64,9 @@ void AssetManager::Initialize()
             const std::string extension = model_entry.path().extension().string();
             std::string local_file_path = model_entry.path().string();
             local_file_path.erase(0, model_file_path_.size() + 1);
-            if (extension == ".obj")
+            if (extension == ".obj" || extension == ".fbx")
             {
-                obj_files_.push_back(local_file_path);
-            }
-            else if (extension == ".fbx")
-            {
-                fbx_files_.push_back(local_file_path);
+                model_files_.push_back(local_file_path);
             }
         }
     }
@@ -101,14 +97,9 @@ const std::vector<std::string>& AssetManager::GetTextureFiles()
     return texture_files_;
 }
 
-const std::vector<std::string>& AssetManager::GetOBJFiles()
+const std::vector<std::string>& AssetManager::GetModelFiles()
 {
-    return obj_files_;
-}
-
-const std::vector<std::string>& AssetManager::GetFBXFiles()
-{
-    return fbx_files_;
+    return model_files_;
 }
 
 std::string AssetManager::GetVertexShaderFilePath(const std::string& vertex_shader) const

@@ -33,7 +33,7 @@ add_library(${PROJECT_NAME} component/Animator.cpp
                             render/CullingManager.cpp
                             render/Image.cpp
                             render/Instantiator.cpp
-                            render/Mesh.cpp
+        render/IMesh.cpp
                             render/MeshGenerator.cpp
                             render/Model.cpp
                             render/OrthographicViewVolume.cpp
@@ -43,6 +43,9 @@ add_library(${PROJECT_NAME} component/Animator.cpp
                             render/ViewVolumeBuilder.cpp
                             render/VolumePropagator.cpp
                             render/Window.cpp
+                            render/pipeline/EntityRenderPass.cpp
+                            render/pipeline/ShadowMapPass.cpp
+                            render/pipeline/SkyDomePass.cpp
                             render/opengl/GLCompiler.cpp
                             render/opengl/GLMesh.cpp
                             render/opengl/GLModel.cpp

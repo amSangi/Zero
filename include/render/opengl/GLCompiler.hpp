@@ -78,7 +78,7 @@ namespace render
          * @brief Concatenated shader name to graphics program map
          * Graphics program caching avoids having to link shaders that have already been linked again.
          */
-        std::unordered_map<std::string, std::shared_ptr<GLProgram>> program_map_;
+        std::unordered_map<std::string, std::unique_ptr<GLProgram>> program_map_;
 
     }; // class GLCompiler
 
