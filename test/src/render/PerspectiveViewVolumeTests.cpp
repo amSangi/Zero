@@ -1,5 +1,5 @@
-#include "render/ViewVolumeBuilder.hpp"
-#include "render/PerspectiveViewVolume.hpp"
+#include "render/scene/ViewVolumeBuilder.hpp"
+#include "render/scene/PerspectiveViewVolume.hpp"
 #include <gtest/gtest.h>
 #include <memory>
 

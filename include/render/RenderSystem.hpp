@@ -3,16 +3,13 @@
 #include <memory>
 #include "engine/RenderSystemConfig.hpp"
 #include "core/System.hpp"
-#include "render/IRenderer.hpp"
+#include "component/Component.hpp"
+#include "component/Light.hpp"
 #include "render/Window.hpp"
+#include "render/renderer/RenderPipeline.hpp"
+#include "render/scene/SceneManager.hpp"
 
-namespace zero
-{
-    // Forward declarations
-    class Light;
-    class PrimitiveInstance;
-
-namespace render
+namespace zero::render
 {
     /**
      * @brief The RenderingSystem uses transform, mesh, material, scene, and camera components
@@ -99,22 +96,12 @@ namespace render
          */
         static const char* kTitle;
 
-        /**
-         * @brief The RenderSystem configuration
-         */
         RenderSystemConfig config_;
-
-        /**
-         * @brief The window to manage the actual window and graphics api context
-         */
+        std::unique_ptr<IRenderingManager> rendering_manager_;
+        std::unique_ptr<RenderPipeline> render_pipeline_;
+        std::unique_ptr<SceneManager> scene_manager_;
         std::unique_ptr<Window> window_;
-
-        /**
-         * @brief The renderer used to draw and cull entities onto the window
-         */
-        std::unique_ptr<IRenderer> renderer_;
 
     }; // class RenderSystem
 
-} // namespace render
-} // namespace zero
+} // namespace zero::render

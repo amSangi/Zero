@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TestGLShader.hpp"
-#include "render/ShaderStage.hpp"
+#include "render/renderer/ShaderStage.hpp"
 #include "render/opengl/GLCompiler.hpp"
 
 class TestGLCompiler : public TestGLShader

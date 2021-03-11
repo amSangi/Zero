@@ -1,5 +1,5 @@
 #include "render/Window.hpp"
-#include "render/opengl/OpenGL.hpp"
+#include "render/renderer/opengl/OpenGL.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 

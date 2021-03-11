@@ -1,5 +1,5 @@
-#include "render/ViewVolumeBuilder.hpp"
-#include "render/OrthographicViewVolume.hpp"
+#include "render/scene/ViewVolumeBuilder.hpp"
+#include "render/scene/OrthographicViewVolume.hpp"
 #include <gtest/gtest.h>
 #include <memory>
 

@@ -105,7 +105,7 @@ std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, co
     return root_model;
 }
 
-Mesh AssimpLoader::LoadMesh(aiMesh* ai_mesh) const
+std::unique_ptr<Mesh> AssimpLoader::LoadMesh(aiMesh* ai_mesh) const
 {
     std::vector<Vertex> vertices{};
     std::vector<uint32> indices{};
@@ -159,7 +159,7 @@ Mesh AssimpLoader::LoadMesh(aiMesh* ai_mesh) const
         }
     }
 
-    return Mesh{std::move(vertices), std::move(indices)};
+    return std::make_unique<Mesh>(std::move(vertices), std::move(indices));
 }
 
 uint32 AssimpLoader::GetImportFlags() const

@@ -42,6 +42,15 @@ namespace zero::render
          */
         static constexpr uint32 kMaxVertexBoneWeightCount = 4U;
 
+        /**
+         * @brief The shadow map dimensions
+         */
+        ///@{
+        static constexpr uint32 kShadowMapWidth = 1024U;
+        static constexpr uint32 kShadowMapHeight = 1024U;
+        ///@}
+
+
     }; // class Constants
 
 } // namespace zero

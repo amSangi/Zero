@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "render/IModelManager.hpp"
+#include "render/renderer/IModelManager.hpp"
 
 
 // Forward declarations
@@ -34,7 +34,7 @@ namespace zero::render
 
     private:
         std::shared_ptr<Model> LoadModel(const std::string& model_name, const aiScene* scene, const aiNode* node);
-        Mesh LoadMesh(aiMesh* ai_mesh) const;
+        std::unique_ptr<Mesh> LoadMesh(aiMesh* ai_mesh) const;
 
         uint32 GetImportFlags() const;
 
