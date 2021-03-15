@@ -14,27 +14,27 @@ GLRenderingManager::GLRenderingManager()
 
 IModelManager* GLRenderingManager::GetModelManager()
 {
-    return gl_model_manager_;
+    return gl_model_manager_.get();
 }
 
 IRenderingContext* GLRenderingManager::GetRenderingContext()
 {
-    return gl_rendering_context_;
+    return gl_rendering_context_.get();
 }
 
 IShaderManager* GLRenderingManager::GetShaderManager()
 {
-    return gl_shader_manager_;
+    return gl_shader_manager_.get();
 }
 
 ITextureManager* GLRenderingManager::GetTextureManager()
 {
-    return gl_texture_manager_;
+    return gl_texture_manager_.get();
 }
 
 IUniformManager* GLRenderingManager::GetUniformManager()
 {
-    return gl_uniform_manager_;
+    return gl_uniform_manager_.get();
 }
 
 

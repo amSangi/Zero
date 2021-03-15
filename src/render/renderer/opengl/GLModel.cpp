@@ -13,8 +13,9 @@ GLModel::GLModel(std::shared_ptr<GLMesh> mesh,
 {
 }
 
-void GLModel::Draw()
+std::shared_ptr<IMesh> GLModel::GetMesh()
 {
+    return std::static_pointer_cast<IMesh>(mesh_);
 }
 
 } // namespace zero::render

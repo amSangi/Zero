@@ -23,7 +23,7 @@ struct alignas(16) CameraData
 };
 
 GLCameraUniformBuffer::GLCameraUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("Camera")
 {
 }
 

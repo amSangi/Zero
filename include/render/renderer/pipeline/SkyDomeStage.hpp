@@ -12,10 +12,7 @@ namespace zero::render
         ~SkyDomeStage() override = default;
 
         void Execute(IRenderView* render_view) override;
-
     private:
-        void RenderSkyDome(const Camera& camera, const SkyDome& sky_dome) const;
-
         IRenderingManager* rendering_manager_;
         std::shared_ptr<IMesh> sphere_mesh_;
 

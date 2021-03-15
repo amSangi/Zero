@@ -18,7 +18,7 @@ struct alignas(16) LightInformationData
 };
 
 GLLightInfoUniformBuffer::GLLightInfoUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("LightInformation")
 {
 }
 

@@ -5,7 +5,7 @@ namespace zero::render
 {
 
 GLRenderTarget::GLRenderTarget()
-, fbo_id_(0)
+: fbo_id_(0)
 {
 }
 

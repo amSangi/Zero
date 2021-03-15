@@ -23,7 +23,7 @@ struct alignas(16) DirectionalLightData
 
 
 GLDirectionalLightUniformBuffer::GLDirectionalLightUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("DirectionalLights")
 {
 }
 

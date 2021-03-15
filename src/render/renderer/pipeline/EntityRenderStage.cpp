@@ -1,5 +1,4 @@
 #include "render/renderer/pipeline/EntityRenderStage.hpp"
-#include "render/scene/CullingManager.hpp"
 
 namespace zero::render
 {
@@ -22,19 +21,20 @@ void EntityRenderStage::Execute(IRenderView* render_view)
 
     std::vector<std::shared_ptr<ITexture>> shadow_map_textures = texture_manager->GetShadowMapTextures();
 
+    const Camera& camera = render_view->GetCamera();
+    const TimeDelta& time_delta = render_view->GetTimeDelta();
+
     // Begin rendering frame with default render target
     rendering_context->BeginFrame(nullptr);
     rendering_context->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
     math::Matrix4x4 view_matrix = camera.GetViewMatrix();
 
-    std::vector<Entity> viewable_entities = CullingManager::GetRenderableEntities(camera, registry);
-
     // Begin rendering each renderable entity
-    for (Entity viewable_entity : viewable_entities)
+    for (const std::shared_ptr<IRenderable>& renderable : render_view->GetRenderables())
     {
-        const Transform& transform = renderable_view.get<const Transform>(viewable_entity);
-        const Material& material = renderable_view.get<const Material>(viewable_entity);
-        const Volume& volume = renderable_view.get<const Volume>(viewable_entity);
+        const Transform& transform = renderable->GetTransform();
+        const Material& material = renderable->GetMaterial();
+        const Volume& volume = renderable->GetVolume();
 
         auto shader_program = shader_manager->GenerateProgram(material);
         if (shader_program == nullptr)
@@ -53,14 +53,14 @@ void EntityRenderStage::Execute(IRenderView* render_view)
 
         // Bind uniform buffers
         rendering_context->BindShaderProgram(shader_program.get());
-        rendering_context->BindUniformBuffer(0, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));
-        rendering_context->BindUniformBuffer(1, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MATERIAL_BUFFER));
-        rendering_context->BindUniformBuffer(2, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
-        rendering_context->BindUniformBuffer(3, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::LIGHT_INFO_BUFFER));
-        rendering_context->BindUniformBuffer(4, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::DIRECTIONAL_LIGHT_BUFFER));
-        rendering_context->BindUniformBuffer(5, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::POINT_LIGHT_BUFFER));
-        rendering_context->BindUniformBuffer(6, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::SPOT_LIGHT_BUFFER));
-        rendering_context->BindUniformBuffer(7, uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::SHADOW_MAP_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MATERIAL_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::LIGHT_INFO_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::DIRECTIONAL_LIGHT_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::POINT_LIGHT_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::SPOT_LIGHT_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::SHADOW_MAP_BUFFER));
 
         // Bind shadow map textures/samplers
         uint32 texture_index = 0;
@@ -76,28 +76,8 @@ void EntityRenderStage::Execute(IRenderView* render_view)
         rendering_context->BindTextureSampler(texture_index, diffuse_map_sampler_.get());
         uniform_manager->SetDiffuseSamplerName(shader_program.get(), texture_index);
 
-        // Render model/primitive
-        if (model_view.contains(viewable_entity))
-        {
-            const ModelInstance& model_instance = model_view.get<const ModelInstance>(viewable_entity);
-            std::shared_ptr<Model> model = model_manager->GetModel(model_instance);
-            if (animated_model_view.contains(viewable_entity))
-            {
-                const Animator& animator = animated_model_view.get<const Animator>(viewable_entity);
-                RenderAnimatedModel(rendering_manager_, model, shader_program.get(), animator, time_delta);
-            }
-            else
-            {
-                RenderModel(rendering_manager_, model);
-            }
-        }
-        else
-        {
-            const PrimitiveInstance& primitive_instance = primitive_view.get<const PrimitiveInstance>(viewable_entity);
-            std::shared_ptr<IMesh> primitive_mesh = model_manager->GetPrimitive(primitive_instance);
-            rendering_context->Draw(primitive_mesh.get());
-        }
-    };
+        Render(rendering_context, model_manager, shader_program.get(), renderable, time_delta);
+    }
 
     // Finish frame
     rendering_context->EndFrame();

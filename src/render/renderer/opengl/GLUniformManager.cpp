@@ -104,6 +104,8 @@ IUniformBuffer* GLUniformManager::GetUniformBuffer(IUniformManager::UniformBuffe
             return model_buffer_.get();
         case IUniformManager::UniformBufferType::SHADOW_MAP_BUFFER:
             return shadow_map_buffer_.get();
+        default:
+            return nullptr;
     }
 }
 
@@ -118,13 +120,15 @@ void GLUniformManager::UpdateCameraUniforms(const math::Matrix4x4& projection_ma
 }
 
 void GLUniformManager::UpdateLightUniforms(const std::vector<DirectionalLight>& directional_lights,
+                                           const std::vector<Transform>& point_light_transforms,
                                            const std::vector<PointLight>& point_lights,
+                                           const std::vector<Transform>& spot_light_transforms,
                                            const std::vector<SpotLight>& spot_lights)
 {
     light_info_buffer_->UpdateUniforms(directional_lights.size(), point_lights.size(), spot_lights.size());
     directional_light_buffer_->UpdateUniforms(directional_lights);
-    point_light_buffer_->UpdateUniforms(point_lights);
-    spot_light_buffer_->UpdateUniforms(spot_lights);
+    point_light_buffer_->UpdateUniforms(point_light_transforms, point_lights);
+    spot_light_buffer_->UpdateUniforms(spot_light_transforms, spot_lights);
 }
 
 void GLUniformManager::UpdateMaterialUniforms(const Material& material)

@@ -20,21 +20,32 @@ namespace zero::render
     class RenderStage : public IRenderStage
     {
     public:
+        RenderStage();
         virtual ~RenderStage() = default;
         void Execute(IRenderView* render_view) override = 0;
 
     protected:
+        void Render(IRenderingContext* rendering_context,
+                    IModelManager* model_manager,
+                    IProgram* shader_program,
+                    const std::shared_ptr<IRenderable>& renderable,
+                    const TimeDelta& time_delta);
+
         void RenderVolume(IRenderingManager* rendering_manager,
                           const Camera& camera,
                           const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
-        void RenderModel(IRenderingManager* rendering_manager, std::shared_ptr<Model> model);
-        void RenderAnimatedModel(IRenderingManager* rendering_manager,
+
+        void RenderAnimatedModel(IRenderingContext* rendering_context,
                                  std::shared_ptr<Model> model,
                                  IProgram* shader_program,
                                  const Animator& animator,
                                  const TimeDelta& time_delta);
+    private:
+        Material volume_material_;
+        PrimitiveInstance volume_primitive_instance_;
+
     }; // abstract class RenderStage
 
 } // namespace zero::render

@@ -14,6 +14,8 @@ namespace zero::render
         ~GLMesh() override;
         void Initialize(std::unique_ptr<Mesh> mesh) override;
 
+        GLuint GetVAO() const;
+        uint32 GetIndexDataSize() const;
     private:
         GLuint vao_;
         GLuint vertex_vbo_;

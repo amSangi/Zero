@@ -21,7 +21,7 @@ struct alignas(16) MaterialData
 };
 
 GLMaterialUniformBuffer::GLMaterialUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("Material")
 {
 }
 

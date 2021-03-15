@@ -4,6 +4,7 @@
 #include "component/Material.hpp"
 #include "component/ModelInstance.hpp"
 #include "component/Volume.hpp"
+#include "render/renderer/IMesh.hpp"
 
 namespace zero::render
 {
@@ -27,9 +28,9 @@ namespace zero::render
         virtual ~Model() = default;
 
         /**
-         * @brief Draw the model on the current active rendering context
+         * @brief Get the mesh associated with the model
          */
-        virtual void Draw() = 0;
+        virtual std::shared_ptr<IMesh> GetMesh() = 0;
 
         /**
          * @brief Get a transform associated with the model

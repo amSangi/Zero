@@ -42,20 +42,17 @@ void RenderSystem::Update(const TimeDelta& time_delta)
 {
 
     /**
-        1. TODO: Create RenderView
-        2. TODO: Use RenderView in RenderPipeline
-        3. TODO: Change RenderPass to RenderStage
-        4. TODO: Create SceneManager
-        5. TODO: Move culling and scene setup logic from GLRenderer to SceneManager
-        6. TODO: Update RenderSystem to own a RenderPipeline and SceneManager
+        1. TODO: Create SceneManager
+        2. TODO: Move culling and scene setup logic from GLRenderer to SceneManager
+        3. TODO: Add RenderManager initialization to RenderSystem
+        4. TODO: Add RenderManager shutdown to RenderSystem
+        5. TODO: Add RenderManager update to RenderSystem (e.g. uniform updates)
 
         //////////////////////////////////////////////////
         ////////// RenderPipeline
         /////////////////////////////////////////////////
 
-        RenderPipeline::Render(RenderView render_view)
-            for (const RenderStage& render_stage : render_stages_)
-                render_stage->Render(render_view)
+
 
         RenderSystem::Update(registry)
             scene_manager->UpdateView(registry)
@@ -84,6 +81,10 @@ Entity RenderSystem::CreateModelInstance(const std::string& model_filename)
 {
     LOG_VERBOSE(kTitle, "Instantiating a new 3D model instance");
     auto model = rendering_manager_->GetModelManager()->GetModel(model_filename);
+    if (!model)
+    {
+        return NullEntity;
+    }
     return Instantiator::InstantiateModel(GetCore()->GetRegistry(), model);
 }
 

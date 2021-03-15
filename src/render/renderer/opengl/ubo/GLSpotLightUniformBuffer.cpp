@@ -37,7 +37,7 @@ struct alignas(16) SpotLightData
 };
 
 GLSpotLightUniformBuffer::GLSpotLightUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("SpotLights")
 {
 }
 
@@ -46,14 +46,17 @@ void GLSpotLightUniformBuffer::Initialize(uint32 binding_index)
     InitializeBaseBuffer<SpotLightData>(binding_index);
 }
 
-void GLSpotLightUniformBuffer::UpdateUniforms(const std::vector<SpotLight>& spot_lights)
+void GLSpotLightUniformBuffer::UpdateUniforms(const std::vector<Transform>& transforms,
+                                              const std::vector<SpotLight>& spot_lights)
 {
     std::vector<SpotLightData> spot_light_data{};
     spot_light_data.reserve(spot_lights.size());
 
-    for (const SpotLight& spot_light : spot_lights)
+    for (uint32 i = 0; i < transforms.size() && i < spot_lights.size(); ++i)
     {
-        spot_light_data.emplace_back(spot_light);
+        const Transform& transform = transforms[i];
+        const SpotLight& spot_light = spot_lights[i];
+        spot_light_data.emplace_back(transform, spot_light);
     }
 
     glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);

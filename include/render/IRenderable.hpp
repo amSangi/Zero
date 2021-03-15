@@ -1,5 +1,6 @@
 #pragma once
 
+#include "component/Animator.hpp"
 #include "component/Material.hpp"
 #include "component/ModelInstance.hpp"
 #include "component/PrimitiveInstance.hpp"
@@ -13,11 +14,13 @@ namespace zero
     {
     public:
         virtual ~IRenderable() = default;
-        virtual Material* GetMaterial() = 0;
+        virtual const Material& GetMaterial() = 0;
+        virtual const Transform& GetTransform() = 0;
+        virtual const Volume& GetVolume() = 0;
+
+        virtual Animator* GetAnimator() = 0;
         virtual ModelInstance* GetModelInstance() = 0;
         virtual PrimitiveInstance* GetPrimitiveInstance() = 0;
-        virtual Transform* GetTransform() = 0;
-        virtual Volume* GetVolume() = 0;
     }; // interface IRenderable
 
 } // namespace zero

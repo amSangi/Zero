@@ -14,15 +14,9 @@ SkyDomeStage::SkyDomeStage(IRenderingManager* rendering_manager)
 
 void SkyDomeStage::Execute(IRenderView* render_view)
 {
+    const Camera& camera = render_view->GetCamera();
     const SkyDome& sky_dome = render_view->GetSkyDome();
-    for (const Camera& camera : render_view->GetCameras())
-    {
-        RenderSkyDome(camera, sky_dome);
-    }
-}
 
-void SkyDomeStage::RenderSkyDome(const Camera& camera, const SkyDome& sky_dome) const
-{
     IRenderingContext* rendering_context = rendering_manager_->GetRenderingContext();
     IShaderManager* shader_manager = rendering_manager_->GetShaderManager();
     IUniformManager* uniform_manager = rendering_manager_->GetUniformManager();

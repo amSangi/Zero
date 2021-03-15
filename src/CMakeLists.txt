@@ -35,6 +35,7 @@ add_library(${PROJECT_NAME}
                             math/Sphere.cpp
                             # Render Files
                             render/AssimpLoader.cpp
+                            render/CascadedShadowMap.cpp
                             render/Instantiator.cpp
                             render/RenderSystem.cpp
                             render/VolumePropagator.cpp
@@ -45,12 +46,12 @@ add_library(${PROJECT_NAME}
                             render/scene/PerspectiveViewVolume.cpp
                             render/scene/ViewVolumeBuilder.cpp
                             # Renderer Files
-                            render/renderer/CascadedShadowMap.cpp
                             render/renderer/Image.cpp
                             render/renderer/IMesh.cpp
                             render/renderer/MeshGenerator.cpp
                             render/renderer/Model.cpp
                             render/renderer/RenderPipeline.cpp
+                            render/renderer/RenderStage.cpp
                             # Pipeline Files
                             render/renderer/pipeline/EntityRenderStage.cpp
                             render/renderer/pipeline/ShadowMapStage.cpp
@@ -61,6 +62,7 @@ add_library(${PROJECT_NAME}
                             render/renderer/opengl/GLModelManager.cpp
                             render/renderer/opengl/GLPrimitiveGenerator.cpp
                             render/renderer/opengl/GLProgram.cpp
+                            render/renderer/opengl/GLRenderingContext.cpp
                             render/renderer/opengl/GLRenderingManager.cpp
                             render/renderer/opengl/GLRenderTarget.cpp
                             render/renderer/opengl/GLSampler.cpp

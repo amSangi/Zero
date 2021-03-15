@@ -34,7 +34,6 @@ namespace zero::render
         virtual ~IRenderingContext() = default;
 
         virtual void Initialize(const RenderSystemConfig& config) = 0;
-        virtual void Shutdown() = 0;
 
         virtual void SetViewport(uint32 x, uint32 y, uint32 width, uint32 height)  = 0;
         virtual void SetFillMode(FillMode fill_mode) = 0;
@@ -50,10 +49,9 @@ namespace zero::render
         virtual void EndFrame() = 0;
 
         virtual void BindShaderProgram(IProgram* shader_program) = 0;
-        virtual void BindUniformBuffer(uint32 index, IUniformBuffer* uniform_buffer) = 0;
+        virtual void BindUniformBuffer(IUniformBuffer* uniform_buffer) = 0;
         virtual void BindTextureSampler(uint32 index, ISampler* sampler) = 0;
         virtual void BindTexture(uint32 index, ITexture* texture) = 0;
-        virtual void BindMaterial(const Material& material) = 0;
 
         virtual void Draw(IMesh* mesh) = 0;
 

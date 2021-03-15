@@ -5,6 +5,7 @@
 #include "component/Material.hpp"
 #include "component/SkyDome.hpp"
 #include "core/NonCopyable.hpp"
+#include "render/renderer/IProgram.hpp"
 #include "render/renderer/IShader.hpp"
 #include "render/renderer/ShaderStage.hpp"
 

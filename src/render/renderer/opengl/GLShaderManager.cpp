@@ -1,4 +1,5 @@
 #include "render/renderer/opengl/GLShaderManager.hpp"
+#include "core/Logger.hpp"
 
 namespace zero::render
 {
@@ -9,7 +10,7 @@ GLShaderManager::GLShaderManager()
 {
 }
 
-GLShaderManager::~IShaderManager()
+GLShaderManager::~GLShaderManager()
 {
 }
 
@@ -63,7 +64,7 @@ std::shared_ptr<IProgram> GLShaderManager::GenerateProgram(const Material& mater
     auto program_search = program_map_.find(program_hash);
     if (program_search != program_map_.end())
     {
-        return program_search->second;
+        return std::static_pointer_cast<IProgram>(program_search->second);
     }
 
     std::shared_ptr<GLProgram> program = GLProgram::CreateGLProgram(shaders);

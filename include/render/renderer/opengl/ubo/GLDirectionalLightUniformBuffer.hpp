@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+#include "component/Light.hpp"
 #include "render/renderer/opengl/ubo/GLBaseUniformBuffer.hpp"
 #include "render/renderer/opengl/OpenGL.hpp"
 

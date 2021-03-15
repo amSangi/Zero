@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include "render/AnimationData.hpp"
 #include "render/renderer/Model.hpp"
 #include "render/renderer/opengl/GLMesh.hpp"
 
@@ -31,14 +30,10 @@ namespace zero::render
 
         ~GLModel() = default;
 
-        /**
-         * @brief See Model::Draw
-         */
-        void Draw() override;
+        std::shared_ptr<IMesh> GetMesh() override;
 
     private:
         std::shared_ptr<GLMesh> mesh_;
-        std::shared_ptr<AnimationData> animation_data_;
 
     }; // class GLModel
 

@@ -1,4 +1,4 @@
-#include "render/renderer/CascadedShadowMap.hpp"
+#include "render/CascadedShadowMap.hpp"
 
 namespace zero::render
 {

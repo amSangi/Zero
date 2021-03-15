@@ -1,12 +1,11 @@
 #include "render/renderer/RenderPipeline.hpp"
-#include "render/renderer/IRenderStage.hpp"
 
 namespace zero::render
 {
 
 void RenderPipeline::AddRenderStage(std::unique_ptr<IRenderStage> render_stage)
 {
-    render_stages_.push_back(std::move(render_pass));
+    render_stages_.push_back(std::move(render_stage));
 }
 
 void RenderPipeline::Render(std::unique_ptr<IRenderView> render_view)

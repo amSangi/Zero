@@ -11,6 +11,13 @@ GLMesh::GLMesh()
 {
 }
 
+GLMesh::~GLMesh()
+{
+    glDeleteVertexArrays(1, &vao_);
+    glDeleteBuffers(1, &vertex_vbo_);
+    glDeleteBuffers(1, &index_vbo_);
+}
+
 void GLMesh::Initialize(std::unique_ptr<Mesh> mesh)
 {
     index_data_size_ = mesh->indices_.size();
@@ -47,11 +54,15 @@ void GLMesh::Initialize(std::unique_ptr<Mesh> mesh)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-GLMesh::~GLMesh()
+GLuint GLMesh::GetVAO() const
 {
-    glDeleteVertexArrays(1, &vao_);
-    glDeleteBuffers(1, &vertex_vbo_);
-    glDeleteBuffers(1, &index_vbo_);
+    return vao_;
 }
+
+uint32 GLMesh::GetIndexDataSize() const
+{
+    return index_data_size_;
+}
+
 
 } // namespace zero::render

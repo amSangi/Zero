@@ -31,7 +31,7 @@ struct alignas(16) PointLightData
 };
 
 GLPointLightUniformBuffer::GLPointLightUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("PointLights")
 {
 }
 
@@ -40,14 +40,17 @@ void GLPointLightUniformBuffer::Initialize(uint32 binding_index)
     InitializeBaseBuffer<PointLightData>(binding_index);
 }
 
-void GLPointLightUniformBuffer::UpdateUniforms(const std::vector<PointLight>& point_lights)
+void GLPointLightUniformBuffer::UpdateUniforms(const std::vector<Transform>& transforms,
+                                               const std::vector<PointLight>& point_lights)
 {
     std::vector<PointLightData> point_light_data{};
     point_light_data.reserve(point_lights.size());
 
-    for (const PointLight& point_light : point_lights)
+    for (uint32 i = 0; i < transforms.size() && i < point_lights.size(); ++i)
     {
-        point_light_data.emplace_back(point_light);
+        const Transform& transform = transforms[i];
+        const PointLight& point_light = point_lights[i];
+        point_light_data.emplace_back(transform, point_light);
     }
 
     glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);

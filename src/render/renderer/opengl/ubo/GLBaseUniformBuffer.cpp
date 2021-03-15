@@ -3,8 +3,9 @@
 namespace zero::render
 {
 
-GLBaseUniformBuffer::GLBaseUniformBuffer()
-: buffer_id_(0)
+GLBaseUniformBuffer::GLBaseUniformBuffer(const std::string& name)
+: name_(name)
+, buffer_id_(0)
 , binding_index_(0)
 , initialized_(false)
 {
@@ -21,6 +22,11 @@ GLBaseUniformBuffer::~GLBaseUniformBuffer()
 uint32 GLBaseUniformBuffer::GetBindingIndex() const
 {
     return binding_index_;
+}
+
+const std::string& GLBaseUniformBuffer::GetName() const
+{
+    return name_;
 }
 
 } // namespace zero::render

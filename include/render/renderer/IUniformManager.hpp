@@ -4,6 +4,7 @@
 #include "component/Camera.hpp"
 #include "component/Light.hpp"
 #include "component/Material.hpp"
+#include "component/Transform.hpp"
 #include "component/SkyDome.hpp"
 #include "core/NonCopyable.hpp"
 #include "render/renderer/IProgram.hpp"
@@ -42,7 +43,9 @@ namespace zero::render
                                           const math::Vec3f& camera_position) = 0;
 
         virtual void UpdateLightUniforms(const std::vector<DirectionalLight>& directional_lights,
+                                         const std::vector<Transform>& point_light_transforms,
                                          const std::vector<PointLight>& point_lights,
+                                         const std::vector<Transform>& spot_light_transforms,
                                          const std::vector<SpotLight>& spot_lights) = 0;
 
         virtual void UpdateMaterialUniforms(const Material& material) = 0;

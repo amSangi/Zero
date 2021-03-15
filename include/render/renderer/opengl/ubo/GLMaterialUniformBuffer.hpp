@@ -1,5 +1,6 @@
 #pragma once
 
+#include "component/Material.hpp"
 #include "render/renderer/opengl/ubo/GLBaseUniformBuffer.hpp"
 #include "render/renderer/opengl/OpenGL.hpp"
 

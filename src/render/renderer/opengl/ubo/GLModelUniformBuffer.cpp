@@ -16,7 +16,7 @@ struct alignas(16) ModelData
 };
 
 GLModelUniformBuffer::GLModelUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("Model")
 {
 }
 

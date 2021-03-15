@@ -58,9 +58,9 @@ std::shared_ptr<Model> GLModelManager::CreateModel(const std::string& model_name
                                                                material,
                                                                volume,
                                                                model_instance);
-    // TODO: Fix Clion cast warning
+
     model_map_.emplace(model_name, model);
-    return static_pointer_cast<Model>(model);
+    return std::static_pointer_cast<Model>(model);
 }
 
 void GLModelManager::ClearModels()

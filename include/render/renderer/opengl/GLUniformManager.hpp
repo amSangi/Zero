@@ -30,7 +30,9 @@ namespace zero::render
                                   const math::Vec3f& camera_position) override;
 
         void UpdateLightUniforms(const std::vector<DirectionalLight>& directional_lights,
+                                 const std::vector<Transform>& point_light_transforms,
                                  const std::vector<PointLight>& point_lights,
+                                 const std::vector<Transform>& spot_light_transforms,
                                  const std::vector<SpotLight>& spot_lights) override;
 
         void UpdateMaterialUniforms(const Material& material) override;

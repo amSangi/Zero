@@ -1,4 +1,5 @@
 #include "render/renderer/opengl/ubo/GLShadowMapUniformBuffer.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -22,7 +23,7 @@ struct alignas(16) ShadowMapInformation
 };
 
 GLShadowMapUniformBuffer::GLShadowMapUniformBuffer()
-: GLBaseUniformBuffer()
+: GLBaseUniformBuffer("ShadowMapInformation")
 {
 }
 
@@ -31,11 +32,11 @@ void GLShadowMapUniformBuffer::Initialize(uint32 binding_index)
     InitializeBaseBuffer<ShadowMapInformation>(binding_index);
 }
 
-void GLShadowMapUniformBuffer::UpdateUniforms(const std::vector<math::Matrix4x4>& light_matrices,
+void GLShadowMapUniformBuffer::UpdateUniforms(const std::vector<math::Matrix4x4>& shadow_map_matrices,
                                               const std::vector<float>& cascade_end_clip_spaces)
 {
     glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);
-    ShadowMapInformation shadow_map_information{shadow_map_matrix, cascade_end_clip_spaces};
+    ShadowMapInformation shadow_map_information{shadow_map_matrices, cascade_end_clip_spaces};
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(ShadowMapInformation), &shadow_map_information);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

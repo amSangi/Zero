@@ -12,7 +12,7 @@ namespace zero::render
     {
     public:
         GLShaderManager();
-        ~IShaderManager() override;
+        ~GLShaderManager() override;
         std::shared_ptr<IProgram> GenerateProgram(const Material& material) override;
         std::shared_ptr<IProgram> GenerateProgram(const SkyDome& sky_dome) override;
         std::shared_ptr<IProgram> GenerateProgram(const std::string& vertex_shader, const std::string& fragment_shader) override;
@@ -31,7 +31,7 @@ namespace zero::render
          * @brief Concatenated shader name to graphics program map
          * Graphics program caching avoids having to link shaders that have already been linked again.
          */
-        std::unordered_map<std::string, std::unique_ptr<GLProgram>> program_map_;
+        std::unordered_map<std::string, std::shared_ptr<GLProgram>> program_map_;
 
     }; // class GLShaderManager
 
