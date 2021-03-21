@@ -21,6 +21,7 @@ namespace zero::render
         ~GLUniformManager() override;
 
         void Initialize() override;
+        void Shutdown() override;
         void SetShadowSamplerName(IProgram* shader_program, uint32 texture_index) override;
         void SetDiffuseSamplerName(IProgram* shader_program, uint32 texture_index) override;
         void SetSkyDomeUniforms(IProgram* sky_dome_program, const Camera& camera, const SkyDome& sky_dome) override;
@@ -30,10 +31,8 @@ namespace zero::render
                                   const math::Vec3f& camera_position) override;
 
         void UpdateLightUniforms(const std::vector<DirectionalLight>& directional_lights,
-                                 const std::vector<Transform>& point_light_transforms,
-                                 const std::vector<PointLight>& point_lights,
-                                 const std::vector<Transform>& spot_light_transforms,
-                                 const std::vector<SpotLight>& spot_lights) override;
+                                 const std::vector<std::pair<PointLight, Transform>>& point_lights,
+                                 const std::vector<std::pair<SpotLight, Transform>>& spot_lights) override;
 
         void UpdateMaterialUniforms(const Material& material) override;
 

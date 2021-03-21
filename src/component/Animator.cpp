@@ -3,6 +3,14 @@
 namespace zero
 {
 
+Animator::Animator()
+{
+}
+
+Animator::~Animator()
+{
+}
+
 
 } // namespace zero
 

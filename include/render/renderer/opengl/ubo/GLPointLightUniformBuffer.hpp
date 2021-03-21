@@ -15,7 +15,7 @@ namespace zero::render
         GLPointLightUniformBuffer();
         ~GLPointLightUniformBuffer() override = default;
         void Initialize(uint32 binding_index);
-        void UpdateUniforms(const std::vector<Transform>& transforms, const std::vector<PointLight>& point_lights);
+        void UpdateUniforms(const std::vector<std::pair<PointLight, Transform>>& point_lights);
     };
 
 } // namespace zero::render

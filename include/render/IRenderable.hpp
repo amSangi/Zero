@@ -7,7 +7,7 @@
 #include "component/Transform.hpp"
 #include "component/Volume.hpp"
 
-namespace zero
+namespace zero::render
 {
 
     class IRenderable

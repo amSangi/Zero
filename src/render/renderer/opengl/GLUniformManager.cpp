@@ -56,6 +56,18 @@ void GLUniformManager::Initialize()
     spot_light_buffer_->Initialize(kSpotLightBufferBindingIndex);
 }
 
+void GLUniformManager::Shutdown()
+{
+    camera_buffer_.reset();
+    material_buffer_.reset();
+    model_buffer_.reset();
+    shadow_map_buffer_.reset();
+    light_info_buffer_.reset();
+    directional_light_buffer_.reset();
+    point_light_buffer_.reset();
+    spot_light_buffer_.reset();
+}
+
 void GLUniformManager::SetShadowSamplerName(IProgram* shader_program, uint32 texture_index)
 {
     std::string uniform_sampler_name = "u_cascaded_shadow_map[" + std::to_string(texture_index) + "]";
@@ -120,15 +132,13 @@ void GLUniformManager::UpdateCameraUniforms(const math::Matrix4x4& projection_ma
 }
 
 void GLUniformManager::UpdateLightUniforms(const std::vector<DirectionalLight>& directional_lights,
-                                           const std::vector<Transform>& point_light_transforms,
-                                           const std::vector<PointLight>& point_lights,
-                                           const std::vector<Transform>& spot_light_transforms,
-                                           const std::vector<SpotLight>& spot_lights)
+                                           const std::vector<std::pair<PointLight, Transform>>& point_lights,
+                                           const std::vector<std::pair<SpotLight, Transform>>& spot_lights)
 {
     light_info_buffer_->UpdateUniforms(directional_lights.size(), point_lights.size(), spot_lights.size());
     directional_light_buffer_->UpdateUniforms(directional_lights);
-    point_light_buffer_->UpdateUniforms(point_light_transforms, point_lights);
-    spot_light_buffer_->UpdateUniforms(spot_light_transforms, spot_lights);
+    point_light_buffer_->UpdateUniforms(point_lights);
+    spot_light_buffer_->UpdateUniforms(spot_lights);
 }
 
 void GLUniformManager::UpdateMaterialUniforms(const Material& material)

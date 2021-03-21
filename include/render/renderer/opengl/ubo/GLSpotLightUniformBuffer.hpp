@@ -14,7 +14,7 @@ namespace zero::render
         GLSpotLightUniformBuffer();
         ~GLSpotLightUniformBuffer() override = default;
         void Initialize(uint32 binding_index);
-        void UpdateUniforms(const std::vector<Transform>& transforms, const std::vector<SpotLight>& spot_lights);
+        void UpdateUniforms(const std::vector<std::pair<SpotLight, Transform>>& spot_lights);
     };
 
 } // namespace zero::render

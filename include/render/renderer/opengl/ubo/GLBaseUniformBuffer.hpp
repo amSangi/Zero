@@ -17,17 +17,7 @@ namespace zero::render
         const std::string& GetName() const;
 
     protected:
-        template<class T>
-        void InitializeBaseBuffer(uint32 binding_index)
-        {
-            binding_index_ = binding_index;
-            glGenBuffers(1, &buffer_id_);
-            glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);
-            glBufferData(GL_UNIFORM_BUFFER, sizeof(T), nullptr, GL_STATIC_DRAW);
-            glBindBufferBase(GL_UNIFORM_BUFFER, binding_index_, buffer_id_);
-            glBindBuffer(GL_UNIFORM_BUFFER, 0);
-            initialized_ = true;
-        }
+        void InitializeBaseBuffer(uint32 binding_index, uint32 data_size);
 
         std::string name_;
         GLuint buffer_id_;

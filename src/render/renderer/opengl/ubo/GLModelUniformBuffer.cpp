@@ -22,7 +22,7 @@ GLModelUniformBuffer::GLModelUniformBuffer()
 
 void GLModelUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<ModelData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(ModelData));
 }
 
 void GLModelUniformBuffer::UpdateUniforms(const math::Matrix4x4& model_matrix, const math::Matrix4x4& normal_matrix)

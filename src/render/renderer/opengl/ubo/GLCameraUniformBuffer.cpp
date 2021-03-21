@@ -29,7 +29,7 @@ GLCameraUniformBuffer::GLCameraUniformBuffer()
 
 void GLCameraUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<CameraData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(CameraData));
 }
 
 void GLCameraUniformBuffer::UpdateUniforms(const math::Matrix4x4& projection_matrix,

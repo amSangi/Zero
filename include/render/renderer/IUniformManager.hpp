@@ -33,6 +33,7 @@ namespace zero::render
         virtual ~IUniformManager() = default;
 
         virtual void Initialize() = 0;
+        virtual void Shutdown() = 0;
 
         virtual void SetShadowSamplerName(IProgram* shader_program, uint32 texture_index) = 0;
         virtual void SetDiffuseSamplerName(IProgram* shader_program, uint32 texture_index) = 0;
@@ -43,10 +44,8 @@ namespace zero::render
                                           const math::Vec3f& camera_position) = 0;
 
         virtual void UpdateLightUniforms(const std::vector<DirectionalLight>& directional_lights,
-                                         const std::vector<Transform>& point_light_transforms,
-                                         const std::vector<PointLight>& point_lights,
-                                         const std::vector<Transform>& spot_light_transforms,
-                                         const std::vector<SpotLight>& spot_lights) = 0;
+                                         const std::vector<std::pair<PointLight, Transform>>& point_lights,
+                                         const std::vector<std::pair<SpotLight, Transform>>& spot_lights) = 0;
 
         virtual void UpdateMaterialUniforms(const Material& material) = 0;
 

@@ -44,6 +44,9 @@ add_library(${PROJECT_NAME}
                             render/scene/CullingManager.cpp
                             render/scene/OrthographicViewVolume.cpp
                             render/scene/PerspectiveViewVolume.cpp
+                            render/scene/Renderable.cpp
+                            render/scene/RenderView.cpp
+                            render/scene/SceneManager.cpp
                             render/scene/ViewVolumeBuilder.cpp
                             # Renderer Files
                             render/renderer/Image.cpp

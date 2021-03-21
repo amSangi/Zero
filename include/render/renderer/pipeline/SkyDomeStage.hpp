@@ -11,6 +11,7 @@ namespace zero::render
         explicit SkyDomeStage(IRenderingManager* rendering_manager);
         ~SkyDomeStage() override = default;
 
+        void Initialize() override;
         void Execute(IRenderView* render_view) override;
     private:
         IRenderingManager* rendering_manager_;

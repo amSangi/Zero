@@ -1,4 +1,5 @@
 #include "render/renderer/opengl/ubo/GLDirectionalLightUniformBuffer.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -29,7 +30,7 @@ GLDirectionalLightUniformBuffer::GLDirectionalLightUniformBuffer()
 
 void GLDirectionalLightUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<DirectionalLightData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(DirectionalLightData) * Constants::kMaxDirectionalLights);
 }
 
 void GLDirectionalLightUniformBuffer::UpdateUniforms(const std::vector<DirectionalLight>& directional_lights)

@@ -1,14 +1,19 @@
 #pragma once
 
 #include "component/Component.hpp"
+#include "math/Vector3.hpp"
 
 namespace zero
 {
 
-    class Animator : public Component
+    struct Animator : public Component
     {
-    public:
+        Animator();
+        ~Animator();
         // TODO: Create Animator component
+
+    private:
+        math::Vec3f dummy_data_;
     }; // class Animator
 
 } // namespace zero

@@ -7,6 +7,10 @@ SkyDomeStage::SkyDomeStage(IRenderingManager* rendering_manager)
 : rendering_manager_(rendering_manager)
 , sphere_mesh_(nullptr)
 {
+}
+
+void SkyDomeStage::Initialize()
+{
     IModelManager* model_manager = rendering_manager_->GetModelManager();
     PrimitiveInstance sphere_primitive_instance{Sphere{}};
     sphere_mesh_ = model_manager->GetPrimitive(sphere_primitive_instance);
@@ -14,9 +18,14 @@ SkyDomeStage::SkyDomeStage(IRenderingManager* rendering_manager)
 
 void SkyDomeStage::Execute(IRenderView* render_view)
 {
-    const Camera& camera = render_view->GetCamera();
     const SkyDome& sky_dome = render_view->GetSkyDome();
+    if (!sky_dome.is_active_)
+    {
+        // Skip render stage if the sky dome is not active
+        return;
+    }
 
+    const Camera& camera = render_view->GetCamera();
     IRenderingContext* rendering_context = rendering_manager_->GetRenderingContext();
     IShaderManager* shader_manager = rendering_manager_->GetShaderManager();
     IUniformManager* uniform_manager = rendering_manager_->GetUniformManager();

@@ -42,7 +42,9 @@ std::vector<Entity> CullingManager::GetViewableEntities(const Camera& camera, co
 std::vector<Entity> CullingManager::CullEntities(const IViewVolume* culler, const entt::registry& registry)
 {
     // Viewable entities must have Transform, Material, and Volume components
-    auto renderable_view = registry.view<const Transform, const Material, const Volume>();
+    auto renderable_view        = registry.view<const Transform, const Material, const Volume>();
+    auto model_instance_vew     = registry.view<const Transform, const Material, const Volume, const ModelInstance>();
+    auto primitive_instance_vew = registry.view<const Transform, const Material, const Volume, const PrimitiveInstance>();
 
     std::deque<Entity> entities_to_cull{};
 
@@ -68,12 +70,6 @@ std::vector<Entity> CullingManager::CullEntities(const IViewVolume* culler, cons
     {
         Entity entity = entities_to_cull.front();
         entities_to_cull.pop_front();
-
-        // Ignore entities that do not have mesh data
-        if (!registry.has<ModelInstance>(entity) && !registry.has<PrimitiveInstance>(entity))
-        {
-            continue;
-        }
 
         // Entity is not visible
         const auto& material = renderable_view.get<const Material>(entity);

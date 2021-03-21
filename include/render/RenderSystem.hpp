@@ -5,6 +5,7 @@
 #include "core/System.hpp"
 #include "component/Component.hpp"
 #include "component/Light.hpp"
+#include "render/AssimpLoader.hpp"
 #include "render/Window.hpp"
 #include "render/renderer/RenderPipeline.hpp"
 #include "render/scene/SceneManager.hpp"
@@ -90,6 +91,11 @@ namespace zero::render
         Entity CreateLightInstance(const Light& light, Entity entity);
 
     private:
+        void LoadModels();
+        void LoadShaders();
+        void LoadTextures();
+        void ReadShaderSource(const std::string& filename, std::string& destination);
+        bool ContainsCamera() const;
 
         /**
          * @brief The log title
@@ -98,6 +104,7 @@ namespace zero::render
 
         RenderSystemConfig config_;
         std::unique_ptr<IRenderingManager> rendering_manager_;
+        std::unique_ptr<AssimpLoader> model_loader_;
         std::unique_ptr<RenderPipeline> render_pipeline_;
         std::unique_ptr<SceneManager> scene_manager_;
         std::unique_ptr<Window> window_;

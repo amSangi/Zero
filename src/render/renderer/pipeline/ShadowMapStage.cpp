@@ -1,4 +1,5 @@
 #include "render/renderer/pipeline/ShadowMapStage.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -7,8 +8,14 @@ const std::string ShadowMapStage::kShadowMapFragmentShaderName = "shadow_map.fra
 
 ShadowMapStage::ShadowMapStage(IRenderingManager* rendering_manager)
 : rendering_manager_(rendering_manager)
-, diffuse_map_sampler_(rendering_manager_->GetTextureManager()->GetDiffuseMapSampler())
+, diffuse_map_sampler_(nullptr)
 {
+}
+
+void ShadowMapStage::Initialize()
+{
+    ITextureManager* texture_manager = rendering_manager_->GetTextureManager();
+    diffuse_map_sampler_ = texture_manager->GetDiffuseMapSampler();
 }
 
 void ShadowMapStage::Execute(IRenderView* render_view)
@@ -42,6 +49,9 @@ void ShadowMapStage::Execute(IRenderView* render_view)
 
         // Begin rendering to shadow map render target
         rendering_context->BeginFrame(shadow_map_render_targets[cascade_index].get());
+        rendering_context->SetViewport(0, 0, Constants::kShadowMapWidth, Constants::kShadowMapHeight);
+        rendering_context->ClearDepth();
+        rendering_context->SetCullMode(IRenderingContext::CullMode::CULL_BACK);
         rendering_context->SetFillMode(IRenderingContext::FillMode::SOLID);
 
         uniform_manager->UpdateCameraUniforms(light_projection_matrices[cascade_index], light_view_matrices[cascade_index], math::Vec3f::Zero());
@@ -99,9 +109,9 @@ void ShadowMapStage::RenderEntities(const math::Matrix4x4& light_view_matrix,
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
 
         // Bind diffuse map texture/sampler
+        uniform_manager->SetDiffuseSamplerName(shader_program.get(), 0);
         rendering_context->BindTexture(0, texture_manager->GetTexture(material.texture_map_.diffuse_map_));
         rendering_context->BindTextureSampler(0, diffuse_map_sampler_.get());
-        uniform_manager->SetDiffuseSamplerName(shader_program.get(), 0);
 
         Render(rendering_context, model_manager, shader_program.get(), renderable, time_delta);
     }

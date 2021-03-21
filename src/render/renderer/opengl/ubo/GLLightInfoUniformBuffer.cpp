@@ -24,7 +24,7 @@ GLLightInfoUniformBuffer::GLLightInfoUniformBuffer()
 
 void GLLightInfoUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<LightInformationData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(LightInformationData));
 }
 
 void GLLightInfoUniformBuffer::UpdateUniforms(uint32 directional_light_count,

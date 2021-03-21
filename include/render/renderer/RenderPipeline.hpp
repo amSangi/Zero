@@ -17,6 +17,7 @@ namespace zero::render
         ~RenderPipeline() = default;
 
         void AddRenderStage(std::unique_ptr<IRenderStage> render_stage);
+        void Initialize();
         void Render(std::unique_ptr<IRenderView> render_view);
     private:
         std::vector<std::unique_ptr<IRenderStage>> render_stages_;

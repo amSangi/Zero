@@ -13,6 +13,7 @@ namespace zero::render
         explicit ShadowMapStage(IRenderingManager* rendering_manager);
         ~ShadowMapStage() override = default;
 
+        void Initialize() override;
         void Execute(IRenderView* render_view) override;
 
     private:

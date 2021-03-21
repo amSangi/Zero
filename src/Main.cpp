@@ -31,7 +31,6 @@ public:
 
     void Initialize() override
     {
-        Logger::GetLogger().SetFilter(Logger::Level::LEVEL_ERROR);
         SetupCamera();
         SetupSkyDome();
         SetupModel();
@@ -320,6 +319,8 @@ int main(int /* argc */, char** /* argv */)
     auto engine = std::make_unique<Engine>(engine_config);
     engine->AddGameSystem<DemoGameSystem>(engine_config);
     engine->Initialize();
+
+    Logger::GetLogger().SetFilter(Logger::Level::LEVEL_VERBOSE);
     while(!engine->IsDone())
     {
         engine->Tick();

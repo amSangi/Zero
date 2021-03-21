@@ -27,7 +27,7 @@ GLMaterialUniformBuffer::GLMaterialUniformBuffer()
 
 void GLMaterialUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<MaterialData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(MaterialData));
 }
 
 void GLMaterialUniformBuffer::UpdateUniforms(const Material& material)

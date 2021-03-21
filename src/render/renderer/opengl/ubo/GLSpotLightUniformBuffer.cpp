@@ -1,4 +1,5 @@
 #include "render/renderer/opengl/ubo/GLSpotLightUniformBuffer.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -43,19 +44,18 @@ GLSpotLightUniformBuffer::GLSpotLightUniformBuffer()
 
 void GLSpotLightUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<SpotLightData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(SpotLightData) * Constants::kMaxSpotLights);
 }
 
-void GLSpotLightUniformBuffer::UpdateUniforms(const std::vector<Transform>& transforms,
-                                              const std::vector<SpotLight>& spot_lights)
+void GLSpotLightUniformBuffer::UpdateUniforms(const std::vector<std::pair<SpotLight, Transform>>& spot_lights)
 {
     std::vector<SpotLightData> spot_light_data{};
     spot_light_data.reserve(spot_lights.size());
 
-    for (uint32 i = 0; i < transforms.size() && i < spot_lights.size(); ++i)
+    for (const std::pair<SpotLight, Transform>& spot_light_pair : spot_lights)
     {
-        const Transform& transform = transforms[i];
-        const SpotLight& spot_light = spot_lights[i];
+        const SpotLight& spot_light = spot_light_pair.first;
+        const Transform& transform = spot_light_pair.second;
         spot_light_data.emplace_back(transform, spot_light);
     }
 

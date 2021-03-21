@@ -5,9 +5,16 @@ namespace zero::render
 
 EntityRenderStage::EntityRenderStage(IRenderingManager* rendering_manager)
 : rendering_manager_(rendering_manager)
-, diffuse_map_sampler_(rendering_manager_->GetTextureManager()->GetDiffuseMapSampler())
-, shadow_map_sampler_(rendering_manager_->GetTextureManager()->GetShadowMapSampler())
+, diffuse_map_sampler_(nullptr)
+, shadow_map_sampler_(nullptr)
 {
+}
+
+void EntityRenderStage::Initialize()
+{
+    ITextureManager* texture_manager = rendering_manager_->GetTextureManager();
+    diffuse_map_sampler_ = texture_manager->GetDiffuseMapSampler();
+    shadow_map_sampler_ = texture_manager->GetShadowMapSampler();
 }
 
 void EntityRenderStage::Execute(IRenderView* render_view)
@@ -66,15 +73,15 @@ void EntityRenderStage::Execute(IRenderView* render_view)
         uint32 texture_index = 0;
         for (; texture_index < shadow_map_textures.size(); ++texture_index)
         {
+            uniform_manager->SetShadowSamplerName(shader_program.get(), texture_index);
             rendering_context->BindTexture(texture_index, shadow_map_textures[texture_index].get());
             rendering_context->BindTextureSampler(texture_index, shadow_map_sampler_.get());
-            uniform_manager->SetShadowSamplerName(shader_program.get(), texture_index);
         }
 
         // Bind diffuse map texture/sampler
+        uniform_manager->SetDiffuseSamplerName(shader_program.get(), texture_index);
         rendering_context->BindTexture(texture_index, texture_manager->GetTexture(material.texture_map_.diffuse_map_));
         rendering_context->BindTextureSampler(texture_index, diffuse_map_sampler_.get());
-        uniform_manager->SetDiffuseSamplerName(shader_program.get(), texture_index);
 
         Render(rendering_context, model_manager, shader_program.get(), renderable, time_delta);
     }

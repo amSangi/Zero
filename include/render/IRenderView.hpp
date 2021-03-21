@@ -3,6 +3,7 @@
 #include "component/Camera.hpp"
 #include "component/Light.hpp"
 #include "component/SkyDome.hpp"
+#include "core/TimeDelta.hpp"
 #include "render/CascadedShadowMap.hpp"
 #include "render/IRenderable.hpp"
 
@@ -19,13 +20,13 @@ namespace zero::render
         virtual const TimeDelta& GetTimeDelta() = 0;
 
         virtual const CascadedShadowMap& GetCascadedShadowMap() = 0;
-        virtual const std::vector<std::shared_ptr<IRenderable>>& GetShadowCastingRenderables(uint32 cascade_index) = 0;
 
         virtual const std::vector<std::shared_ptr<IRenderable>>& GetRenderables() = 0;
+        virtual const std::vector<std::shared_ptr<IRenderable>>& GetShadowCastingRenderables(uint32 cascade_index) = 0;
 
         virtual const std::vector<DirectionalLight>& GetDirectionalLights() = 0;
-        virtual const std::vector<PointLight>& GetPointLights() = 0;
-        virtual const std::vector<SpotLight>& GetSpotLights() = 0;
+        virtual const std::vector<std::pair<PointLight, Transform>>& GetPointLights() = 0;
+        virtual const std::vector<std::pair<SpotLight, Transform>>& GetSpotLights() = 0;
     }; // interface IRenderView
 
 } // namespace zero::render

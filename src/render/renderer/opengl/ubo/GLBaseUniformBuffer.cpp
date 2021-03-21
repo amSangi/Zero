@@ -29,5 +29,16 @@ const std::string& GLBaseUniformBuffer::GetName() const
     return name_;
 }
 
+void GLBaseUniformBuffer::InitializeBaseBuffer(uint32 binding_index, uint32 data_size)
+{
+    binding_index_ = binding_index;
+    glGenBuffers(1, &buffer_id_);
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);
+    glBufferData(GL_UNIFORM_BUFFER, data_size, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding_index_, buffer_id_);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    initialized_ = true;
+}
+
 } // namespace zero::render
 

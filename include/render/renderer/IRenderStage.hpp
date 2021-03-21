@@ -14,6 +14,7 @@ namespace zero::render
     {
     public:
         virtual ~IRenderStage() = default;
+        virtual void Initialize() = 0;
         virtual void Execute(IRenderView* render_view) = 0;
     }; // interface IRenderStage
 

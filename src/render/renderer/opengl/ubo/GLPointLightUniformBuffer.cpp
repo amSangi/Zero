@@ -1,4 +1,5 @@
 #include "render/renderer/opengl/ubo/GLPointLightUniformBuffer.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -37,19 +38,18 @@ GLPointLightUniformBuffer::GLPointLightUniformBuffer()
 
 void GLPointLightUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<PointLightData>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(PointLightData) * Constants::kMaxPointLights);
 }
 
-void GLPointLightUniformBuffer::UpdateUniforms(const std::vector<Transform>& transforms,
-                                               const std::vector<PointLight>& point_lights)
+void GLPointLightUniformBuffer::UpdateUniforms(const std::vector<std::pair<PointLight, Transform>>& point_lights)
 {
     std::vector<PointLightData> point_light_data{};
     point_light_data.reserve(point_lights.size());
 
-    for (uint32 i = 0; i < transforms.size() && i < point_lights.size(); ++i)
+    for (const std::pair<PointLight, Transform>& point_light_pair : point_lights)
     {
-        const Transform& transform = transforms[i];
-        const PointLight& point_light = point_lights[i];
+        const PointLight& point_light = point_light_pair.first;
+        const Transform& transform = point_light_pair.second;
         point_light_data.emplace_back(transform, point_light);
     }
 

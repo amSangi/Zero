@@ -29,7 +29,7 @@ GLShadowMapUniformBuffer::GLShadowMapUniformBuffer()
 
 void GLShadowMapUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer<ShadowMapInformation>(binding_index);
+    InitializeBaseBuffer(binding_index, sizeof(ShadowMapInformation));
 }
 
 void GLShadowMapUniformBuffer::UpdateUniforms(const std::vector<math::Matrix4x4>& shadow_map_matrices,

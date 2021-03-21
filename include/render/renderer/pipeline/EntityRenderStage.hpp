@@ -11,6 +11,7 @@ namespace zero::render
         explicit EntityRenderStage(IRenderingManager* rendering_manager);
         ~EntityRenderStage() override = default;
 
+        void Initialize() override;
         void Execute(IRenderView* render_view) override;
 
     private:

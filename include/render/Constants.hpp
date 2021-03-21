@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/ZeroBase.hpp"
+
 namespace zero::render
 {
 
