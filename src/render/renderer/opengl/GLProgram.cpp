@@ -117,42 +117,6 @@ void GLProgram::SetUniform(const std::string& name, float value)
     float_map_[name] = value;
 }
 
-void GLProgram::FlushUniform(const std::string& name, math::Matrix4x4 value)
-{
-    matrix4x4_map_[name] = value;
-    glUniformMatrix4fv(glGetUniformLocation(id_, name.c_str()), 1, GL_TRUE, &value[0][0]);
-}
-
-void GLProgram::FlushUniform(const std::string& name, math::Matrix3x3 value)
-{
-    matrix3x3_map_[name] = value;
-    glUniformMatrix3fv(glGetUniformLocation(id_, name.c_str()), 1, GL_TRUE, &value[0][0]);
-}
-
-void GLProgram::FlushUniform(const std::string& name, math::Vec4f value)
-{
-    vec4f_map_[name] = value;
-    glUniform4fv(glGetUniformLocation(id_, name.c_str()), 1, value.Data());
-}
-
-void GLProgram::FlushUniform(const std::string& name, math::Vec3f value)
-{
-    vec3f_map_[name] = value;
-    glUniform3fv(glGetUniformLocation(id_, name.c_str()), 1, value.Data());
-}
-
-void GLProgram::FlushUniform(const std::string& name, int32 value)
-{
-    int32_map_[name] = value;
-    glUniform1i(glGetUniformLocation(id_, name.c_str()), value);
-}
-
-void GLProgram::FlushUniform(const std::string& name, float value)
-{
-    float_map_[name] = value;
-    glUniform1f(glGetUniformLocation(id_, name.c_str()), value);
-}
-
 void GLProgram::FlushUniforms()
 {
     // Flush Matrix4x4

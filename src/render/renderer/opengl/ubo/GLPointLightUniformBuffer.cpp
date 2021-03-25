@@ -43,6 +43,8 @@ void GLPointLightUniformBuffer::Initialize(uint32 binding_index)
 
 void GLPointLightUniformBuffer::UpdateUniforms(const std::vector<std::pair<PointLight, Transform>>& point_lights)
 {
+    assert(point_lights.size() < Constants::kMaxPointLights);
+
     std::vector<PointLightData> point_light_data{};
     point_light_data.reserve(point_lights.size());
 

@@ -70,7 +70,7 @@ void GLTextureManager::SetupSamplers()
     shadow_map_sampler_->SetMagnificationFilter(ISampler::Filter::LINEAR);
     shadow_map_sampler_->SetWrappingS(ISampler::Wrapping::CLAMP_TO_BORDER);
     shadow_map_sampler_->SetWrappingT(ISampler::Wrapping::CLAMP_TO_BORDER);
-    shadow_map_sampler_->SetBorderColour(math::Vec4f{1.0F, 1.0F, 1.0F, 1.0F});
+    shadow_map_sampler_->SetBorderColour(math::Vec4f::One());
     glSamplerParameteri(shadow_map_sampler_->GetNativeIdentifier(), GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
     glSamplerParameteri(shadow_map_sampler_->GetNativeIdentifier(), GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 }
@@ -81,6 +81,7 @@ void GLTextureManager::SetupShadowMapTextures()
     {
         GLuint shadow_map_texture_id = 0;
         glGenTextures(1, &shadow_map_texture_id);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, shadow_map_texture_id);
         glTexImage2D(GL_TEXTURE_2D,                  // Target texture.
                      0,                              // Level of detail. Level n is the nth mipmap reduction image.

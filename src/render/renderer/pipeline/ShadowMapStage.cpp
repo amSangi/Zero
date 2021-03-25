@@ -96,24 +96,30 @@ void ShadowMapStage::RenderEntities(const math::Matrix4x4& light_view_matrix,
         const Transform& transform = renderable->GetTransform();
         const Material& material = renderable->GetMaterial();
 
-        auto shader_program = shader_manager->GenerateProgram(material.shaders_.vertex_shader_, kShadowMapFragmentShaderName);
+        // Shader program start
+        std::shared_ptr<IProgram> shader_program = shader_manager->GenerateProgram(material.shaders_.vertex_shader_, kShadowMapFragmentShaderName);
+        shader_program->Use();
+        rendering_context->BindShaderProgram(shader_program.get());
 
         // Update model and material uniform buffers
         math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
         uniform_manager->UpdateModelUniforms(model_matrix, (light_view_matrix * model_matrix).Inverse());
-        uniform_manager->UpdateMaterialUniforms(material);
-
-        // Bind uniform buffers
-        rendering_context->BindShaderProgram(shader_program.get());
-        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));
-        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
 
         // Bind diffuse map texture/sampler
         uniform_manager->SetDiffuseSamplerName(shader_program.get(), 0);
         rendering_context->BindTexture(0, texture_manager->GetTexture(material.texture_map_.diffuse_map_));
         rendering_context->BindTextureSampler(0, diffuse_map_sampler_.get());
 
+        // Bind uniform buffers
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));
+        rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
+
+        // Shader program flush uniforms and draw
+        shader_program->FlushUniforms();
         Render(rendering_context, model_manager, shader_program.get(), renderable, time_delta);
+
+        // Shader program finish
+        shader_program->Finish();
     }
 }
 

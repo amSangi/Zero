@@ -67,18 +67,6 @@ namespace zero::render
         ///@}
 
         /**
-         * @see IProgram::FlushUniform
-         */
-        ///@{
-        void FlushUniform(const std::string& name, math::Matrix4x4 value) override;
-        void FlushUniform(const std::string& name, math::Matrix3x3 value) override;
-        void FlushUniform(const std::string& name, math::Vec4f value) override;
-        void FlushUniform(const std::string& name, math::Vec3f value) override;
-        void FlushUniform(const std::string& name, zero::int32 value) override;
-        void FlushUniform(const std::string& name, float value) override;
-        ///@}
-
-        /**
          * @see IProgram::IsLinked
          */
         void FlushUniforms() override;

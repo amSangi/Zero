@@ -35,6 +35,8 @@ void GLDirectionalLightUniformBuffer::Initialize(uint32 binding_index)
 
 void GLDirectionalLightUniformBuffer::UpdateUniforms(const std::vector<DirectionalLight>& directional_lights)
 {
+    assert(directional_lights.size() < Constants::kMaxDirectionalLights);
+
     std::vector<DirectionalLightData> directional_light_data{};
     directional_light_data.reserve(directional_lights.size());
 

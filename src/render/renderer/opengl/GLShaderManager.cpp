@@ -147,7 +147,7 @@ bool GLShaderManager::InitializeShader(const ShaderStage& stage)
         glGetShaderiv(shader->GetNativeIdentifier(), GL_INFO_LOG_LENGTH, &message_length);
         compile_error_message.resize(message_length);
         glGetShaderInfoLog(shader->GetNativeIdentifier(), message_length, &message_length, compile_error_message.data());
-        LOG_ERROR("GLCompiler", compile_error_message);
+        LOG_ERROR("GLShaderManager", compile_error_message);
         return false;
     }
 

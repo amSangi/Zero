@@ -20,7 +20,8 @@ void GLSampler::Initialize()
     glSamplerParameteri(id_, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glSamplerParameteri(id_, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glSamplerParameteri(id_, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , math::Vec4f::Zero().Data());
+    math::Vec3f border_color = math::Vec3f::Zero();
+    glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , border_color.Data());
 }
 
 void GLSampler::SetWrappingS(Wrapping wrapping)

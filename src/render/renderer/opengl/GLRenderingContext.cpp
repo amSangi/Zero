@@ -1,6 +1,5 @@
 #include "render/renderer/opengl/GLMesh.hpp"
 #include "render/renderer/opengl/GLRenderingContext.hpp"
-#include "render/renderer/opengl/GLProgram.hpp"
 #include "render/renderer/opengl/GLRenderTarget.hpp"
 #include "render/renderer/opengl/GLSampler.hpp"
 #include "render/renderer/opengl/GLTexture.hpp"
@@ -31,7 +30,8 @@ void GLMessageCallback(GLenum /* source */,
 }
 
 GLRenderingContext::GLRenderingContext()
-: current_shader_program_(nullptr)
+: largest_texture_unit_index_(0)
+, current_shader_program_(nullptr)
 {
 }
 
@@ -51,6 +51,8 @@ void GLRenderingContext::Initialize(const RenderSystemConfig& config)
 
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
     glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -149,13 +151,23 @@ void GLRenderingContext::EndFrame()
 {
     // Unbind any existing frame buffers
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Unbind shader programs
     current_shader_program_ = nullptr;
+    glUseProgram(0);
+
+    // Unbind all textures
+    for (uint32 texture_unit_index = 0; texture_unit_index < largest_texture_unit_index_; ++texture_unit_index)
+    {
+        glActiveTexture(GL_TEXTURE0 + texture_unit_index);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    largest_texture_unit_index_ = 0;
 }
 
 void GLRenderingContext::BindShaderProgram(IProgram* shader_program)
 {
     current_shader_program_ = reinterpret_cast<GLProgram*>(shader_program);
-    current_shader_program_->Use();
 }
 
 void GLRenderingContext::BindUniformBuffer(IUniformBuffer* uniform_buffer)
@@ -174,6 +186,9 @@ void GLRenderingContext::BindTextureSampler(uint32 index, ISampler* sampler)
 
 void GLRenderingContext::BindTexture(uint32 index, ITexture* texture)
 {
+    // Keep track of largest texture unit index used
+    largest_texture_unit_index_ = math::Max(largest_texture_unit_index_, index);
+
     GLTexture* gl_texture = static_cast<GLTexture*>(texture);
     glActiveTexture(GL_TEXTURE0 + index);
     glBindTexture(gl_texture->GetTarget(), gl_texture->GetNativeIdentifier());

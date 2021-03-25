@@ -1,4 +1,5 @@
 #include "render/renderer/pipeline/EntityRenderStage.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -34,20 +35,25 @@ void EntityRenderStage::Execute(IRenderView* render_view)
     // Begin rendering frame with default render target
     rendering_context->BeginFrame(nullptr);
     rendering_context->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
+
+    math::Matrix4x4 projection_matrix = camera.GetProjectionMatrix();
     math::Matrix4x4 view_matrix = camera.GetViewMatrix();
+    uniform_manager->UpdateCameraUniforms(projection_matrix, view_matrix, camera.position_);
 
     // Begin rendering each renderable entity
     for (const std::shared_ptr<IRenderable>& renderable : render_view->GetRenderables())
     {
         const Transform& transform = renderable->GetTransform();
         const Material& material = renderable->GetMaterial();
-        const Volume& volume = renderable->GetVolume();
 
+        // Shader program start
         auto shader_program = shader_manager->GenerateProgram(material);
         if (shader_program == nullptr)
         {
             continue;
         }
+        shader_program->Use();
+        rendering_context->BindShaderProgram(shader_program.get());
 
         // Set fill/cull settings
         rendering_context->SetCullMode(material.two_sided_ ? IRenderingContext::CullMode::CULL_NONE : IRenderingContext::CullMode::CULL_BACK);
@@ -59,7 +65,6 @@ void EntityRenderStage::Execute(IRenderView* render_view)
         uniform_manager->UpdateMaterialUniforms(material);
 
         // Bind uniform buffers
-        rendering_context->BindShaderProgram(shader_program.get());
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MATERIAL_BUFFER));
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
@@ -70,8 +75,7 @@ void EntityRenderStage::Execute(IRenderView* render_view)
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::SHADOW_MAP_BUFFER));
 
         // Bind shadow map textures/samplers
-        uint32 texture_index = 0;
-        for (; texture_index < shadow_map_textures.size(); ++texture_index)
+        for (uint32 texture_index = 0; texture_index < shadow_map_textures.size(); ++texture_index)
         {
             uniform_manager->SetShadowSamplerName(shader_program.get(), texture_index);
             rendering_context->BindTexture(texture_index, shadow_map_textures[texture_index].get());
@@ -79,11 +83,17 @@ void EntityRenderStage::Execute(IRenderView* render_view)
         }
 
         // Bind diffuse map texture/sampler
-        uniform_manager->SetDiffuseSamplerName(shader_program.get(), texture_index);
-        rendering_context->BindTexture(texture_index, texture_manager->GetTexture(material.texture_map_.diffuse_map_));
-        rendering_context->BindTextureSampler(texture_index, diffuse_map_sampler_.get());
+        uint32 diffuse_texture_index = Constants::kShadowCascadeCount;
+        uniform_manager->SetDiffuseSamplerName(shader_program.get(), diffuse_texture_index);
+        rendering_context->BindTexture(diffuse_texture_index, texture_manager->GetTexture(material.texture_map_.diffuse_map_));
+        rendering_context->BindTextureSampler(diffuse_texture_index, diffuse_map_sampler_.get());
 
+        // Shader program flush uniforms and draw
+        shader_program->FlushUniforms();
         Render(rendering_context, model_manager, shader_program.get(), renderable, time_delta);
+
+        // Shader program finish
+        shader_program->Finish();
     }
 
     // Finish frame

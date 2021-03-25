@@ -30,19 +30,27 @@ void SkyDomeStage::Execute(IRenderView* render_view)
     IShaderManager* shader_manager = rendering_manager_->GetShaderManager();
     IUniformManager* uniform_manager = rendering_manager_->GetUniformManager();
 
-    std::shared_ptr<IProgram> sky_dome_program = shader_manager->GenerateProgram(sky_dome);
-    uniform_manager->SetSkyDomeUniforms(sky_dome_program.get(), camera, sky_dome);
-
     // Begin rendering frame with default render target
     rendering_context->BeginFrame(nullptr);
     rendering_context->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
     rendering_context->Clear();
 
+    // Shader program start
+    std::shared_ptr<IProgram> shader_program = shader_manager->GenerateProgram(sky_dome);
+    shader_program->Use();
+    rendering_context->BindShaderProgram(shader_program.get());
+
+    uniform_manager->SetSkyDomeUniforms(shader_program.get(), camera, sky_dome);
+
     rendering_context->SetFillMode(IRenderingContext::FillMode::SOLID);
     rendering_context->SetCullMode(IRenderingContext::CullMode::CULL_NONE);
 
-    rendering_context->BindShaderProgram(sky_dome_program.get());
+    // Shader program flush uniforms and draw
+    shader_program->FlushUniforms();
     rendering_context->Draw(sphere_mesh_.get());
+
+    // Shader program finish
+    shader_program->Finish();
     rendering_context->EndFrame();
 }
 

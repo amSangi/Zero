@@ -71,12 +71,12 @@ void GLUniformManager::Shutdown()
 void GLUniformManager::SetShadowSamplerName(IProgram* shader_program, uint32 texture_index)
 {
     std::string uniform_sampler_name = "u_cascaded_shadow_map[" + std::to_string(texture_index) + "]";
-    shader_program->SetUniform(uniform_sampler_name, static_cast<float>(texture_index));
+    shader_program->SetUniform(uniform_sampler_name, static_cast<int32>(texture_index));
 }
 
 void GLUniformManager::SetDiffuseSamplerName(IProgram* shader_program, uint32 texture_index)
 {
-    shader_program->SetUniform("u_diffuse_texture", static_cast<float>(texture_index));
+    shader_program->SetUniform("u_diffuse_texture", static_cast<int32>(texture_index));
 }
 
 void GLUniformManager::SetSkyDomeUniforms(IProgram* sky_dome_program, const Camera& camera, const SkyDome& sky_dome)
@@ -91,9 +91,12 @@ void GLUniformManager::SetSkyDomeUniforms(IProgram* sky_dome_program, const Came
     sky_dome_program->SetUniform("u_projection_matrix", camera.GetProjectionMatrix());
     sky_dome_program->SetUniform("u_view_matrix", camera.GetViewMatrix());
     sky_dome_program->SetUniform("u_model_matrix", model_matrix);
-    sky_dome_program->SetUniform("u_camera_position", camera.position_);
+    sky_dome_program->SetUniform("u_camera_position", math::Vec4f(camera.position_.x_,
+                                                                  camera.position_.y_,
+                                                                  camera.position_.z_,
+                                                                  1.0F));
     sky_dome_program->SetUniform("u_apex_color", sky_dome.apex_color_);
-    sky_dome_program->SetUniform("u_center_color", sky_dome.apex_color_);
+    sky_dome_program->SetUniform("u_center_color", sky_dome.center_color_);
 }
 
 IUniformBuffer* GLUniformManager::GetUniformBuffer(IUniformManager::UniformBufferType buffer_type)

@@ -35,6 +35,7 @@ namespace zero::render
         void Draw(IMesh* mesh) override;
 
     private:
+        uint32 largest_texture_unit_index_;
         GLProgram* current_shader_program_;
 
     }; // class GLRenderingContext

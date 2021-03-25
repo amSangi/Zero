@@ -67,6 +67,11 @@ void RenderSystem::Update(const TimeDelta& time_delta)
                                                                  render_view->GetPointLights(),
                                                                  render_view->GetSpotLights());
 
+    LOG_VERBOSE(kTitle, "Updating shadow map buffers");
+    const CascadedShadowMap& cascaded_shadow_map = render_view->GetCascadedShadowMap();
+    rendering_manager_->GetUniformManager()->UpdateShadowMapUniforms(cascaded_shadow_map.GetTextureMatrices(),
+                                                                     cascaded_shadow_map.GetViewFarBounds());
+
     LOG_VERBOSE(kTitle, "Rendering IRenderView");
     render_pipeline_->Render(std::move(render_view));
 
