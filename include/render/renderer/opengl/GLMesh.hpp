@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/renderer/IMesh.hpp"
+#include "render/IMesh.hpp"
 #include "render/renderer/opengl/OpenGL.hpp"
 
 namespace zero::render

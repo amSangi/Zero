@@ -1,4 +1,4 @@
-#include "render/renderer/IMesh.hpp"
+#include "render/IMesh.hpp"
 
 namespace zero::render
 {

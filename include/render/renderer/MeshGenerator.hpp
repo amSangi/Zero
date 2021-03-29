@@ -2,7 +2,7 @@
 
 #include "component/Shapes.hpp"
 #include "math/Box.hpp"
-#include "render/renderer/IMesh.hpp"
+#include "render/IMesh.hpp"
 
 namespace zero::render
 {

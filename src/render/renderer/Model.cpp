@@ -1,4 +1,4 @@
-#include "render/renderer/Model.hpp"
+#include "render/Model.hpp"
 #include "math/Box.hpp"
 
 namespace zero::render

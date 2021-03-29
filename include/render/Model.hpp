@@ -4,7 +4,7 @@
 #include "component/Material.hpp"
 #include "component/ModelInstance.hpp"
 #include "component/Volume.hpp"
-#include "render/renderer/IMesh.hpp"
+#include "render/IMesh.hpp"
 
 namespace zero::render
 {

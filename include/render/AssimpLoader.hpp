@@ -1,12 +1,13 @@
 #pragma once
 
 #include <string>
-#include "render/renderer/IModelManager.hpp"
+#include "render/IModelBuilder.hpp"
 
 
 // Forward declarations
 class aiMesh;
 class aiNode;
+class aiNodeAnim;
 class aiScene;
 
 namespace zero::render
@@ -22,7 +23,7 @@ namespace zero::render
          * @brief Constructor
          * @param model_manager the model manager that manages all 3D models
          */
-        explicit AssimpLoader(IModelManager* model_manager);
+        explicit AssimpLoader(IModelBuilder* model_builder);
         ~AssimpLoader() = default;
 
         /**
@@ -33,12 +34,27 @@ namespace zero::render
         void LoadModel(const std::string& model_name, const std::string& file_path);
 
     private:
-        std::shared_ptr<Model> LoadModel(const std::string& model_name, const aiScene* scene, const aiNode* node);
-        std::unique_ptr<Mesh> LoadMesh(aiMesh* ai_mesh) const;
+        bool IsValidScene(const aiScene* ai_scene) const;
+        void LoadNodeMap(aiNode* ai_node);
+        void LoadAnimationMap(const aiScene* ai_scene);
+
+        void LoadModel(std::shared_ptr<Model> parent_model,
+                       const std::string& model_name,
+                       const aiScene* ai_scene,
+                       const aiNode* ai_node,
+                       const math::Matrix4x4& accumulated_transform);
+
+        math::Matrix4x4 ExtractTransformation(const aiNode* ai_node) const;
+        std::unique_ptr<Mesh> ExtractMesh(aiMesh* ai_mesh) const;
+        Material ExtractMaterial(const aiScene* ai_scene, const aiNode* ai_node) const;
+        Volume ExtractVolume(aiMesh* ai_mesh) const;
+        ModelInstance ExtractModelInstance(const std::string& model_name, const aiNode* ai_node) const;
 
         uint32 GetImportFlags() const;
 
-        IModelManager* model_manager_;
+        IModelBuilder* model_builder_;
+        std::unordered_map<std::string, aiNode*> ai_node_map_;
+        std::unordered_map<std::string, aiNodeAnim*> ai_animation_map_;
 
     }; // class AssimpLoader
 

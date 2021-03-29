@@ -4,13 +4,13 @@
 #include "component/Camera.hpp"
 #include "component/Material.hpp"
 #include "core/NonCopyable.hpp"
-#include "render/renderer/IMesh.hpp"
+#include "render/IMesh.hpp"
+#include "render/Model.hpp"
 #include "render/renderer/IProgram.hpp"
 #include "render/renderer/IRenderTarget.hpp"
 #include "render/renderer/ISampler.hpp"
 #include "render/renderer/ITexture.hpp"
 #include "render/renderer/IUniformBuffer.hpp"
-#include "render/renderer/Model.hpp"
 
 namespace zero::render
 {

@@ -16,12 +16,12 @@ namespace zero::render
         ~GLModelManager() override;
 
         void Initialize() override;
-        std::shared_ptr<Model> CreateModel(const std::string& model_name,
-                                           std::unique_ptr<Mesh> mesh,
-                                           const Transform& transform,
-                                           const Material& material,
-                                           const Volume& volume,
-                                           const ModelInstance& model_instance) override;
+        std::shared_ptr<Model> BuildModel(const std::string& model_name,
+                                          std::unique_ptr<Mesh> mesh,
+                                          const Transform& transform,
+                                          const Material& material,
+                                          const Volume& volume,
+                                          const ModelInstance& model_instance) override;
         void ClearModels() override;
         void ClearPrimitives() override;
         std::shared_ptr<Model> GetModel(const std::string& model_name) override;

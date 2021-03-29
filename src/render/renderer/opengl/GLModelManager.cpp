@@ -43,12 +43,12 @@ void GLModelManager::Initialize()
     torus_mesh_ = GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<Model> GLModelManager::CreateModel(const std::string& model_name,
-                                                   std::unique_ptr<Mesh> mesh,
-                                                   const Transform& transform,
-                                                   const Material& material,
-                                                   const Volume& volume,
-                                                   const ModelInstance& model_instance)
+std::shared_ptr<Model> GLModelManager::BuildModel(const std::string& model_name,
+                                                  std::unique_ptr<Mesh> mesh,
+                                                  const Transform& transform,
+                                                  const Material& material,
+                                                  const Volume& volume,
+                                                  const ModelInstance& model_instance)
 {
     auto gl_mesh = std::make_shared<GLMesh>();
     gl_mesh->Initialize(std::move(mesh));

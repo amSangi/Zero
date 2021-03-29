@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "render/renderer/Model.hpp"
+#include "render/Model.hpp"
 #include "render/renderer/opengl/GLMesh.hpp"
 
 namespace zero::render
