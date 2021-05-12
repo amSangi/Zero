@@ -7,6 +7,8 @@ namespace zero::render
 {
 
     // Forward declarations
+    class EntityPrototype;
+    class Node;
     class Model;
 
     /**
@@ -57,6 +59,13 @@ namespace zero::render
          * @return the light entity instance
          */
         static Entity InstantiateLight(entt::registry& registry, const Light& light, Entity entity);
+
+    private:
+        static Entity InstantiateEntityPrototype(entt::registry& registry,
+                                                 Entity parent,
+                                                 EntityPrototype* entity_prototype,
+                                                 const math::Matrix4x4& transformation);
+        static Entity InstantiateNode(entt::registry& registry, std::shared_ptr<Node> node, Entity parent);
 
     }; // class Instantiator
 

@@ -4,6 +4,8 @@ set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
 
 ## Create Library ##
 add_library(${PROJECT_NAME}
+                            # Animation Files
+                            animation/AnimationSystem.cpp
                             # Component Files
                             component/Animator.cpp
                             component/Camera.cpp
@@ -36,7 +38,10 @@ add_library(${PROJECT_NAME}
                             # Render Files
                             render/AssimpLoader.cpp
                             render/CascadedShadowMap.cpp
+                            render/EntityPrototype.cpp
                             render/Instantiator.cpp
+                            render/Model.cpp
+                            render/Node.cpp
                             render/RenderSystem.cpp
                             render/VolumePropagator.cpp
                             render/Window.cpp
@@ -52,7 +57,6 @@ add_library(${PROJECT_NAME}
                             render/renderer/Image.cpp
                             render/renderer/IMesh.cpp
                             render/renderer/MeshGenerator.cpp
-                            render/renderer/Model.cpp
                             render/renderer/RenderPipeline.cpp
                             render/renderer/RenderStage.cpp
                             # Pipeline Files
@@ -61,7 +65,6 @@ add_library(${PROJECT_NAME}
                             render/renderer/pipeline/SkyDomeStage.cpp
                             # OpenGL Files
                             render/renderer/opengl/GLMesh.cpp
-                            render/renderer/opengl/GLModel.cpp
                             render/renderer/opengl/GLModelManager.cpp
                             render/renderer/opengl/GLPrimitiveGenerator.cpp
                             render/renderer/opengl/GLProgram.cpp
@@ -75,6 +78,7 @@ add_library(${PROJECT_NAME}
                             render/renderer/opengl/GLTextureManager.cpp
                             render/renderer/opengl/GLUniformManager.cpp
                             render/renderer/opengl/ubo/GLBaseUniformBuffer.cpp
+                            render/renderer/opengl/ubo/GLBoneUniformBuffer.cpp
                             render/renderer/opengl/ubo/GLCameraUniformBuffer.cpp
                             render/renderer/opengl/ubo/GLDirectionalLightUniformBuffer.cpp
                             render/renderer/opengl/ubo/GLLightInfoUniformBuffer.cpp

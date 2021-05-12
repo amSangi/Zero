@@ -27,6 +27,7 @@ namespace zero::render
 
         std::vector<std::shared_ptr<IRenderable>> GetRenderables(const Camera& camera, const entt::registry& registry);
         std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeCount> GetShadowCastingRenderables(const entt::registry& registry);
+        std::vector<math::Matrix4x4> GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity) const;
 
         std::unique_ptr<IRenderView> render_view_;
         std::shared_ptr<CascadedShadowMap> cascaded_shadow_map_;

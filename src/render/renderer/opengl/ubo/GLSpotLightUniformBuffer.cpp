@@ -49,7 +49,7 @@ void GLSpotLightUniformBuffer::Initialize(uint32 binding_index)
 
 void GLSpotLightUniformBuffer::UpdateUniforms(const std::vector<std::pair<SpotLight, Transform>>& spot_lights)
 {
-    assert(spot_lights.size() < Constants::kMaxSpotLights);
+    assert(spot_lights.size() <= Constants::kMaxSpotLights);
 
     std::vector<SpotLightData> spot_light_data{};
     spot_light_data.reserve(spot_lights.size());

@@ -20,6 +20,7 @@ namespace zero::render
     public:
         enum class UniformBufferType
         {
+            BONE_BUFFER,
             CAMERA_BUFFER,
             LIGHT_INFO_BUFFER,
             DIRECTIONAL_LIGHT_BUFFER,
@@ -38,6 +39,8 @@ namespace zero::render
         virtual void SetShadowSamplerName(IProgram* shader_program, uint32 texture_index) = 0;
         virtual void SetDiffuseSamplerName(IProgram* shader_program, uint32 texture_index) = 0;
         virtual void SetSkyDomeUniforms(IProgram* sky_dome_program, const Camera& camera, const SkyDome& sky_dome) = 0;
+
+        virtual void UpdateBoneUniforms(std::vector<math::Matrix4x4> bone_matrices) = 0;
 
         virtual void UpdateCameraUniforms(const math::Matrix4x4& projection_matrix,
                                           const math::Matrix4x4& view_matrix,

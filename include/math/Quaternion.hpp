@@ -219,6 +219,15 @@ namespace zero::math
         /* ********** Static Operations ********** */
 
         /**
+         * @brief Get a spherical linear interpolation of two quaternions
+         * @param start The starting quaternion
+         * @param end The end quaternion
+         * @param t The amount to slerp by with range [0, 1]
+         * @return The spherically interpolated quaternion
+         */
+        static Quaternion Slerp(const Quaternion& lhs, const Quaternion& rhs, float t);
+
+        /**
          * @brief Compute the dot product between lhs and rhs
          * @param lhs The left Quaternion
          * @param rhs The right Quaternion

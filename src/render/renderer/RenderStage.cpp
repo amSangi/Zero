@@ -13,7 +13,6 @@ RenderStage::RenderStage()
 
 void RenderStage::Render(IRenderingContext* rendering_context,
                          IModelManager* model_manager,
-                         IProgram* shader_program,
                          const std::shared_ptr<IRenderable>& renderable,
                          const TimeDelta& time_delta)
 {
@@ -24,17 +23,10 @@ void RenderStage::Render(IRenderingContext* rendering_context,
     // Render model/primitive
     if (model_instance)
     {
-        std::shared_ptr<Model> model = model_manager->GetModel(*model_instance);
-        const Animator* animator = renderable->GetAnimator();
-        if (animator)
-        {
-            RenderAnimatedModel(rendering_context, model, shader_program, *animator, time_delta);
-        }
-        else
-        {
-            std::shared_ptr<IMesh> mesh = model->GetMesh();
-            rendering_context->Draw(mesh.get());
-        }
+        std::shared_ptr<Model> model = model_manager->GetModel(model_instance->model_name_);
+        std::shared_ptr<Node> node = model->GetNode(model_instance->node_name_);
+        IMesh* mesh = node->GetEntityPrototype(model_instance->mesh_index_)->GetMesh();
+        rendering_context->Draw(mesh);
     }
     else
     {
@@ -73,15 +65,6 @@ void RenderStage::RenderVolume(IRenderingManager* rendering_manager,
 
     std::shared_ptr<IMesh> sphere_mesh = model_manager->GetPrimitive(volume_primitive_instance_);
     rendering_context->Draw(sphere_mesh.get());
-}
-
-void RenderStage::RenderAnimatedModel(IRenderingContext* rendering_context,
-                                      std::shared_ptr<Model> model,
-                                      IProgram* shader_program,
-                                      const Animator& animator,
-                                      const TimeDelta& time_delta)
-{
-    // TODO: Implement animated model rendering
 }
 
 } // namespace zero::render

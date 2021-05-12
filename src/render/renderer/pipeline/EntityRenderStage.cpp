@@ -65,6 +65,13 @@ void EntityRenderStage::Execute(IRenderView* render_view)
         uniform_manager->UpdateMaterialUniforms(material);
 
         // Bind uniform buffers
+        if (renderable->GetAnimator())
+        {
+            // Only update and bind the bone buffer for animated entities
+            // Assume the material component has an animated vertex shader (i.e. has the bone uniform)
+            uniform_manager->UpdateBoneUniforms(renderable->GetBoneMatrices());
+            rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::BONE_BUFFER));
+        }
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MATERIAL_BUFFER));
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::MODEL_BUFFER));
@@ -90,7 +97,7 @@ void EntityRenderStage::Execute(IRenderView* render_view)
 
         // Shader program flush uniforms and draw
         shader_program->FlushUniforms();
-        Render(rendering_context, model_manager, shader_program.get(), renderable, time_delta);
+        Render(rendering_context, model_manager, renderable, time_delta);
 
         // Shader program finish
         shader_program->Finish();

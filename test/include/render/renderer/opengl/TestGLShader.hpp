@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <memory>
 #include "TestWindow.hpp"
-#include "render/opengl/GLShader.hpp"
+#include "render/renderer/opengl/GLShader.hpp"
 
 
 class TestGLShader : public TestWindow

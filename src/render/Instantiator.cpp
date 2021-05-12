@@ -1,6 +1,8 @@
 #include "render/Instantiator.hpp"
 #include "render/Model.hpp"
+#include "component/Transform.hpp"
 #include "math/Box.hpp"
+#include <queue>
 
 namespace zero::render
 {
@@ -9,28 +11,61 @@ Entity Instantiator::InstantiateModel(entt::registry& registry,
                                       const std::shared_ptr<Model>& model,
                                       Entity parent)
 {
-    Entity entity = registry.create();
-    registry.emplace<Volume>(entity, model->GetVolume());
-    registry.emplace<Material>(entity, model->GetMaterial());
-    registry.emplace<ModelInstance>(entity, model->GetModelInstance());
+    return InstantiateNode(registry, model->GetRootNode(), parent);
+}
 
-    zero::Transform transform = model->GetTransform();
-    transform.parent_ = parent;
-    for (const auto& child_gl_model : model->GetChildren())
+Entity Instantiator::InstantiateNode(entt::registry& registry, std::shared_ptr<Node> node, Entity parent)
+{
+    auto InstantiateChildNodes = [](Entity entity, std::shared_ptr<Node> node, entt::registry& registry)
     {
-        Entity child_entity = InstantiateModel(registry, child_gl_model, entity);
-        if (child_entity != NullEntity)
+        // Instantiate child nodes
+        std::vector<Entity> child_entities{};
+        child_entities.reserve(node->GetChildren().size());
+        for (const auto child_node : node->GetChildren())
         {
-            transform.children_.push_back(child_entity);
+            child_entities.push_back(InstantiateNode(registry, child_node, entity));
         }
+
+        // Set child entities
+        Transform& transform = registry.view<Transform>().get<Transform>(entity);
+        transform.children_ = child_entities;
+    };
+
+    if (node->GetEntityPrototypeCount() == 1)
+    {
+        // Directly instantiate node
+        Entity entity = InstantiateEntityPrototype(registry, parent, node->GetEntityPrototype(0), node->GetTransformation());
+        InstantiateChildNodes(entity, node, registry);
+        return entity;
     }
 
-    registry.emplace<zero::Transform>(entity, transform);
+    // Create entity with transform/volume components to contain multiple entity prototypes
+    Entity entity = registry.create();
+    registry.emplace<Transform>(entity, Transform::FromMatrix4x4(node->GetTransformation()));
+    registry.emplace<Volume>(entity, node->GetVolume());
+    InstantiateChildNodes(entity, node, registry);
     return entity;
 }
 
-Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
-                                          const PrimitiveInstance& primitive)
+Entity Instantiator::InstantiateEntityPrototype(entt::registry& registry,
+                                                Entity parent,
+                                                EntityPrototype* entity_prototype,
+                                                const math::Matrix4x4& transformation)
+{
+    Entity entity = registry.create();
+    Transform& transform = registry.emplace<Transform>(entity, Transform::FromMatrix4x4(transformation));
+    transform.parent_ = parent;
+    registry.emplace<Volume>(entity, entity_prototype->GetVolume());
+    registry.emplace<Material>(entity, entity_prototype->GetMaterial());
+    registry.emplace<ModelInstance>(entity, entity_prototype->GetModelInstance());
+    if (entity_prototype->GetAnimator())
+    {
+        registry.emplace<Animator>(entity, *entity_prototype->GetAnimator());
+    }
+    return entity;
+}
+
+Entity Instantiator::InstantiatePrimitive(entt::registry& registry, const PrimitiveInstance& primitive)
 {
     Entity entity = registry.create();
     Transform transform{};
@@ -96,9 +131,7 @@ Entity Instantiator::InstantiatePrimitive(entt::registry& registry,
     return entity;
 }
 
-Entity Instantiator::InstantiateLight(entt::registry& registry,
-                                      const Light& light,
-                                      Entity entity)
+Entity Instantiator::InstantiateLight(entt::registry& registry, const Light& light, Entity entity)
 {
     Entity entity_to_attach = entity;
     if (!registry.valid(entity_to_attach))

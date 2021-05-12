@@ -43,24 +43,11 @@ void GLModelManager::Initialize()
     torus_mesh_ = GLPrimitiveGenerator::Generate(instance);
 }
 
-std::shared_ptr<Model> GLModelManager::BuildModel(const std::string& model_name,
-                                                  std::unique_ptr<Mesh> mesh,
-                                                  const Transform& transform,
-                                                  const Material& material,
-                                                  const Volume& volume,
-                                                  const ModelInstance& model_instance)
+std::unique_ptr<IMesh> GLModelManager::LoadMesh(std::unique_ptr<Mesh> mesh_data)
 {
-    auto gl_mesh = std::make_shared<GLMesh>();
-    gl_mesh->Initialize(std::move(mesh));
-
-    std::shared_ptr<GLModel> model = std::make_shared<GLModel>(gl_mesh,
-                                                               transform,
-                                                               material,
-                                                               volume,
-                                                               model_instance);
-
-    model_map_.emplace(model_name, model);
-    return std::static_pointer_cast<Model>(model);
+    auto gl_mesh = std::make_unique<GLMesh>();
+    gl_mesh->Initialize(std::move(mesh_data));
+    return std::move(gl_mesh);
 }
 
 void GLModelManager::ClearModels()
@@ -78,6 +65,11 @@ void GLModelManager::ClearPrimitives()
     torus_mesh_.reset();
 }
 
+void GLModelManager::AddModel(const std::string& model_name, std::shared_ptr<Model> model)
+{
+    model_map_.emplace(model_name, model);
+}
+
 std::shared_ptr<Model> GLModelManager::GetModel(const std::string& model_name)
 {
     auto model_search = model_map_.find(model_name);
@@ -86,23 +78,6 @@ std::shared_ptr<Model> GLModelManager::GetModel(const std::string& model_name)
         return nullptr;
     }
     return model_search->second;
-}
-
-std::shared_ptr<Model> GLModelManager::GetModel(const ModelInstance& model_instance)
-{
-    auto model = GetModel(model_instance.model_name_);
-    if (!model)
-    {
-        return nullptr;
-    }
-
-    if (model->GetModelInstance().node_name_ == model_instance.node_name_)
-    {
-        return model;
-    }
-
-    // Search for the correct child node
-    return model->FindChild(model_instance.node_name_);
 }
 
 std::shared_ptr<IMesh> GLModelManager::GetPrimitive(const PrimitiveInstance& primitive_instance)

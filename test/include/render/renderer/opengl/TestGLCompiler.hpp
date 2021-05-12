@@ -2,7 +2,7 @@
 
 #include "TestGLShader.hpp"
 #include "render/renderer/ShaderStage.hpp"
-#include "render/opengl/GLCompiler.hpp"
+#include "render/renderer/opengl/GLShaderManager.hpp"
 
 class TestGLCompiler : public TestGLShader
 {
@@ -12,7 +12,7 @@ protected:
     {
         using namespace zero::render;
         TestGLShader::SetUp();
-        compiler_ = std::make_shared<GLCompiler>();
+        shader_manager_ = std::make_shared<GLShaderManager>();
         vertex_stage_ = ShaderStage{IShader::Type::VERTEX_SHADER, "Vertex", TEST_VERTEX_SOURCE};
         fragment_stage_ = ShaderStage{IShader::Type::FRAGMENT_SHADER, "Fragment", TEST_FRAGMENT_SOURCE};
         geometry_stage_ = ShaderStage{IShader::Type::GEOMETRY_SHADER, "Geometry", TEST_GEOMETRY_SOURCE};
@@ -22,7 +22,7 @@ protected:
     }
 
 protected:
-    std::shared_ptr<zero::render::GLCompiler> compiler_;
+    std::shared_ptr<zero::render::GLShaderManager> shader_manager_;
     zero::render::ShaderStage vertex_stage_;
     zero::render::ShaderStage fragment_stage_;
     zero::render::ShaderStage geometry_stage_;

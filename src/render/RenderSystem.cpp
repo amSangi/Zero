@@ -129,13 +129,18 @@ Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity)
 void RenderSystem::LoadModels()
 {
     AssetManager& asset_manager = GetCore()->GetAssetManager();
+    IModelManager* model_manager = rendering_manager_->GetModelManager();
 
     const std::vector<std::string>& model_files = asset_manager.GetModelFiles();
     LOG_DEBUG(kTitle, "Loading 3D models. Model count: " + std::to_string(model_files.size()));
     for (const auto& model_file : model_files)
     {
         std::string model_file_path = asset_manager.GetModelFilePath(model_file);
-        model_loader_->LoadModel(model_file, model_file_path);
+        std::shared_ptr<Model> model = model_loader_->LoadModel(model_file, model_file_path);
+        if (model)
+        {
+            model_manager->AddModel(model_file, model);
+        }
     }
 }
 

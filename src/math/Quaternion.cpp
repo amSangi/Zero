@@ -295,6 +295,25 @@ Matrix3x3 Quaternion::GetRotationMatrix() const
                      e20, e21, e22);
 }
 
+Quaternion Quaternion::Slerp(const Quaternion& lhs, const Quaternion& rhs, float t)
+{
+    float cos_theta = Dot(lhs, rhs);
+
+    // Perform linear interpolation when cos_theta is close to 1 to avoid division by zero when sin(angle) approaches 0
+    if (cos_theta > (1.0F - math::kEpsilon))
+    {
+        return math::Quaternion(math::Lerp(lhs.w_, rhs.w_, t),
+                                math::Lerp(lhs.x_, rhs.x_, t),
+                                math::Lerp(lhs.y_, rhs.y_, t),
+                                math::Lerp(lhs.z_, rhs.z_, t));
+    }
+
+    float angle = math::Acos(cos_theta);
+    Quaternion lhs_temp = lhs * math::Sin((1.0F - t) * angle);
+    Quaternion rhs_temp = rhs * math::Sin(t * angle);
+    return (lhs_temp + rhs_temp) / math::Sin(angle);
+}
+
 float Quaternion::Dot(const Quaternion& lhs, const Quaternion& rhs)
 {
 	return (lhs.w_ * rhs.w_) + (lhs.x_ * rhs.x_) + (lhs.y_ * rhs.y_) + (lhs.z_ * rhs.z_);

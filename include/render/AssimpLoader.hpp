@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string>
-#include "render/IModelBuilder.hpp"
+#include "render/IMeshLoader.hpp"
 
 
 // Forward declarations
+class aiMaterial;
 class aiMesh;
 class aiNode;
 class aiNodeAnim;
@@ -21,38 +22,38 @@ namespace zero::render
     public:
         /**
          * @brief Constructor
-         * @param model_manager the model manager that manages all 3D models
+         * @param mesh_loader the IMesh loader
          */
-        explicit AssimpLoader(IModelBuilder* model_builder);
+        explicit AssimpLoader(IMeshLoader* mesh_loader);
         ~AssimpLoader() = default;
 
         /**
          * @brief Load a 3D model
          * @param model_name the name of the model
          * @param file_path the fully qualified model file path
+         * @return the Model instance. Nullptr if the model failed to load
          */
-        void LoadModel(const std::string& model_name, const std::string& file_path);
+        std::shared_ptr<Model> LoadModel(const std::string& model_name, const std::string& file_path);
 
     private:
         bool IsValidScene(const aiScene* ai_scene) const;
         void LoadNodeMap(aiNode* ai_node);
         void LoadAnimationMap(const aiScene* ai_scene);
 
-        void LoadModel(std::shared_ptr<Model> parent_model,
-                       const std::string& model_name,
-                       const aiScene* ai_scene,
-                       const aiNode* ai_node,
-                       const math::Matrix4x4& accumulated_transform);
+        std::shared_ptr<Node> CreateNode(const std::string& model_name,
+                                         const aiScene* ai_scene,
+                                         const aiNode* ai_node,
+                                         const math::Matrix4x4& parent_transformation);
 
-        math::Matrix4x4 ExtractTransformation(const aiNode* ai_node) const;
-        std::unique_ptr<Mesh> ExtractMesh(aiMesh* ai_mesh) const;
-        Material ExtractMaterial(const aiScene* ai_scene, const aiNode* ai_node) const;
-        Volume ExtractVolume(aiMesh* ai_mesh) const;
-        ModelInstance ExtractModelInstance(const std::string& model_name, const aiNode* ai_node) const;
+        std::unique_ptr<Mesh>     ExtractMesh(aiMesh* ai_mesh) const;
+        std::unique_ptr<Animator> ExtractAnimator(const aiNode* ai_node, aiMesh* ai_mesh) const;
+        Material                  ExtractMaterial(const aiMaterial* ai_material) const;
+        Volume                    ExtractVolume(aiMesh* ai_mesh) const;
+        ModelInstance             ExtractModelInstance(const std::string& model_name, const aiNode* ai_node, uint32 mesh_index) const;
 
-        uint32 GetImportFlags() const;
+        constexpr uint32 GetImportFlags() const;
 
-        IModelBuilder* model_builder_;
+        IMeshLoader* mesh_loader_;
         std::unordered_map<std::string, aiNode*> ai_node_map_;
         std::unordered_map<std::string, aiNodeAnim*> ai_animation_map_;
 

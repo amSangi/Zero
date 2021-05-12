@@ -1,6 +1,7 @@
 #pragma once
 
 #include "render/renderer/IUniformManager.hpp"
+#include "render/renderer/opengl/ubo/GLBoneUniformBuffer.hpp"
 #include "render/renderer/opengl/ubo/GLCameraUniformBuffer.hpp"
 #include "render/renderer/opengl/ubo/GLDirectionalLightUniformBuffer.hpp"
 #include "render/renderer/opengl/ubo/GLLightInfoUniformBuffer.hpp"
@@ -26,6 +27,8 @@ namespace zero::render
         void SetDiffuseSamplerName(IProgram* shader_program, uint32 texture_index) override;
         void SetSkyDomeUniforms(IProgram* sky_dome_program, const Camera& camera, const SkyDome& sky_dome) override;
 
+        void UpdateBoneUniforms(std::vector<math::Matrix4x4> bone_matrices) override;
+
         void UpdateCameraUniforms(const math::Matrix4x4& projection_matrix,
                                   const math::Matrix4x4& view_matrix,
                                   const math::Vec3f& camera_position) override;
@@ -44,6 +47,7 @@ namespace zero::render
         IUniformBuffer* GetUniformBuffer(UniformBufferType buffer_type) override;
 
     private:
+        std::unique_ptr<GLBoneUniformBuffer> bone_buffer_;
         std::unique_ptr<GLCameraUniformBuffer> camera_buffer_;
         std::unique_ptr<GLMaterialUniformBuffer> material_buffer_;
         std::unique_ptr<GLModelUniformBuffer> model_buffer_;

@@ -2,6 +2,7 @@
 #include "render/scene/Renderable.hpp"
 #include "render/scene/RenderView.hpp"
 #include "render/scene/CullingManager.hpp"
+#include <queue>
 
 namespace zero::render
 {
@@ -160,15 +161,18 @@ std::vector<std::shared_ptr<IRenderable>> SceneManager::GetRenderables(const Cam
         const Transform& transform = renderable_view.get<const Transform>(entity);
         const Material& material = renderable_view.get<const Material>(entity);
         const Volume& volume = renderable_view.get<const Volume>(entity);
+
         std::unique_ptr<Animator> animator{};
         std::unique_ptr<ModelInstance> model_instance{};
         std::unique_ptr<PrimitiveInstance> primitive_instance{};
+        std::vector<math::Matrix4x4> bone_matrices{};
         if (model_instance_view.contains(entity))
         {
             model_instance = std::make_unique<ModelInstance>(model_instance_view.get<const ModelInstance>(entity));
             if (animated_model_instance_view.contains(entity))
             {
                 animator = std::make_unique<Animator>(animated_model_instance_view.get<const Animator>(entity));
+                bone_matrices = GetBoneMatrices(registry, animator->GetRootBoneEntity());
             }
         }
         else
@@ -181,7 +185,8 @@ std::vector<std::shared_ptr<IRenderable>> SceneManager::GetRenderables(const Cam
                                                                                volume,
                                                                                std::move(animator),
                                                                                std::move(model_instance),
-                                                                               std::move(primitive_instance));
+                                                                               std::move(primitive_instance),
+                                                                               bone_matrices);
         renderable_cache_.emplace(entity, renderable);
         renderables.push_back(renderable);
     }
@@ -225,12 +230,14 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
             std::unique_ptr<Animator> animator{};
             std::unique_ptr<ModelInstance> model_instance{};
             std::unique_ptr<PrimitiveInstance> primitive_instance{};
+            std::vector<math::Matrix4x4> bone_matrices{};
             if (model_instance_view.contains(entity))
             {
                 model_instance = std::make_unique<ModelInstance>(model_instance_view.get<const ModelInstance>(entity));
                 if (animated_model_instance_view.contains(entity))
                 {
                     animator = std::make_unique<Animator>(animated_model_instance_view.get<const Animator>(entity));
+                    bone_matrices = GetBoneMatrices(registry, animator->GetRootBoneEntity());
                 }
             }
             else
@@ -243,13 +250,48 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
                                                                                    volume,
                                                                                    std::move(animator),
                                                                                    std::move(model_instance),
-                                                                                   std::move(primitive_instance));
+                                                                                   std::move(primitive_instance),
+                                                                                   bone_matrices);
             shadow_casting_renderables[cascade_index].push_back(renderable);
             renderable_cache_.emplace(entity, renderable);
         }
     }
 
     return shadow_casting_renderables;
+}
+
+std::vector<math::Matrix4x4> SceneManager::GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity) const
+{
+    // TODO: Validate bone matrix retrieval
+    // - Valid matrix?
+    // - Valid bone list order?
+    //     - Needs to be in expected order (Vertices expect IDs to be correct)
+    std::vector<math::Matrix4x4> bone_matrices{};
+
+    auto bone_view = registry.view<const Transform, const Bone>();
+
+    // Breadth first approach
+    std::queue<Entity> bone_entities{};
+    bone_entities.push(root_bone_entity);
+    while (!bone_entities.empty())
+    {
+        Entity bone_entity = bone_entities.front();
+        bone_entities.pop();
+
+        const Transform& bone_transform = bone_view.get<const Transform>(bone_entity);
+        bone_matrices.push_back(bone_transform.GetLocalToWorldMatrix());
+
+        // Add only child bone entities
+        for (Entity child_entity : bone_transform.children_)
+        {
+            if (bone_view.contains(child_entity))
+            {
+                bone_entities.push(child_entity);
+            }
+        }
+    }
+
+    return bone_matrices;
 }
 
 } // namespace zero::render

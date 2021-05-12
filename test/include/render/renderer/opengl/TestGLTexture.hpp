@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TestGLShader.hpp"
-#include "render/opengl/GLTexture.hpp"
+#include "render/renderer/opengl/GLTexture.hpp"
 
 class TestGLTexture : public TestGLShader
 {

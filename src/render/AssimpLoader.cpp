@@ -1,22 +1,24 @@
 #include "render/AssimpLoader.hpp"
 #include "core/Logger.hpp"
 #include <assimp/Importer.hpp>
+#include <assimp/matrix4x4.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <queue>
 
 namespace zero::render
 {
 
 constexpr auto kLogTitle = "AssimpLoader";
 
-AssimpLoader::AssimpLoader(IModelBuilder* model_builder)
-: model_builder_(model_builder)
+AssimpLoader::AssimpLoader(IMeshLoader* mesh_loader)
+: mesh_loader_(mesh_loader)
 , ai_node_map_()
 , ai_animation_map_()
 {
 }
 
-void AssimpLoader::LoadModel(const std::string& model_name, const std::string& file_path)
+std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, const std::string& file_path)
 {
     Assimp::Importer importer{};
     const aiScene* ai_scene = importer.ReadFile(file_path.c_str(), GetImportFlags());
@@ -24,40 +26,28 @@ void AssimpLoader::LoadModel(const std::string& model_name, const std::string& f
     if (!IsValidScene(ai_scene))
     {
         LOG_ERROR(kLogTitle, "Failed to load model because the scene structure is invalid. Model: " + file_path);
-        return;
+        return nullptr;
     }
 
     // Load the {node name, node} and {node name, animation channel} maps
     LoadNodeMap(ai_scene->mRootNode);
     LoadAnimationMap(ai_scene);
 
-    // Construct root model
-    aiNode* ai_root_node = ai_scene->mRootNode;
-    aiMesh* ai_mesh = ai_scene->mMeshes[ai_root_node->mMeshes[0]];
-    math::Matrix4x4 transformation = ExtractTransformation(ai_root_node);
-    std::shared_ptr<Model> root_model = model_builder_->BuildModel(model_name,
-                                                                   ExtractMesh(ai_mesh),
-                                                                   Transform::FromMatrix4x4(transformation),
-                                                                   ExtractMaterial(ai_scene, ai_root_node),
-                                                                   ExtractVolume(ai_mesh),
-                                                                   ExtractModelInstance(model_name, ai_root_node));
-    // Construct child models
-    for (uint32 i = 0; i < ai_root_node->mNumChildren; ++i)
-    {
-        aiNode* ai_child_node = ai_root_node->mChildren[i];
-        LoadModel(root_model, model_name, ai_scene, ai_child_node, transformation);
-    }
+    std::shared_ptr<Node> root_node = CreateNode(model_name, ai_scene, ai_scene->mRootNode, math::Matrix4x4::Identity());
+    std::shared_ptr<Model> model = std::make_shared<Model>(model_name, root_node);
+    model->Initialize();
 
     // Clear cache because the scene will be released
     ai_node_map_.clear();
     ai_animation_map_.clear();
+
+    return model;
 }
 
 bool AssimpLoader::IsValidScene(const aiScene* ai_scene) const
 {
-    return ai_scene != nullptr                   // Non-null scene
-        && ai_scene->mRootNode != nullptr        // Non-null root node
-        && ai_scene->mRootNode->mNumMeshes > 0;  // Root node contains at least 1 mesh
+    return ai_scene != nullptr             // Non-null scene
+        && ai_scene->mRootNode != nullptr; // Non-null root node
 }
 
 void AssimpLoader::LoadNodeMap(aiNode* ai_node)
@@ -82,56 +72,46 @@ void AssimpLoader::LoadAnimationMap(const aiScene* ai_scene)
     }
 }
 
-void AssimpLoader::LoadModel(std::shared_ptr<Model> parent_model,
-                             const std::string& model_name,
-                             const aiScene* ai_scene,
-                             const aiNode* ai_node,
-                             const math::Matrix4x4& parent_node_transformation)
+std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name,
+                                               const aiScene *ai_scene,
+                                               const aiNode *ai_node,
+                                               const math::Matrix4x4& parent_transformation)
 {
-    math::Matrix4x4 transformation = parent_node_transformation * ExtractTransformation(ai_node);
-    if (ai_node->mNumMeshes == 0)
-    {
-        // Do not construct model but propagate node transform
-        for (uint32 i = 0; i < ai_node->mNumChildren; ++i)
-        {
-            aiNode* ai_child_node = ai_node->mChildren[i];
-            LoadModel(parent_model, model_name, ai_scene, ai_child_node, parent_node_transformation);
-        }
-
-        return;
-    }
-
-    if (ai_node->mNumMeshes > 1)
-    {
-        LOG_WARN(kLogTitle, "Loader does not support multi-mesh nodes. Extra meshes will be ignored. Model: " + model_name);
-    }
-
-    // Assume each node has at most 1 mesh
-    aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[0]];
-    std::shared_ptr<Model> model = model_builder_->BuildModel(model_name,
-                                                              ExtractMesh(ai_mesh),
-                                                              Transform::FromMatrix4x4(transformation),
-                                                              ExtractMaterial(ai_scene, ai_node),
-                                                              ExtractVolume(ai_mesh),
-                                                              ExtractModelInstance(model_name, ai_node));
-    model->SetParent(parent_model);
-    parent_model->AddChild(model);
-
-    // Recursively load child models
-    for (uint32 i = 0; i < ai_node->mNumChildren; ++i)
-    {
-        aiNode* ai_child_node = ai_node->mChildren[i];
-        LoadModel(model, model_name, ai_scene, ai_child_node, parent_node_transformation);
-    }
-}
-
-math::Matrix4x4 AssimpLoader::ExtractTransformation(const aiNode* ai_node) const
-{
+    // ai_matrix is the transformation relative to the parent.
+    // Compute transformation relative to the world.
     const aiMatrix4x4& ai_matrix = ai_node->mTransformation;
-    return math::Matrix4x4{ai_matrix.a1, ai_matrix.a2, ai_matrix.a3, ai_matrix.a4,
-                           ai_matrix.b1, ai_matrix.b2, ai_matrix.b3, ai_matrix.b4,
-                           ai_matrix.c1, ai_matrix.c2, ai_matrix.c3, ai_matrix.c4,
-                           ai_matrix.d1, ai_matrix.d2, ai_matrix.d3, ai_matrix.d4};
+    math::Matrix4x4 transformation = parent_transformation * math::Matrix4x4{ai_matrix.a1, ai_matrix.a2, ai_matrix.a3, ai_matrix.a4,
+                                                                             ai_matrix.b1, ai_matrix.b2, ai_matrix.b3, ai_matrix.b4,
+                                                                             ai_matrix.c1, ai_matrix.c2, ai_matrix.c3, ai_matrix.c4,
+                                                                             ai_matrix.d1, ai_matrix.d2, ai_matrix.d3, ai_matrix.d4};
+
+    std::shared_ptr<Node> node = std::make_shared<Node>(ai_node->mName.C_Str(), transformation);
+
+    // Create EntityPrototypes associated with each mesh
+    // If the node does not contain a mesh and is not renderable, the instantiated entity associated with the node
+    // will only contain Transform and Volume components
+    for (uint32 i = 0; i < ai_node->mNumMeshes; ++i)
+    {
+        aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
+        aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
+        std::unique_ptr<EntityPrototype> entity_prototype = std::make_unique<EntityPrototype>(mesh_loader_->LoadMesh(ExtractMesh(ai_mesh)),
+                                                                                              ExtractAnimator(ai_node, ai_mesh),
+                                                                                              ExtractMaterial(ai_material),
+                                                                                              ExtractVolume(ai_mesh),
+                                                                                              ExtractModelInstance(model_name, ai_node, i));
+        node->AddEntityPrototype(std::move(entity_prototype));
+    }
+
+    // Create child nodes
+    for (uint32 child_index = 0; child_index < ai_node->mNumChildren; ++child_index)
+    {
+        const aiNode* child_ai_node = ai_node->mChildren[child_index];
+        std::shared_ptr<Node> child_node = CreateNode(model_name, ai_scene, child_ai_node, transformation);
+
+        node->AddChild(child_node);
+        child_node->SetParent(node);
+    }
+    return node;
 }
 
 std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
@@ -192,24 +172,32 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
     return std::make_unique<Mesh>(std::move(vertices), std::move(indices));
 }
 
-Material AssimpLoader::ExtractMaterial(const aiScene* ai_scene, const aiNode* ai_node) const
+std::unique_ptr<Animator> AssimpLoader::ExtractAnimator(const aiNode* ai_node, aiMesh* ai_mesh) const
+{
+    // No bones to animate
+    if (ai_mesh->mNumBones == 0)
+    {
+        return nullptr;
+    }
+
+    // TODO: Finish implementation
+    return nullptr;
+}
+
+Material AssimpLoader::ExtractMaterial(const aiMaterial* ai_material) const
 {
     Material material{};
-    if (ai_scene->mNumMaterials > 0)
-    {
-        aiMaterial* ai_material = ai_scene->mMaterials[0];
-        material.name_ = ai_material->GetName().C_Str();
+    material.name_ = ai_material->GetName().C_Str();
 
-        aiString ai_path{};
-        ai_material->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &ai_path);
-        material.texture_map_.diffuse_map_ = ai_path.C_Str();
+    aiString ai_path{};
+    ai_material->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &ai_path);
+    material.texture_map_.diffuse_map_ = ai_path.C_Str();
 
-        ai_material->GetTexture(aiTextureType::aiTextureType_SPECULAR, 0, &ai_path);
-        material.texture_map_.specular_map_  = ai_path.C_Str();
+    ai_material->GetTexture(aiTextureType::aiTextureType_SPECULAR, 0, &ai_path);
+    material.texture_map_.specular_map_  = ai_path.C_Str();
 
-        ai_material->GetTexture(aiTextureType::aiTextureType_NORMALS, 0, &ai_path);
-        material.texture_map_.normal_map_  = ai_path.C_Str();
-    }
+    ai_material->GetTexture(aiTextureType::aiTextureType_NORMALS, 0, &ai_path);
+    material.texture_map_.normal_map_  = ai_path.C_Str();
     return material;
 }
 
@@ -224,23 +212,24 @@ Volume AssimpLoader::ExtractVolume(aiMesh* ai_mesh) const
     return volume;
 }
 
-ModelInstance AssimpLoader::ExtractModelInstance(const std::string& model_name, const aiNode* ai_node) const
+ModelInstance AssimpLoader::ExtractModelInstance(const std::string& model_name, const aiNode* ai_node, uint32 mesh_index) const
 {
     ModelInstance model_instance{};
     model_instance.model_name_ = model_name;
     model_instance.node_name_ = ai_node->mName.C_Str();
+    model_instance.mesh_index_ = mesh_index;
     return model_instance;
 }
 
-uint32 AssimpLoader::GetImportFlags() const
+constexpr uint32 AssimpLoader::GetImportFlags() const
 {
-    uint32 flags = aiProcess_FlipUVs
-                   | aiProcess_GenBoundingBoxes
-                   | aiProcess_GenNormals
-                   | aiProcess_LimitBoneWeights
-                   | aiProcess_OptimizeMeshes
-                   | aiProcess_OptimizeGraph
-                   | aiProcess_Triangulate;
+    constexpr uint32 flags = aiProcess_FlipUVs
+                           | aiProcess_GenBoundingBoxes
+                           | aiProcess_GenNormals
+                           | aiProcess_LimitBoneWeights
+                           | aiProcess_OptimizeMeshes
+                           | aiProcess_OptimizeGraph
+                           | aiProcess_Triangulate;
     return flags;
 }
 

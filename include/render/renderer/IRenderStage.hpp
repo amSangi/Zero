@@ -28,7 +28,6 @@ namespace zero::render
     protected:
         void Render(IRenderingContext* rendering_context,
                     IModelManager* model_manager,
-                    IProgram* shader_program,
                     const std::shared_ptr<IRenderable>& renderable,
                     const TimeDelta& time_delta);
 
@@ -37,12 +36,6 @@ namespace zero::render
                           const math::Matrix4x4& projection_matrix,
                           const math::Matrix4x4& view_matrix,
                           const Volume& volume);
-
-        void RenderAnimatedModel(IRenderingContext* rendering_context,
-                                 std::shared_ptr<Model> model,
-                                 IProgram* shader_program,
-                                 const Animator& animator,
-                                 const TimeDelta& time_delta);
     private:
         Material volume_material_;
         PrimitiveInstance volume_primitive_instance_;

@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include "render/renderer/IModelManager.hpp"
 #include "render/renderer/opengl/GLMesh.hpp"
-#include "render/renderer/opengl/GLModel.hpp"
 
 namespace zero::render
 {
@@ -16,16 +15,11 @@ namespace zero::render
         ~GLModelManager() override;
 
         void Initialize() override;
-        std::shared_ptr<Model> BuildModel(const std::string& model_name,
-                                          std::unique_ptr<Mesh> mesh,
-                                          const Transform& transform,
-                                          const Material& material,
-                                          const Volume& volume,
-                                          const ModelInstance& model_instance) override;
+        std::unique_ptr<IMesh> LoadMesh(std::unique_ptr<Mesh> mesh_data) override;
         void ClearModels() override;
         void ClearPrimitives() override;
+        void AddModel(const std::string& model_name, std::shared_ptr<Model> model) override;
         std::shared_ptr<Model> GetModel(const std::string& model_name) override;
-        std::shared_ptr<Model> GetModel(const ModelInstance& model_instance) override;
         std::shared_ptr<IMesh> GetPrimitive(const PrimitiveInstance& primitive_instance) override;
     private:
         /**
@@ -44,7 +38,7 @@ namespace zero::render
         [[nodiscard]] std::shared_ptr<GLMesh> Generate(const Torus& torus) const;
         ///@}
 
-        std::unordered_map<std::string, std::shared_ptr<GLModel>> model_map_;
+        std::unordered_map<std::string, std::shared_ptr<Model>> model_map_;
 
         /**
          * @brief Default primitive data

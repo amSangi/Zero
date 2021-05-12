@@ -21,6 +21,7 @@ namespace zero::render
         virtual Animator* GetAnimator() = 0;
         virtual ModelInstance* GetModelInstance() = 0;
         virtual PrimitiveInstance* GetPrimitiveInstance() = 0;
+        virtual const std::vector<math::Matrix4x4>& GetBoneMatrices() = 0;
     }; // interface IRenderable
 
 } // namespace zero

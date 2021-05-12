@@ -6,15 +6,16 @@ namespace zero::render
 //////////////////////////////////////////////////
 ///// Binding Indices
 //////////////////////////////////////////////////
-constexpr uint32 kCameraBufferBindingIndex           = 0U;
-constexpr uint32 kMaterialBufferBindingIndex         = 1U;
-constexpr uint32 kModelBufferBindingIndex            = 2U;
-constexpr uint32 kShadowMapBufferBindingIndex        = 3U;
+constexpr uint32 kBoneBufferBindingIndex             = 0U;
+constexpr uint32 kCameraBufferBindingIndex           = 1U;
+constexpr uint32 kMaterialBufferBindingIndex         = 2U;
+constexpr uint32 kModelBufferBindingIndex            = 3U;
+constexpr uint32 kShadowMapBufferBindingIndex        = 4U;
 
-constexpr uint32 kLightInfoBufferBindingIndex        = 4U;
-constexpr uint32 kDirectionalLightBufferBindingIndex = 5U;
-constexpr uint32 kPointLightBufferBindingIndex       = 6U;
-constexpr uint32 kSpotLightBufferBindingIndex        = 7U;
+constexpr uint32 kLightInfoBufferBindingIndex        = 5U;
+constexpr uint32 kDirectionalLightBufferBindingIndex = 6U;
+constexpr uint32 kPointLightBufferBindingIndex       = 7U;
+constexpr uint32 kSpotLightBufferBindingIndex        = 8U;
 
 //////////////////////////////////////////////////
 ///// GLUniformManager
@@ -37,6 +38,7 @@ GLUniformManager::~GLUniformManager()
 
 void GLUniformManager::Initialize()
 {
+    bone_buffer_ = std::make_unique<GLBoneUniformBuffer>();
     camera_buffer_ = std::make_unique<GLCameraUniformBuffer>();
     material_buffer_ = std::make_unique<GLMaterialUniformBuffer>();
     model_buffer_ = std::make_unique<GLModelUniformBuffer>();
@@ -46,6 +48,7 @@ void GLUniformManager::Initialize()
     point_light_buffer_ = std::make_unique<GLPointLightUniformBuffer>();
     spot_light_buffer_ = std::make_unique<GLSpotLightUniformBuffer>();
 
+    bone_buffer_->Initialize(kBoneBufferBindingIndex);
     camera_buffer_->Initialize(kCameraBufferBindingIndex);
     material_buffer_->Initialize(kMaterialBufferBindingIndex);
     model_buffer_->Initialize(kModelBufferBindingIndex);
@@ -58,6 +61,7 @@ void GLUniformManager::Initialize()
 
 void GLUniformManager::Shutdown()
 {
+    bone_buffer_.reset();
     camera_buffer_.reset();
     material_buffer_.reset();
     model_buffer_.reset();
@@ -103,6 +107,8 @@ IUniformBuffer* GLUniformManager::GetUniformBuffer(IUniformManager::UniformBuffe
 {
     switch (buffer_type)
     {
+        case IUniformManager::UniformBufferType::BONE_BUFFER:
+            return bone_buffer_.get();
         case IUniformManager::UniformBufferType::CAMERA_BUFFER:
             return camera_buffer_.get();
         case IUniformManager::UniformBufferType::LIGHT_INFO_BUFFER:
@@ -127,6 +133,11 @@ IUniformBuffer* GLUniformManager::GetUniformBuffer(IUniformManager::UniformBuffe
 //////////////////////////////////////////////////
 ///// Update Uniforms
 //////////////////////////////////////////////////
+void GLUniformManager::UpdateBoneUniforms(std::vector<math::Matrix4x4> bone_matrices)
+{
+    bone_buffer_->UpdateUniforms(std::move(bone_matrices));
+}
+
 void GLUniformManager::UpdateCameraUniforms(const math::Matrix4x4& projection_matrix,
                                             const math::Matrix4x4& view_matrix,
                                             const math::Vec3f& camera_position)
