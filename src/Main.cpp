@@ -1,10 +1,7 @@
 #include "engine/Engine.hpp"
-#include "component/Camera.hpp"
-#include "component/Light.hpp"
-#include "component/PrimitiveInstance.hpp"
-#include "component/SkyDome.hpp"
 #include "core/Logger.hpp"
 #include <memory>
+#include <queue>
 
 using namespace zero;
 
@@ -169,20 +166,40 @@ private:
         }
         {
             // Instantiate an animated 3D model
-            auto model_entity = GetInstantiator()->InstantiateModel("biped-robot\\source\\Robot.FBX");
-            if (model_entity == zero::NullEntity)
+            auto model_entity = GetInstantiator()->InstantiateModel("wolf\\wolf.FBX");
+            Transform& transform = registry.get<Transform>(model_entity);
+            transform.Translate(math::Vec3f(-5.0F, -2.0F, 0.0F));
+            transform.Scale(math::Vec3f(0.05F));
+
+            Animator& animator = registry.get<Animator>(model_entity);
+            const std::vector<std::string>& animations = animator.GetAnimationNames();
+            //animator.StartAnimation(animations[0]);
+
+            std::queue<Entity> frontier{};
+            frontier.push(model_entity);
+
+            while (!frontier.empty())
             {
-                return;
+                Entity entity = frontier.front();
+                frontier.pop();
+
+                auto& entity_transform = registry.get<Transform>(entity);
+                if (registry.has<Material>(entity))
+                {
+                    auto& entity_material = registry.get<Material>(entity);
+                    entity_material.shaders_.vertex_shader_ = "animated_model.vertex.glsl";
+                    entity_material.shaders_.fragment_shader_ = "model.fragment.glsl";
+                    entity_material.texture_map_.diffuse_map_ = "wolf.png";
+                    entity_material.wireframe_enabled_ = false;
+                    entity_material.visible_ = true;
+                    entity_material.specular_exponent_ = 32.0F;
+                }
+
+                for (Entity child_entity : entity_transform.children_)
+                {
+                    frontier.push(child_entity);
+                }
             }
-            auto& model_material = registry.get<Material>(model_entity);
-            model_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-            model_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-            model_material.wireframe_enabled_ = false;
-            model_material.visible_ = true;
-            model_material.specular_exponent_ = 32.0F;
-            auto& transform = registry.get<Transform>(model_entity);
-            transform.Translate(math::Vec3f(0.0F, -2.0F, -10.0F));
-            transform.Scale(math::Vec3f(0.10F));
         }
     }
     void SetupPrimitives()

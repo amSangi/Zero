@@ -1,4 +1,5 @@
 #include "core/AssetManager.hpp"
+#include <algorithm>
 #include <filesystem>
 
 namespace zero
@@ -61,7 +62,9 @@ void AssetManager::Initialize()
     {
         if (model_entry.is_regular_file())
         {
-            const std::string extension = model_entry.path().extension().string();
+            std::string extension = model_entry.path().extension().string();
+            // Case insensitive extension check
+            std::transform(extension.begin(), extension.end(), extension.begin(), [](unsigned char c) { return std::tolower(c); });
             std::string local_file_path = model_entry.path().string();
             local_file_path.erase(0, model_file_path_.size() + 1);
             if (extension == ".obj" || extension == ".fbx")

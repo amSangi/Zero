@@ -13,6 +13,7 @@ Engine::Engine(EngineConfig  engine_config)
 : engine_config_(std::move(engine_config))
 , time_delta_()
 , engine_core_(std::make_unique<EngineCore>())
+, animation_system_(std::make_unique<animation::AnimationSystem>(GetEngineCore()))
 , render_system_(std::make_unique<render::RenderSystem>(GetEngineCore(), engine_config_.render_system_config_))
 , game_systems_()
 , entity_instantiator_(std::make_unique<EntityInstantiator>(engine_core_->GetRegistry(), render_system_.get()))
@@ -26,6 +27,7 @@ void Engine::Initialize()
     engine_core_->GetAssetManager().Initialize();
     LOG_VERBOSE(kTitle, "Initializing systems");
     render_system_->Initialize();
+    animation_system_->Initialize();
     for (const auto& system : game_systems_)
     {
         system->Initialize();
@@ -46,8 +48,9 @@ void Engine::Tick()
 
     LOG_VERBOSE(kTitle, "Propagating entity transforms");
     TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
-    render_system_->Update(time_delta_);
 
+    render_system_->Update(time_delta_);
+    animation_system_->Update(time_delta_);
     for (const auto& system : game_systems_)
     {
         system->Update(time_delta_);

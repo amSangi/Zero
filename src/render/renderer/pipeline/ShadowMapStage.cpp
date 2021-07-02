@@ -111,11 +111,11 @@ void ShadowMapStage::RenderEntities(const math::Matrix4x4& light_view_matrix,
         rendering_context->BindTextureSampler(0, diffuse_map_sampler_.get());
 
         // Bind uniform buffers
-        if (renderable->GetAnimator())
+        if (renderable->GetBoneMatrices())
         {
             // Only update and bind the bone buffer for animated entities
             // Assume the material component has an animated vertex shader (i.e. has the bone uniform)
-            uniform_manager->UpdateBoneUniforms(renderable->GetBoneMatrices());
+            uniform_manager->UpdateBoneUniforms(*renderable->GetBoneMatrices());
             rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::BONE_BUFFER));
         }
         rendering_context->BindUniformBuffer(uniform_manager->GetUniformBuffer(IUniformManager::UniformBufferType::CAMERA_BUFFER));

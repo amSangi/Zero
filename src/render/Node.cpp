@@ -7,6 +7,7 @@ Node::Node(const std::string& name, const math::Matrix4x4& transformation)
 : name_(name)
 , parent_(nullptr)
 , children_()
+, bone_(nullptr)
 , entity_prototypes_()
 , transformation_(transformation)
 , volume_()
@@ -30,7 +31,7 @@ std::shared_ptr<Node> Node::GetParent() const
 
 void Node::AddChild(std::shared_ptr<Node> node)
 {
-    children_.push_back(std::move(node));
+    children_.push_back(node);
     volume_.Engulf(node->GetVolume());
 }
 
@@ -68,6 +69,16 @@ const math::Matrix4x4& Node::GetTransformation() const
 const Volume& Node::GetVolume() const
 {
     return volume_;
+}
+
+void Node::SetBone(std::shared_ptr<Bone> bone)
+{
+    bone_ = std::move(bone);
+}
+
+std::shared_ptr<Bone> Node::GetBone()
+{
+    return bone_;
 }
 
 

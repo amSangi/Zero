@@ -11,6 +11,7 @@ SceneManager::SceneManager()
 : render_view_(nullptr)
 , cascaded_shadow_map_(std::make_unique<CascadedShadowMap>(Constants::kShadowCascadeCount))
 , renderable_cache_()
+, bone_matrix_cache_()
 {
 }
 
@@ -43,6 +44,7 @@ void SceneManager::UpdateView(entt::registry& registry, const TimeDelta& time_de
                                                 GetSpotLights(registry));
     // Cache is no longer needed
     renderable_cache_.clear();
+    bone_matrix_cache_.clear();
 }
 
 std::unique_ptr<IRenderView> SceneManager::GetLatestView()
@@ -149,7 +151,7 @@ std::vector<std::shared_ptr<IRenderable>> SceneManager::GetRenderables(const Cam
     // Construct views
     auto renderable_view              = registry.view<const Transform, const Material, const Volume>();
     auto model_instance_view          = registry.view<const ModelInstance>();
-    auto animated_model_instance_view = registry.view<const Animator>();
+    auto animated_view                = registry.view<const Animated>();
     auto primitive_instance_view      = registry.view<const PrimitiveInstance>();
 
     std::vector<std::shared_ptr<IRenderable>> renderables{};
@@ -162,17 +164,16 @@ std::vector<std::shared_ptr<IRenderable>> SceneManager::GetRenderables(const Cam
         const Material& material = renderable_view.get<const Material>(entity);
         const Volume& volume = renderable_view.get<const Volume>(entity);
 
-        std::unique_ptr<Animator> animator{};
         std::unique_ptr<ModelInstance> model_instance{};
         std::unique_ptr<PrimitiveInstance> primitive_instance{};
-        std::vector<math::Matrix4x4> bone_matrices{};
+        std::shared_ptr<std::vector<math::Matrix4x4>> bone_matrices{};
         if (model_instance_view.contains(entity))
         {
             model_instance = std::make_unique<ModelInstance>(model_instance_view.get<const ModelInstance>(entity));
-            if (animated_model_instance_view.contains(entity))
+            if (animated_view.contains(entity))
             {
-                animator = std::make_unique<Animator>(animated_model_instance_view.get<const Animator>(entity));
-                bone_matrices = GetBoneMatrices(registry, animator->GetRootBoneEntity());
+                const Animated& animated_component = animated_view.get<const Animated>(entity);
+                bone_matrices = GetBoneMatrices(registry, animated_component.root_bone_entity_);
             }
         }
         else
@@ -183,7 +184,6 @@ std::vector<std::shared_ptr<IRenderable>> SceneManager::GetRenderables(const Cam
         std::shared_ptr<IRenderable> renderable = std::make_shared<Renderable>(material,
                                                                                transform,
                                                                                volume,
-                                                                               std::move(animator),
                                                                                std::move(model_instance),
                                                                                std::move(primitive_instance),
                                                                                bone_matrices);
@@ -201,7 +201,7 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
     // Construct views in case we need to construct a renderable not in the cache
     auto renderable_view              = registry.view<const Transform, const Material, const Volume>();
     auto model_instance_view          = registry.view<const ModelInstance>();
-    auto animated_model_instance_view = registry.view<const Animator>();
+    auto animated_view                = registry.view<const Animated>();
     auto primitive_instance_view      = registry.view<const PrimitiveInstance>();
 
     std::vector<math::Box> world_bounding_boxes = cascaded_shadow_map_->GetWorldBoundingBoxes();
@@ -227,17 +227,17 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
             const Transform& transform = renderable_view.get<const Transform>(entity);
             const Material& material = renderable_view.get<const Material>(entity);
             const Volume& volume = renderable_view.get<const Volume>(entity);
-            std::unique_ptr<Animator> animator{};
+
             std::unique_ptr<ModelInstance> model_instance{};
             std::unique_ptr<PrimitiveInstance> primitive_instance{};
-            std::vector<math::Matrix4x4> bone_matrices{};
+            std::shared_ptr<std::vector<math::Matrix4x4>> bone_matrices{};
             if (model_instance_view.contains(entity))
             {
                 model_instance = std::make_unique<ModelInstance>(model_instance_view.get<const ModelInstance>(entity));
-                if (animated_model_instance_view.contains(entity))
+                if (animated_view.contains(entity))
                 {
-                    animator = std::make_unique<Animator>(animated_model_instance_view.get<const Animator>(entity));
-                    bone_matrices = GetBoneMatrices(registry, animator->GetRootBoneEntity());
+                    const Animated& animated_component = animated_view.get<const Animated>(entity);
+                    bone_matrices = GetBoneMatrices(registry, animated_component.root_bone_entity_);
                 }
             }
             else
@@ -248,7 +248,6 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
             std::shared_ptr<IRenderable> renderable = std::make_shared<Renderable>(material,
                                                                                    transform,
                                                                                    volume,
-                                                                                   std::move(animator),
                                                                                    std::move(model_instance),
                                                                                    std::move(primitive_instance),
                                                                                    bone_matrices);
@@ -260,14 +259,16 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
     return shadow_casting_renderables;
 }
 
-std::vector<math::Matrix4x4> SceneManager::GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity) const
+std::shared_ptr<std::vector<math::Matrix4x4>> SceneManager::GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity)
 {
-    // TODO: Validate bone matrix retrieval
-    // - Valid matrix?
-    // - Valid bone list order?
-    //     - Needs to be in expected order (Vertices expect IDs to be correct)
-    std::vector<math::Matrix4x4> bone_matrices{};
+    auto bone_matrix_search = bone_matrix_cache_.find(root_bone_entity);
+    if (bone_matrix_search != bone_matrix_cache_.end())
+    {
+        return bone_matrix_search->second;
+    }
 
+    // TODO: Validate bone matrix retrieval
+    std::shared_ptr<std::vector<math::Matrix4x4>> bone_matrices = std::make_shared<std::vector<math::Matrix4x4>>();
     auto bone_view = registry.view<const Transform, const Bone>();
 
     // Breadth first approach
@@ -279,7 +280,7 @@ std::vector<math::Matrix4x4> SceneManager::GetBoneMatrices(const entt::registry&
         bone_entities.pop();
 
         const Transform& bone_transform = bone_view.get<const Transform>(bone_entity);
-        bone_matrices.push_back(bone_transform.GetLocalToWorldMatrix());
+        bone_matrices->push_back(bone_transform.GetLocalToWorldMatrix());
 
         // Add only child bone entities
         for (Entity child_entity : bone_transform.children_)
@@ -291,6 +292,13 @@ std::vector<math::Matrix4x4> SceneManager::GetBoneMatrices(const entt::registry&
         }
     }
 
+    // Fill bone matrix list with identity matrices
+    while (bone_matrices->size() < Constants::kMaxMeshBoneCount)
+    {
+        bone_matrices->push_back(math::Matrix4x4::Identity());
+    }
+
+    bone_matrix_cache_.emplace(root_bone_entity, bone_matrices);
     return bone_matrices;
 }
 

@@ -42,7 +42,7 @@ void GLMesh::Initialize(std::unique_ptr<Mesh> mesh)
     glVertexAttribPointer(position_attribute_index,    3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_)));
     glVertexAttribPointer(normal_attribute_index,      3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal_)));
     glVertexAttribPointer(uv_attribute_index,          2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, texture_coordinate_)));
-    glVertexAttribPointer(bone_id_attribute_index,     4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_ids_)));
+    glVertexAttribPointer(bone_id_attribute_index,     4, GL_INT,   GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_ids_)));
     glVertexAttribPointer(bone_weight_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_weights_)));
 
     glGenBuffers(1, &index_vbo_);

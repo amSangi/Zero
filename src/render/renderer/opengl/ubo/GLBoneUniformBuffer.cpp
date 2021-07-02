@@ -12,7 +12,15 @@ GLBoneUniformBuffer::GLBoneUniformBuffer()
 
 void GLBoneUniformBuffer::Initialize(uint32 binding_index)
 {
-    InitializeBaseBuffer(binding_index, sizeof(math::Matrix4x4) * Constants::kMaxMeshBoneCount);
+    // Last matrix will always be the identity matrix.
+    // The identity matrix is applied to a vertex if the bone ID is invalid
+    InitializeBaseBuffer(binding_index, sizeof(math::Matrix4x4) * (Constants::kMaxMeshBoneCount + 1));
+
+    // Set identity matrices
+    std::vector<math::Matrix4x4> bone_matrices{Constants::kMaxMeshBoneCount + 1, math::Matrix4x4::Identity()};
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(math::Matrix4x4) * bone_matrices.size(), bone_matrices.data());
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void GLBoneUniformBuffer::UpdateUniforms(std::vector<math::Matrix4x4> bone_matrices)

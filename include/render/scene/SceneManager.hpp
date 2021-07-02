@@ -27,11 +27,12 @@ namespace zero::render
 
         std::vector<std::shared_ptr<IRenderable>> GetRenderables(const Camera& camera, const entt::registry& registry);
         std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeCount> GetShadowCastingRenderables(const entt::registry& registry);
-        std::vector<math::Matrix4x4> GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity) const;
+        std::shared_ptr<std::vector<math::Matrix4x4>> GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity);
 
         std::unique_ptr<IRenderView> render_view_;
         std::shared_ptr<CascadedShadowMap> cascaded_shadow_map_;
         std::unordered_map<Entity, std::shared_ptr<IRenderable>> renderable_cache_;
+        std::unordered_map<Entity, std::shared_ptr<std::vector<math::Matrix4x4>>> bone_matrix_cache_;
 
     }; // class SceneManager
 

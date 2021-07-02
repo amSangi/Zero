@@ -11,38 +11,92 @@ Entity Instantiator::InstantiateModel(entt::registry& registry,
                                       const std::shared_ptr<Model>& model,
                                       Entity parent)
 {
-    return InstantiateNode(registry, model->GetRootNode(), parent);
+    Entity root_bone_entity = NullEntity;
+    Entity root_entity = InstantiateNode(registry, model->GetRootNode(), parent, root_bone_entity);
+    if (model->GetAnimator())
+    {
+        // Create Animator component for root entity
+        Animator& animator = registry.emplace<Animator>(root_entity, *(model->GetAnimator()));
+        animator.SetRootBoneEntity(root_bone_entity);
+
+        // Create Animated component for all non-bone entities
+        auto bone_view = registry.view<const Bone>();
+        auto transform_view = registry.view<const Transform>();
+        std::queue<Entity> frontier{};
+        frontier.push(root_entity);
+        while (!frontier.empty())
+        {
+            Entity animated_entity = frontier.front();
+            frontier.pop();
+
+            if (!bone_view.contains(animated_entity))
+            {
+                Animated& animated_component = registry.emplace<Animated>(animated_entity);
+                animated_component.root_bone_entity_ = root_bone_entity;
+            }
+
+            const Transform& transform = transform_view.get<const Transform>(animated_entity);
+            for (Entity child_entity : transform.children_)
+            {
+                frontier.push(child_entity);
+            }
+        }
+    }
+    return root_entity;
 }
 
-Entity Instantiator::InstantiateNode(entt::registry& registry, std::shared_ptr<Node> node, Entity parent)
+Entity Instantiator::InstantiateNode(entt::registry& registry, std::shared_ptr<Node> node, Entity parent, Entity& root_bone_entity)
 {
-    auto InstantiateChildNodes = [](Entity entity, std::shared_ptr<Node> node, entt::registry& registry)
+    auto InstantiateChildNodes = [&root_bone_entity](Entity parent, std::shared_ptr<Node> node, entt::registry& registry)
     {
         // Instantiate child nodes
         std::vector<Entity> child_entities{};
         child_entities.reserve(node->GetChildren().size());
         for (const auto child_node : node->GetChildren())
         {
-            child_entities.push_back(InstantiateNode(registry, child_node, entity));
+            child_entities.push_back(InstantiateNode(registry, child_node, parent, root_bone_entity));
         }
 
-        // Set child entities
-        Transform& transform = registry.view<Transform>().get<Transform>(entity);
-        transform.children_ = child_entities;
+        Transform& transform = registry.get<Transform>(parent);
+        transform.children_.insert(transform.children_.end(), child_entities.begin(), child_entities.end());
     };
 
     if (node->GetEntityPrototypeCount() == 1)
     {
-        // Directly instantiate node
+        // Directly instantiate node as an EntityPrototype
         Entity entity = InstantiateEntityPrototype(registry, parent, node->GetEntityPrototype(0), node->GetTransformation());
         InstantiateChildNodes(entity, node, registry);
         return entity;
     }
 
-    // Create entity with transform/volume components to contain multiple entity prototypes
+    // Create parent container for nodes with multiple EntityPrototype instances
     Entity entity = registry.create();
     registry.emplace<Transform>(entity, Transform::FromMatrix4x4(node->GetTransformation()));
     registry.emplace<Volume>(entity, node->GetVolume());
+    if (node->GetBone())
+    {
+        registry.emplace<Bone>(entity, *node->GetBone());
+        if (root_bone_entity == NullEntity)
+        {
+            root_bone_entity = entity;
+        }
+    }
+
+    // Add EntityPrototype instances as children
+    std::vector<Entity> child_entities{};
+    child_entities.reserve(node->GetEntityPrototypeCount());
+    for (uint32 prototype_index = 0; prototype_index < node->GetEntityPrototypeCount(); ++prototype_index)
+    {
+        EntityPrototype* entity_prototype = node->GetEntityPrototype(prototype_index);
+        child_entities.push_back(InstantiateEntityPrototype(registry, entity, entity_prototype, node->GetTransformation()));
+    }
+    if (parent != NullEntity)
+    {
+        Transform& transform = registry.get<Transform>(parent);
+        transform.children_ = child_entities;
+    }
+
+    // Add child node instances as children
     InstantiateChildNodes(entity, node, registry);
     return entity;
 }
@@ -58,10 +112,6 @@ Entity Instantiator::InstantiateEntityPrototype(entt::registry& registry,
     registry.emplace<Volume>(entity, entity_prototype->GetVolume());
     registry.emplace<Material>(entity, entity_prototype->GetMaterial());
     registry.emplace<ModelInstance>(entity, entity_prototype->GetModelInstance());
-    if (entity_prototype->GetAnimator())
-    {
-        registry.emplace<Animator>(entity, *entity_prototype->GetAnimator());
-    }
     return entity;
 }
 

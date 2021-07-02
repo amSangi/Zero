@@ -5,7 +5,7 @@ precision highp float;
 ////////// Constants
 //////////////////////////////////////////////////
 const uint kShadowCascadeCount = 3;
-const uint kMaxBoneCount = 64;
+const uint kMaxBoneCount = 65;
 
 //////////////////////////////////////////////////
 ////////// Bone Uniforms
@@ -70,11 +70,11 @@ out VertexData
 void main()
 {
     // Compute skinned position
-    vec4 skinned_vertex = vec4(0, 0, 0, 0);
-    skinned_vertex += u_bone_matrices[in_bone_ids.x] * vec4(in_position, 1.0) * in_bone_weights.x;
-    skinned_vertex += u_bone_matrices[in_bone_ids.y] * vec4(in_position, 1.0) * in_bone_weights.y;
-    skinned_vertex += u_bone_matrices[in_bone_ids.z] * vec4(in_position, 1.0) * in_bone_weights.z;
-    skinned_vertex += u_bone_matrices[in_bone_ids.w] * vec4(in_position, 1.0) * in_bone_weights.w;
+    vec4 skinned_vertex = vec4(0.0, 0.0, 0.0, 0.0);
+    skinned_vertex += u_bone_matrices[int(in_bone_ids.x)] * vec4(in_position, 1.0) * in_bone_weights.x;
+    skinned_vertex += u_bone_matrices[int(in_bone_ids.y)] * vec4(in_position, 1.0) * in_bone_weights.y;
+    skinned_vertex += u_bone_matrices[int(in_bone_ids.z)] * vec4(in_position, 1.0) * in_bone_weights.z;
+    skinned_vertex += u_bone_matrices[int(in_bone_ids.w)] * vec4(in_position, 1.0) * in_bone_weights.w;
 
     // Compute world space position
     vec4 world_position_4D = (u_model_matrix * vec4(skinned_vertex.xyz, 1.0));

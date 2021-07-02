@@ -63,7 +63,7 @@ void AnimationSystem::UpdateBoneTransform(Pose* pose, const Bone& bone, Transfor
     // - Should transforms be set or scaled/rotated/translated
 
     // Apply scale, rotation, and translation to bone transform
-    math::Matrix4x4 pose_transformation = pose->transforms_[bone.GetName()];
+    math::Matrix4x4 pose_transformation = pose->transforms_[bone.name_];
     bone_transform.Scale(pose_transformation.GetScale());
     bone_transform.Rotate(pose_transformation.GetRotation());
     bone_transform.Translate(pose_transformation.GetTranslation());

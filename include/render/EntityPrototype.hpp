@@ -21,7 +21,6 @@ namespace zero::render
          * @param model_instance the model instance component prototype
          */
         EntityPrototype(std::unique_ptr<IMesh> mesh,
-                        std::unique_ptr<Animator> animator,
                         Material material,
                         Volume volume,
                         ModelInstance model_instance);
@@ -33,12 +32,6 @@ namespace zero::render
          * @return the mesh
          */
         [[nodiscard]] IMesh* GetMesh() const;
-
-        /**
-         * @brief Get the animator prototype instance
-         * @return  the animator component. Nullptr if the entity is not animated
-         */
-        [[nodiscard]] Animator* GetAnimator() const;
 
         /**
          * @brief Get the material prototype instance
@@ -63,11 +56,6 @@ namespace zero::render
          * @brief The mesh of the entity prototype
          */
         std::unique_ptr<IMesh> mesh_;
-
-        /**'
-         * @brief The optional animator prototype associated with the entity prototype
-         */
-        std::unique_ptr<Animator> animator_;
 
         /**
          * @brief Material prototype associated with the entity prototype

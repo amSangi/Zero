@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include "animation/AnimationSystem.hpp"
 #include "engine/EngineConfig.hpp"
 #include "engine/EntityInstantiator.hpp"
 #include "core/EngineCore.hpp"
@@ -105,6 +106,11 @@ namespace zero
          * @brief The engine core. Contains game data and objects that are used by many different Systems.
          */
         std::unique_ptr<EngineCore> engine_core_;
+
+        /**
+         * @brief The Animation system used to update entity animations
+         */
+        std::unique_ptr<animation::AnimationSystem> animation_system_;
 
         /**
          * @brief The Rendering system used to create a window/OpenGL context, render game entities, and instantiate 3D models.

@@ -5,6 +5,7 @@
 #include "math/Vector2.hpp"
 #include "math/Vector3.hpp"
 #include "core/NonCopyable.hpp"
+#include "render/Constants.hpp"
 
 namespace zero::render
 {
@@ -17,7 +18,7 @@ namespace zero::render
         /**
          * @brief Invalid Bone ID
          */
-        static constexpr int32 kInvalidBoneID = -1;
+        static constexpr int32 kInvalidBoneID = Constants::kMaxMeshBoneCount + 1;
 
         Vertex();
 

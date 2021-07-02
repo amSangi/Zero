@@ -5,6 +5,7 @@
 
 
 // Forward declarations
+class aiBone;
 class aiMaterial;
 class aiMesh;
 class aiNode;
@@ -37,8 +38,7 @@ namespace zero::render
 
     private:
         bool IsValidScene(const aiScene* ai_scene) const;
-        void LoadNodeMap(aiNode* ai_node);
-        void LoadAnimationMap(const aiScene* ai_scene);
+        void LoadBoneMap(const aiScene* ai_scene);
 
         std::shared_ptr<Node> CreateNode(const std::string& model_name,
                                          const aiScene* ai_scene,
@@ -46,7 +46,7 @@ namespace zero::render
                                          const math::Matrix4x4& parent_transformation);
 
         std::unique_ptr<Mesh>     ExtractMesh(aiMesh* ai_mesh) const;
-        std::unique_ptr<Animator> ExtractAnimator(const aiNode* ai_node, aiMesh* ai_mesh) const;
+        std::unique_ptr<Animator> ExtractAnimator(const aiScene* ai_scene) const;
         Material                  ExtractMaterial(const aiMaterial* ai_material) const;
         Volume                    ExtractVolume(aiMesh* ai_mesh) const;
         ModelInstance             ExtractModelInstance(const std::string& model_name, const aiNode* ai_node, uint32 mesh_index) const;
@@ -54,8 +54,7 @@ namespace zero::render
         constexpr uint32 GetImportFlags() const;
 
         IMeshLoader* mesh_loader_;
-        std::unordered_map<std::string, aiNode*> ai_node_map_;
-        std::unordered_map<std::string, aiNodeAnim*> ai_animation_map_;
+        std::unordered_map<std::string, aiBone*> bone_map_;
 
     }; // class AssimpLoader
 

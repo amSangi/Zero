@@ -30,10 +30,14 @@ namespace zero::render
         const math::Matrix4x4& GetTransformation() const;
         const Volume& GetVolume() const;
 
+        void SetBone(std::shared_ptr<Bone> bone);
+        std::shared_ptr<Bone> GetBone();
+
     private:
         std::string name_;
         std::shared_ptr<Node> parent_;
         std::vector<std::shared_ptr<Node>> children_;
+        std::shared_ptr<Bone> bone_;
         std::vector<std::unique_ptr<EntityPrototype>> entity_prototypes_;
         math::Matrix4x4 transformation_;
         Volume volume_;

@@ -109,7 +109,7 @@ Pose* Animator::GetActivePose() const
 
 void Animator::AddAnimation(const std::string& animation_name, std::shared_ptr<Animation> animation)
 {
-    animation_map_.emplace(animation_name, std::move(animation));
+    animation_map_.emplace(animation_name, animation);
 }
 
 std::shared_ptr<Animation> Animator::GetActiveAnimation() const
@@ -133,14 +133,11 @@ Entity Animator::GetRootBoneEntity() const
     return root_bone_entity_;
 }
 
-void Bone::SetName(const std::string& name)
-{
-    bone_name_ = name;
-}
 
-const std::string& Bone::GetName() const
+Bone::Bone()
+: name_()
+, offset_matrix_(math::Matrix4x4::Identity())
 {
-    return bone_name_;
 }
 
 } // namespace zero

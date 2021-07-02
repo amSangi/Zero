@@ -13,8 +13,7 @@ constexpr auto kLogTitle = "AssimpLoader";
 
 AssimpLoader::AssimpLoader(IMeshLoader* mesh_loader)
 : mesh_loader_(mesh_loader)
-, ai_node_map_()
-, ai_animation_map_()
+, bone_map_()
 {
 }
 
@@ -29,18 +28,11 @@ std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, co
         return nullptr;
     }
 
-    // Load the {node name, node} and {node name, animation channel} maps
-    LoadNodeMap(ai_scene->mRootNode);
-    LoadAnimationMap(ai_scene);
+    LoadBoneMap(ai_scene);
 
     std::shared_ptr<Node> root_node = CreateNode(model_name, ai_scene, ai_scene->mRootNode, math::Matrix4x4::Identity());
     std::shared_ptr<Model> model = std::make_shared<Model>(model_name, root_node);
-    model->Initialize();
-
-    // Clear cache because the scene will be released
-    ai_node_map_.clear();
-    ai_animation_map_.clear();
-
+    model->Initialize(ExtractAnimator(ai_scene));
     return model;
 }
 
@@ -50,24 +42,31 @@ bool AssimpLoader::IsValidScene(const aiScene* ai_scene) const
         && ai_scene->mRootNode != nullptr; // Non-null root node
 }
 
-void AssimpLoader::LoadNodeMap(aiNode* ai_node)
+void AssimpLoader::LoadBoneMap(const aiScene* ai_scene)
 {
-    ai_node_map_.emplace(std::string(ai_node->mName.C_Str()), ai_node);
-    for (uint32 i = 0; i < ai_node->mNumChildren; ++i)
-    {
-        LoadNodeMap(ai_node->mChildren[i]);
-    }
-}
+    std::queue<const aiNode*> node_queue{};
+    node_queue.push(ai_scene->mRootNode);
 
-void AssimpLoader::LoadAnimationMap(const aiScene* ai_scene)
-{
-    for (uint32 animation_index = 0; animation_index < ai_scene->mNumAnimations; ++animation_index)
+    // Add bones to map iteratively using breadth first search
+    while (!node_queue.empty())
     {
-        const aiAnimation* ai_animation = ai_scene->mAnimations[animation_index];
-        for (uint32 channel_index = 0; channel_index < ai_animation->mNumChannels; ++channel_index)
+        const aiNode* ai_node = node_queue.front();
+        node_queue.pop();
+
+        for (uint32 mesh_index = 0; mesh_index < ai_node->mNumMeshes; ++mesh_index)
         {
-            aiNodeAnim* ai_node_anim = ai_animation->mChannels[channel_index];
-            ai_animation_map_.emplace(std::string(ai_node_anim->mNodeName.C_Str()), ai_node_anim);
+            aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[mesh_index]];
+            for (uint32 ai_bone_index = 0; ai_bone_index < ai_mesh->mNumBones; ++ai_bone_index)
+            {
+                aiBone* ai_bone = ai_mesh->mBones[ai_bone_index];
+                bone_map_.emplace(ai_bone->mName.C_Str(), ai_bone);
+            }
+        }
+
+        // Add children to queue
+        for (uint32 child_index = 0; child_index < ai_node->mNumChildren; ++child_index)
+        {
+            node_queue.push(ai_node->mChildren[child_index]);
         }
     }
 }
@@ -86,19 +85,30 @@ std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name,
                                                                              ai_matrix.d1, ai_matrix.d2, ai_matrix.d3, ai_matrix.d4};
 
     std::shared_ptr<Node> node = std::make_shared<Node>(ai_node->mName.C_Str(), transformation);
+    auto bone_search = bone_map_.find(node->GetName());
+    if (bone_search != bone_map_.end())
+    {
+        std::unique_ptr<Bone> bone = std::make_unique<Bone>();
+        bone->name_ = node->GetName();
+        const aiMatrix4x4& ai_bone_matrix = bone_search->second->mOffsetMatrix;
+        bone->offset_matrix_ = math::Matrix4x4{ai_bone_matrix.a1, ai_bone_matrix.a2, ai_bone_matrix.a3, ai_bone_matrix.a4,
+                                               ai_bone_matrix.b1, ai_bone_matrix.b2, ai_bone_matrix.b3, ai_bone_matrix.b4,
+                                               ai_bone_matrix.c1, ai_bone_matrix.c2, ai_bone_matrix.c3, ai_bone_matrix.c4,
+                                               ai_bone_matrix.d1, ai_bone_matrix.d2, ai_bone_matrix.d3, ai_bone_matrix.d4};
+        node->SetBone(std::move(bone));
+    }
 
     // Create EntityPrototypes associated with each mesh
     // If the node does not contain a mesh and is not renderable, the instantiated entity associated with the node
     // will only contain Transform and Volume components
-    for (uint32 i = 0; i < ai_node->mNumMeshes; ++i)
+    for (uint32 mesh_index = 0; mesh_index < ai_node->mNumMeshes; ++mesh_index)
     {
-        aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
+        aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[mesh_index]];
         aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
         std::unique_ptr<EntityPrototype> entity_prototype = std::make_unique<EntityPrototype>(mesh_loader_->LoadMesh(ExtractMesh(ai_mesh)),
-                                                                                              ExtractAnimator(ai_node, ai_mesh),
                                                                                               ExtractMaterial(ai_material),
                                                                                               ExtractVolume(ai_mesh),
-                                                                                              ExtractModelInstance(model_name, ai_node, i));
+                                                                                              ExtractModelInstance(model_name, ai_node, mesh_index));
         node->AddEntityPrototype(std::move(entity_prototype));
     }
 
@@ -164,6 +174,7 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
                 {
                     vertex.bone_ids_[i] = ai_bone_index;
                     vertex.bone_weights_[i] = bone_weight;
+                    break;
                 }
             }
         }
@@ -172,16 +183,69 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
     return std::make_unique<Mesh>(std::move(vertices), std::move(indices));
 }
 
-std::unique_ptr<Animator> AssimpLoader::ExtractAnimator(const aiNode* ai_node, aiMesh* ai_mesh) const
+std::unique_ptr<Animator> AssimpLoader::ExtractAnimator(const aiScene* ai_scene) const
 {
-    // No bones to animate
-    if (ai_mesh->mNumBones == 0)
+    if (ai_scene->mNumAnimations == 0)
     {
         return nullptr;
     }
 
-    // TODO: Finish implementation
-    return nullptr;
+    std::unique_ptr<Animator> animator = std::make_unique<Animator>();
+
+    // Load animation data
+    for (uint32 animation_index = 0; animation_index < ai_scene->mNumAnimations; ++animation_index)
+    {
+        aiAnimation* ai_animation = ai_scene->mAnimations[animation_index];
+        std::unique_ptr<Animation> animation = std::make_unique<Animation>();
+        animation->name_ = ai_animation->mName.C_Str();
+        animation->tick_rate_ = ai_animation->mTicksPerSecond;
+        animation->duration_ = ai_animation->mDuration;
+        for (uint32 channel_index = 0; channel_index < ai_animation->mNumChannels; ++channel_index)
+        {
+            aiNodeAnim* ai_node_anim = ai_animation->mChannels[channel_index];
+            std::unique_ptr<AnimationChannel> animation_channel = std::make_unique<AnimationChannel>();
+            animation_channel->name_ = ai_node_anim->mNodeName.C_Str();
+
+            for (uint32 i = 0; i < ai_node_anim->mNumPositionKeys; ++i)
+            {
+                aiVectorKey ai_translation_key = ai_node_anim->mPositionKeys[i];
+                VectorKey translation_key{};
+                translation_key.vector_ = math::Vec3f{ai_translation_key.mValue.x,
+                                                      ai_translation_key.mValue.y,
+                                                      ai_translation_key.mValue.z};
+                translation_key.time_ = ai_translation_key.mTime;
+                animation_channel->translations_.push_back(translation_key);
+            }
+
+            for (uint32 i = 0; i < ai_node_anim->mNumRotationKeys; ++i)
+            {
+                aiQuatKey ai_rotation_key = ai_node_anim->mRotationKeys[i];
+                QuaternionKey rotation_key{};
+                rotation_key.quaternion_ = math::Quaternion{ai_rotation_key.mValue.w,
+                                                            ai_rotation_key.mValue.x,
+                                                            ai_rotation_key.mValue.y,
+                                                            ai_rotation_key.mValue.z};
+                rotation_key.time_ = ai_rotation_key.mTime;
+                animation_channel->rotations_.push_back(rotation_key);
+            }
+
+            for (uint32 i = 0; i < ai_node_anim->mNumScalingKeys; ++i)
+            {
+                aiVectorKey ai_scaling_key = ai_node_anim->mScalingKeys[i];
+                VectorKey scaling_key{};
+                scaling_key.vector_ = math::Vec3f{ai_scaling_key.mValue.x,
+                                                  ai_scaling_key.mValue.y,
+                                                  ai_scaling_key.mValue.z};
+                scaling_key.time_ = ai_scaling_key.mTime;
+                animation_channel->scalings_.push_back(scaling_key);
+            }
+
+            animation->channel_map_.emplace(ai_node_anim->mNodeName.C_Str(), std::move(animation_channel));
+        }
+
+        animator->AddAnimation(ai_animation->mName.C_Str(), std::move(animation));
+    }
+    return std::move(animator);
 }
 
 Material AssimpLoader::ExtractMaterial(const aiMaterial* ai_material) const

@@ -370,15 +370,10 @@ Quaternion Quaternion::FromEuler(Radian x, Radian y, Radian z)
 
 Quaternion Quaternion::FromMatrix3(const Matrix3x3& matrix)
 {
-	float w = Sqrt(Max(0.0F, 1.0F + matrix(0, 0) + matrix(1, 1) + matrix(2, 2))) * 0.5F;
-	float x = Sqrt(Max(0.0F, 1.0F + matrix(0, 0) - matrix(1, 1) - matrix(2, 2))) * 0.5F;
-	float y = Sqrt(Max(0.0F, 1.0F - matrix(0, 0) + matrix(1, 1) - matrix(2, 2))) * 0.5F;
-	float z = Sqrt(Max(0.0F, 1.0F - matrix(0, 0) - matrix(1, 1) + matrix(2, 2))) * 0.5F;
-
-	x = Copysign(x, matrix(2, 1) - matrix(1, 2));
-	y = Copysign(y, matrix(0, 2) - matrix(2, 0));
-	z = Copysign(z, matrix(2, 0) - matrix(0, 2));
-
+	float w = Sqrt(1.0F + matrix(0, 0) + matrix(1, 1) + matrix(2, 2)) * 0.5F;
+	float x = (matrix(2, 1) - matrix(1, 2)) / (4.0F * w);
+	float y = (matrix(0, 2) - matrix(2, 0)) / (4.0F * w);
+	float z = (matrix(1, 0) - matrix(0, 1)) / (4.0F * w);
 	return Quaternion(w, x, y, z);
 }
 

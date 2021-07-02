@@ -65,7 +65,7 @@ namespace zero::render
                                                  Entity parent,
                                                  EntityPrototype* entity_prototype,
                                                  const math::Matrix4x4& transformation);
-        static Entity InstantiateNode(entt::registry& registry, std::shared_ptr<Node> node, Entity parent);
+        static Entity InstantiateNode(entt::registry& registry, std::shared_ptr<Node> node, Entity parent, Entity& root_bone_entity);
 
     }; // class Instantiator
 

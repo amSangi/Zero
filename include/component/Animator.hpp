@@ -53,6 +53,11 @@ namespace zero
         std::unordered_map<std::string, std::shared_ptr<AnimationChannel>> channel_map_;
     }; // struct Animation
 
+    struct Animated : public Component
+    {
+        Entity root_bone_entity_;
+    };
+
     struct Animator : public Component
     {
         Animator();
@@ -82,15 +87,11 @@ namespace zero
 
     struct Bone : public Component
     {
-        Bone() = default;
+        Bone();
         ~Bone() = default;
 
-        void SetName(const std::string& name);
-        const std::string& GetName() const;
-
-    private:
-        std::string bone_name_;
-
+        std::string name_;
+        math::Matrix4x4 offset_matrix_;
     }; // struct Bone
 
 } // namespace zero
