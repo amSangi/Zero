@@ -58,7 +58,9 @@ namespace zero::render
     struct Mesh
     {
         Mesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices);
+        Mesh(std::vector<Vertex>&& vertices, std::vector<uint32>&& indices, std::vector<std::string>&& bone_names);
         Mesh(Mesh&& mesh);
+        std::vector<std::string> bone_names_;
         std::vector<Vertex> vertices_;
         std::vector<uint32> indices_;
     };
@@ -69,6 +71,7 @@ namespace zero::render
         IMesh() = default;
         virtual ~IMesh() = default;
         virtual void Initialize(std::unique_ptr<Mesh> mesh) = 0;
+        virtual const std::vector<std::string>& GetBoneNames() const = 0;
     }; // interface IMesh
 
 } // namespace zero::render

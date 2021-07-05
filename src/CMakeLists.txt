@@ -39,6 +39,7 @@ add_library(${PROJECT_NAME}
                             render/AssimpLoader.cpp
                             render/CascadedShadowMap.cpp
                             render/EntityPrototype.cpp
+                            render/IMesh.cpp
                             render/Instantiator.cpp
                             render/Model.cpp
                             render/Node.cpp
@@ -55,7 +56,6 @@ add_library(${PROJECT_NAME}
                             render/scene/ViewVolumeBuilder.cpp
                             # Renderer Files
                             render/renderer/Image.cpp
-                            render/renderer/IMesh.cpp
                             render/renderer/MeshGenerator.cpp
                             render/renderer/RenderPipeline.cpp
                             render/renderer/RenderStage.cpp

@@ -55,7 +55,12 @@ namespace zero
 
     struct Animated : public Component
     {
+        Animated();
+        ~Animated();
+
         Entity root_bone_entity_;
+        std::vector<std::string> bone_names_;
+        std::vector<Entity> bone_entities_;
     };
 
     struct Animator : public Component

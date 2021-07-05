@@ -88,6 +88,7 @@ std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name,
     auto bone_search = bone_map_.find(node->GetName());
     if (bone_search != bone_map_.end())
     {
+        // Node is a bone
         std::unique_ptr<Bone> bone = std::make_unique<Bone>();
         bone->name_ = node->GetName();
         const aiMatrix4x4& ai_bone_matrix = bone_search->second->mOffsetMatrix;
@@ -128,8 +129,13 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
 {
     std::vector<Vertex> vertices{};
     std::vector<uint32> indices{};
+    // List of bone names in the order that the mesh is rigged
+    std::vector<std::string> bone_names{};
+
     vertices.reserve(ai_mesh->mNumVertices);
     indices.reserve(ai_mesh->mNumFaces * 3);
+    // Allow direct indexing of the list of bone names
+    bone_names.resize(ai_mesh->mNumBones);
 
     // Load interleaved position, normal, and UV attributes
     for (uint32 i = 0; i < ai_mesh->mNumVertices; ++i)
@@ -158,13 +164,13 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
     for (uint32 ai_bone_index = 0; ai_bone_index < ai_mesh->mNumBones; ++ai_bone_index)
     {
         const aiBone* ai_bone = ai_mesh->mBones[ai_bone_index];
+        bone_names[ai_bone_index] = ai_bone->mName.C_Str();
 
         for (uint32 weight_index = 0; weight_index < ai_bone->mNumWeights; ++weight_index)
         {
             const aiVertexWeight& ai_vertex_weight = ai_bone->mWeights[weight_index];
             const uint32 vertex_index = ai_vertex_weight.mVertexId;
             const float bone_weight = static_cast<float>(ai_vertex_weight.mWeight);
-
 
             // Set the bone attributes in the next available slot
             Vertex& vertex = vertices[vertex_index];
@@ -180,7 +186,7 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
         }
     }
 
-    return std::make_unique<Mesh>(std::move(vertices), std::move(indices));
+    return std::make_unique<Mesh>(std::move(vertices), std::move(indices), std::move(bone_names));
 }
 
 std::unique_ptr<Animator> AssimpLoader::ExtractAnimator(const aiScene* ai_scene) const

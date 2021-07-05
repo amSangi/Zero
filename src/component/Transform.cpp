@@ -215,4 +215,19 @@ const math::Quaternion& Transform::GetLocalOrientation() const
     return local_orientation_;
 }
 
+void Transform::SetLocalScale(const math::Vec3f& scale)
+{
+    local_scale_ = scale;
+}
+
+void Transform::SetLocalOrientation(const math::Quaternion& orientation)
+{
+    local_orientation_ = orientation;
+}
+
+void Transform::SetLocalPosition(const math::Vec3f& position)
+{
+    local_position_ = position;
+}
+
 } // namespace zero

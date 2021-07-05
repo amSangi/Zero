@@ -175,6 +175,24 @@ namespace zero
          */
         [[nodiscard]] const math::Quaternion& GetLocalOrientation() const;
 
+        /**
+         * @brief Set the local scale relative to the parent
+         * @param scale the new local scale
+         */
+        void SetLocalScale(const math::Vec3f& scale);
+
+        /**
+         * @brief Set the local orientation relative to the parent
+         * @param orientation the new local orientation
+         */
+        void SetLocalOrientation(const math::Quaternion& orientation);
+
+        /**
+         * @brief Set the local orientation relative to the parent
+         * @param position the new local orientation
+         */
+        void SetLocalPosition(const math::Vec3f& position);
+
     private:
 
         /**

@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+#include "component/Animator.hpp"
 #include "component/Component.hpp"
 #include "core/TimeDelta.hpp"
 #include "render/Constants.hpp"
@@ -27,7 +28,7 @@ namespace zero::render
 
         std::vector<std::shared_ptr<IRenderable>> GetRenderables(const Camera& camera, const entt::registry& registry);
         std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeCount> GetShadowCastingRenderables(const entt::registry& registry);
-        std::shared_ptr<std::vector<math::Matrix4x4>> GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity);
+        std::shared_ptr<std::vector<math::Matrix4x4>> GetBoneMatrices(const entt::registry& registry, const Animated& animated_component);
 
         std::unique_ptr<IRenderView> render_view_;
         std::shared_ptr<CascadedShadowMap> cascaded_shadow_map_;

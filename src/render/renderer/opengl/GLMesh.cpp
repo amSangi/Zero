@@ -8,6 +8,7 @@ GLMesh::GLMesh()
 , vertex_vbo_(0)
 , index_vbo_(0)
 , index_data_size_(0)
+, bone_names_()
 {
 }
 
@@ -21,6 +22,7 @@ GLMesh::~GLMesh()
 void GLMesh::Initialize(std::unique_ptr<Mesh> mesh)
 {
     index_data_size_ = mesh->indices_.size();
+    bone_names_ = mesh->bone_names_;
 
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -52,6 +54,11 @@ void GLMesh::Initialize(std::unique_ptr<Mesh> mesh)
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+const std::vector<std::string>& GLMesh::GetBoneNames() const
+{
+    return bone_names_;
 }
 
 GLuint GLMesh::GetVAO() const

@@ -51,6 +51,17 @@ Animation::Animation()
 {
 }
 
+Animated::Animated()
+: root_bone_entity_(NullEntity)
+, bone_names_()
+, bone_entities_()
+{
+}
+
+Animated::~Animated()
+{
+}
+
 Animator::Animator()
 : root_bone_entity_(NullEntity)
 , active_animation_()

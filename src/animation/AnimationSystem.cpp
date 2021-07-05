@@ -53,10 +53,10 @@ void AnimationSystem::ApplyAnimation(Animator& animator, const TimeDelta& time_d
     Entity root_bone_entity = animator.GetRootBoneEntity();
     Transform& root_bone_transform = bone_view.get<Transform>(root_bone_entity);
     const Bone& root_bone = bone_view.get<Bone>(root_bone_entity);
-    UpdateBoneTransform(pose.get(), root_bone, root_bone_transform);
+    UpdateBoneTransform(pose.get(), root_bone, root_bone_transform, math::Matrix4x4::Identity());
 }
 
-void AnimationSystem::UpdateBoneTransform(Pose* pose, const Bone& bone, Transform& bone_transform)
+void AnimationSystem::UpdateBoneTransform(Pose* pose, const Bone& bone, Transform& bone_transform, const math::Matrix4x4& parent_transformation)
 {
     // TODO: Validate bone transform update
     // - Transforms updated properly?
@@ -80,7 +80,7 @@ void AnimationSystem::UpdateBoneTransform(Pose* pose, const Bone& bone, Transfor
 
         Transform& child_bone_transform = bone_view.get<Transform>(child_entity);
         Bone& child_bone = bone_view.get<Bone>(child_entity);
-        UpdateBoneTransform(pose, child_bone, child_bone_transform);
+        UpdateBoneTransform(pose, child_bone, child_bone_transform, parent_transformation);
     }
 }
 

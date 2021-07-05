@@ -172,8 +172,7 @@ std::vector<std::shared_ptr<IRenderable>> SceneManager::GetRenderables(const Cam
             model_instance = std::make_unique<ModelInstance>(model_instance_view.get<const ModelInstance>(entity));
             if (animated_view.contains(entity))
             {
-                const Animated& animated_component = animated_view.get<const Animated>(entity);
-                bone_matrices = GetBoneMatrices(registry, animated_component.root_bone_entity_);
+                bone_matrices = GetBoneMatrices(registry, animated_view.get<const Animated>(entity));
             }
         }
         else
@@ -236,8 +235,7 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
                 model_instance = std::make_unique<ModelInstance>(model_instance_view.get<const ModelInstance>(entity));
                 if (animated_view.contains(entity))
                 {
-                    const Animated& animated_component = animated_view.get<const Animated>(entity);
-                    bone_matrices = GetBoneMatrices(registry, animated_component.root_bone_entity_);
+                    bone_matrices = GetBoneMatrices(registry, animated_view.get<const Animated>(entity));
                 }
             }
             else
@@ -259,46 +257,25 @@ std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeC
     return shadow_casting_renderables;
 }
 
-std::shared_ptr<std::vector<math::Matrix4x4>> SceneManager::GetBoneMatrices(const entt::registry& registry, Entity root_bone_entity)
+std::shared_ptr<std::vector<math::Matrix4x4>> SceneManager::GetBoneMatrices(const entt::registry& registry, const Animated& animated_component)
 {
-    auto bone_matrix_search = bone_matrix_cache_.find(root_bone_entity);
+    auto bone_matrix_search = bone_matrix_cache_.find(animated_component.root_bone_entity_);
     if (bone_matrix_search != bone_matrix_cache_.end())
     {
         return bone_matrix_search->second;
     }
 
-    // TODO: Validate bone matrix retrieval
     std::shared_ptr<std::vector<math::Matrix4x4>> bone_matrices = std::make_shared<std::vector<math::Matrix4x4>>();
-    auto bone_view = registry.view<const Transform, const Bone>();
-
-    // Breadth first approach
-    std::queue<Entity> bone_entities{};
-    bone_entities.push(root_bone_entity);
-    while (!bone_entities.empty())
+    bone_matrices->resize(Constants::kMaxMeshBoneCount, math::Matrix4x4::Identity());
+    auto bone_transform_view = registry.view<const Transform, const Bone>();
+    for (uint32 i = 0; i < animated_component.bone_entities_.size(); ++i)
     {
-        Entity bone_entity = bone_entities.front();
-        bone_entities.pop();
-
-        const Transform& bone_transform = bone_view.get<const Transform>(bone_entity);
-        bone_matrices->push_back(bone_transform.GetLocalToWorldMatrix());
-
-        // Add only child bone entities
-        for (Entity child_entity : bone_transform.children_)
-        {
-            if (bone_view.contains(child_entity))
-            {
-                bone_entities.push(child_entity);
-            }
-        }
+        const Entity bone_entity = animated_component.bone_entities_[i];
+        const Transform& bone_transform = bone_transform_view.get<const Transform>(bone_entity);
+        (*bone_matrices)[i] = bone_transform.GetLocalToWorldMatrix();
     }
 
-    // Fill bone matrix list with identity matrices
-    while (bone_matrices->size() < Constants::kMaxMeshBoneCount)
-    {
-        bone_matrices->push_back(math::Matrix4x4::Identity());
-    }
-
-    bone_matrix_cache_.emplace(root_bone_entity, bone_matrices);
+    bone_matrix_cache_.emplace(animated_component.root_bone_entity_, bone_matrices);
     return bone_matrices;
 }
 
