@@ -53,6 +53,7 @@ Animation::Animation()
 
 Animated::Animated()
 : root_bone_entity_(NullEntity)
+, inverse_root_transform_(math::Matrix4x4::Identity())
 , bone_names_()
 , bone_entities_()
 {

@@ -136,9 +136,9 @@ void TransformPropagator::PropagateTransform(entt::registry& registry) {
             auto& child_transform = view.get<Transform>(child_entity);
 
             // Set the world transform by decomposing the resulting matrix
-            child_transform.Translate(parent_matrix.GetTranslation());
             child_transform.Scale(parent_matrix.GetScale());
             child_transform.Rotate(parent_matrix.GetRotation());
+            child_transform.Translate(parent_matrix.GetTranslation());
         }
     }
 }

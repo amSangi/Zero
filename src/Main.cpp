@@ -168,8 +168,9 @@ private:
             // Instantiate an animated 3D model
             auto model_entity = GetInstantiator()->InstantiateModel("wolf\\wolf.FBX");
             Transform& transform = registry.get<Transform>(model_entity);
-            transform.Translate(math::Vec3f(-5.0F, -2.0F, 0.0F));
-            transform.Scale(math::Vec3f(0.05F));
+            transform.Scale(math::Vec3f(0.25F));
+            transform.Translate(math::Vec3f(5.0F, -1.0F, 0.0F));
+
 
             Animator& animator = registry.get<Animator>(model_entity);
             const std::vector<std::string>& animations = animator.GetAnimationNames();

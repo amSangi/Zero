@@ -172,6 +172,21 @@ Transform& Transform::LocalScale(const Transform& parent, const math::Vec3f& sca
     return *this;
 }
 
+void Transform::SetScale(const math::Vec3f& scale)
+{
+    scale_ = scale;
+}
+
+void Transform::SetOrientation(const math::Quaternion& orientation)
+{
+    orientation_ = orientation;
+}
+
+void Transform::SetPosition(const math::Vec3f& position)
+{
+    position_ = position;
+}
+
 void Transform::ClearCachedTransformation()
 {
     cached_translation_ = math::Vec3f::Zero();

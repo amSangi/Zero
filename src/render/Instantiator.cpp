@@ -36,6 +36,7 @@ Entity Instantiator::InstantiateModel(entt::registry& registry,
             {
                 Animated& animated_component = animated_view.get<Animated>(entity);
                 animated_component.root_bone_entity_ = root_bone_entity;
+                animated_component.inverse_root_transform_ = model->GetRootNode()->GetTransformation();
                 animated_component.bone_entities_.reserve(animated_component.bone_names_.size());
                 // Insert bone Entity instance in the same order as the associated bone name
                 for (const std::string& bone_name : animated_component.bone_names_)
@@ -60,20 +61,6 @@ Entity Instantiator::InstantiateNode(entt::registry& registry,
                                      Entity& root_bone_entity,
                                      std::unordered_map<std::string, Entity>& bone_entity_map)
 {
-    auto InstantiateChildNodes = [&root_bone_entity, &bone_entity_map](Entity parent, std::shared_ptr<Node> node, entt::registry& registry)
-    {
-        // Instantiate child nodes
-        std::vector<Entity> child_entities{};
-        child_entities.reserve(node->GetChildren().size());
-        for (const auto child_node : node->GetChildren())
-        {
-            child_entities.push_back(InstantiateNode(registry, child_node, parent, root_bone_entity, bone_entity_map));
-        }
-
-        Transform& transform = registry.get<Transform>(parent);
-        transform.children_.insert(transform.children_.end(), child_entities.begin(), child_entities.end());
-    };
-
     Entity entity = NullEntity;
     if (node->GetEntityPrototypeCount() == 1)
     {
@@ -119,8 +106,25 @@ Entity Instantiator::InstantiateNode(entt::registry& registry,
     }
 
     // Add child node instances as children
-    InstantiateChildNodes(entity, node, registry);
+    InstantiateChildNodes(registry, node, entity, root_bone_entity, bone_entity_map);
     return entity;
+}
+
+void Instantiator::InstantiateChildNodes(entt::registry& registry,
+                                         std::shared_ptr<Node> parent_node,
+                                         Entity parent_entity,
+                                         Entity& root_bone_entity,
+                                         std::unordered_map<std::string, Entity>& bone_entity_map)
+{
+    std::vector<Entity> child_entities{};
+    child_entities.reserve(parent_node->GetChildren().size());
+    for (std::shared_ptr<Node> child_node : parent_node->GetChildren())
+    {
+        child_entities.push_back(InstantiateNode(registry, child_node, parent_entity, root_bone_entity, bone_entity_map));
+    }
+
+    Transform& transform = registry.get<Transform>(parent_entity);
+    transform.children_.insert(transform.children_.end(), child_entities.begin(), child_entities.end());
 }
 
 Entity Instantiator::InstantiateEntityPrototype(entt::registry& registry,

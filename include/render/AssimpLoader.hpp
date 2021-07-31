@@ -40,10 +40,7 @@ namespace zero::render
         bool IsValidScene(const aiScene* ai_scene) const;
         void LoadBoneMap(const aiScene* ai_scene);
 
-        std::shared_ptr<Node> CreateNode(const std::string& model_name,
-                                         const aiScene* ai_scene,
-                                         const aiNode* ai_node,
-                                         const math::Matrix4x4& parent_transformation);
+        std::shared_ptr<Node> CreateNode(const std::string& model_name, const aiScene* ai_scene, const aiNode* ai_node);
 
         std::unique_ptr<Mesh>     ExtractMesh(aiMesh* ai_mesh) const;
         std::unique_ptr<Animator> ExtractAnimator(const aiScene* ai_scene) const;

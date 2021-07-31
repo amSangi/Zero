@@ -59,6 +59,7 @@ namespace zero
         ~Animated();
 
         Entity root_bone_entity_;
+        math::Matrix4x4 inverse_root_transform_;
         std::vector<std::string> bone_names_;
         std::vector<Entity> bone_entities_;
     };

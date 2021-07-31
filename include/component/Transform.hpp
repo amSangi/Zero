@@ -128,6 +128,10 @@ namespace zero
          */
         Transform& LocalScale(const Transform& parent, const math::Vec3f& scale);
 
+        void SetScale(const math::Vec3f& scale);
+        void SetOrientation(const math::Quaternion& orientation);
+        void SetPosition(const math::Vec3f& position);
+
         /**
          * @brief Clear the cached transformation
          */

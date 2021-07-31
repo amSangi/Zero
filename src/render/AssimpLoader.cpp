@@ -30,7 +30,7 @@ std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, co
 
     LoadBoneMap(ai_scene);
 
-    std::shared_ptr<Node> root_node = CreateNode(model_name, ai_scene, ai_scene->mRootNode, math::Matrix4x4::Identity());
+    std::shared_ptr<Node> root_node = CreateNode(model_name, ai_scene, ai_scene->mRootNode);
     std::shared_ptr<Model> model = std::make_shared<Model>(model_name, root_node);
     model->Initialize(ExtractAnimator(ai_scene));
     return model;
@@ -71,18 +71,15 @@ void AssimpLoader::LoadBoneMap(const aiScene* ai_scene)
     }
 }
 
-std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name,
-                                               const aiScene *ai_scene,
-                                               const aiNode *ai_node,
-                                               const math::Matrix4x4& parent_transformation)
+std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name, const aiScene *ai_scene, const aiNode *ai_node)
 {
     // ai_matrix is the transformation relative to the parent.
     // Compute transformation relative to the world.
     const aiMatrix4x4& ai_matrix = ai_node->mTransformation;
-    math::Matrix4x4 transformation = parent_transformation * math::Matrix4x4{ai_matrix.a1, ai_matrix.a2, ai_matrix.a3, ai_matrix.a4,
-                                                                             ai_matrix.b1, ai_matrix.b2, ai_matrix.b3, ai_matrix.b4,
-                                                                             ai_matrix.c1, ai_matrix.c2, ai_matrix.c3, ai_matrix.c4,
-                                                                             ai_matrix.d1, ai_matrix.d2, ai_matrix.d3, ai_matrix.d4};
+    math::Matrix4x4 transformation = math::Matrix4x4{ai_matrix.a1, ai_matrix.a2, ai_matrix.a3, ai_matrix.a4,
+                                                     ai_matrix.b1, ai_matrix.b2, ai_matrix.b3, ai_matrix.b4,
+                                                     ai_matrix.c1, ai_matrix.c2, ai_matrix.c3, ai_matrix.c4,
+                                                     ai_matrix.d1, ai_matrix.d2, ai_matrix.d3, ai_matrix.d4};
 
     std::shared_ptr<Node> node = std::make_shared<Node>(ai_node->mName.C_Str(), transformation);
     auto bone_search = bone_map_.find(node->GetName());
@@ -117,7 +114,7 @@ std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name,
     for (uint32 child_index = 0; child_index < ai_node->mNumChildren; ++child_index)
     {
         const aiNode* child_ai_node = ai_node->mChildren[child_index];
-        std::shared_ptr<Node> child_node = CreateNode(model_name, ai_scene, child_ai_node, transformation);
+        std::shared_ptr<Node> child_node = CreateNode(model_name, ai_scene, child_ai_node);
 
         node->AddChild(child_node);
         child_node->SetParent(node);

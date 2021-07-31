@@ -58,15 +58,11 @@ void AnimationSystem::ApplyAnimation(Animator& animator, const TimeDelta& time_d
 
 void AnimationSystem::UpdateBoneTransform(Pose* pose, const Bone& bone, Transform& bone_transform, const math::Matrix4x4& parent_transformation)
 {
-    // TODO: Validate bone transform update
-    // - Transforms updated properly?
-    // - Should transforms be set or scaled/rotated/translated
-
     // Apply scale, rotation, and translation to bone transform
     math::Matrix4x4 pose_transformation = pose->transforms_[bone.name_];
-    bone_transform.Scale(pose_transformation.GetScale());
-    bone_transform.Rotate(pose_transformation.GetRotation());
-    bone_transform.Translate(pose_transformation.GetTranslation());
+    bone_transform.SetScale(pose_transformation.GetScale());
+    bone_transform.SetOrientation(pose_transformation.GetRotation());
+    bone_transform.SetPosition(pose_transformation.GetTranslation());
 
     // Update child bones
     auto bone_view = GetCore()->GetRegistry().view<Transform, Bone>();
@@ -80,7 +76,7 @@ void AnimationSystem::UpdateBoneTransform(Pose* pose, const Bone& bone, Transfor
 
         Transform& child_bone_transform = bone_view.get<Transform>(child_entity);
         Bone& child_bone = bone_view.get<Bone>(child_entity);
-        UpdateBoneTransform(pose, child_bone, child_bone_transform, parent_transformation);
+        UpdateBoneTransform(pose, child_bone, child_bone_transform, parent_transformation * pose_transformation);
     }
 }
 
