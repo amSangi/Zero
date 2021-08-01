@@ -70,11 +70,6 @@ namespace zero::render
                                       Entity parent,
                                       Entity& root_bone_entity,
                                       std::unordered_map<std::string, Entity>& bone_entity_map);
-        static void InstantiateChildNodes(entt::registry& registry,
-                                          std::shared_ptr<Node> parent_node,
-                                          Entity parent_entity,
-                                          Entity& root_bone_entity,
-                                          std::unordered_map<std::string, Entity>& bone_entity_map);
 
     }; // class Instantiator
 
