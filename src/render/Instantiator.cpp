@@ -118,7 +118,7 @@ Entity Instantiator::InstantiateEntityPrototype(entt::registry& registry,
     Entity entity = registry.create();
     Transform& transform = registry.emplace<Transform>(entity, Transform::FromMatrix4x4(transformation));
     transform.parent_ = parent;
-    if (entity_prototype->GetMesh()->GetBoneNames().size() > 0)
+    if (!entity_prototype->GetMesh()->GetBoneNames().empty())
     {
         Animated& animated_component = registry.emplace<Animated>(entity);
         animated_component.bone_names_ = entity_prototype->GetMesh()->GetBoneNames();
@@ -140,7 +140,9 @@ Entity Instantiator::InstantiatePrimitive(entt::registry& registry, const Primit
         case PrimitiveInstance::Type::BOX:
         {
             Box box = primitive.GetBox();
-            math::Box math_box{math::Vec3f::Zero(), math::Vec3f(box.width_, box.height_, box.depth_)};
+            math::Box math_box{math::Vec3f::Zero(), math::Vec3f(static_cast<float>(box.width_),
+																static_cast<float>(box.height_),
+																static_cast<float>(box.depth_))};
             volume.bounding_volume_.center_ = math_box.Center();
             volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
             transform.Scale(math_box.max_);
@@ -149,14 +151,14 @@ Entity Instantiator::InstantiatePrimitive(entt::registry& registry, const Primit
         case PrimitiveInstance::Type::CONE:
         {
             Cone cone = primitive.GetCone();
-            float half_height = cone.height_ * 0.5F;
+            float half_height = static_cast<float>(cone.height_) * 0.5F;
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + cone.radius_ * cone.radius_);
             break;
         }
         case PrimitiveInstance::Type::CYLINDER:
         {
             Cylinder cylinder = primitive.GetCylinder();
-            float half_height = cylinder.height_ * 0.5F;
+            float half_height = static_cast<float>(cylinder.height_) * 0.5F;
             float largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + largest_radius * largest_radius);
             break;
@@ -164,8 +166,8 @@ Entity Instantiator::InstantiatePrimitive(entt::registry& registry, const Primit
         case PrimitiveInstance::Type::PLANE:
         {
             Plane plane = primitive.GetPlane();
-            float half_width = plane.width_ * 0.5F;
-            float half_height = plane.height_ * 0.5F;
+            float half_width = static_cast<float>(plane.width_) * 0.5F;
+            float half_height = static_cast<float>(plane.height_) * 0.5F;
             volume.bounding_volume_.center_ = math::Vec3f(half_width,
                                                           0.0F,
                                                           half_height);
