@@ -27,11 +27,6 @@ void GLBoneUniformBuffer::UpdateUniforms(std::vector<math::Matrix4x4> bone_matri
 {
     assert(bone_matrices.size() <= Constants::kMaxMeshBoneCount);
 
-    // Transpose each bone matrix
-    for (math::Matrix4x4& matrix : bone_matrices)
-    {
-        matrix = matrix.Transpose();
-    }
     glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(math::Matrix4x4) * bone_matrices.size(), bone_matrices.data());
     glBindBuffer(GL_UNIFORM_BUFFER, 0);

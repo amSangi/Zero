@@ -274,7 +274,7 @@ std::shared_ptr<std::vector<math::Matrix4x4>> SceneManager::GetBoneMatrices(cons
         const Transform& bone_transform = bone_transform_view.get<const Transform>(bone_entity);
         const Bone& bone = bone_transform_view.get<const Bone>(bone_entity);
         math::Matrix4x4 world_matrix = bone_transform.GetLocalToWorldMatrix();
-        (*bone_matrices)[i] = bone.offset_matrix_;
+        bone_matrices->operator[](i) = animated_component.inverse_root_transform_ * world_matrix * bone.offset_matrix_;
     }
 
     bone_matrix_cache_.emplace(animated_component.root_bone_entity_, bone_matrices);
