@@ -98,33 +98,16 @@ Entity Instantiator::InstantiateNode(entt::registry& registry,
         bone_entity_map[node->GetBone()->name_] = entity;
     }
 
-    // Update parent transform
-    if (parent != NullEntity)
-    {
-        Transform& parent_transform = registry.get<Transform>(parent);
-        parent_transform.children_.push_back(entity);
-    }
-
-    // Add child node instances as children
-    InstantiateChildNodes(registry, node, entity, root_bone_entity, bone_entity_map);
-    return entity;
-}
-
-void Instantiator::InstantiateChildNodes(entt::registry& registry,
-                                         std::shared_ptr<Node> parent_node,
-                                         Entity parent_entity,
-                                         Entity& root_bone_entity,
-                                         std::unordered_map<std::string, Entity>& bone_entity_map)
-{
     std::vector<Entity> child_entities{};
-    child_entities.reserve(parent_node->GetChildren().size());
-    for (std::shared_ptr<Node> child_node : parent_node->GetChildren())
+    child_entities.reserve(node->GetChildren().size());
+    for (const std::shared_ptr<Node>& child_node : node->GetChildren())
     {
-        child_entities.push_back(InstantiateNode(registry, child_node, parent_entity, root_bone_entity, bone_entity_map));
+    	child_entities.push_back(InstantiateNode(registry, child_node, entity, root_bone_entity, bone_entity_map));
     }
 
-    Transform& transform = registry.get<Transform>(parent_entity);
+    Transform& transform = registry.get<Transform>(entity);
     transform.children_.insert(transform.children_.end(), child_entities.begin(), child_entities.end());
+    return entity;
 }
 
 Entity Instantiator::InstantiateEntityPrototype(entt::registry& registry,
