@@ -1,6 +1,6 @@
 #include "render/renderer/opengl/ubo/GLBoneUniformBuffer.hpp"
 #include "render/Constants.hpp"
-#include <assert.h>
+#include <cassert>
 
 namespace zero::render
 {
@@ -27,6 +27,10 @@ void GLBoneUniformBuffer::UpdateUniforms(std::vector<math::Matrix4x4> bone_matri
 {
     assert(bone_matrices.size() <= Constants::kMaxMeshBoneCount);
 
+    for (auto& bone_matrix : bone_matrices)
+    {
+    	bone_matrix = bone_matrix.Transpose();
+    }
     glBindBuffer(GL_UNIFORM_BUFFER, buffer_id_);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(math::Matrix4x4) * bone_matrices.size(), bone_matrices.data());
     glBindBuffer(GL_UNIFORM_BUFFER, 0);

@@ -5,12 +5,11 @@
 
 namespace zero
 {
-
-    class TransformPropagator
+	class TransformPropagator
     {
     public:
 
-        TransformPropagator() = delete;
+    	TransformPropagator() = delete;
 
         /**
          * @brief Remove a child from a parent Transform
@@ -56,6 +55,18 @@ namespace zero
          * @param registry the registry containing the entities and their components
          */
         static void ClearCachedTransformations(entt::registry& registry);
+
+
+        /**
+         * @brief Visit the transform hierarchy
+         *
+         * The visitor callback is only invoked on valid entities that contain at least a Transform component
+         *
+         * @param registry the registry containing the entities and their components
+         * @param root_entity the root entity to start traversing
+         * @param visitor the callback to invoke on each entity in the hierarchy, starting with the root entity
+         */
+//        static void VisitTransform(entt::registry& registry, Entity root_entity, std::function<void(Entity entity)> visitor);
 
     }; // class TransformPropagator
 

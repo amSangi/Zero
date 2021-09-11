@@ -1,5 +1,6 @@
 #include "core/TransformPropagator.hpp"
 #include <algorithm>
+#include <queue>
 #include <stack>
 
 namespace zero
@@ -40,7 +41,8 @@ void TransformPropagator::RemoveChildren(entt::registry& registry, Entity parent
     transform.children_.clear();
 }
 
-void TransformPropagator::RemoveParent(entt::registry& registry, Entity entity) {
+void TransformPropagator::RemoveParent(entt::registry& registry, Entity entity)
+{
     auto& transform = registry.get<Transform>(entity);
     if (transform.parent_ != NullEntity)
     {
@@ -48,7 +50,8 @@ void TransformPropagator::RemoveParent(entt::registry& registry, Entity entity) 
     }
 }
 
-void TransformPropagator::PropagateMarkForDestruction(entt::registry& registry) {
+void TransformPropagator::PropagateMarkForDestruction(entt::registry& registry)
+{
     auto view = registry.view<Transform>();
     std::stack<Entity> update_stack;
 
@@ -94,53 +97,56 @@ void TransformPropagator::PropagateMarkForDestruction(entt::registry& registry) 
     }
 }
 
-void TransformPropagator::PropagateTransform(entt::registry& registry) {
-    auto view = registry.view<Transform>();
-    std::stack<Entity> update_stack;
+void TransformPropagator::PropagateTransform(entt::registry& registry)
+{
+	auto transform_view = registry.view<Transform>();
+	std::vector<Entity> root_parent_entities;
 
-    // Retrieve root parents with children
-    for (Entity entity : view)
-    {
-        auto& transform = view.get<Transform>(entity);
-        if (transform.parent_ == NullEntity && !transform.children_.empty())
-        {
-            update_stack.push(entity);
-        }
-    }
+	// Retrieve root parents with children
+	for (Entity entity : transform_view)
+	{
+		auto& transform = transform_view.get<Transform>(entity);
+		if (transform.parent_ == NullEntity && !transform.children_.empty())
+		{
+			root_parent_entities.push_back(entity);
+		}
+	}
 
-    // Begin downward propagation
-    while (!update_stack.empty())
-    {
-        auto& transform = view.get<Transform>(update_stack.top());
-        update_stack.pop();
+	// Begin downward propagation
+	for (Entity root_parent_entity : root_parent_entities)
+	{
+		Transform& root_transform = transform_view.get<Transform>(root_parent_entity);
 
-        // Skip unmodified entities
-        if (!transform.IsModified())
-        {
-            continue;
-        }
+		// Skip unmodified entities
+		if (!root_transform.IsModified())
+		{
+			continue;
+		}
 
-        const auto parent_matrix = transform.GetCachedLocalToWorldMatrix();
+		// Apply transformation to child entities
+		std::queue<Entity> entities{};
+		entities.push(root_parent_entity);
+		while (!entities.empty())
+		{
+			Entity entity = entities.front();
+			entities.pop();
 
-        // Apply transformation to child entities
-        for (Entity child_entity : transform.children_)
-        {
-            if (!registry.valid(child_entity))
-            {
-                continue;
-            }
+			Transform& parent_transform = transform_view.get<Transform>(entity);
+			for (Entity child_entity : parent_transform.children_)
+			{
+				if (!registry.valid(child_entity))
+				{
+					continue;
+				}
 
-            // Add child to update_stack to propagate to its children
-            update_stack.push(child_entity);
-
-            auto& child_transform = view.get<Transform>(child_entity);
-
-            // Set the world transform by decomposing the resulting matrix
-            child_transform.Scale(parent_matrix.GetScale());
-            child_transform.Rotate(parent_matrix.GetRotation());
-            child_transform.Translate(parent_matrix.GetTranslation());
-        }
-    }
+				Transform& child_transform = transform_view.get<Transform>(child_entity);
+				child_transform.Scale(parent_transform.GetScale());
+				child_transform.Rotate(parent_transform.GetOrientation());
+				child_transform.Translate(parent_transform.GetPosition());
+				entities.push(child_entity);
+			}
+		}
+	}
 }
 
 void TransformPropagator::ClearCachedTransformations(entt::registry& registry)
@@ -152,5 +158,4 @@ void TransformPropagator::ClearCachedTransformations(entt::registry& registry)
         transform.ClearCachedTransformation();
     }
 }
-
 } // namespace zero

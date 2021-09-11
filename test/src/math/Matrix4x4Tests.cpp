@@ -264,7 +264,8 @@ TEST(TestMatrix4, GetRotation)
     matrix.Scale(scale)
           .Rotate(rotation)
           .Translate(translation);
-    EXPECT_EQ(matrix.GetRotation(), rotation);
+    Quaternion actual_rotation = matrix.GetRotation();
+    EXPECT_EQ(actual_rotation, rotation);
 }
 
 TEST(TestMatrix4, GetScale)

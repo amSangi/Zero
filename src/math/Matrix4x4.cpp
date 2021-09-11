@@ -381,7 +381,7 @@ Vec3f Matrix4x4::GetTranslation() const
 
 Quaternion Matrix4x4::GetRotation() const
 {
-    return Quaternion::FromMatrix3(GetMatrix3x3()).Unit();
+    return Quaternion::FromMatrix3(GetMatrix3x3());
 }
 
 Vec3f Matrix4x4::GetScale() const

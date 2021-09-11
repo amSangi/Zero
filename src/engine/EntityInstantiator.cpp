@@ -1,6 +1,5 @@
 #include "engine/EntityInstantiator.hpp"
 #include "render/RenderSystem.hpp"
-#include "component/SkyDome.hpp"
 
 namespace zero
 {

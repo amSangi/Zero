@@ -215,6 +215,16 @@ namespace zero::math
          */
         [[nodiscard]] Matrix3x3 GetRotationMatrix() const;
 
+        /**
+         * @brief Convert the Quaternion to a string in the form <w, x, y, z>
+         * @return a string representation
+         */
+        [[nodiscard]] std::string ToString() const
+        {
+        	std::stringstream result;
+        	result << "<" << w_ << ", " << x_ << ", " <<  y_ << ", " << z_ << ">";
+        	return result.str();
+        }
 
         /* ********** Static Operations ********** */
 

@@ -169,7 +169,7 @@ private:
             auto model_entity = GetInstantiator()->InstantiateModel("wolf\\wolf.FBX");
             Transform& transform = registry.get<Transform>(model_entity);
             transform.Scale(math::Vec3f(0.25F));
-            transform.Translate(math::Vec3f(5.0F, -1.0F, 0.0F));
+            transform.Translate(math::Vec3f(8.0F, 0.0F, 0.0F));
 
 
             Animator& animator = registry.get<Animator>(model_entity);

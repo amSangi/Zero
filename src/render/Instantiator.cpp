@@ -56,7 +56,7 @@ Entity Instantiator::InstantiateModel(entt::registry& registry,
 }
 
 Entity Instantiator::InstantiateNode(entt::registry& registry,
-                                     std::shared_ptr<Node> node,
+                                     const std::shared_ptr<Node>& node,
                                      Entity parent,
                                      Entity& root_bone_entity,
                                      std::unordered_map<std::string, Entity>& bone_entity_map)
