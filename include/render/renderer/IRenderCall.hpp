@@ -16,8 +16,8 @@ namespace zero::render
     {
         /**
          * @brief Identifies the render pass.
-         * Sort based on the pass to ensure shadow passes and performed before a normal render pass
-         * to ensure shadow map textures are ready for use.
+         * Sort based on the pass. This can be used to ensure shadow passes are performed before a normal render pass,
+         * which also ensures shadow map textures are ready for use.
          */
         uint8 pass_;
         /**
