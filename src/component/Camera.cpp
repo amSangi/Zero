@@ -24,7 +24,8 @@ float Camera::Viewport::GetAspectRatio() const
 }
 
 Camera::Camera()
-: projection_(Camera::ProjectionType::PERSPECTIVE)
+: Component()
+, projection_(Camera::ProjectionType::PERSPECTIVE)
 , near_clip_(kDefaultNearClip)
 , far_clip_(kDefaultFarClip)
 , horizontal_field_of_view_(kDefaultHorizontalFOVDegrees)
@@ -36,7 +37,8 @@ Camera::Camera()
 }
 
 Camera::Camera(Camera::ProjectionType projection_type)
-: projection_(projection_type)
+: Component()
+, projection_(projection_type)
 , near_clip_(kDefaultNearClip)
 , far_clip_(kDefaultFarClip)
 , horizontal_field_of_view_(kDefaultHorizontalFOVDegrees)

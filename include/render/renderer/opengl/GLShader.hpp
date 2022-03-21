@@ -16,22 +16,12 @@ namespace zero::render
 
         /**
          * @brief Constructor
-         * @param source the source code for the shader
+         * @param shader_id the OpenGL Shader ID
          * @param type the shader type
          */
-        GLShader(const std::string& source, IShader::Type type);
+        GLShader(GLuint shader_id, IShader::Type type);
 
-        ~GLShader() override;
-
-        /**
-         * @see IShader::Compile
-         */
-        bool Compile() override;
-
-        /**
-         * @see IShader::IsCompiled
-         */
-        [[nodiscard]] bool IsCompiled() const override;
+        ~GLShader() override = default;
 
         /**
          * @see IShader::GetType
@@ -42,15 +32,9 @@ namespace zero::render
          * @brief Get the native OpenGL identifier
          * @return the identifier
          */
-        [[nodiscard]] GLuint GetNativeIdentifier() const;
+        [[nodiscard]] GLuint GetIdentifier() const;
 
     private:
-
-        /**
-         * @brief Destroy the shader resources
-         */
-        void Cleanup() const;
-
         /**
          * @brief OpenGL shader identifier
          */

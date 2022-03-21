@@ -20,28 +20,6 @@ namespace zero::render
         virtual ~IProgram() = default;
 
         /**
-         * @brief Link the graphics program
-         * @return True if the link was successful. Otherwise false.
-         */
-        virtual bool Link() = 0;
-
-        /**
-         * @brief Is the Program linked?
-         * @return True if the program is linked. Otherwise false.
-         */
-        [[nodiscard]] virtual bool IsLinked() const = 0;
-
-        /**
-         * @brief Set the graphics program as active on the current rendering state
-         */
-        virtual void Use() = 0;
-
-        /**
-         * @brief Removes the graphics program from the current rendering state
-         */
-        virtual void Finish() = 0;
-
-        /**
          * @brief Set a Uniform variable. The program needs to be in use.
          * @param name The variable name
          * @param value The variable value
@@ -54,12 +32,6 @@ namespace zero::render
         virtual void SetUniform(const std::string& name, zero::int32 value) = 0;
         virtual void SetUniform(const std::string& name, float value) = 0;
         ///@}
-
-        /**
-         * @brief Set the uniform variables in the graphics program
-         *   The graphics program must be active.
-         */
-        virtual void FlushUniforms() = 0;
 
     }; // class IProgram
 

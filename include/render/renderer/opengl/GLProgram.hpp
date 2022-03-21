@@ -6,13 +6,10 @@
 #include <unordered_map>
 #include "render/renderer/IProgram.hpp"
 #include "render/renderer/opengl/OpenGL.hpp"
+#include "render/renderer/opengl/GLShader.hpp"
 
 namespace zero::render
 {
-
-    // Forward declarations
-    class GLShader;
-
     /**
      * @brief OpenGL graphics program wrapper
      */
@@ -21,38 +18,13 @@ namespace zero::render
         template<class T>
         using UniformMap = std::unordered_map<std::string, T> ;
     public:
-
-        /**
-         * @brief Create a new GLProgram given a series of GLShaders
-         * @param shaders the shaders to use for the graphics program
-         * @return a graphics program. Nullptr if an error occurred.
-         */
-        static std::shared_ptr<GLProgram> CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders);
-
         /**
          * @brief Constructor
-         * @param id the OpenGL identifier
+         * @param program_id the OpenGL linked shader program identifier
          */
-        explicit GLProgram(GLuint id);
+        explicit GLProgram(GLuint program_id);
 
-        ~GLProgram() override;
-
-        bool Link() override;
-
-        /**
-         * @see IProgram::IsLinked
-         */
-        bool IsLinked() const override;
-
-        /**
-         * @see IProgram::IsLinked
-         */
-        void Use() override;
-
-        /**
-         * @see IProgram::IsLinked
-         */
-        void Finish() override;
+        ~GLProgram() override = default;
 
         /**
          * @see IProgram::SetUniform
@@ -66,41 +38,16 @@ namespace zero::render
         void SetUniform(const std::string& name, float value) override;
         ///@}
 
-        /**
-         * @see IProgram::IsLinked
-         */
-        void FlushUniforms() override;
+        const UniformMap<math::Matrix4x4>& GetMatrix4x4Map() const;
+        const UniformMap<math::Matrix3x3>& GetMatrix3x3Map() const;
+        const UniformMap<math::Vec4f>& GetVec4fMap() const;
+        const UniformMap<math::Vec3f>& GetVec3fMap() const;
+        const UniformMap<int32>& GetInt32Map() const;
+        const UniformMap<float>& GetFloatMap() const;
 
-        /**
-         * @brief Get the attribute location of a given variable
-         * @param name the variable name
-         * @return the attribute location
-         */
-        [[nodiscard]] GLint GetAttribLocation(const std::string& name) const;
-
-        /**
-         * @brief Get the uniform block index of a named uniform block
-         * @param uniform_name the uniform name
-         * @return the block index
-         */
-        [[nodiscard]] GLuint GetUniformBlockIndex(const std::string& uniform_name) const;
-
-        /**
-         * @brief Bind the index of the shader program to the associated binding point
-         * @param block_index the index in the shader program
-         * @param block_binding the binding point to bind the index to
-         */
-        void BindBlockIndex(GLuint block_index, GLuint block_binding) const;
-
-        GLuint GetId() const { return id_; }
+        [[nodiscard]] GLuint GetIdentifier() const;
     private:
-
-        /**
-         * @brief Destroy the program resources
-         */
-        void Cleanup() const;
-
-        GLuint id_;
+        GLuint program_id_;
         UniformMap<math::Matrix4x4> matrix4x4_map_;
         UniformMap<math::Matrix3x3> matrix3x3_map_;
         UniformMap<math::Vec4f> vec4f_map_;

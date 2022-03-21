@@ -11,7 +11,7 @@ namespace zero
     /**
      * @brief The transform component containing position, orientation, and scale information
      */
-    struct Transform : public HierarchyComponent
+    struct Transform : public Component
     {
 
         /**
@@ -46,14 +46,20 @@ namespace zero
         static Transform FromMatrix4x4(const math::Matrix4x4& transformation);
 
         /**
-         * @brief Check if the transform is equal to another transform
+         * @brief Check if the positional data is equal to another transform's positional data
+         *
+         * Does not check if parent/child relationships are equal.
+         *
          * @param other the other transform
          * @return True if the global and local components are equal. Otherwise false.
          */
         bool operator==(const Transform& other) const;
 
         /**
-         * @brief Check if the transform is not equal to another transform
+         * @brief Check if the positional data is not equal to another transform's positional data
+         *
+         * Does not check if parent/child relationships are equal.
+         *
          * @param other the other transform
          * @return True if the transforms are not equal. Otherwise false.
          */
@@ -72,132 +78,10 @@ namespace zero
         [[nodiscard]] math::Matrix4x4 GetLocalToWorldMatrix() const;
 
         /**
-         * @brief Get the cached transformation from local coordinates to world coordinates
-         * @return the cached transformation matrix
-         */
-        [[nodiscard]] math::Matrix4x4 GetCachedLocalToWorldMatrix() const;
-
-        /**
          * @brief Matrix that represents local coordinates relative to the parent matrix
          * @return the transformation matrix
          */
         [[nodiscard]] math::Matrix4x4 GetLocalToParentMatrix() const;
-
-        /**
-         * @brief Translate the position relative to the world
-         * @param translation the translation vector
-         * @return the caller
-         */
-        Transform& Translate(const math::Vec3f& translation);
-
-        /**
-         * @brief Translate the position relative to the parent entity
-         * @param parent the parent transform
-         * @param translation the translation vector
-         * @return the caller
-         */
-        Transform& LocalTranslate(const Transform& parent, const math::Vec3f& translation);
-
-        /**
-         * @brief Rotate the transform using the quaternion relative to the world
-         * @param rotation the rotation quaternion
-         * @return the caller
-         */
-        Transform& Rotate(const math::Quaternion& rotation);
-
-        /**
-         * @brief Rotate the transform using the quaternion relative to the parent entity
-         * @param parent the parent transform
-         * @param rotation the rotation quaternion
-         * @return the caller
-         */
-        Transform& LocalRotate(const Transform& parent, const math::Quaternion& rotation);
-
-        /**
-         * @brief Scale the entity
-         * @param scale the scale
-         * @return the caller
-         */
-        Transform& Scale(const math::Vec3f& scale);
-
-        /**
-         * @brief Scale the transform using the scale relative to the parent entity
-         * @param parent the parent transform
-         * @param scale the scale
-         * @return the caller
-         */
-        Transform& LocalScale(const Transform& parent, const math::Vec3f& scale);
-
-        void SetScale(const math::Vec3f& scale);
-        void SetOrientation(const math::Quaternion& orientation);
-        void SetPosition(const math::Vec3f& position);
-
-        /**
-         * @brief Clear the cached transformation
-         */
-        void ClearCachedTransformation();
-
-        /**
-         * @brief Has the transform been modified?
-         * @return True if the transform was modified. Otherwise false.
-         */
-        [[nodiscard]] bool IsModified() const;
-
-        /**
-         * @brief Get the position in the world
-         * @return the position
-         */
-        [[nodiscard]] const math::Vec3f& GetPosition() const;
-
-        /**
-         * @brief Get the local position relative to the parent
-         * @return the local position
-         */
-        [[nodiscard]] const math::Vec3f& GetLocalPosition() const;
-
-        /**
-         * @brief Get the scale in the world
-         * @return the scale
-         */
-        [[nodiscard]] const math::Vec3f& GetScale() const;
-
-        /**
-         * @brief Get the local scale relative to the parent
-         * @return the local scale
-         */
-        [[nodiscard]] const math::Vec3f& GetLocalScale() const;
-
-        /**
-         * @brief Get the orientation in the world
-         * @return the orientation
-         */
-        [[nodiscard]] const math::Quaternion& GetOrientation() const;
-
-        /**
-         * @brief Get the local orientation relative to the parent
-         * @return the local orientation
-         */
-        [[nodiscard]] const math::Quaternion& GetLocalOrientation() const;
-
-        /**
-         * @brief Set the local scale relative to the parent
-         * @param scale the new local scale
-         */
-        void SetLocalScale(const math::Vec3f& scale);
-
-        /**
-         * @brief Set the local orientation relative to the parent
-         * @param orientation the new local orientation
-         */
-        void SetLocalOrientation(const math::Quaternion& orientation);
-
-        /**
-         * @brief Set the local orientation relative to the parent
-         * @param position the new local orientation
-         */
-        void SetLocalPosition(const math::Vec3f& position);
-
-    private:
 
         /**
          * @brief The position in the world
@@ -205,14 +89,9 @@ namespace zero
         math::Vec3f position_;
 
         /**
-         * @brief The position relative to the parent transform
+         * @brief The position relative to the parent
          */
         math::Vec3f local_position_;
-
-        /**
-         * @brief The cached translation transformation
-         */
-        math::Vec3f cached_translation_;
 
         /**
          * @brief The scale relative to the world
@@ -225,11 +104,6 @@ namespace zero
         math::Vec3f local_scale_;
 
         /**
-         * @brief The cached scale transformation
-         */
-        math::Vec3f cached_scale_;
-
-        /**
          * @brief The orientation in the world
          */
         math::Quaternion orientation_;
@@ -240,14 +114,17 @@ namespace zero
         math::Quaternion local_orientation_;
 
         /**
-         * @brief The cached rotation transformation
+         * @brief The parent entity
+         *
+         * This is set to NullEntity by default.
          */
-        math::Quaternion cached_rotation_;
+        Entity parent_;
 
         /**
-         * @brief Has the transform been modified?
+         * @brief The child entities
          */
-        bool is_modified_;
+        std::vector<Entity> children_;
+
     }; // struct Transform
 
 } // namespace zero

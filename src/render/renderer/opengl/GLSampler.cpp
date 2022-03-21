@@ -3,25 +3,9 @@
 namespace zero::render
 {
 
-GLSampler::GLSampler()
-: id_(0)
+GLSampler::GLSampler(GLuint sampler_id)
+: id_(sampler_id)
 {
-}
-
-GLSampler::~GLSampler()
-{
-    Cleanup();
-}
-
-void GLSampler::Initialize()
-{
-    glGenSamplers(1, &id_);
-    glSamplerParameteri(id_, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glSamplerParameteri(id_, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glSamplerParameteri(id_, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glSamplerParameteri(id_, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    math::Vec3f border_color = math::Vec3f::Zero();
-    glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , border_color.Data());
 }
 
 void GLSampler::SetWrappingS(Wrapping wrapping)
@@ -124,14 +108,9 @@ void GLSampler::SetBorderColour(zero::math::Vec4f colour)
     glSamplerParameterfv(id_, GL_TEXTURE_BORDER_COLOR , colour.Data());
 }
 
-GLuint GLSampler::GetNativeIdentifier() const
+GLuint GLSampler::GetIdentifier() const
 {
     return id_;
-}
-
-void GLSampler::Cleanup()
-{
-    glDeleteSamplers(1, &id_);
 }
 
 } // namespace zero::render

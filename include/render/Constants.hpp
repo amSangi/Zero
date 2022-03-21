@@ -52,7 +52,6 @@ namespace zero::render
         static constexpr uint32 kShadowMapHeight = 1024U;
         ///@}
 
-
     }; // class Constants
 
 } // namespace zero

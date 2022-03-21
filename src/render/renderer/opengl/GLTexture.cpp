@@ -9,24 +9,14 @@ GLTexture::GLTexture(GLuint id, GLenum target)
 {
 }
 
-GLTexture::~GLTexture()
-{
-    Cleanup();
-}
-
 GLenum GLTexture::GetTarget() const
 {
     return target_;
 }
 
-GLuint GLTexture::GetNativeIdentifier() const
+GLuint GLTexture::GetIdentifier() const
 {
     return id_;
-}
-
-void GLTexture::Cleanup()
-{
-    glDeleteTextures(1, &id_);
 }
 
 } // namespace zero::render

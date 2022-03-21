@@ -45,11 +45,6 @@ namespace zero::render
         virtual ~ISampler() = default;
 
         /**
-         * @brief Initialize the sampler
-         */
-        virtual void Initialize() = 0;
-
-        /**
          * @brief Set the wrapping technique for the s texture coordinate axis.
          * @param wrapping the texture coordinate wrapping technique
          */

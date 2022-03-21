@@ -30,9 +30,6 @@ public:
     {
         SetupCamera();
         SetupSkyDome();
-        SetupModel();
-        SetupPrimitives();
-        SetupLights();
         GetCore()->GetEventBus().RegisterKeyPressedListener(this);
     }
 
@@ -90,27 +87,27 @@ public:
                 break;
             case KeyCode::NUM_PAD_4:
                 // Move -x
-                transform.Translate(-1.0F * horizontal_speed_);
+                transform.position_ += (-1.0F * horizontal_speed_);
                 break;
             case KeyCode::NUM_PAD_6:
                 // Move +x
-                transform.Translate(horizontal_speed_);
+                transform.position_ += horizontal_speed_;
                 break;
             case KeyCode::NUM_PAD_8:
                 // Move +y
-                transform.Translate(vertical_speed_);
+                transform.position_ += vertical_speed_;
                 break;
             case KeyCode::NUM_PAD_2:
                 // Move -y
-                transform.Translate(-1.0F * vertical_speed_);
+                transform.position_ += -1.0F * vertical_speed_;
                 break;
             case KeyCode::NUM_PAD_1:
                 // Move -z
-                transform.Translate(-1.0F * forward_speed_);
+                transform.position_ += -1.0F * forward_speed_;
                 break;
             case KeyCode::NUM_PAD_3:
                 // Move +z
-                transform.Translate(forward_speed_);
+                transform.position_ += forward_speed_;
                 break;
             default:
                 break;
@@ -147,158 +144,6 @@ private:
         sky_dome.fragment_shader_ = "sky_dome.fragment.glsl";
         sky_dome.apex_color_ = math::Vec3f(0.0F, 0.15F, 0.66F);
         sky_dome.center_color_ = math::Vec3f(0.3F, 0.45F, 0.96F);
-    }
-    void SetupModel()
-    {
-        entt::registry& registry = GetCore()->GetRegistry();
-        {
-            // Instantiate a 3D model
-            auto model_entity = GetInstantiator()->InstantiateModel("illidan\\IllidanLegion.obj");
-            auto& model_material = registry.get<Material>(model_entity);
-            model_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-            model_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-            model_material.texture_map_.diffuse_map_ = "IllidanLegion_illidan2.png";
-            model_material.wireframe_enabled_ = false;
-            model_material.visible_ = true;
-            model_material.specular_exponent_ = 32.0F;
-            auto& transform = registry.get<Transform>(model_entity);
-            transform.Translate(math::Vec3f(0.0F, -2.0F, 0.0F));
-        }
-        {
-            // Instantiate an animated 3D model
-            auto model_entity = GetInstantiator()->InstantiateModel("wolf\\wolf.FBX");
-            Transform& transform = registry.get<Transform>(model_entity);
-            transform.Scale(math::Vec3f(0.25F));
-            transform.Translate(math::Vec3f(8.0F, 0.0F, 0.0F));
-
-
-            Animator& animator = registry.get<Animator>(model_entity);
-            const std::vector<std::string>& animations = animator.GetAnimationNames();
-            //animator.StartAnimation(animations[0]);
-
-            std::queue<Entity> frontier{};
-            frontier.push(model_entity);
-
-            while (!frontier.empty())
-            {
-                Entity entity = frontier.front();
-                frontier.pop();
-
-                auto& entity_transform = registry.get<Transform>(entity);
-                if (registry.has<Material>(entity))
-                {
-                    auto& entity_material = registry.get<Material>(entity);
-                    entity_material.shaders_.vertex_shader_ = "animated_model.vertex.glsl";
-                    entity_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-                    entity_material.texture_map_.diffuse_map_ = "wolf.png";
-                    entity_material.wireframe_enabled_ = false;
-                    entity_material.visible_ = true;
-                    entity_material.specular_exponent_ = 32.0F;
-                }
-
-                for (Entity child_entity : entity_transform.children_)
-                {
-                    frontier.push(child_entity);
-                }
-            }
-        }
-    }
-    void SetupPrimitives()
-    {
-        entt::registry& registry = GetCore()->GetRegistry();
-
-        // Instantiate a root primitive
-        PrimitiveInstance root_primitive{};
-        Torus root_shape{};
-        root_primitive.Set(root_shape);
-        auto root_primitive_entity = GetInstantiator()->InstantiatePrimitive(root_primitive);
-        auto& root_primitive_material = registry.get<Material>(root_primitive_entity);
-        root_primitive_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-        root_primitive_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-        root_primitive_material.wireframe_enabled_ = false;
-        root_primitive_material.diffuse_color_ = math::Vec3f(0.65F, 0.0F, 0.0F);
-        root_primitive_material.visible_ = true;
-
-        // Instantiate a child primitive
-        PrimitiveInstance primitive{};
-        Torus shape{};
-        primitive.Set(shape);
-        auto primitive_entity = GetInstantiator()->InstantiatePrimitive(primitive);
-        auto& primitive_material = registry.get<Material>(primitive_entity);
-        primitive_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-        primitive_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-        primitive_material.wireframe_enabled_ = false;
-        primitive_material.diffuse_color_ = math::Vec3f(0.0F, 0.65F, 0.0F);
-        primitive_material.visible_ = true;
-
-        // Incorporate parent-child hierarchy
-        auto& root_transform = registry.get<Transform>(root_primitive_entity);
-        auto& child_transform = registry.get<Transform>(primitive_entity);
-        child_transform.LocalRotate(root_transform,
-                                    math::Quaternion::FromAngleAxis(math::Vec3f::Up(), math::Radian::FromDegree(90.0F)));
-        child_transform.LocalTranslate(root_transform, math::Vec3f(0.0F, 1.5F, 0.0F));
-        root_transform.children_.push_back(primitive_entity);
-        child_transform.parent_ = root_primitive_entity;
-        root_transform.Translate(math::Vec3f(5.0F, 0.0F, 0.0F));
-
-        // Instantiate the floor
-        PrimitiveInstance floor_primitive{};
-        Plane plane{};
-        plane.width_ = 32U;
-        plane.height_ = 32U;
-        plane.u_axis_ = math::Vec3f::Right();
-        plane.v_axis_ = math::Vec3f::Back();
-        floor_primitive.Set(plane);
-        auto floor_entity = GetInstantiator()->InstantiatePrimitive(floor_primitive);
-        auto& floor_material = registry.get<Material>(floor_entity);
-        floor_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-        floor_material.shaders_.fragment_shader_ = "model.fragment.glsl";
-        floor_material.diffuse_color_ = math::Vec3f(0.52F, 0.37F, 0.26F);
-        floor_material.two_sided_ = true;
-        auto& floor_transform = registry.get<Transform>(floor_entity);
-        floor_transform.Scale(math::Vec3f(10.0F));
-        floor_transform.Translate(math::Vec3f(-10.0F, -2.0F, 10.0F));
-    }
-    void SetupLights()
-    {
-        entt::registry& registry = GetCore()->GetRegistry();
-
-        PrimitiveInstance sphere_primitive{Sphere{}};
-        Light light{};
-
-        // Instantiate directional light
-        {
-            DirectionalLight directional_light{};
-            directional_light.ambient_intensity_ = 1.0F;
-            directional_light.diffuse_intensity_ = 0.25F;
-            directional_light.color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
-            directional_light.direction_ = math::Vec3f(1.0F, -1.0F, 0.0F);
-            directional_light.casts_shadows_ = true;
-            light.Set(directional_light);
-            GetInstantiator()->InstantiateLight(light, NullEntity);
-        }
-
-        // Instantiate spot light
-        {
-            auto spot_light_entity = GetInstantiator()->InstantiatePrimitive(sphere_primitive);
-            SpotLight spot_light{};
-            spot_light.direction_ = math::Vec3f::Normalize(math::Vec3f(0.0F, -1.0F, 0.0F));
-            spot_light.color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
-            spot_light.casts_shadows_ = true;
-            light.Set(spot_light);
-            GetInstantiator()->InstantiateLight(light, spot_light_entity);
-
-            auto& light_primitive_material = registry.get<Material>(spot_light_entity);
-            light_primitive_material.shaders_.vertex_shader_ = "model.vertex.glsl";
-            light_primitive_material.shaders_.fragment_shader_ = "model_unlit.fragment.glsl";
-            light_primitive_material.diffuse_color_ = math::Vec3f(1.0F, 0.0F, 0.0F);
-            light_primitive_material.visible_ = true;
-
-            auto& light_transform = registry.get<Transform>(spot_light_entity);
-            light_transform.Scale(math::Vec3f(0.1F));
-            light_transform.Translate(math::Vec3f(2.0F, 5.0F, 0.0F));
-            entity_to_move_ = spot_light_entity;
-        }
     }
 
     EngineConfig engine_config_;

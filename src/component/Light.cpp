@@ -11,7 +11,8 @@ Attenuation::Attenuation()
 }
 
 DirectionalLight::DirectionalLight()
-: color_(math::Vec3f::One())
+: Component()
+, color_(math::Vec3f::One())
 , direction_(math::Vec3f::Down())
 , ambient_intensity_(1.0F)
 , diffuse_intensity_(1.0F)
@@ -20,7 +21,8 @@ DirectionalLight::DirectionalLight()
 }
 
 PointLight::PointLight()
-: color_(math::Vec3f::One())
+: Component()
+, color_(math::Vec3f::One())
 , ambient_intensity_(1.0F)
 , diffuse_intensity_(1.0F)
 , attenuation_()
@@ -29,7 +31,8 @@ PointLight::PointLight()
 }
 
 SpotLight::SpotLight()
-: color_(math::Vec3f::One())
+: Component()
+, color_(math::Vec3f::One())
 , direction_(math::Vec3f::Down())
 , ambient_intensity_(1.0F)
 , diffuse_intensity_(1.0F)

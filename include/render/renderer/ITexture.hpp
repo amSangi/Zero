@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/NonCopyable.hpp"
-#include "render/renderer/Image.hpp"
 
 namespace zero::render
 {

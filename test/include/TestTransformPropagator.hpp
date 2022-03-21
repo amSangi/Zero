@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/TransformPropagator.hpp"
+#include "core/TransformSystem.hpp"
 #include "TestRegistry.hpp"
 
 class TestTransformPropagator : public TestRegistry

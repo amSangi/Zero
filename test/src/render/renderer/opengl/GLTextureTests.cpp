@@ -2,7 +2,7 @@
 #include <chrono>
 #include <memory>
 #include <thread>
-#include "render/renderer/Image.hpp"
+#include "render/Image.hpp"
 #include "render/renderer/opengl/GLShader.hpp"
 #include "render/renderer/opengl/GLProgram.hpp"
 #include "render/renderer/opengl/GLSampler.hpp"

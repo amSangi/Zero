@@ -65,8 +65,8 @@ void Window::Initialize()
         sdl_window_ = SDL_CreateWindow(config_.title_.c_str(),
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
-                                       config_.width_,
-                                       config_.height_,
+                                       static_cast<int>(config_.width_),
+                                       static_cast<int>(config_.height_),
                                        window_flags);
         sdl_gl_context_ = SDL_GL_CreateContext(sdl_window_);
         SDL_GL_MakeCurrent(sdl_window_, sdl_gl_context_);
@@ -76,7 +76,7 @@ void Window::Initialize()
     }
     else
     {
-        SDL_SetWindowSize(sdl_window_, config_.width_, config_.height_);
+        SDL_SetWindowSize(sdl_window_, static_cast<int>(config_.width_), static_cast<int>(config_.height_));
         SDL_SetWindowTitle(sdl_window_, config_.title_.c_str());
         SDL_SetWindowFullscreen(sdl_window_, window_flags);
     }

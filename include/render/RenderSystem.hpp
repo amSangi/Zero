@@ -1,14 +1,14 @@
 #pragma once
 
 #include <memory>
-#include "engine/RenderSystemConfig.hpp"
-#include "core/System.hpp"
 #include "component/Component.hpp"
 #include "component/Light.hpp"
+#include "core/System.hpp"
+#include "component/PrimitiveInstance.hpp"
+#include "engine/RenderSystemConfig.hpp"
 #include "render/AssimpLoader.hpp"
+#include "render/renderer/IRenderHardware.hpp"
 #include "render/Window.hpp"
-#include "render/renderer/RenderPipeline.hpp"
-#include "render/scene/SceneManager.hpp"
 
 namespace zero::render
 {
@@ -91,11 +91,33 @@ namespace zero::render
         Entity CreateLightInstance(const Light& light, Entity entity);
 
     private:
+        /**
+         * @brief Load all 3D assets
+         */
         void LoadModels();
+
+        /**
+         * @brief Compile and load all shader files
+         */
         void LoadShaders();
+
+        /**
+         * @brief Load all textures onto the graphics hardware
+         */
         void LoadTextures();
-        void ReadShaderSource(const std::string& filename, std::string& destination);
-        bool ContainsCamera() const;
+
+        /**
+         * @brief Check whether there is an active camera in the scene
+         * @return True if there is an active Camera entity in the scene. Otherwise, false.
+         */
+        [[nodiscard]] bool ContainsCamera() const;
+
+        /**
+         * @brief Load the contents of a shader file
+         * @param filename the fully qualified shader file name
+         * @param destination the destination that will contain the contents of the shader file
+         */
+        static void ReadShaderSource(const std::string& filename, std::string& destination);
 
         /**
          * @brief The log title
@@ -103,11 +125,13 @@ namespace zero::render
         static const char* kTitle;
 
         RenderSystemConfig config_;
-        std::unique_ptr<IRenderingManager> rendering_manager_;
-        std::unique_ptr<AssimpLoader> model_loader_;
-        std::unique_ptr<RenderPipeline> render_pipeline_;
-        std::unique_ptr<SceneManager> scene_manager_;
+        std::unique_ptr<IRenderHardware> rhi_;
+        std::unique_ptr<AssimpLoader> asset_loader_;
         std::unique_ptr<Window> window_;
+        std::unordered_map<uint32, std::shared_ptr<IMesh>> mesh_cache_;
+        std::unordered_map<uint32, std::shared_ptr<IProgram>> program_cache_;
+        std::unordered_map<uint32, std::shared_ptr<IShader>> shader_cache_;
+        std::unordered_map<uint32, std::shared_ptr<ITexture>> texture_cache_;
 
     }; // class RenderSystem
 

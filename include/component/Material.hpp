@@ -12,9 +12,6 @@ namespace zero
      */
     struct Material : public Component
     {
-
-        Material();
-
         /**
          * @brief Shader files used by the material
          */
@@ -44,26 +41,54 @@ namespace zero
              */
             ///@{
             std::string diffuse_map_;
-            std::string specular_map_;
             std::string normal_map_;
+            std::string specular_map_;
             ///@}
 
         }; // struct TextureMap
+
+        Material();
+
+        /**
+         * @brief Get the texture map
+         * @return the texture map
+         */
+        [[nodiscard]] const TextureMap& GetTextureMap() const;
+
+        /**
+         * @brief Get the shaders
+         * @return the shaders
+         */
+        [[nodiscard]] const Shaders& GetShaders() const;
+
+        /**
+         * @brief Get the unique texture identifier
+         */
+        [[nodiscard]] uint32 GetTextureID() const;
+
+        /**
+         * @brief Get the unique shader identifier
+         */
+        [[nodiscard]] uint32 GetShaderID() const;
+
+        /**
+         * @brief Set the texture map
+         * @param texture_map the texture map
+         */
+        void SetTextureMap(const TextureMap& texture_map);
+
+        /**
+         * @brief Set the shaders
+         * @param shaders the shaders
+         */
+        void SetShaders(const Shaders& shaders) ;
+
+    public:
 
         /**
          * @brief The name of the material.
          */
         std::string name_;
-
-        /**
-         * @brief The texture map.
-         */
-        TextureMap texture_map_;
-
-        /**
-         * @brief The shaders to use.
-         */
-        Shaders shaders_;
 
         /**
          * @brief The diffuse color. Essential color of an object under direct white light.
@@ -95,6 +120,38 @@ namespace zero
          * @brief Is the entity and its children visible? Only visible entities are rendered.
          */
         bool visible_;
+
+    private:
+
+        /**
+         * @brief Generate the texture identifier by hashing the texture map
+         */
+        void ComputeTextureID();
+
+        /**
+         * @brief Generate the shader identifier by hashing the shaders
+         */
+        void ComputeShaderID();
+
+        /**
+         * The texture map
+         */
+        TextureMap texture_map_;
+
+        /**
+         * @brief The shaders to use
+         */
+        Shaders shaders_;
+
+        /**
+         * @brief The unique texture identifier
+         */
+        uint32 texture_id_;
+
+        /**
+         * @brief The unique shader identifier
+         */
+        uint32 shader_id_;
 
     }; // struct Material
 

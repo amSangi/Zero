@@ -30,10 +30,9 @@ std::shared_ptr<Model> AssimpLoader::LoadModel(const std::string& model_name, co
 
     LoadBoneMap(ai_scene);
 
-    std::shared_ptr<Node> root_node = CreateNode(model_name, ai_scene, ai_scene->mRootNode);
-    std::shared_ptr<Model> model = std::make_shared<Model>(model_name, root_node);
-    model->Initialize(ExtractAnimator(ai_scene));
-    return model;
+//    std::shared_ptr<Node> root_node = CreateNode(model_name, ai_scene, ai_scene->mRootNode);
+//    std::shared_ptr<Model> model = std::make_shared<Model>(model_name, root_node);
+    return nullptr;
 }
 
 bool AssimpLoader::IsValidScene(const aiScene* ai_scene) const
@@ -69,57 +68,6 @@ void AssimpLoader::LoadBoneMap(const aiScene* ai_scene)
             node_queue.push(ai_node->mChildren[child_index]);
         }
     }
-}
-
-std::shared_ptr<Node> AssimpLoader::CreateNode(const std::string& model_name, const aiScene *ai_scene, const aiNode *ai_node)
-{
-    // ai_matrix is the transformation relative to the parent.
-    // Compute transformation relative to the world.
-    const aiMatrix4x4& ai_matrix = ai_node->mTransformation;
-    math::Matrix4x4 transformation = math::Matrix4x4{ai_matrix.a1, ai_matrix.a2, ai_matrix.a3, ai_matrix.a4,
-                                                     ai_matrix.b1, ai_matrix.b2, ai_matrix.b3, ai_matrix.b4,
-                                                     ai_matrix.c1, ai_matrix.c2, ai_matrix.c3, ai_matrix.c4,
-                                                     ai_matrix.d1, ai_matrix.d2, ai_matrix.d3, ai_matrix.d4};
-
-    std::shared_ptr<Node> node = std::make_shared<Node>(ai_node->mName.C_Str(), transformation);
-    auto bone_search = bone_map_.find(node->GetName());
-    if (bone_search != bone_map_.end())
-    {
-        // Node is a bone
-        std::unique_ptr<Bone> bone = std::make_unique<Bone>();
-        bone->name_ = node->GetName();
-        const aiMatrix4x4& ai_bone_matrix = bone_search->second->mOffsetMatrix;
-        bone->offset_matrix_ = math::Matrix4x4{ai_bone_matrix.a1, ai_bone_matrix.a2, ai_bone_matrix.a3, ai_bone_matrix.a4,
-                                               ai_bone_matrix.b1, ai_bone_matrix.b2, ai_bone_matrix.b3, ai_bone_matrix.b4,
-                                               ai_bone_matrix.c1, ai_bone_matrix.c2, ai_bone_matrix.c3, ai_bone_matrix.c4,
-                                               ai_bone_matrix.d1, ai_bone_matrix.d2, ai_bone_matrix.d3, ai_bone_matrix.d4};
-        node->SetBone(std::move(bone));
-    }
-
-    // Create EntityPrototypes associated with each mesh
-    // If the node does not contain a mesh and is not renderable, the instantiated entity associated with the node
-    // will only contain Transform and Volume components
-    for (uint32 mesh_index = 0; mesh_index < ai_node->mNumMeshes; ++mesh_index)
-    {
-        aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[mesh_index]];
-        aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
-        std::unique_ptr<EntityPrototype> entity_prototype = std::make_unique<EntityPrototype>(mesh_loader_->LoadMesh(ExtractMesh(ai_mesh)),
-                                                                                              ExtractMaterial(ai_material),
-                                                                                              ExtractVolume(ai_mesh),
-                                                                                              ExtractModelInstance(model_name, ai_node, mesh_index));
-        node->AddEntityPrototype(std::move(entity_prototype));
-    }
-
-    // Create child nodes
-    for (uint32 child_index = 0; child_index < ai_node->mNumChildren; ++child_index)
-    {
-        const aiNode* child_ai_node = ai_node->mChildren[child_index];
-        std::shared_ptr<Node> child_node = CreateNode(model_name, ai_scene, child_ai_node);
-
-        node->AddChild(child_node);
-        child_node->SetParent(node);
-    }
-    return node;
 }
 
 std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
@@ -186,71 +134,6 @@ std::unique_ptr<Mesh> AssimpLoader::ExtractMesh(aiMesh* ai_mesh) const
     return std::make_unique<Mesh>(std::move(vertices), std::move(indices), std::move(bone_names));
 }
 
-std::unique_ptr<Animator> AssimpLoader::ExtractAnimator(const aiScene* ai_scene) const
-{
-    if (ai_scene->mNumAnimations == 0)
-    {
-        return nullptr;
-    }
-
-    std::unique_ptr<Animator> animator = std::make_unique<Animator>();
-
-    // Load animation data
-    for (uint32 animation_index = 0; animation_index < ai_scene->mNumAnimations; ++animation_index)
-    {
-        aiAnimation* ai_animation = ai_scene->mAnimations[animation_index];
-        std::unique_ptr<Animation> animation = std::make_unique<Animation>();
-        animation->name_ = ai_animation->mName.C_Str();
-        animation->tick_rate_ = ai_animation->mTicksPerSecond;
-        animation->duration_ = ai_animation->mDuration;
-        for (uint32 channel_index = 0; channel_index < ai_animation->mNumChannels; ++channel_index)
-        {
-            aiNodeAnim* ai_node_anim = ai_animation->mChannels[channel_index];
-            std::unique_ptr<AnimationChannel> animation_channel = std::make_unique<AnimationChannel>();
-            animation_channel->name_ = ai_node_anim->mNodeName.C_Str();
-
-            for (uint32 i = 0; i < ai_node_anim->mNumPositionKeys; ++i)
-            {
-                aiVectorKey ai_translation_key = ai_node_anim->mPositionKeys[i];
-                VectorKey translation_key{};
-                translation_key.vector_ = math::Vec3f{ai_translation_key.mValue.x,
-                                                      ai_translation_key.mValue.y,
-                                                      ai_translation_key.mValue.z};
-                translation_key.time_ = ai_translation_key.mTime;
-                animation_channel->translations_.push_back(translation_key);
-            }
-
-            for (uint32 i = 0; i < ai_node_anim->mNumRotationKeys; ++i)
-            {
-                aiQuatKey ai_rotation_key = ai_node_anim->mRotationKeys[i];
-                QuaternionKey rotation_key{};
-                rotation_key.quaternion_ = math::Quaternion{ai_rotation_key.mValue.w,
-                                                            ai_rotation_key.mValue.x,
-                                                            ai_rotation_key.mValue.y,
-                                                            ai_rotation_key.mValue.z};
-                rotation_key.time_ = ai_rotation_key.mTime;
-                animation_channel->rotations_.push_back(rotation_key);
-            }
-
-            for (uint32 i = 0; i < ai_node_anim->mNumScalingKeys; ++i)
-            {
-                aiVectorKey ai_scaling_key = ai_node_anim->mScalingKeys[i];
-                VectorKey scaling_key{};
-                scaling_key.vector_ = math::Vec3f{ai_scaling_key.mValue.x,
-                                                  ai_scaling_key.mValue.y,
-                                                  ai_scaling_key.mValue.z};
-                scaling_key.time_ = ai_scaling_key.mTime;
-                animation_channel->scalings_.push_back(scaling_key);
-            }
-
-            animation->channel_map_.emplace(ai_node_anim->mNodeName.C_Str(), std::move(animation_channel));
-        }
-
-        animator->AddAnimation(ai_animation->mName.C_Str(), std::move(animation));
-    }
-    return std::move(animator);
-}
-
 Material AssimpLoader::ExtractMaterial(const aiMaterial* ai_material) const
 {
     Material material{};
@@ -277,15 +160,6 @@ Volume AssimpLoader::ExtractVolume(aiMesh* ai_mesh) const
     math::Vec3f max{aabb.mMax.x, aabb.mMax.y, aabb.mMax.z};
     volume.Engulf(Volume{min, max});
     return volume;
-}
-
-ModelInstance AssimpLoader::ExtractModelInstance(const std::string& model_name, const aiNode* ai_node, uint32 mesh_index) const
-{
-    ModelInstance model_instance{};
-    model_instance.model_name_ = model_name;
-    model_instance.node_name_ = ai_node->mName.C_Str();
-    model_instance.mesh_index_ = mesh_index;
-    return model_instance;
 }
 
 constexpr uint32 AssimpLoader::GetImportFlags() const

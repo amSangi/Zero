@@ -1,28 +1,30 @@
 #pragma once
 
-#include "render/IMesh.hpp"
+#include <memory>
+#include "render/MeshData.hpp"
+#include "render/renderer/IMesh.hpp"
 #include "render/renderer/opengl/OpenGL.hpp"
 
 namespace zero::render
 {
 
-    class GLMesh : public IMesh
+    class GLMesh final : public IMesh
     {
     public:
-        GLMesh();
+        GLMesh(GLuint vao_identifier, GLuint vertex_buffer, GLuint index_buffer, uint32 index_data_size);
 
-        ~GLMesh() override;
-        void Initialize(std::unique_ptr<Mesh> mesh) override;
-        const std::vector<std::string>& GetBoneNames() const override;
+        ~GLMesh() override = default;
 
-        GLuint GetVAO() const;
-        uint32 GetIndexDataSize() const;
+        [[nodiscard]] GLuint GetVAOIdentifier() const;
+        [[nodiscard]] GLuint GetVertexBufferIdentifier() const;
+        [[nodiscard]] GLuint GetIndexBufferIdentifier() const;
+        [[nodiscard]] uint32 GetIndexDataSize() const;
+
     private:
-        GLuint vao_;
-        GLuint vertex_vbo_;
-        GLuint index_vbo_;
+        GLuint vao_id_;
+        GLuint vertex_buffer_id_;
+        GLuint index_buffer_id_;
         uint32 index_data_size_;
-        std::vector<std::string> bone_names_;
 
     }; // class GLMesh
 

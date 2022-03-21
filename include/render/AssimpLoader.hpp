@@ -2,6 +2,8 @@
 
 #include <string>
 #include "render/IMeshLoader.hpp"
+#include "component/Material.hpp"
+#include "component/Volume.hpp"
 
 
 // Forward declarations
@@ -23,7 +25,7 @@ namespace zero::render
     public:
         /**
          * @brief Constructor
-         * @param mesh_loader the IMesh loader
+         * @param mesh_loader the MeshData loader
          */
         explicit AssimpLoader(IMeshLoader* mesh_loader);
         ~AssimpLoader() = default;
@@ -40,15 +42,11 @@ namespace zero::render
         bool IsValidScene(const aiScene* ai_scene) const;
         void LoadBoneMap(const aiScene* ai_scene);
 
-        std::shared_ptr<Node> CreateNode(const std::string& model_name, const aiScene* ai_scene, const aiNode* ai_node);
-
         std::unique_ptr<Mesh>     ExtractMesh(aiMesh* ai_mesh) const;
-        std::unique_ptr<Animator> ExtractAnimator(const aiScene* ai_scene) const;
         Material                  ExtractMaterial(const aiMaterial* ai_material) const;
         Volume                    ExtractVolume(aiMesh* ai_mesh) const;
-        ModelInstance             ExtractModelInstance(const std::string& model_name, const aiNode* ai_node, uint32 mesh_index) const;
 
-        constexpr uint32 GetImportFlags() const;
+        [[nodiscard]] constexpr uint32 GetImportFlags() const;
 
         IMeshLoader* mesh_loader_;
         std::unordered_map<std::string, aiBone*> bone_map_;

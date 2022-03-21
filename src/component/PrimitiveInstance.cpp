@@ -39,37 +39,43 @@ PrimitiveInstance::PrimitiveInstance()
 }
 
 PrimitiveInstance::PrimitiveInstance(const Box& box)
-: type_(Type::BOX)
+: Component()
+, type_(Type::BOX)
 , primitive_(box)
 {
 }
 
 PrimitiveInstance::PrimitiveInstance(const Sphere& sphere)
-: type_(Type::SPHERE)
+: Component()
+, type_(Type::SPHERE)
 , primitive_(sphere)
 {
 }
 
 PrimitiveInstance::PrimitiveInstance(const Plane& plane)
-: type_(Type::PLANE)
+: Component()
+, type_(Type::PLANE)
 , primitive_(plane)
 {
 }
 
 PrimitiveInstance::PrimitiveInstance(const Cone& cone)
-: type_(Type::CONE)
+: Component()
+, type_(Type::CONE)
 , primitive_(cone)
 {
 }
 
 PrimitiveInstance::PrimitiveInstance(const Cylinder& cylinder)
-: type_(Type::CYLINDER)
+: Component()
+, type_(Type::CYLINDER)
 , primitive_(cylinder)
 {
 }
 
 PrimitiveInstance::PrimitiveInstance(const Torus& torus)
-: type_(Type::TORUS)
+: Component()
+, type_(Type::TORUS)
 , primitive_(torus)
 {
 }
@@ -119,7 +125,7 @@ Box PrimitiveInstance::GetBox() const
 {
     if (type_ != Type::BOX)
     {
-        return Box();
+        return {};
     }
     return primitive_.box_;
 }
@@ -128,7 +134,7 @@ Sphere PrimitiveInstance::GetSphere() const
 {
     if (type_ != Type::SPHERE)
     {
-        return Sphere();
+        return {};
     }
     return primitive_.sphere_;
 }
@@ -137,7 +143,7 @@ Plane PrimitiveInstance::GetPlane() const
 {
     if (type_ != Type::PLANE)
     {
-        return Plane();
+        return {};
     }
     return primitive_.plane_;
 }
@@ -146,7 +152,7 @@ Cone PrimitiveInstance::GetCone() const
 {
     if (type_ != Type::CONE)
     {
-        return Cone();
+        return {};
     }
     return primitive_.cone_;
 }
@@ -155,7 +161,7 @@ Cylinder PrimitiveInstance::GetCylinder() const
 {
     if (type_ != Type::CYLINDER)
     {
-        return Cylinder();
+        return {};
     }
     return primitive_.cylinder_;
 }
@@ -164,7 +170,7 @@ Torus PrimitiveInstance::GetTorus() const
 {
     if (type_ != Type::TORUS)
     {
-        return Torus();
+        return {};
     }
     return primitive_.torus_;
 }

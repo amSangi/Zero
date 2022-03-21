@@ -17,7 +17,6 @@ namespace zero::render
          */
         enum class Type
         {
-            UNKNOWN,                   ///< Unknown Shader
             VERTEX_SHADER,             ///< Vertex Shader
             FRAGMENT_SHADER,           ///< Fragment/Pixel Shader
             GEOMETRY_SHADER,           ///< Geometry Shader
@@ -27,18 +26,6 @@ namespace zero::render
         }; // enum class Type
 
         virtual ~IShader() = default;
-
-        /**
-         * @brief Compile the Shader program
-         * @return True if the compilation was successful. Otherwise false.
-         */
-        virtual bool Compile() = 0;
-
-        /**
-         * @brief Check the compilation status of the shader
-         * @return True if the shader is compiled. Otherwise false.
-         */
-        [[nodiscard]] virtual bool IsCompiled() const = 0;
 
         /**
          * @brief The Shader type

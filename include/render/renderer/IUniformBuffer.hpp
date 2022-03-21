@@ -14,6 +14,8 @@ namespace zero::render
     public:
         IUniformBuffer() = default;
         virtual ~IUniformBuffer() = default;
-    }; // interface IUniformBuffer
+        virtual uint32 GetSize() = 0;
+        virtual const std::string& GetName() = 0;
+    }; // class IUniformBuffer
 
 } // namespace zero::render

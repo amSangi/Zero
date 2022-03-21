@@ -1,6 +1,6 @@
 #include "engine/Engine.hpp"
 #include "core/Logger.hpp"
-#include "core/TransformPropagator.hpp"
+#include "core/TransformSystem.hpp"
 #include <SDL_events.h>
 
 
@@ -46,9 +46,6 @@ void Engine::Tick()
 
     TickEvents();
 
-    LOG_VERBOSE(kTitle, "Propagating entity transforms");
-    TransformPropagator::PropagateTransform(engine_core_->GetRegistry());
-
     render_system_->Update(time_delta_);
     animation_system_->Update(time_delta_);
     for (const auto& system : game_systems_)
@@ -62,8 +59,6 @@ void Engine::Tick()
         system->PostUpdate();
     }
 
-    LOG_VERBOSE(kTitle, "Clearing cached entity transformations");
-    TransformPropagator::ClearCachedTransformations(engine_core_->GetRegistry());
     LOG_VERBOSE(kTitle, "Tick End");
 }
 

@@ -13,14 +13,9 @@ namespace zero::render
     {
     public:
 
-        GLSampler();
+        explicit GLSampler(GLuint sampler_id);
 
-        ~GLSampler() override;
-
-        /**
-         * @see ISampler::Initialize
-         */
-        void Initialize() override;
+        ~GLSampler() override = default;
 
         /**
          * @see ISampler::SetWrappingS
@@ -56,15 +51,9 @@ namespace zero::render
          * @brief Get the native OpenGL identifier
          * @return the identifier
          */
-        [[nodiscard]] GLuint GetNativeIdentifier() const;
+        [[nodiscard]] GLuint GetIdentifier() const;
 
     private:
-
-        /**
-         * @brief Destroy the sampler resources
-         */
-        void Cleanup();
-
         /**
          * @brief The OpenGL sampler id
          */

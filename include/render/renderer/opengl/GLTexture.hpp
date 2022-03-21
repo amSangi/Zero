@@ -20,7 +20,7 @@ namespace zero::render
          */
         GLTexture(GLuint id, GLenum target);
 
-        ~GLTexture();
+        ~GLTexture() override = default;
 
         /**
          * @brief Get the texture target type
@@ -32,15 +32,9 @@ namespace zero::render
          * @brief Get the identifier for the texture
          * @return the id
          */
-        [[nodiscard]] GLuint GetNativeIdentifier() const;
+        [[nodiscard]] GLuint GetIdentifier() const;
 
     private:
-
-        /**
-         * @brief Destroy the texture resources
-         */
-        void Cleanup();
-
         /**
          * @brief OpenGL texture identifier
          */

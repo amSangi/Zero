@@ -5,47 +5,8 @@
 namespace zero::render
 {
 
-std::shared_ptr<GLProgram> GLProgram::CreateGLProgram(const std::vector<std::shared_ptr<GLShader>>& shaders)
-{
-
-    if (shaders.empty())
-    {
-        return nullptr;
-    }
-
-    GLuint program_identifier = glCreateProgram();
-    std::shared_ptr<GLProgram> program = std::make_shared<GLProgram>(program_identifier);
-
-    for (const auto& shader : shaders)
-    {
-        if (!shader->IsCompiled())
-        {
-            return nullptr;
-        }
-        glAttachShader(program_identifier, shader->GetNativeIdentifier());
-    }
-
-    if (!program->Link())
-    {
-        std::string linker_error_message;
-        GLint message_length = 0;
-        glGetProgramiv(program_identifier, GL_INFO_LOG_LENGTH, &message_length);
-        linker_error_message.resize(message_length);
-        glGetProgramInfoLog(program_identifier, message_length, &message_length, linker_error_message.data());
-        LOG_ERROR("GLProgram", "Failed to link OpenGL program. Error: " + linker_error_message);
-        return nullptr;
-    }
-
-    for (const auto& shader : shaders)
-    {
-        glDetachShader(program_identifier, shader->GetNativeIdentifier());
-    }
-
-    return program;
-}
-
-GLProgram::GLProgram(GLuint id)
-: id_(id)
+GLProgram::GLProgram(GLuint program_id)
+: program_id_(program_id)
 , matrix4x4_map_()
 , matrix3x3_map_()
 , vec4f_map_()
@@ -53,38 +14,6 @@ GLProgram::GLProgram(GLuint id)
 , int32_map_()
 , float_map_()
 {
-}
-
-GLProgram::~GLProgram()
-{
-    Cleanup();
-}
-
-bool GLProgram::Link()
-{
-    if (IsLinked())
-    {
-        return true;
-    }
-    glLinkProgram(id_);
-    return IsLinked();
-}
-
-bool GLProgram::IsLinked() const
-{
-    GLint result = GL_FALSE;
-    glGetProgramiv(id_, GL_LINK_STATUS, &result);
-    return (result == GL_TRUE);
-}
-
-void GLProgram::Use()
-{
-    glUseProgram(id_);
-}
-
-void GLProgram::Finish()
-{
-    glUseProgram(0);
 }
 
 void GLProgram::SetUniform(const std::string& name, math::Matrix4x4 value)
@@ -117,66 +46,39 @@ void GLProgram::SetUniform(const std::string& name, float value)
     float_map_[name] = value;
 }
 
-void GLProgram::FlushUniforms()
+const GLProgram::UniformMap<math::Matrix4x4>& GLProgram::GetMatrix4x4Map() const
 {
-    // Flush Matrix4x4
-    for (const auto& iter : matrix4x4_map_)
-    {
-        glUniformMatrix4fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_TRUE, &iter.second[0][0]);
-    }
-
-    // Flush Matrix3x3
-    for (const auto& iter : matrix3x3_map_)
-    {
-        glUniformMatrix3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, GL_TRUE, &iter.second[0][0]);
-    }
-
-    // Flush Vec4f
-    for (const auto& iter : vec4f_map_)
-    {
-        glUniform4fv(glGetUniformLocation(id_, iter.first.c_str()), 1, (iter.second).Data());
-    }
-
-    // Flush Vec3f
-    for (const auto& iter : vec3f_map_)
-    {
-        glUniform3fv(glGetUniformLocation(id_, iter.first.c_str()), 1, (iter.second).Data());
-    }
-
-    // Flush int32
-    for (const auto& iter : int32_map_)
-    {
-        glUniform1i(glGetUniformLocation(id_, iter.first.c_str()), iter.second);
-    }
-
-    // Flush float
-    for (const auto& iter : float_map_)
-    {
-        glUniform1f(glGetUniformLocation(id_, iter.first.c_str()), iter.second);
-    }
+    return matrix4x4_map_;
 }
 
-GLint GLProgram::GetAttribLocation(const std::string& name) const
+const GLProgram::UniformMap<math::Matrix3x3>& GLProgram::GetMatrix3x3Map() const
 {
-    return glGetAttribLocation(id_, name.c_str());
+    return matrix3x3_map_;
 }
 
-GLuint GLProgram::GetUniformBlockIndex(const std::string& uniform_name) const
+const GLProgram::UniformMap<math::Vec4f>& GLProgram::GetVec4fMap() const
 {
-    return glGetUniformBlockIndex(id_, uniform_name.c_str());
+    return vec4f_map_;
 }
 
-void GLProgram::BindBlockIndex(GLuint block_index, GLuint block_binding) const
+const GLProgram::UniformMap<math::Vec3f>& GLProgram::GetVec3fMap() const
 {
-    glUniformBlockBinding(id_, block_index, block_binding);
+    return vec3f_map_;
 }
 
-void GLProgram::Cleanup() const
+const GLProgram::UniformMap<int32>& GLProgram::GetInt32Map() const
 {
-    if (glIsProgram(id_))
-    {
-        glDeleteProgram(id_);
-    }
+    return int32_map_;
+}
+
+const GLProgram::UniformMap<float>& GLProgram::GetFloatMap() const
+{
+    return float_map_;
+}
+
+GLuint GLProgram::GetIdentifier() const
+{
+    return program_id_;
 }
 
 } // namespace zero::render
