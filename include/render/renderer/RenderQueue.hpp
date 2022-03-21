@@ -37,7 +37,7 @@ namespace zero::render
         void Submit(std::unique_ptr<IRenderCall> render_call);
 
         /**
-         * @brief Sort the render calls using the set render call sorter
+         * @brief Sort the render calls
          */
         void Sort();
 
