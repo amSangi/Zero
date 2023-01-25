@@ -14,7 +14,6 @@ foreach(model_format ${USED_MODEL_FORMATS})
     set(${model_format} ON CACHE BOOL "Build used model formats" FORCE)
 endforeach()
 add_subdirectory(assimp)
-target_include_directories(assimp INTERFACE assimp/include)
 
 # Entt
 add_subdirectory(entt)
