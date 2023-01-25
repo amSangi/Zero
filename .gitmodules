@@ -1,9 +1,9 @@
 [submodule "thirdparty/entt"]
 	path = thirdparty/entt
-	url = git@github.com:amSangi/entt.git
+	url = https://github.com/amSangi/entt.git
 [submodule "thirdparty/googletest"]
 	path = thirdparty/googletest
-	url = git@github.com:amSangi/googletest.git
+	url = https://github.com/amSangi/googletest.git
 [submodule "thirdparty/assimp"]
 	path = thirdparty/assimp
-	url = git@github.com:amSangi/assimp.git
+	url = https://github.com/amSangi/assimp.git
