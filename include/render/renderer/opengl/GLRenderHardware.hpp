@@ -1,6 +1,7 @@
 #pragma once
 
 #include "render/renderer/IRenderHardware.hpp"
+#include "render/renderer/opengl/OpenGL.hpp"
 
 namespace zero::render
 {
@@ -11,11 +12,11 @@ namespace zero::render
     class GLTexture;
     class GLUniformBuffer;
 
-    class GLRenderHardware final : public IRenderHardware
+    class GLRenderHardware : public IRenderHardware
     {
     public:
         GLRenderHardware();
-        ~GLRenderHardware() override;
+        ~GLRenderHardware() override = default;
         void Initialize() override;
         void Shutdown() override;
 
@@ -34,7 +35,7 @@ namespace zero::render
 
         void UpdateUniformData(std::shared_ptr<IUniformBuffer> uniform_buffer, const void* data, uint32 data_size, uint32 data_offset) override;
 
-        std::shared_ptr<IMesh> CreateMesh(std::unique_ptr<MeshData> mesh_data) override;
+        std::shared_ptr<IMesh> CreateMesh(MeshData* mesh_data) override;
         std::shared_ptr<IShader> CreateShader(const ShaderStage& shader_stage) override;
         std::shared_ptr<IProgram> CreateShaderProgram(const std::vector<std::shared_ptr<IShader>>& shaders) override;
         std::shared_ptr<ITexture> CreateTexture(std::unique_ptr<Image> image) override;
@@ -44,10 +45,10 @@ namespace zero::render
         void EndFrame() override;
 
         void BindShaderProgram(std::shared_ptr<IProgram> shader_program) override;
-        void BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_sampler_name) override;
+        void BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_name) override;
         void BindUniformBuffer(std::shared_ptr<IUniformBuffer> uniform_buffer) override;
 
-        void DrawMesh(std::shared_ptr<MeshData> mesh) override;
+        void DrawMesh(std::shared_ptr<IMesh> mesh) override;
 
     private:
         /**

@@ -1,6 +1,7 @@
 project(ZeroCore)
 
 set(LIBRARY_OUTPUT_PATH ${ZERO_LIB_OUT_PATH})
+add_compile_definitions(GLEW_STATIC=1)
 
 ## Create Library ##
 add_library(${PROJECT_NAME}
@@ -34,10 +35,10 @@ add_library(${PROJECT_NAME}
                             math/Radian.cpp
                             math/Sphere.cpp
                             # Render Files
-                            render/AssimpLoader.cpp
+                            render/ModelLoader.cpp
                             render/CascadedShadowMap.cpp
                             render/Image.cpp
-                            render/Instantiator.cpp
+                            render/EntityFactory.cpp
                             render/MeshData.cpp
                             render/MeshGenerator.cpp
                             render/RenderSystem.cpp
@@ -46,8 +47,11 @@ add_library(${PROJECT_NAME}
                             render/scene/OrthographicViewVolume.cpp
                             render/scene/PerspectiveViewVolume.cpp
                             render/scene/ViewVolumeBuilder.cpp
+                            render/scene/CullingManager.cpp
+                            render/scene/SceneManager.cpp
+                            render/scene/RenderView.cpp
                             # Renderer Files
-                            render/renderer/RenderQueue.cpp
+        render/renderer/RenderingPipeline.cpp
                             # OpenGL Files
                             render/renderer/opengl/GLFrameBuffer.cpp
                             render/renderer/opengl/GLMesh.cpp
@@ -56,13 +60,17 @@ add_library(${PROJECT_NAME}
                             render/renderer/opengl/GLSampler.cpp
                             render/renderer/opengl/GLShader.cpp
                             render/renderer/opengl/GLTexture.cpp
-                            render/renderer/opengl/GLUniformBuffer.cpp)
+                            render/renderer/opengl/GLUniformBuffer.cpp
+                            render/renderer/opengl/glew.c
+                            # RenderCall Files
+        render/renderer/drawcall/EntityDrawCall.cpp
+        render/renderer/drawcall/SkyDomeDrawCall.cpp
+        render/renderer/drawcall/ShadowMapDrawCall.cpp render/renderer/renderpass/CascadedShadowMapRenderPass.cpp render/renderer/renderpass/EntityRenderPass.cpp render/renderer/DrawCallComparator.cpp)
 
 
 ## Link Libraries ##
 target_link_libraries(${PROJECT_NAME} EnTT
                                       assimp
                                       ${OPENGL_gl_LIBRARY}
-                                      ${GLEW_LIBRARIES}
                                       ${SDL2_LIBRARY}
                                       ${SDL2_IMAGE_LIBRARIES})

@@ -26,7 +26,6 @@ void AnimationSystem::ShutDown()
 
 void AnimationSystem::Update(const TimeDelta& time_delta)
 {
-    entt::registry& registry = GetCore()->GetRegistry();
 }
 
 } // namespace zero::animation

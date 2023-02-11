@@ -1,7 +1,8 @@
 #pragma once
 
-#include "render/IRenderView.hpp"
+#include "render/CascadedShadowMap.hpp"
 #include "render/Constants.hpp"
+#include "render/IRenderView.hpp"
 
 namespace zero::render
 {
@@ -13,12 +14,12 @@ namespace zero::render
                    const SkyDome& sky_dome,
                    const TimeDelta& time_delta,
                    std::shared_ptr<CascadedShadowMap> cascaded_shadow_map,
-                   std::vector<std::shared_ptr<IRenderable>>&& renderables,
-                   std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeCount>&& shadow_casting_renderables,
+                   std::vector<Entity>&& renderable_entities,
+                   std::array<std::vector<Entity>, Constants::kShadowCascadeCount>&& shadow_casting_entities,
                    std::vector<DirectionalLight>&& directional_lights,
                    std::vector<std::pair<PointLight, Transform>>&& point_lights,
                    std::vector<std::pair<SpotLight, Transform>>&& spot_lights);
-        ~RenderView() override;
+        ~RenderView() override = default;
 
         const Camera& GetCamera() override;
         const SkyDome& GetSkyDome() override;
@@ -26,8 +27,8 @@ namespace zero::render
 
         const CascadedShadowMap& GetCascadedShadowMap() override;
 
-        const std::vector<std::shared_ptr<IRenderable>>& GetRenderables() override;
-        const std::vector<std::shared_ptr<IRenderable>>& GetShadowCastingRenderables(uint32 cascade_index) override;
+        const std::vector<Entity>& GetRenderableEntities() override;
+        const std::vector<Entity>& GetShadowCastingEntities(uint32 cascade_index) override;
 
         const std::vector<DirectionalLight>& GetDirectionalLights() override;
         const std::vector<std::pair<PointLight, Transform>>& GetPointLights() override;
@@ -38,8 +39,8 @@ namespace zero::render
         SkyDome sky_dome_;
         TimeDelta time_delta_;
         std::shared_ptr<CascadedShadowMap> cascaded_shadow_map_;
-        std::vector<std::shared_ptr<IRenderable>> renderables_;
-        std::array<std::vector<std::shared_ptr<IRenderable>>, Constants::kShadowCascadeCount> shadow_casting_renderables_;
+        std::vector<Entity> renderable_entities_;
+        std::array<std::vector<Entity>, Constants::kShadowCascadeCount> shadow_casting_entities_;
         std::vector<DirectionalLight> directional_lights_;
         std::vector<std::pair<PointLight, Transform>> point_lights_;
         std::vector<std::pair<SpotLight, Transform>> spot_lights_;

@@ -49,12 +49,6 @@ GLRenderHardware::GLRenderHardware()
 {
 }
 
-GLRenderHardware::~GLRenderHardware()
-{
-    // Ensure all OpenGL resources are cleaned up
-    Shutdown();
-}
-
 void GLRenderHardware::Initialize()
 {
     glEnable(GL_LIGHTING);
@@ -245,7 +239,7 @@ void GLRenderHardware::UpdateUniformData(std::shared_ptr<IUniformBuffer> uniform
 ////////// Create Methods
 //////////////////////////////////////////////////
 
-std::shared_ptr<IMesh> GLRenderHardware::CreateMesh(std::unique_ptr<MeshData> mesh_data)
+std::shared_ptr<IMesh> GLRenderHardware::CreateMesh(MeshData* mesh_data)
 {
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -480,9 +474,10 @@ void GLRenderHardware::BindShaderProgram(std::shared_ptr<IProgram> shader_progra
 
     bound_shader_program_ = std::static_pointer_cast<GLProgram>(shader_program);
     glUseProgram(bound_shader_program_->GetIdentifier());
+	bound_shader_program_->FlushUniforms();
 }
 
-void GLRenderHardware::BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_sampler_name)
+void GLRenderHardware::BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_name)
 {
     assert(texture != nullptr);
     assert(texture_sampler != nullptr);
@@ -498,7 +493,7 @@ void GLRenderHardware::BindTexture(std::shared_ptr<ITexture> texture, std::share
     glBindTexture(gl_texture->GetTarget(), gl_texture->GetIdentifier());
 
     // Map shader uniform name to texture unit
-    bound_shader_program_->SetUniform(uniform_sampler_name, static_cast<GLint>(available_texture_unit_index_));
+    bound_shader_program_->SetUniform(uniform_name, static_cast<GLint>(available_texture_unit_index_));
 
     // Increment to the next available texture unit
     ++available_texture_unit_index_;
@@ -531,7 +526,7 @@ void GLRenderHardware::BindUniformBuffer(std::shared_ptr<IUniformBuffer> uniform
 ////////// Draw Method
 //////////////////////////////////////////////////
 
-void GLRenderHardware::DrawMesh(std::shared_ptr<MeshData> mesh)
+void GLRenderHardware::DrawMesh(std::shared_ptr<IMesh> mesh)
 {
     assert(bound_shader_program_ != nullptr);
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Zero)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_EXE_LINKER_FLAGS "-static")
+set(CMAKE_EXE_LINKER_FLAGS "-static -ldwmapi")
 
 ## Output ##
 set(ZERO_LIB_OUT_PATH ${CMAKE_SOURCE_DIR}/build)
@@ -12,7 +12,6 @@ set(ZERO_TEST_OUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 ## Package Dependencies ##
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
@@ -34,5 +33,5 @@ add_subdirectory(test)
 ## Create Zero EXE ##
 set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 
-add_executable(${PROJECT_NAME} src/Main.cpp)
+add_executable(${PROJECT_NAME} src/Main.cpp include/render/Model.hpp include/render/scene/SceneManager.hpp include/render/IRenderView.hpp include/render/renderer/drawcall/EntityDrawCall.hpp include/render/renderer/drawcall/ShadowMapDrawCall.hpp include/render/renderer/drawcall/SkyDomeDrawCall.hpp include/render/renderer/IRenderPass.hpp include/render/renderer/renderpass/EntityRenderPass.hpp include/render/renderer/renderpass/CascadedShadowMapRenderPass.hpp include/render/renderer/UniformBufferData.hpp include/render/renderer/drawcall/DrawCallBuilder.hpp include/render/renderer/DrawCallComparator.hpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)

@@ -49,7 +49,7 @@ namespace zero::render
 
         virtual void UpdateUniformData(std::shared_ptr<IUniformBuffer> uniform_buffer, const void* data, uint32 data_size, uint32 data_offset) = 0;
 
-        virtual std::shared_ptr<IMesh> CreateMesh(std::unique_ptr<MeshData> mesh_data) = 0;
+        virtual std::shared_ptr<IMesh> CreateMesh(MeshData* mesh_data) = 0;
         virtual std::shared_ptr<IShader> CreateShader(const ShaderStage& shader_stage) = 0;
 		virtual std::shared_ptr<IProgram> CreateShaderProgram(const std::vector<std::shared_ptr<IShader>>& shaders) = 0;
         virtual std::shared_ptr<ITexture> CreateTexture(std::unique_ptr<Image> image) = 0;
@@ -59,10 +59,10 @@ namespace zero::render
         virtual void EndFrame() = 0;
 
 		virtual void BindShaderProgram(std::shared_ptr<IProgram> shader_program) = 0;
-        virtual void BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_sampler_name) = 0;
+        virtual void BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_name) = 0;
         virtual void BindUniformBuffer(std::shared_ptr<IUniformBuffer> uniform_buffer) = 0;
 
-        virtual void DrawMesh(std::shared_ptr<MeshData> mesh) = 0;
+        virtual void DrawMesh(std::shared_ptr<IMesh> mesh) = 0;
 
 	}; // class IRenderHardware
 

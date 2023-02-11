@@ -56,10 +56,22 @@ namespace zero
         [[nodiscard]] const TextureMap& GetTextureMap() const;
 
         /**
+         * @brief Get the texture map as a list
+         * @return the texture map
+         */
+        [[nodiscard]] std::vector<std::string> GetTextureMapAsList() const;
+
+        /**
          * @brief Get the shaders
          * @return the shaders
          */
         [[nodiscard]] const Shaders& GetShaders() const;
+
+        /**
+         * @brief Get the shaders as a list
+         * @return the shaders
+         */
+        [[nodiscard]] std::vector<std::string> GetShadersAsList() const;
 
         /**
          * @brief Get the unique texture identifier

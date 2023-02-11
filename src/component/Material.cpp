@@ -26,9 +26,24 @@ const Material::TextureMap& Material::GetTextureMap() const
     return texture_map_;
 }
 
+std::vector<std::string> Material::GetTextureMapAsList() const
+{
+	return { texture_map_.diffuse_map_, texture_map_.normal_map_, texture_map_.specular_map_ };
+}
+
 const Material::Shaders& Material::GetShaders() const
 {
     return shaders_;
+}
+
+std::vector<std::string> Material::GetShadersAsList() const
+{
+	return { shaders_.vertex_shader_,
+			 shaders_.fragment_shader_,
+			 shaders_.geometry_shader_,
+			 shaders_.tessellation_ctrl_shader_,
+			 shaders_.tessellation_eval_shader_,
+			 shaders_.compute_shader_ };
 }
 
 uint32 Material::GetTextureID() const

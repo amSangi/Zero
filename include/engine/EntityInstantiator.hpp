@@ -24,7 +24,7 @@ namespace render
         /**
          * @see IEntityInstantiator::InstantiateModel
          */
-        Entity InstantiateModel(const std::string& model_filename) override;
+        Entity InstantiateModel(const std::string& model_filename, Entity parent_entity) override;
 
         /**
          * @see IEntityInstantiator::InstantiatePrimitive

@@ -46,6 +46,11 @@ namespace zero::render
         const UniformMap<float>& GetFloatMap() const;
 
         [[nodiscard]] GLuint GetIdentifier() const;
+
+		/**
+		 * @brief Set all uniform data on the current program object
+		 */
+		void FlushUniforms() const;
     private:
         GLuint program_id_;
         UniformMap<math::Matrix4x4> matrix4x4_map_;

@@ -10,9 +10,9 @@ EntityInstantiator::EntityInstantiator(entt::registry& registry, render::RenderS
 {
 }
 
-Entity EntityInstantiator::InstantiateModel(const std::string& model_filename)
+Entity EntityInstantiator::InstantiateModel(const std::string& model_filename, Entity parent_entity)
 {
-    return render_system_->CreateModelInstance(model_filename);
+    return render_system_->CreateModelInstance(model_filename, parent_entity);
 }
 
 Entity EntityInstantiator::InstantiatePrimitive(const PrimitiveInstance& primitive)

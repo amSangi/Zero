@@ -3,12 +3,14 @@
 #include <memory>
 #include "component/Component.hpp"
 #include "component/Light.hpp"
-#include "core/System.hpp"
 #include "component/PrimitiveInstance.hpp"
+#include "core/System.hpp"
 #include "engine/RenderSystemConfig.hpp"
-#include "render/AssimpLoader.hpp"
-#include "render/renderer/IRenderHardware.hpp"
+#include "render/ModelLoader.hpp"
 #include "render/Window.hpp"
+#include "render/renderer/IRenderHardware.hpp"
+#include "render/renderer/RenderingPipeline.hpp"
+#include "render/scene/SceneManager.hpp"
 
 namespace zero::render
 {
@@ -64,9 +66,10 @@ namespace zero::render
          * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
          * @param model_name the model name
+         * @param parent_entity the parent entity of the newly instantiated model
          * @return the root entity associated with the model. NullEntity if an error occurred.
          */
-        [[nodiscard]] Entity CreateModelInstance(const std::string& model_name);
+        [[nodiscard]] Entity CreateModelInstance(const std::string& model_name, Entity parent_entity);
 
         /**
          * @brief Create a new entity based on a primitive shape.
@@ -96,15 +99,7 @@ namespace zero::render
          */
         void LoadModels();
 
-        /**
-         * @brief Compile and load all shader files
-         */
-        void LoadShaders();
-
-        /**
-         * @brief Load all textures onto the graphics hardware
-         */
-        void LoadTextures();
+		void GenerateRenderCalls(IRenderView* render_view);
 
         /**
          * @brief Check whether there is an active camera in the scene
@@ -113,25 +108,16 @@ namespace zero::render
         [[nodiscard]] bool ContainsCamera() const;
 
         /**
-         * @brief Load the contents of a shader file
-         * @param filename the fully qualified shader file name
-         * @param destination the destination that will contain the contents of the shader file
-         */
-        static void ReadShaderSource(const std::string& filename, std::string& destination);
-
-        /**
          * @brief The log title
          */
         static const char* kTitle;
 
         RenderSystemConfig config_;
         std::unique_ptr<IRenderHardware> rhi_;
-        std::unique_ptr<AssimpLoader> asset_loader_;
         std::unique_ptr<Window> window_;
-        std::unordered_map<uint32, std::shared_ptr<IMesh>> mesh_cache_;
-        std::unordered_map<uint32, std::shared_ptr<IProgram>> program_cache_;
-        std::unordered_map<uint32, std::shared_ptr<IShader>> shader_cache_;
-        std::unordered_map<uint32, std::shared_ptr<ITexture>> texture_cache_;
+		std::unique_ptr<RenderingPipeline> rendering_pipeline_;
+		std::unique_ptr<SceneManager> scene_manager_;
+	    std::unordered_map<std::string, std::shared_ptr<Model>> model_cache_;
 
     }; // class RenderSystem
 

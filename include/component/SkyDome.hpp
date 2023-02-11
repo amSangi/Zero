@@ -15,6 +15,29 @@ namespace zero
         SkyDome();
 
         ~SkyDome() = default;
+	    /**
+		 * @brief Set the sky dome shaders
+		 * @param vertex_shader the vertex shader
+		 * @param fragment_shader the fragment shader
+		 */
+	    void SetShaders(const std::string& vertex_shader, const std::string& fragment_shader);
+
+		/**
+		 * @brief Retrieve the vertex shader
+		 * @return the vertex shader
+		 */
+		[[nodiscard]] const std::string& GetVertexShader() const;
+
+		/**
+		 * @brief Retrieve the fragment shader
+		 * @return the fragment shader
+		 */
+		[[nodiscard]] const std::string& GetFragmentShader() const;
+
+	    /**
+		 * @brief Get the unique shader identifier
+		 */
+	    [[nodiscard]] uint32 GetShaderID() const;
 
         /**
          * @brief Is the sky dome active?
@@ -25,16 +48,6 @@ namespace zero
         bool is_active_;
 
         /**
-         * @brief The vertex shader file
-         */
-        std::string vertex_shader_;
-
-        /**
-         * @brief The fragment shader file
-         */
-        std::string fragment_shader_;
-
-        /**
          * @brief The color at the top of the sky dome
          */
         math::Vec3f apex_color_;
@@ -43,6 +56,27 @@ namespace zero
          * @brief The color at the center of the sky dome
          */
         math::Vec3f center_color_;
+
+	private:
+	    /**
+		 * @brief Generate the shader identifier by hashing the shaders
+		 */
+	    void ComputeShaderID();
+
+	    /**
+		 * @brief The unique shader identifier
+		 */
+	    uint32 shader_id_;
+
+	    /**
+		 * @brief The vertex shader file
+		 */
+	    std::string vertex_shader_;
+
+	    /**
+		 * @brief The fragment shader file
+		 */
+	    std::string fragment_shader_;
 
     }; // struct SkyDome
 

@@ -1,5 +1,6 @@
 #include "engine/Engine.hpp"
 #include "core/Logger.hpp"
+#include "component/Camera.hpp"
 #include <memory>
 #include <queue>
 

@@ -89,8 +89,8 @@ void CascadedShadowMap::UpdateMatrices(const Camera& camera, const DirectionalLi
 
         math::Box& world_bounding_box = world_bounding_boxes_[cascade_index];
 
-        // Frustrum corners in normalized device coordinates
-        std::array frustrum_corners =
+        // Frustum corners in normalized device coordinates
+        std::array frustum_corners =
         {
             math::Vec3f(-1.0f,  1.0f, -1.0f),
             math::Vec3f( 1.0f,  1.0f, -1.0f),
@@ -103,40 +103,40 @@ void CascadedShadowMap::UpdateMatrices(const Camera& camera, const DirectionalLi
             math::Vec3f(-1.0f, -1.0f, 1.0f),
         };
 
-        // Convert frustrum corners to world space
+        // Convert frustum corners to world space
         for (uint32 i = 0; i < 8; ++i)
         {
-            math::Vec4f inverse_corner = (inverse_view_projection_matrix * math::Vec4f(frustrum_corners[i].x_,
-                                                                                       frustrum_corners[i].y_,
-                                                                                       frustrum_corners[i].z_,
+            math::Vec4f inverse_corner = (inverse_view_projection_matrix * math::Vec4f(frustum_corners[i].x_,
+                                                                                       frustum_corners[i].y_,
+                                                                                       frustum_corners[i].z_,
                                                                                        1.0F));
-            frustrum_corners[i] = inverse_corner.XYZ() / inverse_corner.w_;
+            frustum_corners[i] = inverse_corner.XYZ() / inverse_corner.w_;
 
-            world_bounding_box.min_ = math::Vec3f::GetMinimumCoordinates(world_bounding_box.min_, frustrum_corners[i]);
-            world_bounding_box.max_ = math::Vec3f::GetMaximumCoordinates(world_bounding_box.max_, frustrum_corners[i]);
+            world_bounding_box.min_ = math::Vec3f::GetMinimumCoordinates(world_bounding_box.min_, frustum_corners[i]);
+            world_bounding_box.max_ = math::Vec3f::GetMaximumCoordinates(world_bounding_box.max_, frustum_corners[i]);
         }
 
-        // Convert frustrum corners to match sub frustrum corners
+        // Convert frustum corners to match sub frustum corners
         for (uint32 i = 0; i < 4; ++i)
         {
-            math::Vec3f distance = frustrum_corners[i + 4] - frustrum_corners[i];
-            frustrum_corners[i + 4] = frustrum_corners[i] + (distance * far_split);
-            frustrum_corners[i] = frustrum_corners[i] + (distance * near_split);
+            math::Vec3f distance = frustum_corners[i + 4] - frustum_corners[i];
+            frustum_corners[i + 4] = frustum_corners[i] + (distance * far_split);
+            frustum_corners[i] = frustum_corners[i] + (distance * near_split);
         }
 
-        // Find frustrum center
-        math::Vec3f frustrum_center{0.0F};
-        for (const math::Vec3f& corner : frustrum_corners)
+        // Find frustum center
+        math::Vec3f frustum_center{0.0F};
+        for (const math::Vec3f& corner : frustum_corners)
         {
-            frustrum_center += corner;
+            frustum_center += corner;
         }
-        frustrum_center /= frustrum_corners.size();
+        frustum_center /= frustum_corners.size();
 
-        // Find longest radius for bounding box
+        // Find the longest radius for bounding box
         float radius = 0.0F;
-        for (const math::Vec3f& corner : frustrum_corners)
+        for (const math::Vec3f& corner : frustum_corners)
         {
-            float distance = (corner - frustrum_center).Magnitude();
+            float distance = (corner - frustum_center).Magnitude();
             radius = math::Max(radius, distance);
         }
         radius = math::Ceil(radius);
@@ -144,8 +144,8 @@ void CascadedShadowMap::UpdateMatrices(const Camera& camera, const DirectionalLi
         math::Vec3f max_extents{radius};
         math::Vec3f min_extents{-radius};
 
-        math::Matrix4x4 light_view_matrix = math::Matrix4x4::LookAt(frustrum_center - (light_direction * max_extents.z_),
-                                                                    frustrum_center,
+        math::Matrix4x4 light_view_matrix = math::Matrix4x4::LookAt(frustum_center - (light_direction * max_extents.z_),
+                                                                    frustum_center,
                                                                     math::Vec3f::Up());
 
         math::Matrix4x4 orthographic_matrix = math::Matrix4x4::Orthographic(min_extents.x_,
@@ -160,7 +160,7 @@ void CascadedShadowMap::UpdateMatrices(const Camera& camera, const DirectionalLi
         math::Matrix4x4 shadow_mvp = orthographic_matrix * light_view_matrix;
         math::Vec3f minimum_coordinate{max};
         math::Vec3f maximum_coordinate{min};
-        for (const math::Vec3f& corner : frustrum_corners)
+        for (const math::Vec3f& corner : frustum_corners)
         {
             math::Vec4f shadow_corner = shadow_mvp * math::Vec4f(corner.x_, corner.y_, corner.z_, 1.0F);
             math::Vec3f shadow_corner_div_w = shadow_corner.XYZ() / shadow_corner.w_;

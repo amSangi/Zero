@@ -81,4 +81,32 @@ GLuint GLProgram::GetIdentifier() const
     return program_id_;
 }
 
+void GLProgram::FlushUniforms() const
+{
+	for (const auto& iter : matrix4x4_map_)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(program_id_, iter.first.c_str()), 1, GL_TRUE, &iter.second[0][0]);
+	}
+	for (const auto& iter : matrix3x3_map_)
+	{
+		glUniformMatrix3fv(glGetUniformLocation(program_id_, iter.first.c_str()), 1, GL_TRUE, &iter.second[0][0]);
+	}
+	for (const auto& iter : vec4f_map_)
+	{
+		glUniform4fv(glGetUniformLocation(program_id_, iter.first.c_str()), 1, (iter.second).Data());
+	}
+	for (const auto& iter : vec3f_map_)
+	{
+		glUniform3fv(glGetUniformLocation(program_id_, iter.first.c_str()), 1, (iter.second).Data());
+	}
+	for (const auto& iter : int32_map_)
+	{
+		glUniform1i(glGetUniformLocation(program_id_, iter.first.c_str()), iter.second);
+	}
+	for (const auto& iter : float_map_)
+	{
+		glUniform1f(glGetUniformLocation(program_id_, iter.first.c_str()), iter.second);
+	}
+}
+
 } // namespace zero::render

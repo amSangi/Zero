@@ -75,6 +75,10 @@ namespace zero::render
          */
         [[nodiscard]] std::vector<math::Matrix4x4> GetTextureMatrices() const;
 
+		/**
+		 * @brief Retrieve the bounding boxes in world space
+		 * @return the world-space bounding boxes of each cascade
+		 */
         [[nodiscard]] std::vector<math::Box> GetWorldBoundingBoxes() const;
 
         /**

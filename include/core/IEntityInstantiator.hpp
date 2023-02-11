@@ -2,14 +2,12 @@
 
 #include <string>
 #include "component/Component.hpp"
+#include "component/Light.hpp"
+#include "component/PrimitiveInstance.hpp"
+#include "component/SkyDome.hpp"
 
 namespace zero
 {
-    // Forward declarations
-    class Light;
-    class PrimitiveInstance;
-    class SkyDome;
-
     class IEntityInstantiator
     {
     public:
@@ -22,9 +20,10 @@ namespace zero
          * Constructs an entity with Transform, Volume, Material, and ModelInstance components.
          *
          * @param model the model name
+         * @param parent_entity the parent entity of the newly instantiated model
          * @return the root entity associated with the 3D model. NullEntity if an error occurred.
          */
-        [[nodiscard]] virtual Entity InstantiateModel(const std::string& model_name) = 0;
+        [[nodiscard]] virtual Entity InstantiateModel(const std::string& model_name, Entity parent_entity) = 0;
 
         /**
          * @brief Create a new entity based on a primitive shape.
