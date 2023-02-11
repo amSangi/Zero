@@ -141,8 +141,7 @@ private:
         auto sky_dome_entity = GetInstantiator()->InstantiateSkyDome(SkyDome{});
         SkyDome& sky_dome = registry.get<SkyDome>(sky_dome_entity);
         sky_dome.is_active_ = true;
-        sky_dome.vertex_shader_ = "sky_dome.vertex.glsl";
-        sky_dome.fragment_shader_ = "sky_dome.fragment.glsl";
+		sky_dome.SetShaders("sky_dome.vertex.glsl", "sky_dome.fragment.glsl");
         sky_dome.apex_color_ = math::Vec3f(0.0F, 0.15F, 0.66F);
         sky_dome.center_color_ = math::Vec3f(0.3F, 0.45F, 0.96F);
     }

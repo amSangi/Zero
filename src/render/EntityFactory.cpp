@@ -27,7 +27,7 @@ Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::share
 	{
 		// Directly assign Mesh and Material components  to entity
 		const GeometryData& geometry_data = geometry_data_list[0];
-		registry.emplace<Material>(entity, geometry_data.material_);
+		registry.emplace<Material>(entity, *geometry_data.material_);
 		Mesh& mesh = registry.emplace<Mesh>(entity);
 		mesh.mesh_id_ = geometry_data_list[0].geometry_id_;
 	}
@@ -39,7 +39,7 @@ Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::share
 			const GeometryData& geometry_data = geometry_data_list[geometry_index];
 
 			Entity geometry_entity = registry.create();
-			registry.emplace<Material>(geometry_entity, geometry_data.material_);
+			registry.emplace<Material>(geometry_entity, *geometry_data.material_);
 			Mesh& geometry_mesh = registry.emplace<Mesh>(geometry_entity);
 			geometry_mesh.mesh_id_ = geometry_data.geometry_id_;
 			registry.emplace<Volume>(geometry_entity, geometry_data.volume_);
