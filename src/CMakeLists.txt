@@ -68,7 +68,7 @@ add_library(${PROJECT_NAME}
                             render/renderer/drawcall/SkyDomeDrawCall.cpp
                             render/renderer/drawcall/ShadowMapDrawCall.cpp
                             render/renderer/renderpass/CascadedShadowMapRenderPass.cpp
-                            render/renderer/renderpass/EntityRenderPass.cpp)
+                            render/renderer/renderpass/EntityRenderPass.cpp DemoGameSystem.hpp)
 
 
 ## Link Libraries ##

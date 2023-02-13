@@ -33,5 +33,5 @@ add_subdirectory(test)
 ## Create Zero EXE ##
 set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 
-add_executable(${PROJECT_NAME} src/Main.cpp include/render/Model.hpp include/render/scene/SceneManager.hpp include/render/IRenderView.hpp include/render/renderer/drawcall/EntityDrawCall.hpp include/render/renderer/drawcall/ShadowMapDrawCall.hpp include/render/renderer/drawcall/SkyDomeDrawCall.hpp include/render/renderer/IRenderPass.hpp include/render/renderer/renderpass/EntityRenderPass.hpp include/render/renderer/renderpass/CascadedShadowMapRenderPass.hpp include/render/renderer/UniformBufferData.hpp include/render/renderer/DrawCallComparator.hpp)
+add_executable(${PROJECT_NAME} src/Main.cpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)

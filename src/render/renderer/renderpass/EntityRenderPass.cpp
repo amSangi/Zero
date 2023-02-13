@@ -42,6 +42,8 @@ void EntityRenderPass::Render(IRenderView* render_view, IRenderHardware* rhi)
     const Camera& camera = render_view->GetCamera();
     rhi->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
 
+    rhi->Clear();
+
     CameraData camera_data{camera.GetProjectionMatrix(), camera.GetViewMatrix(), camera.position_};
     rhi->UpdateUniformData(camera_uniform_, &camera_data, sizeof(camera_data), 0);
     for (const std::unique_ptr<IDrawCall>& draw_call : draw_calls_)
