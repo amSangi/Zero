@@ -1,9 +1,12 @@
 #include "render/renderer/renderpass/CascadedShadowMapRenderPass.hpp"
 #include "render/renderer/UniformBufferData.hpp"
 #include "render/renderer/DrawCallComparator.hpp"
+#include "core/Logger.hpp"
 
 namespace zero::render
 {
+
+const char* CascadedShadowMapRenderPass::kTitle = "CascadedShadowMapRenderPass";
 
 CascadedShadowMapRenderPass::CascadedShadowMapRenderPass(uint32 cascade_index)
 : cascade_index_(cascade_index)
@@ -29,6 +32,12 @@ void CascadedShadowMapRenderPass::Sort()
 
 void CascadedShadowMapRenderPass::Render(IRenderView* render_view, IRenderHardware* rhi)
 {
+	if (draw_calls_.empty())
+	{
+		LOG_DEBUG(kTitle, "No draw calls to render for cascade index: " + std::to_string(cascade_index_));
+		return;
+	}
+
 	const std::vector<std::shared_ptr<IFrameBuffer>> shadow_map_frame_buffers = rhi->GetShadowMapFrameBuffers();
 	CascadedShadowMap cascaded_shadow_map = render_view->GetCascadedShadowMap();
 	assert(shadow_map_frame_buffers.size() == cascaded_shadow_map.GetCascadeCount());
@@ -44,11 +53,9 @@ void CascadedShadowMapRenderPass::Render(IRenderView* render_view, IRenderHardwa
 
 	CameraData camera_data{light_projection_matrices[cascade_index_], light_view_matrices[cascade_index_], math::Vec3f::Zero()};
 	rhi->UpdateUniformData(camera_uniform_, &camera_data, sizeof(camera_data), 0);
-	rhi->BindUniformBuffer(camera_uniform_);
-
-	for (const std::unique_ptr<IDrawCall>& render_call : draw_calls_)
+	for (const std::unique_ptr<IDrawCall>& draw_call : draw_calls_)
 	{
-		render_call->Draw(rhi);
+		draw_call->Draw(rhi);
 	}
 
 	rhi->EndFrame();

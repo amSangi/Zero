@@ -17,6 +17,7 @@ namespace zero::render
 		               std::shared_ptr<IUniformBuffer> material_uniform,
 		               std::shared_ptr<IMesh> mesh,
 		               std::shared_ptr<IProgram> program,
+					   std::vector<std::shared_ptr<IUniformBuffer>> uniform_buffers,
 		               std::unordered_map<std::string, std::shared_ptr<ITexture>> textures,
 		               std::shared_ptr<ISampler> texture_sampler,
 		               std::unordered_map<std::string, std::shared_ptr<ITexture>> shadow_map_textures,
@@ -32,6 +33,7 @@ namespace zero::render
 		std::shared_ptr<IUniformBuffer> material_uniform_buffer_;
 		std::shared_ptr<IMesh> mesh_;
 		std::shared_ptr<IProgram> program_;
+		std::vector<std::shared_ptr<IUniformBuffer>> uniform_buffers_;
 		std::shared_ptr<ISampler> texture_sampler_;
 		std::shared_ptr<ISampler> shadow_map_texture_sampler_;
 		std::unordered_map<std::string, std::shared_ptr<ITexture>> textures_;

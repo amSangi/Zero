@@ -7,7 +7,6 @@ ShadowMapDrawCall::ShadowMapDrawCall(uint32 mesh_id,
                                      Material material,
                                      ModelData model_data,
                                      std::shared_ptr<IUniformBuffer> model_uniform,
-                                     std::shared_ptr<IUniformBuffer> material_uniform,
                                      std::shared_ptr<IMesh> mesh,
                                      std::shared_ptr<IProgram> program,
                                      std::unordered_map<std::string, std::shared_ptr<ITexture>> textures,
@@ -16,7 +15,6 @@ ShadowMapDrawCall::ShadowMapDrawCall(uint32 mesh_id,
 , material_(std::move(material))
 , model_data_(model_data)
 , model_uniform_buffer_(std::move(model_uniform))
-, material_uniform_buffer_(std::move(material_uniform))
 , mesh_(std::move(mesh))
 , program_(std::move(program))
 , texture_sampler_(std::move(texture_sampler))
@@ -35,11 +33,8 @@ const DrawKey& ShadowMapDrawCall::GetDrawKey()
 void ShadowMapDrawCall::Draw(IRenderHardware* rhi)
 {
 	rhi->BindShaderProgram(program_);
-	MaterialData material_data{material_};
 	rhi->UpdateUniformData(model_uniform_buffer_, &model_data_, sizeof(model_data_), 0);
-	rhi->UpdateUniformData(material_uniform_buffer_, &material_data, sizeof(material_data), 0);
 	rhi->BindUniformBuffer(model_uniform_buffer_);
-	rhi->BindUniformBuffer(material_uniform_buffer_);
 	for (const auto& [uniform_name, texture] : textures_)
 	{
 		rhi->BindTexture(texture, texture_sampler_, uniform_name);

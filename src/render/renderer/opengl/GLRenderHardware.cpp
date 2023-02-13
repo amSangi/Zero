@@ -429,7 +429,9 @@ std::shared_ptr<IUniformBuffer> GLRenderHardware::CreateUniformBuffer(std::strin
 
     GLuint buffer_id;
     glGenBuffers(1, &buffer_id);
-    glNamedBufferData(GL_UNIFORM_BUFFER, buffer_size, initial_data, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, buffer_id);
+	glBufferData(GL_UNIFORM_BUFFER, buffer_size, initial_data, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     std::shared_ptr<GLUniformBuffer> uniform_buffer = std::make_shared<GLUniformBuffer>(buffer_id, buffer_size, std::move(buffer_name));
     uniform_buffers_.push_back(buffer_id);

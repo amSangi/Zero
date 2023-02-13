@@ -63,6 +63,8 @@ namespace zero::render
 		void LoadShaders(IRenderHardware* rhi, AssetManager& asset_manager);
 	    std::shared_ptr<IProgram> GenerateShaderProgram(IRenderHardware* rhi, uint32 shader_id, const std::vector<std::string>& shader_name_list);
 	    [[nodiscard]] uint32 GenerateNewUniqueIdentifier();
+		std::vector<std::shared_ptr<IUniformBuffer>> GetUniformBuffers() const;
+
 	    static void ReadShaderSource(const std::string& filename, std::string& destination);
 
 	    /**

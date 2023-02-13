@@ -99,7 +99,7 @@ namespace zero::render
          */
         void LoadModels();
 
-		void GenerateRenderCalls(IRenderView* render_view);
+		void GenerateDrawCalls(IRenderView* render_view);
 
         /**
          * @brief Check whether there is an active camera in the scene

@@ -11,6 +11,7 @@ EntityDrawCall::EntityDrawCall(uint32 mesh_id,
                                std::shared_ptr<IUniformBuffer> material_uniform,
                                std::shared_ptr<IMesh> mesh,
                                std::shared_ptr<IProgram> program,
+							   std::vector<std::shared_ptr<IUniformBuffer>> uniform_buffers,
                                std::unordered_map<std::string, std::shared_ptr<ITexture>> textures,
                                std::shared_ptr<ISampler> texture_sampler,
                                std::unordered_map<std::string, std::shared_ptr<ITexture>> shadow_map_textures,
@@ -22,6 +23,7 @@ EntityDrawCall::EntityDrawCall(uint32 mesh_id,
 , material_uniform_buffer_(std::move(material_uniform))
 , mesh_(std::move(mesh))
 , program_(std::move(program))
+, uniform_buffers_(std::move(uniform_buffers))
 , texture_sampler_(std::move(texture_sampler))
 , shadow_map_texture_sampler_(std::move(shadow_map_texture_sampler))
 , textures_(std::move(textures))
@@ -47,6 +49,10 @@ void EntityDrawCall::Draw(IRenderHardware *rhi)
 	rhi->UpdateUniformData(material_uniform_buffer_, &material_data, sizeof(material_data), 0);
 	rhi->BindUniformBuffer(model_uniform_buffer_);
 	rhi->BindUniformBuffer(material_uniform_buffer_);
+	for (const std::shared_ptr<IUniformBuffer>& uniform_buffer: uniform_buffers_)
+	{
+		rhi->BindUniformBuffer(uniform_buffer);
+	}
 	for (const auto& [uniform_name, texture] : textures_)
 	{
 		rhi->BindTexture(texture, texture_sampler_, uniform_name);

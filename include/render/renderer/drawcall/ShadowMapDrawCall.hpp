@@ -14,7 +14,6 @@ namespace zero::render
 		                  Material material,
 		                  ModelData model_data,
 		                  std::shared_ptr<IUniformBuffer> model_uniform,
-		                  std::shared_ptr<IUniformBuffer> material_uniform,
 		                  std::shared_ptr<IMesh> mesh,
 		                  std::shared_ptr<IProgram> program,
 		                  std::unordered_map<std::string, std::shared_ptr<ITexture>>textures,
@@ -27,7 +26,6 @@ namespace zero::render
 		Material material_;
 		ModelData model_data_;
 		std::shared_ptr<IUniformBuffer> model_uniform_buffer_;
-		std::shared_ptr<IUniformBuffer> material_uniform_buffer_;
 		std::shared_ptr<IMesh> mesh_;
 		std::shared_ptr<IProgram> program_;
 		std::shared_ptr<ISampler> texture_sampler_;

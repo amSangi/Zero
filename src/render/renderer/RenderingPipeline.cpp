@@ -107,6 +107,10 @@ uint32 RenderingPipeline::GetPrimitiveMeshId(PrimitiveInstance::Type primitive_t
 			return primitive_mesh_id_cache_[kSphereMeshIdIndex];
 		case PrimitiveInstance::Type::TORUS:
 			return primitive_mesh_id_cache_[kTorusMeshIdIndex];
+		default:
+			// Box Mesh
+			LOG_WARN(kTitle, "GetPrimitiveMeshId called with invalid primitive type. Returning box mesh by default.");
+			return primitive_mesh_id_cache_[kBoxMeshIdIndex];
 	}
 }
 
@@ -183,6 +187,7 @@ void RenderingPipeline::GenerateDrawCall(IRenderHardware* rhi,
 																			material_uniform_,
 																			mesh_search->second,
 																			program,
+																			GetUniformBuffers(),
 																			uniform_texture_map,
 																			rhi->GetDiffuseMapSampler(),
 																			uniform_shadow_texture_map,
@@ -226,7 +231,6 @@ void RenderingPipeline::GenerateShadowDrawCall(IRenderHardware* rhi,
 																			   material,
 																			   model_data,
 																			   model_uniform_,
-																			   material_uniform_,
 																			   mesh_search->second,
 																			   program,
 																			   uniform_texture_map,
@@ -246,11 +250,6 @@ void RenderingPipeline::Render(IRenderView* render_view, IRenderHardware* rhi)
 {
 	UpdateLightUniforms(render_view, rhi);
 	UpdateShadowMapUniform(render_view, rhi);
-	rhi->BindUniformBuffer(light_info_uniform_);
-	rhi->BindUniformBuffer(directional_light_uniform_);
-	rhi->BindUniformBuffer(point_light_uniform_);
-	rhi->BindUniformBuffer(spot_light_uniform_);
-	rhi->BindUniformBuffer(shadow_map_uniform_);
     for (const std::unique_ptr<IRenderPass>& render_pass : render_passes_)
     {
 	    render_pass->Render(render_view, rhi);
@@ -352,7 +351,9 @@ void RenderingPipeline::LoadTextures(IRenderHardware* rhi, AssetManager& asset_m
 	for (const auto& texture_file : texture_files)
 	{
 		std::string texture_file_path = asset_manager.GetTextureFilePath(texture_file);
-		std::shared_ptr<ITexture> texture = rhi->CreateTexture(std::make_unique<Image>(texture_file_path));
+		std::unique_ptr<Image> texture_image = std::make_unique<Image>(texture_file_path);
+		texture_image->Load();
+		std::shared_ptr<ITexture> texture = rhi->CreateTexture(std::move(texture_image));
 
 		if (texture)
 		{
@@ -452,6 +453,18 @@ std::shared_ptr<IProgram> RenderingPipeline::GenerateShaderProgram(IRenderHardwa
 uint32 RenderingPipeline::GenerateNewUniqueIdentifier()
 {
 	return unique_identifier_++;
+}
+
+std::vector<std::shared_ptr<IUniformBuffer>> RenderingPipeline::GetUniformBuffers() const
+{
+	return {
+		camera_uniform_,
+		light_info_uniform_,
+		directional_light_uniform_,
+		point_light_uniform_,
+		spot_light_uniform_,
+		shadow_map_uniform_,
+	};
 }
 
 void RenderingPipeline::ReadShaderSource(const std::string& filename, std::string& destination)

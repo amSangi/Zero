@@ -52,13 +52,13 @@ void RenderSystem::Update(const TimeDelta& time_delta)
 	scene_manager_->UpdateView(GetCore()->GetRegistry(), time_delta);
 	std::unique_ptr<IRenderView> render_view = scene_manager_->GetLatestView();
 
-	LOG_VERBOSE(kTitle, "Generating Render Calls");
-	GenerateRenderCalls(render_view.get());
+	LOG_VERBOSE(kTitle, "Generating Draw Calls");
+	GenerateDrawCalls(render_view.get());
 
-	LOG_VERBOSE(kTitle, "Sorting Render Calls");
+	LOG_VERBOSE(kTitle, "Sorting Draw Calls");
 	rendering_pipeline_->Sort();
 
-	LOG_VERBOSE(kTitle, "Executing Render Calls");
+	LOG_VERBOSE(kTitle, "Executing Draw Calls");
 	rendering_pipeline_->Render(render_view.get(), rhi_.get());
 
 	LOG_VERBOSE(kTitle, "Swapping buffers");
@@ -137,7 +137,7 @@ void RenderSystem::LoadModels()
     }
 }
 
-void RenderSystem::GenerateRenderCalls(IRenderView* render_view)
+void RenderSystem::GenerateDrawCalls(IRenderView* render_view)
 {
 	entt::registry& registry = GetCore()->GetRegistry();
 	auto drawable_view = registry.view<const Transform, const Material, const Mesh, const Volume>();
