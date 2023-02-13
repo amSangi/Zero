@@ -429,9 +429,9 @@ std::shared_ptr<IUniformBuffer> GLRenderHardware::CreateUniformBuffer(std::strin
 
     GLuint buffer_id;
     glGenBuffers(1, &buffer_id);
-	glBindBuffer(GL_UNIFORM_BUFFER, buffer_id);
-	glBufferData(GL_UNIFORM_BUFFER, buffer_size, initial_data, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer_id);
+    glBufferData(GL_UNIFORM_BUFFER, buffer_size, initial_data, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     std::shared_ptr<GLUniformBuffer> uniform_buffer = std::make_shared<GLUniformBuffer>(buffer_id, buffer_size, std::move(buffer_name));
     uniform_buffers_.push_back(buffer_id);
@@ -476,7 +476,7 @@ void GLRenderHardware::BindShaderProgram(std::shared_ptr<IProgram> shader_progra
 
     bound_shader_program_ = std::static_pointer_cast<GLProgram>(shader_program);
     glUseProgram(bound_shader_program_->GetIdentifier());
-	bound_shader_program_->FlushUniforms();
+    bound_shader_program_->FlushUniforms();
 }
 
 void GLRenderHardware::BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_name)

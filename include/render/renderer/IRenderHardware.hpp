@@ -13,9 +13,9 @@
 
 namespace zero::render
 {
-	class IRenderHardware
-	{
-	public:
+    class IRenderHardware
+    {
+    public:
         enum class FillMode
         {
             FILL_MODE_WIREFRAME,
@@ -44,26 +44,26 @@ namespace zero::render
         virtual std::shared_ptr<ISampler> GetDiffuseMapSampler() = 0;
         virtual std::shared_ptr<ISampler> GetShadowMapSampler() = 0;
 
-		virtual const std::vector<std::shared_ptr<ITexture>>& GetShadowMapTextures() = 0;
-		virtual const std::vector<std::shared_ptr<IFrameBuffer>>& GetShadowMapFrameBuffers() = 0;
+        virtual const std::vector<std::shared_ptr<ITexture>>& GetShadowMapTextures() = 0;
+        virtual const std::vector<std::shared_ptr<IFrameBuffer>>& GetShadowMapFrameBuffers() = 0;
 
         virtual void UpdateUniformData(std::shared_ptr<IUniformBuffer> uniform_buffer, const void* data, uint32 data_size, uint32 data_offset) = 0;
 
         virtual std::shared_ptr<IMesh> CreateMesh(MeshData* mesh_data) = 0;
         virtual std::shared_ptr<IShader> CreateShader(const ShaderStage& shader_stage) = 0;
-		virtual std::shared_ptr<IProgram> CreateShaderProgram(const std::vector<std::shared_ptr<IShader>>& shaders) = 0;
+        virtual std::shared_ptr<IProgram> CreateShaderProgram(const std::vector<std::shared_ptr<IShader>>& shaders) = 0;
         virtual std::shared_ptr<ITexture> CreateTexture(std::unique_ptr<Image> image) = 0;
         virtual std::shared_ptr<IUniformBuffer> CreateUniformBuffer(std::string buffer_name, const void* initial_data, uint32 buffer_size) = 0;
 
         virtual void BeginFrame(std::shared_ptr<IFrameBuffer> frame_buffer) = 0;
         virtual void EndFrame() = 0;
 
-		virtual void BindShaderProgram(std::shared_ptr<IProgram> shader_program) = 0;
+        virtual void BindShaderProgram(std::shared_ptr<IProgram> shader_program) = 0;
         virtual void BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_name) = 0;
         virtual void BindUniformBuffer(std::shared_ptr<IUniformBuffer> uniform_buffer) = 0;
 
         virtual void DrawMesh(std::shared_ptr<IMesh> mesh) = 0;
 
-	}; // class IRenderHardware
+    }; // class IRenderHardware
 
 } // namespace zero::render

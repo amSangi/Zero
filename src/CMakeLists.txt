@@ -51,7 +51,8 @@ add_library(${PROJECT_NAME}
                             render/scene/SceneManager.cpp
                             render/scene/RenderView.cpp
                             # Renderer Files
-        render/renderer/RenderingPipeline.cpp
+                            render/renderer/DrawCallComparator.cpp
+                            render/renderer/RenderingPipeline.cpp
                             # OpenGL Files
                             render/renderer/opengl/GLFrameBuffer.cpp
                             render/renderer/opengl/GLMesh.cpp
@@ -62,10 +63,12 @@ add_library(${PROJECT_NAME}
                             render/renderer/opengl/GLTexture.cpp
                             render/renderer/opengl/GLUniformBuffer.cpp
                             render/renderer/opengl/glew.c
-                            # RenderCall Files
-        render/renderer/drawcall/EntityDrawCall.cpp
-        render/renderer/drawcall/SkyDomeDrawCall.cpp
-        render/renderer/drawcall/ShadowMapDrawCall.cpp render/renderer/renderpass/CascadedShadowMapRenderPass.cpp render/renderer/renderpass/EntityRenderPass.cpp render/renderer/DrawCallComparator.cpp)
+                            # Render Pass and Draw Call Files
+                            render/renderer/drawcall/EntityDrawCall.cpp
+                            render/renderer/drawcall/SkyDomeDrawCall.cpp
+                            render/renderer/drawcall/ShadowMapDrawCall.cpp
+                            render/renderer/renderpass/CascadedShadowMapRenderPass.cpp
+                            render/renderer/renderpass/EntityRenderPass.cpp)
 
 
 ## Link Libraries ##

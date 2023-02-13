@@ -20,26 +20,26 @@ ShadowMapDrawCall::ShadowMapDrawCall(uint32 mesh_id,
 , texture_sampler_(std::move(texture_sampler))
 , textures_(std::move(textures))
 {
-	draw_key_.mesh_id_ = mesh_id;
-	draw_key_.material_id_ = material_.GetShaderID();
-	draw_key_.texture_id_ = material_.GetTextureID();
+    draw_key_.mesh_id_ = mesh_id;
+    draw_key_.material_id_ = material_.GetShaderID();
+    draw_key_.texture_id_ = material_.GetTextureID();
 }
 
 const DrawKey& ShadowMapDrawCall::GetDrawKey()
 {
-	return draw_key_;
+    return draw_key_;
 }
 
 void ShadowMapDrawCall::Draw(IRenderHardware* rhi)
 {
-	rhi->BindShaderProgram(program_);
-	rhi->UpdateUniformData(model_uniform_buffer_, &model_data_, sizeof(model_data_), 0);
-	rhi->BindUniformBuffer(model_uniform_buffer_);
-	for (const auto& [uniform_name, texture] : textures_)
-	{
-		rhi->BindTexture(texture, texture_sampler_, uniform_name);
-	}
-	rhi->DrawMesh(mesh_);
+    rhi->BindShaderProgram(program_);
+    rhi->UpdateUniformData(model_uniform_buffer_, &model_data_, sizeof(model_data_), 0);
+    rhi->BindUniformBuffer(model_uniform_buffer_);
+    for (const auto& [uniform_name, texture] : textures_)
+    {
+        rhi->BindTexture(texture, texture_sampler_, uniform_name);
+    }
+    rhi->DrawMesh(mesh_);
 }
 
 } // namespace zero::render

@@ -15,55 +15,55 @@ Entity EntityFactory::InstantiateModel(entt::registry& registry, const std::shar
 
 Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::shared_ptr<Node>& node, const std::vector<GeometryData>& geometry_data_list, Entity parent_entity)
 {
-	Entity entity = registry.create();
-	for (const std::shared_ptr<Node>& child_node: node->child_nodes_)
-	{
-		InstantiateNode(registry, child_node, geometry_data_list, entity);
-	}
-	registry.emplace<Volume>(entity, node->volume_);
-	registry.emplace<Transform>(entity, Transform::FromMatrix4x4(node->transform_));
+    Entity entity = registry.create();
+    for (const std::shared_ptr<Node>& child_node: node->child_nodes_)
+    {
+        InstantiateNode(registry, child_node, geometry_data_list, entity);
+    }
+    registry.emplace<Volume>(entity, node->volume_);
+    registry.emplace<Transform>(entity, Transform::FromMatrix4x4(node->transform_));
 
-	if (node->geometry_indices_.size() == 1)
-	{
-		// Directly assign Mesh and Material components  to entity
-		const GeometryData& geometry_data = geometry_data_list[0];
-		registry.emplace<Material>(entity, *geometry_data.material_);
-		Mesh& mesh = registry.emplace<Mesh>(entity);
-		mesh.mesh_id_ = geometry_data_list[0].geometry_id_;
-	}
-	else
-	{
-		// Instantiate each geometry and add it as a child
-		for (uint32 geometry_index: node->geometry_indices_)
-		{
-			const GeometryData& geometry_data = geometry_data_list[geometry_index];
+    if (node->geometry_indices_.size() == 1)
+    {
+        // Directly assign Mesh and Material components  to entity
+        const GeometryData& geometry_data = geometry_data_list[0];
+        registry.emplace<Material>(entity, *geometry_data.material_);
+        Mesh& mesh = registry.emplace<Mesh>(entity);
+        mesh.mesh_id_ = geometry_data_list[0].geometry_id_;
+    }
+    else
+    {
+        // Instantiate each geometry and add it as a child
+        for (uint32 geometry_index: node->geometry_indices_)
+        {
+            const GeometryData& geometry_data = geometry_data_list[geometry_index];
 
-			Entity geometry_entity = registry.create();
-			registry.emplace<Material>(geometry_entity, *geometry_data.material_);
-			Mesh& geometry_mesh = registry.emplace<Mesh>(geometry_entity);
-			geometry_mesh.mesh_id_ = geometry_data.geometry_id_;
-			registry.emplace<Volume>(geometry_entity, geometry_data.volume_);
+            Entity geometry_entity = registry.create();
+            registry.emplace<Material>(geometry_entity, *geometry_data.material_);
+            Mesh& geometry_mesh = registry.emplace<Mesh>(geometry_entity);
+            geometry_mesh.mesh_id_ = geometry_data.geometry_id_;
+            registry.emplace<Volume>(geometry_entity, geometry_data.volume_);
 
-			Transform& geometry_entity_transform = registry.emplace<Transform>(geometry_entity);
-			Transform& entity_transform = registry.get<Transform>(entity);
+            Transform& geometry_entity_transform = registry.emplace<Transform>(geometry_entity);
+            Transform& entity_transform = registry.get<Transform>(entity);
 
-			entity_transform.children_.push_back(geometry_entity);
-			geometry_entity_transform.parent_ = entity;
-		}
-	}
+            entity_transform.children_.push_back(geometry_entity);
+            geometry_entity_transform.parent_ = entity;
+        }
+    }
 
-	Transform& parent_transform = registry.get<Transform>(parent_entity);
-	Transform& entity_transform = registry.get<Transform>(entity);
-	parent_transform.children_.push_back(entity);
-	entity_transform.parent_ = parent_entity;
+    Transform& parent_transform = registry.get<Transform>(parent_entity);
+    Transform& entity_transform = registry.get<Transform>(entity);
+    parent_transform.children_.push_back(entity);
+    entity_transform.parent_ = parent_entity;
 
-	return entity;
+    return entity;
 }
 
 Entity EntityFactory::InstantiatePrimitive(entt::registry& registry, uint32 mesh_id, const PrimitiveInstance& primitive)
 {
-	// TODO: Refactor Primitive Instance
-	Entity entity = registry.create();
+    // TODO: Refactor Primitive Instance
+    Entity entity = registry.create();
     Transform transform{};
     Volume volume{};
     // Set transform/volume values
@@ -73,8 +73,8 @@ Entity EntityFactory::InstantiatePrimitive(entt::registry& registry, uint32 mesh
         {
             Box box = primitive.GetBox();
             math::Box math_box{math::Vec3f::Zero(), math::Vec3f(static_cast<float>(box.width_),
-																static_cast<float>(box.height_),
-																static_cast<float>(box.depth_))};
+                                                                static_cast<float>(box.height_),
+                                                                static_cast<float>(box.depth_))};
             volume.bounding_volume_.center_ = math_box.Center();
             volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
             transform.scale_ = math_box.max_;
@@ -126,9 +126,9 @@ Entity EntityFactory::InstantiatePrimitive(entt::registry& registry, uint32 mesh
     registry.emplace<Material>(entity, Material{});
     registry.emplace<PrimitiveInstance>(entity, primitive);
     registry.emplace<Transform>(entity, transform);
-	Mesh& mesh = registry.emplace<Mesh>(entity);
+    Mesh& mesh = registry.emplace<Mesh>(entity);
     mesh.mesh_id_ = mesh_id;
-	return entity;
+    return entity;
 }
 
 Entity EntityFactory::InstantiateLight(entt::registry& registry, const Light& light, Entity entity)

@@ -11,7 +11,7 @@ namespace zero::render
     class ModelLoader
     {
     public:
-	    ModelLoader() = delete;
+        ModelLoader() = delete;
 
         /**
          * @brief Load a 3D model

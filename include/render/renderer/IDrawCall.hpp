@@ -14,12 +14,12 @@ namespace zero::render
      */
     struct DrawKey
     {
-	    DrawKey()
-		: mesh_id_(0)
-		, material_id_(0)
-		, texture_id_(0)
-		{
-		}
+        DrawKey()
+        : mesh_id_(0)
+        , material_id_(0)
+        , texture_id_(0)
+        {
+        }
 
         /**
          * @brief Unique mesh value that uniquely identifies a mesh.
@@ -31,32 +31,32 @@ namespace zero::render
          * Sort based on material ID to minimize state changes.
          */
         uint32 material_id_;
-		/**
-		 * @brief Unique value that identifies the textures
-		 * Sort based on Texture ID to minimize
-		 */
-		uint32 texture_id_;
+        /**
+         * @brief Unique value that identifies the textures
+         * Sort based on Texture ID to minimize
+         */
+        uint32 texture_id_;
     }; // struct DrawKey
 
     /**
      * @brief Interface to a sortable draw call
      */
-	class IDrawCall
-	{
-	public:
+    class IDrawCall
+    {
+    public:
 
-		virtual ~IDrawCall() = default;
+        virtual ~IDrawCall() = default;
 
         /**
          * @brief Retrieve the draw key associated with the draw call
          * @return the draw key
          */
-		virtual const DrawKey& GetDrawKey() = 0;
+        virtual const DrawKey& GetDrawKey() = 0;
         /**
          * @brief Execute the draw call
          * @param rhi the interface to the render hardware used to render
          */
         virtual void Draw(IRenderHardware* rhi) = 0;
-	}; // class IDrawCall
+    }; // class IDrawCall
 
 } // namespace zero::render

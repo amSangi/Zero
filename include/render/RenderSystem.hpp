@@ -99,7 +99,7 @@ namespace zero::render
          */
         void LoadModels();
 
-		void GenerateDrawCalls(IRenderView* render_view);
+        void GenerateDrawCalls(IRenderView* render_view);
 
         /**
          * @brief Check whether there is an active camera in the scene
@@ -115,9 +115,9 @@ namespace zero::render
         RenderSystemConfig config_;
         std::unique_ptr<IRenderHardware> rhi_;
         std::unique_ptr<Window> window_;
-		std::unique_ptr<RenderingPipeline> rendering_pipeline_;
-		std::unique_ptr<SceneManager> scene_manager_;
-	    std::unordered_map<std::string, std::shared_ptr<Model>> model_cache_;
+        std::unique_ptr<RenderingPipeline> rendering_pipeline_;
+        std::unique_ptr<SceneManager> scene_manager_;
+        std::unordered_map<std::string, std::shared_ptr<Model>> model_cache_;
 
     }; // class RenderSystem
 

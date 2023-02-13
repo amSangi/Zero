@@ -54,8 +54,8 @@ namespace zero::render
          */
         [[nodiscard]] static Entity InstantiateLight(entt::registry& registry, const Light& light, Entity entity);
 
-	private:
-		static Entity InstantiateNode(entt::registry& registry, const std::shared_ptr<Node>& node, const std::vector<GeometryData>& geometry_data_list, Entity parent_entity);
+    private:
+        static Entity InstantiateNode(entt::registry& registry, const std::shared_ptr<Node>& node, const std::vector<GeometryData>& geometry_data_list, Entity parent_entity);
 
     }; // class EntityFactory
 

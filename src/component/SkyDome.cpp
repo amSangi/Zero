@@ -12,37 +12,37 @@ SkyDome::SkyDome()
 , vertex_shader_()
 , fragment_shader_()
 {
-	ComputeShaderID();
+    ComputeShaderID();
 }
 
 void SkyDome::SetShaders(const std::string& vertex_shader, const std::string& fragment_shader)
 {
-	vertex_shader_ = vertex_shader;
-	fragment_shader_ = fragment_shader;
-	ComputeShaderID();
+    vertex_shader_ = vertex_shader;
+    fragment_shader_ = fragment_shader;
+    ComputeShaderID();
 }
 
 const std::string& SkyDome::GetVertexShader() const
 {
-	return vertex_shader_;
+    return vertex_shader_;
 }
 
 const std::string& SkyDome::GetFragmentShader() const
 {
-	return fragment_shader_;
+    return fragment_shader_;
 }
 
 uint32 SkyDome::GetShaderID() const
 {
-	return shader_id_;
+    return shader_id_;
 }
 
 void SkyDome::ComputeShaderID()
 {
-	std::string shader_aggregate{};
-	shader_aggregate += vertex_shader_;
-	shader_aggregate += fragment_shader_;
-	shader_id_ = std::hash<std::string>()(shader_aggregate);
+    std::string shader_aggregate{};
+    shader_aggregate += vertex_shader_;
+    shader_aggregate += fragment_shader_;
+    shader_id_ = std::hash<std::string>()(shader_aggregate);
 }
 
 } // namespace zero

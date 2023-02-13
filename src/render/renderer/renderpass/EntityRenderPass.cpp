@@ -16,45 +16,45 @@ EntityRenderPass::EntityRenderPass()
 
 void EntityRenderPass::Initialize(IRenderHardware* rhi, std::shared_ptr<IUniformBuffer> camera_uniform)
 {
-	camera_uniform_ = std::move(camera_uniform);
+    camera_uniform_ = std::move(camera_uniform);
 }
 
 void EntityRenderPass::Submit(std::unique_ptr<IDrawCall> draw_call)
 {
-	draw_calls_.push_back(std::move(draw_call));
+    draw_calls_.push_back(std::move(draw_call));
 }
 
 void EntityRenderPass::Sort()
 {
-	std::sort(draw_calls_.begin(), draw_calls_.end(), DrawCallComparator::CompareDrawCalls);
+    std::sort(draw_calls_.begin(), draw_calls_.end(), DrawCallComparator::CompareDrawCalls);
 }
 
 void EntityRenderPass::Render(IRenderView* render_view, IRenderHardware* rhi)
 {
-	if (draw_calls_.empty())
-	{
-		LOG_DEBUG(kTitle, "No draw calls to render");
-		return;
-	}
+    if (draw_calls_.empty())
+    {
+        LOG_DEBUG(kTitle, "No draw calls to render");
+        return;
+    }
 
-	rhi->BeginFrame(nullptr);
+    rhi->BeginFrame(nullptr);
 
-	const Camera& camera = render_view->GetCamera();
-	rhi->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
+    const Camera& camera = render_view->GetCamera();
+    rhi->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
 
-	CameraData camera_data{camera.GetProjectionMatrix(), camera.GetViewMatrix(), camera.position_};
-	rhi->UpdateUniformData(camera_uniform_, &camera_data, sizeof(camera_data), 0);
-	for (const std::unique_ptr<IDrawCall>& draw_call : draw_calls_)
-	{
-		draw_call->Draw(rhi);
-	}
+    CameraData camera_data{camera.GetProjectionMatrix(), camera.GetViewMatrix(), camera.position_};
+    rhi->UpdateUniformData(camera_uniform_, &camera_data, sizeof(camera_data), 0);
+    for (const std::unique_ptr<IDrawCall>& draw_call : draw_calls_)
+    {
+        draw_call->Draw(rhi);
+    }
 
-	rhi->EndFrame();
+    rhi->EndFrame();
 }
 
 void EntityRenderPass::ClearDrawCalls()
 {
-	draw_calls_.clear();
+    draw_calls_.clear();
 }
 
 } // namespace zero::render

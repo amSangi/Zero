@@ -142,7 +142,7 @@ strcpy(symbolName+1, (const char*)name);
 symbolName[0] = '_';
 symbol = NULL;
 /* if (NSIsSymbolNameDefined(symbolName))
-	 symbol = NSLookupAndBindSymbol(symbolName); */
+     symbol = NSLookupAndBindSymbol(symbolName); */
 symbol = image ? NSLookupSymbolInImage(image, symbolName, NSLOOKUPSYMBOLINIMAGE_OPTION_BIND | NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR) : NULL;
 free(symbolName);
 if( symbol ) return NSAddressOfSymbol(symbol);

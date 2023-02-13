@@ -24,16 +24,16 @@ RenderSystem::RenderSystem(EngineCore* engine_core, const RenderSystemConfig& co
 
 void RenderSystem::Initialize()
 {
-	LOG_VERBOSE(kTitle, "Initializing Window");
-	window_->Initialize();
+    LOG_VERBOSE(kTitle, "Initializing Window");
+    window_->Initialize();
 
-	LOG_VERBOSE(kTitle, "Initializing Render Hardware Interface");
-	rhi_->Initialize();
+    LOG_VERBOSE(kTitle, "Initializing Render Hardware Interface");
+    rhi_->Initialize();
 
     LoadModels();
 
-	LOG_VERBOSE(kTitle, "Initializing rendering pipeline");
-	rendering_pipeline_->Initialize(rhi_.get(), GetCore()->GetAssetManager());
+    LOG_VERBOSE(kTitle, "Initializing rendering pipeline");
+    rendering_pipeline_->Initialize(rhi_.get(), GetCore()->GetAssetManager());
 }
 
 void RenderSystem::PreUpdate()
@@ -48,24 +48,24 @@ void RenderSystem::Update(const TimeDelta& time_delta)
         return;
     }
 
-	LOG_VERBOSE(kTitle, "Generating IRenderView");
-	scene_manager_->UpdateView(GetCore()->GetRegistry(), time_delta);
-	std::unique_ptr<IRenderView> render_view = scene_manager_->GetLatestView();
+    LOG_VERBOSE(kTitle, "Generating IRenderView");
+    scene_manager_->UpdateView(GetCore()->GetRegistry(), time_delta);
+    std::unique_ptr<IRenderView> render_view = scene_manager_->GetLatestView();
 
-	LOG_VERBOSE(kTitle, "Generating Draw Calls");
-	GenerateDrawCalls(render_view.get());
+    LOG_VERBOSE(kTitle, "Generating Draw Calls");
+    GenerateDrawCalls(render_view.get());
 
-	LOG_VERBOSE(kTitle, "Sorting Draw Calls");
-	rendering_pipeline_->Sort();
+    LOG_VERBOSE(kTitle, "Sorting Draw Calls");
+    rendering_pipeline_->Sort();
 
-	LOG_VERBOSE(kTitle, "Executing Draw Calls");
-	rendering_pipeline_->Render(render_view.get(), rhi_.get());
+    LOG_VERBOSE(kTitle, "Executing Draw Calls");
+    rendering_pipeline_->Render(render_view.get(), rhi_.get());
 
-	LOG_VERBOSE(kTitle, "Swapping buffers");
-	window_->SwapBuffers();
+    LOG_VERBOSE(kTitle, "Swapping buffers");
+    window_->SwapBuffers();
 
-	LOG_VERBOSE(kTitle, "Clearing Render Queue");
-	rendering_pipeline_->ClearRenderCalls();
+    LOG_VERBOSE(kTitle, "Clearing Render Queue");
+    rendering_pipeline_->ClearRenderCalls();
 }
 
 void RenderSystem::PostUpdate()
@@ -75,10 +75,10 @@ void RenderSystem::PostUpdate()
 void RenderSystem::ShutDown()
 {
     LOG_VERBOSE(kTitle, "Clearing model cache");
-	model_cache_.clear();
+    model_cache_.clear();
 
-	LOG_VERBOSE(kTitle, "Shutting down rendering pipeline");
-	rendering_pipeline_->Shutdown();
+    LOG_VERBOSE(kTitle, "Shutting down rendering pipeline");
+    rendering_pipeline_->Shutdown();
 
     LOG_VERBOSE(kTitle, "Shutting down rendering hardware");
     rhi_->Shutdown();
@@ -90,13 +90,13 @@ void RenderSystem::ShutDown()
 Entity RenderSystem::CreateModelInstance(const std::string& model_filename, Entity parent_entity)
 {
     LOG_VERBOSE(kTitle, "Instantiating a new model");
-	auto model_search = model_cache_.find(model_filename);
-	if (model_search == model_cache_.end())
-	{
-		LOG_ERROR(kTitle, "The model has not been loaded yet. Failed to instantiate model: " + model_filename);
-		return NullEntity;
-	}
-	return EntityFactory::InstantiateModel(GetCore()->GetRegistry(), model_search->second, parent_entity);
+    auto model_search = model_cache_.find(model_filename);
+    if (model_search == model_cache_.end())
+    {
+        LOG_ERROR(kTitle, "The model has not been loaded yet. Failed to instantiate model: " + model_filename);
+        return NullEntity;
+    }
+    return EntityFactory::InstantiateModel(GetCore()->GetRegistry(), model_search->second, parent_entity);
 }
 
 Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive)
@@ -123,12 +123,12 @@ void RenderSystem::LoadModels()
         std::unique_ptr<Model> model = ModelLoader::LoadModel(model_file, model_file_path);
         if (model)
         {
-	        LOG_DEBUG(kTitle, "Loading 3D asset geometry onto the GPU for asset: " + model_file_path);
-	        for (GeometryData& geometry_data: model->geometries_)
-			{
-				geometry_data.geometry_id_ = rendering_pipeline_->LoadMesh(rhi_.get(), geometry_data.mesh_data_.get());
-			}
-	        model_cache_.emplace(model_file_path, std::move(model));
+            LOG_DEBUG(kTitle, "Loading 3D asset geometry onto the GPU for asset: " + model_file_path);
+            for (GeometryData& geometry_data: model->geometries_)
+            {
+                geometry_data.geometry_id_ = rendering_pipeline_->LoadMesh(rhi_.get(), geometry_data.mesh_data_.get());
+            }
+            model_cache_.emplace(model_file_path, std::move(model));
         }
         else
         {
@@ -139,33 +139,33 @@ void RenderSystem::LoadModels()
 
 void RenderSystem::GenerateDrawCalls(IRenderView* render_view)
 {
-	entt::registry& registry = GetCore()->GetRegistry();
-	auto drawable_view = registry.view<const Transform, const Material, const Mesh, const Volume>();
+    entt::registry& registry = GetCore()->GetRegistry();
+    auto drawable_view = registry.view<const Transform, const Material, const Mesh, const Volume>();
 
-	// Generate SkyDome Draw Call
-	rendering_pipeline_->GenerateSkyDomeDrawCall(rhi_.get(), render_view->GetCamera(), render_view->GetSkyDome());
+    // Generate SkyDome Draw Call
+    rendering_pipeline_->GenerateSkyDomeDrawCall(rhi_.get(), render_view->GetCamera(), render_view->GetSkyDome());
 
-	const math::Matrix4x4 view_matrix = render_view->GetCamera().GetViewMatrix();
+    const math::Matrix4x4 view_matrix = render_view->GetCamera().GetViewMatrix();
 
-	// Generate Draw Calls for Renderable entities
-	const std::vector<std::shared_ptr<ITexture>> shadow_map_textures = rhi_->GetShadowMapTextures();
-	for (Entity renderable_entity: render_view->GetRenderableEntities())
-	{
-		const auto& [transform, material, mesh, _] = drawable_view.get(renderable_entity);
-		math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
-		rendering_pipeline_->GenerateDrawCall(rhi_.get(), mesh, material, model_matrix, view_matrix);
-	}
+    // Generate Draw Calls for Renderable entities
+    const std::vector<std::shared_ptr<ITexture>> shadow_map_textures = rhi_->GetShadowMapTextures();
+    for (Entity renderable_entity: render_view->GetRenderableEntities())
+    {
+        const auto& [transform, material, mesh, _] = drawable_view.get(renderable_entity);
+        math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
+        rendering_pipeline_->GenerateDrawCall(rhi_.get(), mesh, material, model_matrix, view_matrix);
+    }
 
-	// Generate Draw Calls for Shadow Casting entities for each cascade
-	for (uint32 cascade_index = 0; cascade_index < Constants::kShadowCascadeCount; ++cascade_index)
-	{
-		for (Entity shadow_casting_entity: render_view->GetShadowCastingEntities(cascade_index))
-		{
-			const auto& [transform, material, mesh, _] = drawable_view.get(shadow_casting_entity);
-			math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
-			rendering_pipeline_->GenerateShadowDrawCall(rhi_.get(), cascade_index, mesh, material, model_matrix);
-		}
-	}
+    // Generate Draw Calls for Shadow Casting entities for each cascade
+    for (uint32 cascade_index = 0; cascade_index < Constants::kShadowCascadeCount; ++cascade_index)
+    {
+        for (Entity shadow_casting_entity: render_view->GetShadowCastingEntities(cascade_index))
+        {
+            const auto& [transform, material, mesh, _] = drawable_view.get(shadow_casting_entity);
+            math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
+            rendering_pipeline_->GenerateShadowDrawCall(rhi_.get(), cascade_index, mesh, material, model_matrix);
+        }
+    }
 }
 
 bool RenderSystem::ContainsCamera() const
