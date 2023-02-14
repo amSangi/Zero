@@ -53,6 +53,7 @@ add_library(${PROJECT_NAME}
                             # Renderer Files
                             render/renderer/DrawCallComparator.cpp
                             render/renderer/RenderingPipeline.cpp
+                            render/renderer/UniformManager.cpp
                             # OpenGL Files
                             render/renderer/opengl/GLFrameBuffer.cpp
                             render/renderer/opengl/GLMesh.cpp
@@ -68,7 +69,7 @@ add_library(${PROJECT_NAME}
                             render/renderer/drawcall/SkyDomeDrawCall.cpp
                             render/renderer/drawcall/ShadowMapDrawCall.cpp
                             render/renderer/renderpass/CascadedShadowMapRenderPass.cpp
-                            render/renderer/renderpass/EntityRenderPass.cpp DemoGameSystem.hpp render/renderer/UniformManager.cpp)
+                            render/renderer/renderpass/EntityRenderPass.cpp)
 
 
 ## Link Libraries ##
