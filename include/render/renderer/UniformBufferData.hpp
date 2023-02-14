@@ -15,8 +15,8 @@ namespace zero::render
         CameraData(const math::Matrix4x4& projection_matrix,
                    const math::Matrix4x4& view_matrix,
                    const math::Vec3f& camera_position)
-                : projection_matrix_(projection_matrix)
-                , view_matrix_(view_matrix)
+                : projection_matrix_(projection_matrix.Transpose())
+                , view_matrix_(view_matrix.Transpose())
                 , camera_position_(camera_position.x_,
                                    camera_position.y_,
                                    camera_position.z_,
@@ -32,8 +32,8 @@ namespace zero::render
     struct alignas(16) ModelData
     {
         ModelData(const math::Matrix4x4& model_matrix, const math::Matrix4x4& normal_matrix)
-        : model_matrix_(model_matrix)
-        , normal_matrix_(normal_matrix)
+        : model_matrix_(model_matrix.Transpose())
+        , normal_matrix_(normal_matrix.Transpose())
         {
         }
 

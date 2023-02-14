@@ -33,5 +33,5 @@ add_subdirectory(test)
 ## Create Zero EXE ##
 set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 
-add_executable(${PROJECT_NAME} src/Main.cpp)
+add_executable(${PROJECT_NAME} src/Main.cpp include/render/renderer/UniformManager.hpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)

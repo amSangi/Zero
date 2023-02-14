@@ -111,11 +111,6 @@ layout (std140) uniform ShadowMapInformation
 uniform sampler2DShadow u_cascaded_shadow_map[kShadowCascadeCount];
 
 //////////////////////////////////////////////////
-////////// Texture Uniforms
-//////////////////////////////////////////////////
-uniform sampler2D u_diffuse_texture;
-
-//////////////////////////////////////////////////
 ////////// IN Variables
 //////////////////////////////////////////////////
 in VertexData
@@ -161,11 +156,11 @@ float ComputeCascadedShadowMap()
 ////////// Lighting Functions
 //////////////////////////////////////////////////
 vec4 ComputeBaseLightColor(vec3 light_color,
-                           vec3 light_to_vertex,
-                           vec3 vertex_to_eye,
-                           vec3 normal,
-                           float ambient_intensity,
-                           float diffuse_intensity)
+vec3 light_to_vertex,
+vec3 vertex_to_eye,
+vec3 normal,
+float ambient_intensity,
+float diffuse_intensity)
 {
     // Compute ambient color of the light
     vec4 ambient_color = vec4(light_color * ambient_intensity, 1.0);
@@ -177,8 +172,8 @@ vec4 ComputeBaseLightColor(vec3 light_color,
     // Compute specular color of the light
     vec3 reflection_direction = normalize(reflect(light_to_vertex, normal));
     float specular_factor = pow(max(dot(vertex_to_eye, reflection_direction),
-                                    0.0),
-                                u_specular_exponent);
+    0.0),
+    u_specular_exponent);
 
     vec4 specular_color = vec4(light_color, 1.0) * u_specular_intensity * specular_factor;
 
@@ -188,11 +183,11 @@ vec4 ComputeBaseLightColor(vec3 light_color,
 vec4 ComputeDirectionalLightColor(DirectionalLight light, vec3 normal, vec3 vertex_to_eye)
 {
     return ComputeBaseLightColor(light.color.xyz,
-                                 light.direction.xyz,
-                                 vertex_to_eye,
-                                 normal,
-                                 light.ambient_intensity,
-                                 light.diffuse_intensity);
+    light.direction.xyz,
+    vertex_to_eye,
+    normal,
+    light.ambient_intensity,
+    light.diffuse_intensity);
 }
 
 vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
@@ -202,15 +197,15 @@ vec4 ComputePointLightColor(PointLight light, vec3 normal, vec3 vertex_to_eye)
     light_to_vertex = normalize(light_to_vertex);
 
     vec4 base_light_color = ComputeBaseLightColor(light.color.xyz,
-                                                  light_to_vertex,
-                                                  vertex_to_eye,
-                                                  normal,
-                                                  light.ambient_intensity,
-                                                  light.diffuse_intensity);
+    light_to_vertex,
+    vertex_to_eye,
+    normal,
+    light.ambient_intensity,
+    light.diffuse_intensity);
 
     float attenuation = light.attenuation_constant
-                        + (light.attenuation_linear * distance)
-                        + (light.attenuation_quadratic * distance * distance);
+    + (light.attenuation_linear * distance)
+    + (light.attenuation_quadratic * distance * distance);
 
     return base_light_color / attenuation;
 }
@@ -222,15 +217,15 @@ vec4 ComputeSpotLightColor(SpotLight light, vec3 normal, vec3 vertex_to_eye)
     light_to_vertex = normalize(light_to_vertex);
 
     vec4 base_light_color = ComputeBaseLightColor(light.color.xyz,
-                                                  light_to_vertex,
-                                                  vertex_to_eye,
-                                                  normal,
-                                                  light.ambient_intensity,
-                                                  light.diffuse_intensity);
+    light_to_vertex,
+    vertex_to_eye,
+    normal,
+    light.ambient_intensity,
+    light.diffuse_intensity);
 
     float attenuation = light.attenuation_constant
-                        + (light.attenuation_linear * distance)
-                        + (light.attenuation_quadratic * distance * distance);
+    + (light.attenuation_linear * distance)
+    + (light.attenuation_quadratic * distance * distance);
 
     float theta = dot(light_to_vertex, light.direction.xyz);
     float epsilon = (light.inner_cosine - light.outer_cosine);
@@ -272,8 +267,7 @@ void main()
     vec3 normal = normalize(IN.normal);
     vec3 vertex_to_eye = normalize(u_camera_position.xyz - IN.world_position);
 
-    vec3 texture_color = texture(u_diffuse_texture, IN.texture_coordinate).xyz;
-    vec4 object_color = vec4(texture_color + u_diffuse_color.xyz, 1.0);
+    vec4 object_color = vec4(u_diffuse_color.xyz, 1.0);
     vec4 light_color = ComputeLightColor(normal, vertex_to_eye);
 
     out_color = object_color * light_color * 1;

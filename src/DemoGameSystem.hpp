@@ -33,6 +33,9 @@ public:
     {
         SetupCamera();
         SetupSkyDome();
+        SetupPrimitives();
+        SetupLights();
+        SetupModels();
         GetCore()->GetEventBus().RegisterKeyPressedListener(this);
     }
 
@@ -271,6 +274,7 @@ private:
             model_material.visible_ = true;
             model_material.specular_exponent_ = 32.0F;
             auto& transform = registry.get<Transform>(model_entity);
+            transform.scale_ = math::Vec3f(0.25F);
             transform.position_ = math::Vec3f(0.0F, -2.0F, 0.0F);
         }
     }

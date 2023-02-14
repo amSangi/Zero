@@ -52,10 +52,13 @@ Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::share
         }
     }
 
-    Transform& parent_transform = registry.get<Transform>(parent_entity);
-    Transform& entity_transform = registry.get<Transform>(entity);
-    parent_transform.children_.push_back(entity);
-    entity_transform.parent_ = parent_entity;
+    if (parent_entity != NullEntity)
+    {
+        Transform& parent_transform = registry.get<Transform>(parent_entity);
+        Transform& entity_transform = registry.get<Transform>(entity);
+        parent_transform.children_.push_back(entity);
+        entity_transform.parent_ = parent_entity;
+    }
 
     return entity;
 }

@@ -65,6 +65,7 @@ namespace zero::render
         std::shared_ptr<GLProgram> bound_shader_program_;
         std::vector<std::shared_ptr<ITexture>> shadow_map_textures_;
         std::vector<std::shared_ptr<IFrameBuffer>> shadow_map_frame_buffers_;
+        std::shared_ptr<GLTexture> empty_texture_;
         uint32 available_texture_unit_index_;
         uint32 available_uniform_buffer_binding_point;
     }; // class GLRenderHardware

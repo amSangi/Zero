@@ -23,7 +23,6 @@ constexpr uint32 GetImportFlags()
     constexpr uint32 flags = aiProcess_FlipUVs
                              | aiProcess_GenBoundingBoxes
                              | aiProcess_GenNormals
-                             | aiProcess_LimitBoneWeights
                              | aiProcess_OptimizeMeshes
                              | aiProcess_OptimizeGraph
                              | aiProcess_Triangulate;
@@ -34,13 +33,9 @@ std::unique_ptr<MeshData> ExtractMesh(aiMesh* ai_mesh)
 {
     std::vector<Vertex> vertices{};
     std::vector<uint32> indices{};
-    // List of bone names in the order that the mesh is rigged
-    std::vector<std::string> bone_names{};
 
     vertices.reserve(ai_mesh->mNumVertices);
     indices.reserve(ai_mesh->mNumFaces * 3);
-    // Allow direct indexing of the list of bone names
-    bone_names.resize(ai_mesh->mNumBones);
 
     // Load interleaved position, normal, and UV attributes
     for (uint32 i = 0; i < ai_mesh->mNumVertices; ++i)
@@ -65,33 +60,7 @@ std::unique_ptr<MeshData> ExtractMesh(aiMesh* ai_mesh)
         }
     }
 
-    // Load the bone ID and weight attributes
-    for (uint32 ai_bone_index = 0; ai_bone_index < ai_mesh->mNumBones; ++ai_bone_index)
-    {
-        const aiBone* ai_bone = ai_mesh->mBones[ai_bone_index];
-        bone_names[ai_bone_index] = ai_bone->mName.C_Str();
-
-        for (uint32 weight_index = 0; weight_index < ai_bone->mNumWeights; ++weight_index)
-        {
-            const aiVertexWeight& ai_vertex_weight = ai_bone->mWeights[weight_index];
-            const uint32 vertex_index = ai_vertex_weight.mVertexId;
-            const auto bone_weight = static_cast<float>(ai_vertex_weight.mWeight);
-
-            // Set the bone attributes in the next available slot
-            Vertex& vertex = vertices[vertex_index];
-            for (uint32 i = 0; i < vertex.bone_ids_.GetDimensions(); ++i)
-            {
-                if (vertex.bone_ids_[i] == Vertex::kInvalidBoneID)
-                {
-                    vertex.bone_ids_[i] = static_cast<int32>(ai_bone_index);
-                    vertex.bone_weights_[i] = bone_weight;
-                    break;
-                }
-            }
-        }
-    }
-
-    return std::make_unique<MeshData>(std::move(vertices), std::move(indices), std::move(bone_names));
+    return std::make_unique<MeshData>(std::move(vertices), std::move(indices));
 }
 
 std::unique_ptr<Material> ExtractMaterial(aiMaterial* ai_material)
@@ -146,13 +115,17 @@ std::unique_ptr<Model> LoadModelFromScene(const std::string& model_name, const a
         std::shared_ptr<Node> parent_node = queue_entry.second;
 
         Volume volume{};
+        std::vector<uint32> geometry_indices{};
         for (uint32 mesh_index = 0; mesh_index < ai_node->mNumMeshes; ++mesh_index)
         {
             aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[mesh_index]];
             volume.Engulf(ExtractVolume(ai_mesh));
+
+            geometry_indices.push_back(mesh_index);
         }
 
         std::shared_ptr<Node> node = std::make_shared<Node>(volume, ExtractTransformation(ai_node->mTransformation));
+        node->geometry_indices_ = geometry_indices;
         if (root_node == nullptr)
         {
             root_node = node;

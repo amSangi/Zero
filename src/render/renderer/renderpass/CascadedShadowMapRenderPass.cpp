@@ -38,6 +38,8 @@ void CascadedShadowMapRenderPass::Render(IRenderView* render_view, IRenderHardwa
         return;
     }
 
+    LOG_DEBUG(kTitle, "Rendering cascade index: " + std::to_string(cascade_index_));
+
     const std::vector<std::shared_ptr<IFrameBuffer>> shadow_map_frame_buffers = rhi->GetShadowMapFrameBuffers();
     CascadedShadowMap cascaded_shadow_map = render_view->GetCascadedShadowMap();
     assert(shadow_map_frame_buffers.size() == cascaded_shadow_map.GetCascadeCount());

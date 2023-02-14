@@ -79,7 +79,7 @@ void GLRenderHardware::Initialize()
     shadow_map_sampler_->SetWrappingT(ISampler::Wrapping::CLAMP_TO_BORDER);
     shadow_map_sampler_->SetBorderColour(math::Vec4f::One());
     glSamplerParameteri(shadow_map_sampler_->GetIdentifier(), GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-    glSamplerParameteri(shadow_map_sampler_->GetIdentifier(), GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+    glSamplerParameteri(shadow_map_sampler_->GetIdentifier(), GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
     // Create shadow map textures and frame buffers
     for (uint32 i = 0; i < Constants::kShadowCascadeCount; ++i)
@@ -115,6 +115,24 @@ void GLRenderHardware::Initialize()
     }
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Create 1x1 black texture for unused/empty/default textures
+    GLuint empty_texture;
+    glGenTextures(1, &empty_texture);
+    glBindTexture(GL_TEXTURE_2D, empty_texture);
+    GLubyte data[] = {0, 0, 0, 0};
+    glTexImage2D(GL_TEXTURE_2D,     // Target texture)
+                 0,                 // Level of detail. Level n is the nth mipmap reduction image.
+                 GL_RGBA,           // Number of color components in the texture.
+                 1,                 // Texture image width
+                 1,                 // Texture image height
+                 0,                 // Border. Must be 0.
+                 GL_RGBA,           // Format of the pixel data
+                 GL_UNSIGNED_BYTE,  // Data type of the pixel data
+                 data);             // Pointer to the image data in memory
+    textures_.push_back(empty_texture);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    empty_texture_ = std::make_shared<GLTexture>(empty_texture, GL_TEXTURE_2D);
 
 #if LOGGING_ENABLED
     glEnable(GL_DEBUG_OUTPUT);
@@ -254,18 +272,12 @@ std::shared_ptr<IMesh> GLRenderHardware::CreateMesh(MeshData* mesh_data)
     constexpr uint32 position_attribute_index = 0;
     constexpr uint32 normal_attribute_index = 1;
     constexpr uint32 uv_attribute_index = 2;
-    constexpr uint32 bone_id_attribute_index = 3;
-    constexpr uint32 bone_weight_attribute_index = 4;
     glEnableVertexAttribArray(position_attribute_index);
     glEnableVertexAttribArray(normal_attribute_index);
     glEnableVertexAttribArray(uv_attribute_index);
-    glEnableVertexAttribArray(bone_id_attribute_index);
-    glEnableVertexAttribArray(bone_weight_attribute_index);
     glVertexAttribPointer(position_attribute_index,    3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, position_)));
     glVertexAttribPointer(normal_attribute_index,      3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, normal_)));
     glVertexAttribPointer(uv_attribute_index,          2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, texture_coordinate_)));
-    glVertexAttribPointer(bone_id_attribute_index,     4, GL_INT,   GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_ids_)));
-    glVertexAttribPointer(bone_weight_attribute_index, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, bone_weights_)));
 
     uint32 index_count = mesh_data->indices_.size();
     GLuint index_buffer;
@@ -456,7 +468,12 @@ void GLRenderHardware::BeginFrame(std::shared_ptr<IFrameBuffer> frame_buffer)
 
 void GLRenderHardware::EndFrame()
 {
-    assert(bound_shader_program_ != nullptr);
+    // Unbind any existing frame buffers
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Unbind shader programs
+    bound_shader_program_ = nullptr;
+    glUseProgram(0);
 
     // Reset all texture units
     for (uint32 texture_unit = 0; texture_unit < available_texture_unit_index_; ++texture_unit)
@@ -481,21 +498,24 @@ void GLRenderHardware::BindShaderProgram(std::shared_ptr<IProgram> shader_progra
 
 void GLRenderHardware::BindTexture(std::shared_ptr<ITexture> texture, std::shared_ptr<ISampler> texture_sampler, const std::string& uniform_name)
 {
-    assert(texture != nullptr);
     assert(texture_sampler != nullptr);
 
-    std::shared_ptr<GLTexture> gl_texture = std::static_pointer_cast<GLTexture>(texture);
     std::shared_ptr<GLSampler> gl_sampler = std::static_pointer_cast<GLSampler>(texture_sampler);
+
+    // Bind texture to texture unit
+    glActiveTexture(GL_TEXTURE0 + available_texture_unit_index_);
+    std::shared_ptr<GLTexture> gl_texture = empty_texture_;
+    if (texture)
+    {
+        gl_texture = std::static_pointer_cast<GLTexture>(texture);
+    }
+    glBindTexture(gl_texture->GetTarget(), gl_texture->GetIdentifier());
 
     // Bind texture sampler to texture unit
     glBindSampler(available_texture_unit_index_, gl_sampler->GetIdentifier());
 
-    // Bind texture to texture unit
-    glActiveTexture(GL_TEXTURE0 + available_texture_unit_index_);
-    glBindTexture(gl_texture->GetTarget(), gl_texture->GetIdentifier());
-
     // Map shader uniform name to texture unit
-    bound_shader_program_->SetUniform(uniform_name, static_cast<GLint>(available_texture_unit_index_));
+    glUniform1i(glGetUniformLocation(bound_shader_program_->GetIdentifier(), uniform_name.c_str()), static_cast<int32>(available_texture_unit_index_));
 
     // Increment to the next available texture unit
     ++available_texture_unit_index_;
@@ -535,7 +555,6 @@ void GLRenderHardware::DrawMesh(std::shared_ptr<IMesh> mesh)
     std::shared_ptr<GLMesh> gl_mesh = std::static_pointer_cast<GLMesh>(mesh);
     glBindVertexArray(gl_mesh->GetVAOIdentifier());
     glDrawElements(GL_TRIANGLES, static_cast<GLint>(gl_mesh->GetIndexDataSize()), GL_UNSIGNED_INT, nullptr);
-    glBindVertexArray(0);
 }
 
 } // namespace zero::render

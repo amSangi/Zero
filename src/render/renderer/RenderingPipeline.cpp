@@ -30,17 +30,10 @@ RenderingPipeline::RenderingPipeline()
 , unique_identifier_(1)
 , primitive_mesh_id_cache_()
 , render_passes_()
-, cascade_shadow_map_render_pass_start_(0)
 , entity_render_pass_index_(Constants::kShadowCascadeCount)
-, camera_uniform_(nullptr)
-, material_uniform_(nullptr)
-, model_uniform_(nullptr)
-, light_info_uniform_(nullptr)
-, directional_light_uniform_(nullptr)
-, point_light_uniform_(nullptr)
-, spot_light_uniform_(nullptr)
-, shadow_map_uniform_(nullptr)
+, uniform_manager_(nullptr)
 {
+    shadow_map_material_.SetShaders({"model.vertex.glsl", "shadow_map.fragment.glsl"});
 }
 
 uint32 RenderingPipeline::LoadMesh(IRenderHardware* rhi, MeshData* mesh_data)
@@ -56,24 +49,17 @@ void RenderingPipeline::Initialize(IRenderHardware* rhi, AssetManager& asset_man
     LoadPrimitiveMeshes(rhi);
     LoadShaders(rhi, asset_manager);
     LoadTextures(rhi, asset_manager);
-
-    camera_uniform_ = rhi->CreateUniformBuffer("Camera", nullptr, sizeof(CameraData));
-    material_uniform_ = rhi->CreateUniformBuffer("Material", nullptr, sizeof(MaterialData));
-    model_uniform_ = rhi->CreateUniformBuffer("Model", nullptr, sizeof(ModelData));
-    light_info_uniform_ = rhi->CreateUniformBuffer("LightInformation", nullptr, sizeof(LightInformationData));
-    directional_light_uniform_ = rhi->CreateUniformBuffer("DirectionalLights", nullptr, sizeof(DirectionalLightData) * Constants::kMaxDirectionalLights);
-    point_light_uniform_ = rhi->CreateUniformBuffer("PointLights", nullptr, sizeof(PointLightData) * Constants::kMaxPointLights);
-    spot_light_uniform_ = rhi->CreateUniformBuffer("SpotLights", nullptr, sizeof(SpotLightData) * Constants::kMaxSpotLights);
-    shadow_map_uniform_ = rhi->CreateUniformBuffer("ShadowMapInformation", nullptr, sizeof(ShadowMapInformation));
+    uniform_manager_ = std::make_shared<UniformManager>();
+    uniform_manager_->Initialize(rhi);
 
     for (uint32 cascade_index = 0; cascade_index < Constants::kShadowCascadeCount; ++cascade_index)
     {
         std::unique_ptr<CascadedShadowMapRenderPass> shadow_map_render_pass = std::make_unique<CascadedShadowMapRenderPass>(cascade_index);
-        shadow_map_render_pass->Initialize(rhi, camera_uniform_);
+        shadow_map_render_pass->Initialize(rhi, uniform_manager_->GetCameraUniform());
         render_passes_.push_back(std::move(shadow_map_render_pass));
     }
     std::unique_ptr<EntityRenderPass> entity_render_pass = std::make_unique<EntityRenderPass>();
-    entity_render_pass->Initialize(rhi, camera_uniform_);
+    entity_render_pass->Initialize(rhi, uniform_manager_->GetCameraUniform());
     render_passes_.push_back(std::move(entity_render_pass));
 }
 
@@ -87,8 +73,8 @@ void RenderingPipeline::Shutdown()
     shader_cache_.clear();
     LOG_VERBOSE(kTitle, "Clearing texture cache");
     texture_cache_.clear();
-
     ClearRenderCalls();
+    uniform_manager_ = nullptr;
 }
 
 uint32 RenderingPipeline::GetPrimitiveMeshId(PrimitiveInstance::Type primitive_type) const
@@ -128,16 +114,14 @@ void RenderingPipeline::GenerateSkyDomeDrawCall(IRenderHardware *rhi, const Came
     math::Matrix4x4 model_matrix = math::Matrix4x4::Identity()
             .Scale(math::Vec3f(kSkyDomeSphereScale))
             .Translate(camera.position_);
-
-    program->SetUniform("u_projection_matrix", camera.GetProjectionMatrix());
-    program->SetUniform("u_view_matrix", camera.GetViewMatrix());
-    program->SetUniform("u_model_matrix", model_matrix);
-    program->SetUniform("u_camera_position", math::Vec4f(camera.position_.x_, camera.position_.y_, camera.position_.z_, 1.0F));
-    program->SetUniform("u_apex_color", sky_dome.apex_color_);
-    program->SetUniform("u_center_color", sky_dome.center_color_);
-
+    ModelData model_data{model_matrix, math::Matrix4x4::Identity()};
     std::shared_ptr<IMesh> sky_dome_mesh = mesh_cache_[primitive_mesh_id_cache_[kSphereMeshIdIndex]];
-    render_passes_[entity_render_pass_index_]->Submit(std::make_unique<SkyDomeDrawCall>(sky_dome_mesh, program));
+    render_passes_[entity_render_pass_index_]->Submit(std::make_unique<SkyDomeDrawCall>(model_data,
+                                                                                        sky_dome.apex_color_,
+                                                                                        sky_dome.center_color_,
+                                                                                        sky_dome_mesh,
+                                                                                        program,
+                                                                                        uniform_manager_));
 }
 
 void RenderingPipeline::GenerateDrawCall(IRenderHardware* rhi,
@@ -162,36 +146,17 @@ void RenderingPipeline::GenerateDrawCall(IRenderHardware* rhi,
         return;
     }
 
-    // Retrieve the texture maps
-    std::unordered_map<std::string, std::shared_ptr<ITexture>> uniform_texture_map{};
-    auto texture_search = texture_cache_.find(material.GetTextureMap().diffuse_map_);
-    if (texture_search != texture_cache_.end())
-    {
-        uniform_texture_map.emplace("u_diffuse_texture", texture_search->second);
-    }
-
-    // Retrieve the shadow map textures
-    std::unordered_map<std::string, std::shared_ptr<ITexture>> uniform_shadow_texture_map{};
-    const std::vector<std::shared_ptr<ITexture>> cascaded_shadow_map_textures = rhi->GetShadowMapTextures();
-    for (uint32 cascade_index = 0; cascade_index < cascaded_shadow_map_textures.size(); ++cascade_index)
-    {
-        uniform_shadow_texture_map.emplace("u_cascaded_shadow_map[" + std::to_string(cascade_index) + "]", cascaded_shadow_map_textures[cascade_index]);
-    }
-
     // Construct ModelData
     ModelData model_data{model_matrix, (view_matrix * model_matrix).Inverse()};
     std::unique_ptr<IDrawCall> draw_call = std::make_unique<EntityDrawCall>(mesh.mesh_id_,
                                                                             material,
                                                                             model_data,
-                                                                            model_uniform_,
-                                                                            material_uniform_,
                                                                             mesh_search->second,
                                                                             program,
-                                                                            GetUniformBuffers(),
-                                                                            uniform_texture_map,
                                                                             rhi->GetDiffuseMapSampler(),
-                                                                            uniform_shadow_texture_map,
-                                                                            rhi->GetShadowMapSampler());
+                                                                            rhi->GetShadowMapSampler(),
+                                                                            uniform_manager_,
+                                                                            texture_cache_[material.GetTextureMap().diffuse_map_]);
     render_passes_[entity_render_pass_index_]->Submit(std::move(draw_call));
 }
 
@@ -210,19 +175,11 @@ void RenderingPipeline::GenerateShadowDrawCall(IRenderHardware* rhi,
     }
 
     // Retrieve the shader program used by the entity
-    std::shared_ptr<IProgram> program = GenerateShaderProgram(rhi, material.GetShaderID(), material.GetShadersAsList());
+    std::shared_ptr<IProgram> program = GenerateShaderProgram(rhi, shadow_map_material_.GetShaderID(), shadow_map_material_.GetShadersAsList());
     if (program == nullptr)
     {
         LOG_ERROR(kTitle, "Failed to generate shader program for entity. The entity will not be rendered.");
         return;
-    }
-
-    // Retrieve the texture maps
-    std::unordered_map<std::string, std::shared_ptr<ITexture>> uniform_texture_map{};
-    auto texture_search = texture_cache_.find(material.GetTextureMap().diffuse_map_);
-    if (texture_search != texture_cache_.end())
-    {
-        uniform_texture_map.emplace("u_diffuse_texture", texture_search->second);
     }
 
     // Construct ModelData. Normal matrix is not needed for shadow maps
@@ -230,11 +187,9 @@ void RenderingPipeline::GenerateShadowDrawCall(IRenderHardware* rhi,
     std::unique_ptr<IDrawCall> draw_call = std::make_unique<ShadowMapDrawCall>(mesh.mesh_id_,
                                                                                material,
                                                                                model_data,
-                                                                               model_uniform_,
                                                                                mesh_search->second,
                                                                                program,
-                                                                               uniform_texture_map,
-                                                                               rhi->GetDiffuseMapSampler());
+                                                                               uniform_manager_);
     render_passes_[cascade_index]->Submit(std::move(draw_call));
 }
 
@@ -289,17 +244,17 @@ void RenderingPipeline::UpdateLightUniforms(IRenderView* render_view, IRenderHar
     {
         spot_light_data_list.emplace_back(transform, spot_light);
     }
-    rhi->UpdateUniformData(light_info_uniform_, &light_information_data, sizeof(light_information_data), 0);
-    rhi->UpdateUniformData(directional_light_uniform_, directional_light_data_list.data(), sizeof(DirectionalLightData) * directional_light_data_list.size(), 0);
-    rhi->UpdateUniformData(point_light_uniform_, point_light_data_list.data(), sizeof(PointLightData) * point_light_data_list.size(), 0);
-    rhi->UpdateUniformData(spot_light_uniform_, spot_light_data_list.data(), sizeof(SpotLightData) * spot_light_data_list.size(), 0);
+    rhi->UpdateUniformData(uniform_manager_->GetLightInformationUniform(), &light_information_data, sizeof(light_information_data), 0);
+    rhi->UpdateUniformData(uniform_manager_->GetDirectionalLightUniform(), directional_light_data_list.data(), sizeof(DirectionalLightData) * directional_light_data_list.size(), 0);
+    rhi->UpdateUniformData(uniform_manager_->GetPointLightUniform(), point_light_data_list.data(), sizeof(PointLightData) * point_light_data_list.size(), 0);
+    rhi->UpdateUniformData(uniform_manager_->GetSpotLightUniform(), spot_light_data_list.data(), sizeof(SpotLightData) * spot_light_data_list.size(), 0);
 }
 
 void RenderingPipeline::UpdateShadowMapUniform(IRenderView* render_view, IRenderHardware* rhi)
 {
     ShadowMapInformation shadow_map_information{render_view->GetCascadedShadowMap().GetTextureMatrices(),
                                                 render_view->GetCascadedShadowMap().GetViewFarBounds()};
-    rhi->UpdateUniformData(shadow_map_uniform_, &shadow_map_information, sizeof(ShadowMapInformation), 0);
+    rhi->UpdateUniformData(uniform_manager_->GetShadowMapUniform(), &shadow_map_information, sizeof(ShadowMapInformation), 0);
 }
 
 void RenderingPipeline::LoadPrimitiveMeshes(IRenderHardware* rhi)
@@ -453,18 +408,6 @@ std::shared_ptr<IProgram> RenderingPipeline::GenerateShaderProgram(IRenderHardwa
 uint32 RenderingPipeline::GenerateNewUniqueIdentifier()
 {
     return unique_identifier_++;
-}
-
-std::vector<std::shared_ptr<IUniformBuffer>> RenderingPipeline::GetUniformBuffers() const
-{
-    return {
-        camera_uniform_,
-        light_info_uniform_,
-        directional_light_uniform_,
-        point_light_uniform_,
-        spot_light_uniform_,
-        shadow_map_uniform_,
-    };
 }
 
 void RenderingPipeline::ReadShaderSource(const std::string& filename, std::string& destination)

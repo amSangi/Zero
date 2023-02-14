@@ -8,8 +8,9 @@
 #include "component/Material.hpp"
 #include "component/Mesh.hpp"
 #include "component/PrimitiveInstance.hpp"
-#include "render/renderer/IRenderPass.hpp"
 #include "render/IRenderView.hpp"
+#include "render/renderer/IRenderPass.hpp"
+#include "render/renderer/UniformManager.hpp"
 
 namespace zero::render
 {
@@ -63,8 +64,6 @@ namespace zero::render
         void LoadShaders(IRenderHardware* rhi, AssetManager& asset_manager);
         std::shared_ptr<IProgram> GenerateShaderProgram(IRenderHardware* rhi, uint32 shader_id, const std::vector<std::string>& shader_name_list);
         [[nodiscard]] uint32 GenerateNewUniqueIdentifier();
-        std::vector<std::shared_ptr<IUniformBuffer>> GetUniformBuffers() const;
-
         static void ReadShaderSource(const std::string& filename, std::string& destination);
 
         /**
@@ -86,20 +85,10 @@ namespace zero::render
          * @brief Active render passes, which maintain their own set of draw calls
          */
         std::vector<std::unique_ptr<IRenderPass>> render_passes_;
-        const uint32 cascade_shadow_map_render_pass_start_;
         const uint32 entity_render_pass_index_;
-
-        /**
-         * @brief Uniform Buffers
-         */
-        std::shared_ptr<IUniformBuffer> camera_uniform_;
-        std::shared_ptr<IUniformBuffer> material_uniform_;
-        std::shared_ptr<IUniformBuffer> model_uniform_;
-        std::shared_ptr<IUniformBuffer> light_info_uniform_;
-        std::shared_ptr<IUniformBuffer> directional_light_uniform_;
-        std::shared_ptr<IUniformBuffer> point_light_uniform_;
-        std::shared_ptr<IUniformBuffer> spot_light_uniform_;
-        std::shared_ptr<IUniformBuffer> shadow_map_uniform_;
+        Material shadow_map_material_{};
+        std::shared_ptr<ITexture> empty_texture_;
+        std::shared_ptr<UniformManager> uniform_manager_;
 
     }; // class RenderingPipeline
 

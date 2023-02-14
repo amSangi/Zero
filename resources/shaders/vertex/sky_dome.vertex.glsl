@@ -2,12 +2,23 @@
 precision highp float;
 
 //////////////////////////////////////////////////
-////////// Camera and Model Uniforms
+////////// Camera Uniforms
 //////////////////////////////////////////////////
-uniform mat4 u_projection_matrix;
-uniform mat4 u_view_matrix;
-uniform mat4 u_model_matrix;
-uniform vec4 u_camera_position;
+layout (std140) uniform Camera
+{
+    mat4 u_projection_matrix;
+    mat4 u_view_matrix;
+    vec4 u_camera_position;
+};
+
+//////////////////////////////////////////////////
+////////// Model Uniforms
+//////////////////////////////////////////////////
+layout (std140) uniform Model
+{
+    mat4 u_model_matrix;
+    mat4 u_normal_matrix;
+};
 
 //////////////////////////////////////////////////
 ////////// IN Variables

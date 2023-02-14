@@ -128,7 +128,7 @@ void RenderSystem::LoadModels()
             {
                 geometry_data.geometry_id_ = rendering_pipeline_->LoadMesh(rhi_.get(), geometry_data.mesh_data_.get());
             }
-            model_cache_.emplace(model_file_path, std::move(model));
+            model_cache_.emplace(model_file, std::move(model));
         }
         else
         {

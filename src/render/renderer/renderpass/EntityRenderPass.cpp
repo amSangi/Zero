@@ -37,11 +37,11 @@ void EntityRenderPass::Render(IRenderView* render_view, IRenderHardware* rhi)
         return;
     }
 
+    LOG_DEBUG(kTitle, "Rendering entities");
     rhi->BeginFrame(nullptr);
 
     const Camera& camera = render_view->GetCamera();
     rhi->SetViewport(camera.viewport_.x_, camera.viewport_.y_, camera.viewport_.width_, camera.viewport_.height_);
-
     rhi->Clear();
 
     CameraData camera_data{camera.GetProjectionMatrix(), camera.GetViewMatrix(), camera.position_};
