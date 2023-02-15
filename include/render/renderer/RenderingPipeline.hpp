@@ -27,7 +27,7 @@ namespace zero::render
         void Initialize(IRenderHardware* rhi, AssetManager& asset_manager);
         void Shutdown();
 
-        uint32 GetPrimitiveMeshId(PrimitiveInstance::Type primitive_type) const;
+        uint32 GetPrimitiveMeshId(IRenderHardware* rhi, PrimitiveInstance primitive_instance);
         void GenerateSkyDomeDrawCall(IRenderHardware* rhi, const Camera& camera, const SkyDome& sky_dome);
         void GenerateDrawCall(IRenderHardware* rhi,
                               const Mesh& mesh,

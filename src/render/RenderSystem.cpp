@@ -102,7 +102,7 @@ Entity RenderSystem::CreateModelInstance(const std::string& model_filename, Enti
 Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive)
 {
     LOG_VERBOSE(kTitle, "Instantiating a new primitive");
-    return EntityFactory::InstantiatePrimitive(GetCore()->GetRegistry(), rendering_pipeline_->GetPrimitiveMeshId(primitive.GetType()), primitive);
+    return EntityFactory::InstantiatePrimitive(GetCore()->GetRegistry(), rendering_pipeline_->GetPrimitiveMeshId(rhi_.get(), primitive), primitive);
 }
 
 Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity)

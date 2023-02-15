@@ -85,42 +85,6 @@ PrimitiveInstance::Type PrimitiveInstance::GetType() const
     return type_;
 }
 
-void PrimitiveInstance::Set(const Box& box)
-{
-    type_ = Type::BOX;
-    primitive_.box_ = box;
-}
-
-void PrimitiveInstance::Set(const Sphere& sphere)
-{
-    type_ = Type::SPHERE;
-    primitive_.sphere_ = sphere;
-}
-
-void PrimitiveInstance::Set(const Plane& plane)
-{
-    type_ = Type::PLANE;
-    primitive_.plane_ = plane;
-}
-
-void PrimitiveInstance::Set(const Cone& cone)
-{
-    type_ = Type::CONE;
-    primitive_.cone_ = cone;
-}
-
-void PrimitiveInstance::Set(const Cylinder& cylinder)
-{
-    type_ = Type::CYLINDER;
-    primitive_.cylinder_ = cylinder;
-}
-
-void PrimitiveInstance::Set(const Torus& torus)
-{
-    type_ = Type::TORUS;
-    primitive_.torus_ = torus;
-}
-
 Box PrimitiveInstance::GetBox() const
 {
     if (type_ != Type::BOX)

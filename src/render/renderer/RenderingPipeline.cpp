@@ -77,22 +77,38 @@ void RenderingPipeline::Shutdown()
     uniform_manager_ = nullptr;
 }
 
-uint32 RenderingPipeline::GetPrimitiveMeshId(PrimitiveInstance::Type primitive_type) const
+uint32 RenderingPipeline::GetPrimitiveMeshId(IRenderHardware* rhi, PrimitiveInstance primitive_instance)
 {
-    switch (primitive_type)
+    // TODO: Add caching logic and avoid generating GLMesh on each instantiation call
+    switch (primitive_instance.GetType())
     {
         case PrimitiveInstance::Type::BOX:
             return primitive_mesh_id_cache_[kBoxMeshIdIndex];
         case PrimitiveInstance::Type::CONE:
-            return primitive_mesh_id_cache_[kConeMeshIdIndex];
+        {
+            std::shared_ptr<MeshData> mesh_data = MeshGenerator::GenerateCone(primitive_instance.GetCone());
+            return LoadMesh(rhi, mesh_data.get());
+        }
         case PrimitiveInstance::Type::CYLINDER:
-            return primitive_mesh_id_cache_[kCylinderMeshIdIndex];
+        {
+            std::shared_ptr<MeshData> mesh_data = MeshGenerator::GenerateCylinder(primitive_instance.GetCylinder());
+            return LoadMesh(rhi, mesh_data.get());
+        }
         case PrimitiveInstance::Type::PLANE:
-            return primitive_mesh_id_cache_[kPlaneMeshIdIndex];
+        {
+            std::shared_ptr<MeshData> mesh_data = MeshGenerator::GeneratePlane(primitive_instance.GetPlane());
+            return LoadMesh(rhi, mesh_data.get());
+        }
         case PrimitiveInstance::Type::SPHERE:
-            return primitive_mesh_id_cache_[kSphereMeshIdIndex];
+        {
+            std::shared_ptr<MeshData> mesh_data = MeshGenerator::GenerateSphere(primitive_instance.GetSphere());
+            return LoadMesh(rhi, mesh_data.get());
+        }
         case PrimitiveInstance::Type::TORUS:
-            return primitive_mesh_id_cache_[kTorusMeshIdIndex];
+        {
+            std::shared_ptr<MeshData> mesh_data = MeshGenerator::GenerateTorus(primitive_instance.GetTorus());
+            return LoadMesh(rhi, mesh_data.get());
+        }
         default:
             // Box Mesh
             LOG_WARN(kTitle, "GetPrimitiveMeshId called with invalid primitive type. Returning box mesh by default.");

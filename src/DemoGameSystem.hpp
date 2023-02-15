@@ -91,27 +91,27 @@ public:
                 camera.position_ = default_camera_position_;
                 camera.orientation_ = math::Quaternion::Identity();
                 break;
-            case KeyCode::NUM_PAD_4:
+            case KeyCode::NUMBER_1:
                 // Move -x
                 transform.position_ += (-1.0F * horizontal_speed_);
                 break;
-            case KeyCode::NUM_PAD_6:
+            case KeyCode::NUMBER_2:
                 // Move +x
                 transform.position_ += horizontal_speed_;
                 break;
-            case KeyCode::NUM_PAD_8:
+            case KeyCode::NUMBER_3:
                 // Move +y
                 transform.position_ += vertical_speed_;
                 break;
-            case KeyCode::NUM_PAD_2:
+            case KeyCode::NUMBER_4:
                 // Move -y
                 transform.position_ += -1.0F * vertical_speed_;
                 break;
-            case KeyCode::NUM_PAD_1:
+            case KeyCode::NUMBER_5:
                 // Move -z
                 transform.position_ += -1.0F * forward_speed_;
                 break;
-            case KeyCode::NUM_PAD_3:
+            case KeyCode::NUMBER_6:
                 // Move +z
                 transform.position_ += forward_speed_;
                 break;
@@ -155,9 +155,8 @@ private:
         entt::registry& registry = GetCore()->GetRegistry();
 
         // Instantiate a root primitive
-        PrimitiveInstance root_primitive{};
         Torus root_shape{};
-        root_primitive.Set(root_shape);
+        PrimitiveInstance root_primitive{root_shape};
         Entity root_primitive_entity = GetInstantiator()->InstantiatePrimitive(root_primitive);
         Material& root_primitive_material = registry.get<Material>(root_primitive_entity);
         Material::Shaders root_primitive_material_shaders{};
@@ -169,9 +168,8 @@ private:
         root_primitive_material.visible_ = true;
 
         // Instantiate a child primitive
-        PrimitiveInstance primitive{};
         Torus shape{};
-        primitive.Set(shape);
+        PrimitiveInstance primitive{shape};
         Entity primitive_entity = GetInstantiator()->InstantiatePrimitive(primitive);
         Material& primitive_material = registry.get<Material>(primitive_entity);
         Material::Shaders primitive_material_shaders{};
@@ -185,22 +183,22 @@ private:
         // Incorporate parent-child hierarchy
         Transform& root_transform = registry.get<Transform>(root_primitive_entity);
         Transform& child_transform = registry.get<Transform>(primitive_entity);
-        child_transform.orientation_ = math::Quaternion::FromAngleAxis(math::Vec3f::Up(), math::Radian::FromDegree(90.0F));
-        child_transform.position_ = math::Vec3f(0.0F, 1.5F, 0.0F);
+        child_transform.local_orientation_ = math::Quaternion::FromAngleAxis(math::Vec3f::Up(), math::Radian::FromDegree(90.0F));
+        child_transform.local_position_ = math::Vec3f(0.0F, 1.5F, 0.0F);
         root_transform.children_.push_back(primitive_entity);
         child_transform.parent_ = root_primitive_entity;
 
-        math::Matrix4x4 transformation = math::Matrix4x4::Identity().Translate(math::Vec3f(5.0F, 0.0F, 0.0F));
+        math::Matrix4x4 transformation = math::Matrix4x4::Identity()
+                .Translate(math::Vec3f(5.0F, 0.0F, 0.0F));
         TransformSystem::UpdateTransform(registry, root_primitive_entity, transformation);
 
         // Instantiate the floor
-        PrimitiveInstance floor_primitive{};
         Plane plane{};
         plane.width_ = 32U;
         plane.height_ = 32U;
         plane.u_axis_ = math::Vec3f::Right();
         plane.v_axis_ = math::Vec3f::Back();
-        floor_primitive.Set(plane);
+        PrimitiveInstance floor_primitive{plane};
         Entity floor_entity = GetInstantiator()->InstantiatePrimitive(floor_primitive);
         Material& floor_material = registry.get<Material>(floor_entity);
         Material::Shaders floor_material_shaders{};
@@ -274,7 +272,6 @@ private:
             model_material.visible_ = true;
             model_material.specular_exponent_ = 32.0F;
             auto& transform = registry.get<Transform>(model_entity);
-            transform.scale_ = math::Vec3f(0.25F);
             transform.position_ = math::Vec3f(0.0F, -2.0F, 0.0F);
         }
     }

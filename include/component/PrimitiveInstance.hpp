@@ -48,18 +48,6 @@ namespace zero
         [[nodiscard]] Type GetType() const;
 
         /**
-         * @brief Change the primitive
-         */
-        ///@{
-        void Set(const Box& box);
-        void Set(const Sphere& sphere);
-        void Set(const Plane& plane);
-        void Set(const Cone& cone);
-        void Set(const Cylinder& cylinder);
-        void Set(const Torus& torus);
-        ///@}
-
-        /**
          * @brief Get the primitive data
          *
          * If the primitive instance type and the accessor do not match, a default constructed value is returned.

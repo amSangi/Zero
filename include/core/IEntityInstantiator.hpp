@@ -3,8 +3,8 @@
 #include <string>
 #include "component/Component.hpp"
 #include "component/Light.hpp"
-#include "component/PrimitiveInstance.hpp"
 #include "component/SkyDome.hpp"
+#include "component/PrimitiveInstance.hpp"
 
 namespace zero
 {
