@@ -276,5 +276,5 @@ void main()
     vec4 object_color = vec4(texture_color + u_diffuse_color.xyz, 1.0);
     vec4 light_color = ComputeLightColor(normal, vertex_to_eye);
 
-    out_color = object_color * light_color * 1;
+    out_color = object_color * light_color * ComputeCascadedShadowMap();
 }

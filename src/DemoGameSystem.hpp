@@ -221,7 +221,7 @@ private:
         // Instantiate directional light
         {
             DirectionalLight directional_light{};
-            directional_light.ambient_intensity_ = 1.0F;
+            directional_light.ambient_intensity_ = 0.65F;
             directional_light.diffuse_intensity_ = 0.25F;
             directional_light.color_ = math::Vec3f(1.0F, 1.0F, 1.0F);
             directional_light.direction_ = math::Vec3f(1.0F, -1.0F, 0.0F);

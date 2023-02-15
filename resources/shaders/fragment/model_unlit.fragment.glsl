@@ -168,5 +168,5 @@ void main()
     vec3 texture_color = texture(u_diffuse_texture, IN.texture_coordinate).xyz;
     vec4 object_color = vec4(texture_color + u_diffuse_color.xyz, 1.0);
 
-    out_color = object_color * ComputeCascadedShadowMap();
+    out_color = object_color * 1;
 }
