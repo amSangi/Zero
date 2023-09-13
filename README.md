@@ -13,3 +13,6 @@ Currently working on the Animation and Render Systems
 - EnTT - Used for the entity-component system
 - SDL - Used for cross-platform windowing and input handling
 - GoogleTest - Used for Unit Testing
+
+## Current Demo Screenshot
+![Demo Screenshot](demo_screenshot.png)
