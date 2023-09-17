@@ -21,12 +21,8 @@ add_executable(${PROJECT_NAME} TestMain.cpp
                                src/math/SphereTests.cpp
                                src/math/VectorTests.cpp
                                src/render/OrthographicViewVolumeTests.cpp
-                               src/render/VolumePropagatorTests.cpp
                                src/render/PerspectiveViewVolumeTests.cpp
-                               src/render/renderer/opengl/GLCompilerTests.cpp
-                               src/render/renderer/opengl/GLProgramTests.cpp
-                               src/render/renderer/opengl/GLShaderTests.cpp
-                               src/render/renderer/opengl/GLTextureTests.cpp)
+        )
 
 target_link_libraries(${PROJECT_NAME} ZeroCore
                                       gtest

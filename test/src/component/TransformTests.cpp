@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "component/Transform.hpp"
+#include "core/TransformSystem.hpp"
 #include "math/Matrix4x4.hpp"
 #include "math/Vector3.hpp"
 
@@ -8,12 +9,12 @@ using namespace zero;
 TEST(TestTransform, DefaultConstructor)
 {
     Transform transform;
-    EXPECT_EQ(transform.GetPosition(), math::Vec3f::Zero());
-    EXPECT_EQ(transform.GetLocalPosition(), math::Vec3f::Zero());
-    EXPECT_EQ(transform.GetOrientation(), math::Quaternion());
-    EXPECT_EQ(transform.GetLocalOrientation(), math::Quaternion());
-    EXPECT_EQ(transform.GetScale(), math::Vec3f::One());
-    EXPECT_EQ(transform.GetLocalScale(), math::Vec3f::One());
+    EXPECT_EQ(transform.position_, math::Vec3f::Zero());
+    EXPECT_EQ(transform.local_position_, math::Vec3f::Zero());
+    EXPECT_EQ(transform.orientation_, math::Quaternion());
+    EXPECT_EQ(transform.local_orientation_, math::Quaternion());
+    EXPECT_EQ(transform.scale_, math::Vec3f::One());
+    EXPECT_EQ(transform.local_scale_, math::Vec3f::One());
     EXPECT_TRUE(transform.parent_ == NullEntity);
     EXPECT_TRUE(transform.children_.empty());
 }
@@ -26,12 +27,12 @@ TEST(TestTransform, RootTransformConstructor)
                                                                math::Radian(0.0F),
                                                                math::Degree(90.0F).ToRadian());
     Transform transform(position, scale, orientation);
-    EXPECT_EQ(transform.GetPosition(), position);
-    EXPECT_EQ(transform.GetLocalPosition(), math::Vec3f::Zero());
-    EXPECT_EQ(transform.GetOrientation(), orientation);
-    EXPECT_EQ(transform.GetLocalOrientation(), math::Quaternion());
-    EXPECT_EQ(transform.GetScale(), scale);
-    EXPECT_EQ(transform.GetLocalScale(), math::Vec3f::One());
+    EXPECT_EQ(transform.position_, position);
+    EXPECT_EQ(transform.local_position_, math::Vec3f::Zero());
+    EXPECT_EQ(transform.orientation_, orientation);
+    EXPECT_EQ(transform.local_orientation_, math::Quaternion());
+    EXPECT_EQ(transform.scale_, scale);
+    EXPECT_EQ(transform.local_scale_, math::Vec3f::One());
     EXPECT_TRUE(transform.parent_ == NullEntity);
     EXPECT_TRUE(transform.children_.empty());
 }
@@ -58,12 +59,12 @@ TEST(TestTransform, ChildTransformConstructor)
                               local_child_scale,
                               local_child_orientation);
 
-    EXPECT_EQ(child_transform.GetPosition(), parent_position + local_child_position);
-    EXPECT_EQ(child_transform.GetLocalPosition(), local_child_position);
-    EXPECT_EQ(child_transform.GetOrientation(), (parent_orientation * local_child_orientation).Unit());
-    EXPECT_EQ(child_transform.GetLocalOrientation(), local_child_orientation);
-    EXPECT_EQ(child_transform.GetScale(), parent_scale * local_child_scale);
-    EXPECT_EQ(child_transform.GetLocalScale(), local_child_scale);
+    EXPECT_EQ(child_transform.position_, parent_position + local_child_position);
+    EXPECT_EQ(child_transform.local_position_, local_child_position);
+    EXPECT_EQ(child_transform.orientation_, (parent_orientation * local_child_orientation).Unit());
+    EXPECT_EQ(child_transform.local_orientation_, local_child_orientation);
+    EXPECT_EQ(child_transform.scale_, parent_scale * local_child_scale);
+    EXPECT_EQ(child_transform.local_scale_, local_child_scale);
 }
 
 TEST(TestTransform, WorldToLocalMatrix)
@@ -172,8 +173,8 @@ TEST(TestTransform, Translate)
 
     math::Vec3f expected_child_world_pos = parent_position + local_child_position + translation;
 
-    EXPECT_EQ(child_transform.GetPosition(), expected_child_world_pos);
-    EXPECT_EQ(child_transform.GetLocalPosition(), local_child_position);
+    EXPECT_EQ(child_transform.position_, expected_child_world_pos);
+    EXPECT_EQ(child_transform.local_position_, local_child_position);
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, expected_child_world_pos.x_,
                                                                        0.0F, 1.0F, 0.0F, expected_child_world_pos.y_,
                                                                        0.0F, 0.0F, 1.0F, expected_child_world_pos.z_,
@@ -200,8 +201,8 @@ TEST(TestTransform, LocalTranslate)
     math::Vec3f expected_child_world_pos = parent_position + local_child_position + translation;
     math::Vec3f expected_child_local_pos = local_child_position + translation;
 
-    EXPECT_EQ(child_transform.GetPosition(), expected_child_world_pos);
-    EXPECT_EQ(child_transform.GetLocalPosition(), expected_child_local_pos);
+    EXPECT_EQ(child_transform.position_, expected_child_world_pos);
+    EXPECT_EQ(child_transform.local_position_, expected_child_local_pos);
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(1.0F, 0.0F, 0.0F, expected_child_world_pos.x_,
                                                                        0.0F, 1.0F, 0.0F, expected_child_world_pos.y_,
                                                                        0.0F, 0.0F, 1.0F, expected_child_world_pos.z_,
@@ -233,8 +234,8 @@ TEST(TestTransform, Rotate)
 
     math::Quaternion expected_child_world_orientation = (parent_orientation * local_child_orientation * rotation);
 
-    EXPECT_EQ(child_transform.GetOrientation(), expected_child_world_orientation);
-    EXPECT_EQ(child_transform.GetLocalOrientation(), local_child_orientation);
+    EXPECT_EQ(child_transform.orientation_, expected_child_world_orientation);
+    EXPECT_EQ(child_transform.local_orientation_, local_child_orientation);
     auto rotation_matrix = expected_child_world_orientation.GetRotationMatrix();
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(rotation_matrix));
 }
@@ -265,8 +266,8 @@ TEST(TestTransform, LocalRotate)
     math::Quaternion expected_child_world_orientation = (parent_orientation * local_child_orientation * rotation);
     math::Quaternion expected_child_local_orientation = (local_child_orientation * rotation);
 
-    EXPECT_EQ(child_transform.GetOrientation(), expected_child_world_orientation);
-    EXPECT_EQ(child_transform.GetLocalOrientation(), expected_child_local_orientation);
+    EXPECT_EQ(child_transform.orientation_, expected_child_world_orientation);
+    EXPECT_EQ(child_transform.local_orientation_, expected_child_local_orientation);
     auto rotation_matrix = expected_child_world_orientation.GetRotationMatrix();
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(rotation_matrix));
 }
@@ -290,8 +291,8 @@ TEST(TestTransform, Scale)
 
     math::Vec3f expected_child_world_scale = parent_scale * local_child_scale * scale;
 
-    EXPECT_EQ(child_transform.GetScale(), expected_child_world_scale);
-    EXPECT_EQ(child_transform.GetLocalScale(), local_child_scale);
+    EXPECT_EQ(child_transform.scale_, expected_child_world_scale);
+    EXPECT_EQ(child_transform.local_scale_, local_child_scale);
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(expected_child_world_scale.x_, 0.0F, 0.0F, 0.0F,
                                                                        0.0F, expected_child_world_scale.y_, 0.0F, 0.0F,
                                                                        0.0F, 0.0F, expected_child_world_scale.z_, 0.0F,
@@ -318,8 +319,8 @@ TEST(TestTransform, LocalScale)
     math::Vec3f expected_child_world_scale = parent_scale * local_child_scale * scale;
     math::Vec3f expected_child_local_scale = local_child_scale * scale;
 
-    EXPECT_EQ(child_transform.GetScale(), expected_child_world_scale);
-    EXPECT_EQ(child_transform.GetLocalScale(), expected_child_local_scale);
+    EXPECT_EQ(child_transform.scale_, expected_child_world_scale);
+    EXPECT_EQ(child_transform.local_scale_, expected_child_local_scale);
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), math::Matrix4x4(expected_child_world_scale.x_, 0.0F, 0.0F, 0.0F,
                                                                        0.0F, expected_child_world_scale.y_, 0.0F, 0.0F,
                                                                        0.0F, 0.0F, expected_child_world_scale.z_, 0.0F,
@@ -363,12 +364,12 @@ TEST(TestTransform, World_TRS_Transformation)
                                   .Rotate(expected_orientation)
                                   .Translate(expected_position);
 
-    EXPECT_EQ(child_transform.GetPosition(), expected_position);
-    EXPECT_EQ(child_transform.GetScale(), expected_scale);
-    EXPECT_EQ(child_transform.GetOrientation(), expected_orientation);
-    EXPECT_EQ(child_transform.GetLocalPosition(), math::Vec3f::Zero());
-    EXPECT_EQ(child_transform.GetLocalScale(), math::Vec3f::One());
-    EXPECT_EQ(child_transform.GetLocalOrientation(), math::Quaternion());
+    EXPECT_EQ(child_transform.position_, expected_position);
+    EXPECT_EQ(child_transform.scale_, expected_scale);
+    EXPECT_EQ(child_transform.orientation_, expected_orientation);
+    EXPECT_EQ(child_transform.local_position_, math::Vec3f::Zero());
+    EXPECT_EQ(child_transform.local_scale_, math::Vec3f::One());
+    EXPECT_EQ(child_transform.local_orientation_, math::Quaternion());
 
     EXPECT_EQ(child_transform.GetLocalToParentMatrix(), math::Matrix4x4::Identity());
     EXPECT_EQ(child_transform.GetLocalToWorldMatrix(), expected_local_to_world_matrix);
@@ -413,13 +414,13 @@ TEST(TestTransform, Local_TRS_Transformation)
     auto expected_scale = expected_local_scale * parent_scale;
     auto expected_orientation = expected_local_orientation * parent_orientation;
 
-    EXPECT_EQ(child_transform.GetPosition(), expected_position);
-    EXPECT_EQ(child_transform.GetScale(), expected_scale);
-    EXPECT_EQ(child_transform.GetOrientation(), expected_orientation);
+    EXPECT_EQ(child_transform.position_, expected_position);
+    EXPECT_EQ(child_transform.scale_, expected_scale);
+    EXPECT_EQ(child_transform.orientation_, expected_orientation);
 
-    EXPECT_EQ(child_transform.GetLocalPosition(), expected_local_position);
-    EXPECT_EQ(child_transform.GetLocalScale(), expected_scale);
-    EXPECT_EQ(child_transform.GetLocalOrientation(), expected_local_orientation);
+    EXPECT_EQ(child_transform.local_position_, expected_local_position);
+    EXPECT_EQ(child_transform.local_scale_, expected_scale);
+    EXPECT_EQ(child_transform.local_orientation_, expected_local_orientation);
 
     auto expected_local_to_parent_matrix = math::Matrix4x4::Identity()
             .Scale(expected_local_scale)
