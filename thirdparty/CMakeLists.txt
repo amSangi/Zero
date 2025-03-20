@@ -18,5 +18,9 @@ add_subdirectory(assimp)
 # Entt
 add_subdirectory(entt)
 
+# SDL
+add_subdirectory(SDL)
+add_subdirectory(SDL_image)
+
 # GoogleTest
 add_subdirectory(googletest)

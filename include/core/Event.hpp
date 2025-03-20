@@ -60,11 +60,11 @@ namespace zero
         /**
          * @brief The x coordinate of the mouse relative to the window
          */
-        int32 x_;
+        float x_;
         /**
          * @brief The y coordinate of the mouse relative to the window
          */
-        int32 y_;
+        float y_;
         /**
          * @brief The number of times the button was clicked
          */
@@ -80,19 +80,19 @@ namespace zero
         /**
          * @brief The x coordinate of the mouse relative to the window
          */
-        int32 x_;
+        float x_;
         /**
          * @brief The y coordinate of the mouse relative to the window
          */
-        int32 y_;
+        float y_;
         /**
          * @brief Relative motion in the x direction
          */
-        int32 relative_x_motion_;
+        float relative_x_motion_;
         /**
          * @brief Relative motion in the y direction
          */
-        int32 relative_y_motion_;
+        float relative_y_motion_;
 
     }; // struct MouseMoveEvent
 
@@ -106,13 +106,13 @@ namespace zero
          * Positive indicates the scroll is to the right
          * Negative indicates the scroll is to the left
          */
-        int32 x_;
+        float x_;
         /**
          * @brief The amount scrolled vertically.
          * Positive indicates the scroll is away from the user
          * Negative indicates the scroll is towards the user
          */
-        int32 y_;
+        float y_;
 
     }; // struct MouseWheelEvent
 

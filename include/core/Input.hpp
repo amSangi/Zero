@@ -48,13 +48,13 @@ namespace zero
          * @brief Get the mouse position relative to the focus window
          * @return the mouse position relative to the focus window
          */
-        [[nodiscard]] static math::Vec2i GetMousePosition();
+        [[nodiscard]] static math::Vec2f GetMousePosition();
 
         /**
          * @brief Get the global mouse position relative to the global desktop
          * @return the mouse position relative to the desktop
          */
-        [[nodiscard]] static math::Vec2i GetGlobalMousePosition();
+        [[nodiscard]] static math::Vec2f GetGlobalMousePosition();
 
     }; // class Input
 

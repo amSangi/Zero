@@ -1,6 +1,5 @@
 #include "render/Image.hpp"
-#include <SDL_surface.h>
-#include <SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 
 namespace zero::render
 {
@@ -32,7 +31,7 @@ bool Image::Release()
     {
         return false;
     }
-    SDL_FreeSurface(surface_);
+    SDL_DestroySurface(surface_);
     surface_ = nullptr;
     return true;
 }
@@ -62,16 +61,6 @@ zero::uint32 Image::GetPitch() const
     return surface_ ? surface_->pitch : 0;
 }
 
-zero::uint8 Image::BitsPerPixel() const
-{
-    return surface_ ? surface_->format->BitsPerPixel : 0;
-}
-
-zero::uint8 Image::BytesPerPixel() const
-{
-    return surface_ ? surface_->format->BytesPerPixel : 0;
-}
-
 Image::PixelFormat Image::GetPixelFormat() const
 {
     if (!surface_)
@@ -79,19 +68,19 @@ Image::PixelFormat Image::GetPixelFormat() const
         return PixelFormat::UNDEFINED;
     }
 
-    switch (surface_->format->format)
+    switch (surface_->format)
     {
-        case SDL_PIXELFORMAT_BGR555:
+        case SDL_PIXELFORMAT_XBGR1555:
         case SDL_PIXELFORMAT_BGR565:
         case SDL_PIXELFORMAT_BGR24:
-        case SDL_PIXELFORMAT_BGR888:
+        case SDL_PIXELFORMAT_XBGR8888:
             return PixelFormat::BGR;
         case SDL_PIXELFORMAT_RGB332:
-        case SDL_PIXELFORMAT_RGB444:
-        case SDL_PIXELFORMAT_RGB555:
+        case SDL_PIXELFORMAT_XRGB4444:
+        case SDL_PIXELFORMAT_XRGB1555:
         case SDL_PIXELFORMAT_RGB565:
         case SDL_PIXELFORMAT_RGB24:
-        case SDL_PIXELFORMAT_RGB888:
+        case SDL_PIXELFORMAT_XRGB8888:
             return PixelFormat::RGB;
         case SDL_PIXELFORMAT_RGBA4444:
         case SDL_PIXELFORMAT_RGBA5551:

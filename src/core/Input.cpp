@@ -1,13 +1,13 @@
 #include "core/Input.hpp"
-#include <SDL_keyboard.h>
-#include <SDL_mouse.h>
+#include <SDL3/SDL_keyboard.h>
+#include <SDL3/SDL_mouse.h>
 
 namespace zero
 {
 
 bool Input::IsKeyDown(KeyCode key_code)
 {
-    const uint8* keyboard_state = SDL_GetKeyboardState(nullptr);
+    const bool* keyboard_state = SDL_GetKeyboardState(nullptr);
     return keyboard_state[static_cast<SDL_Scancode>(key_code)];
 }
 
@@ -41,16 +41,16 @@ bool Input::IsMouseButtonUp(MouseButton mouse_button)
     return !IsMouseButtonDown(mouse_button);
 }
 
-math::Vec2i Input::GetMousePosition()
+math::Vec2f Input::GetMousePosition()
 {
-    math::Vec2i position{};
+    math::Vec2f position{};
     SDL_GetMouseState(&position.x_, &position.y_);
     return position;
 }
 
-math::Vec2i Input::GetGlobalMousePosition()
+math::Vec2f Input::GetGlobalMousePosition()
 {
-    math::Vec2i position{};
+    math::Vec2f position{};
     SDL_GetGlobalMouseState(&position.x_, &position.y_);
     return position;
 }

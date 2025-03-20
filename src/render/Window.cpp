@@ -1,7 +1,7 @@
 #include "render/Window.hpp"
 #include "render/renderer/opengl/OpenGL.hpp"
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL3/SDL.h>
+#include <SDL3_image/SDL_image.h>
 
 namespace zero::render
 {
@@ -13,6 +13,7 @@ Window::Window(WindowConfig config)
 {
 }
 
+
 Window::~Window()
 {
     Cleanup();
@@ -21,10 +22,10 @@ Window::~Window()
 void Window::Initialize()
 {
 
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS);
 
     // Get SDL window flags
-    uint32 window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+    uint32 window_flags = SDL_WINDOW_OPENGL;
     switch (config_.window_mode_)
     {
         case WindowMode::FULLSCREEN:
@@ -63,8 +64,6 @@ void Window::Initialize()
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES , 4);
         sdl_window_ = SDL_CreateWindow(config_.title_.c_str(),
-                                       SDL_WINDOWPOS_CENTERED,
-                                       SDL_WINDOWPOS_CENTERED,
                                        static_cast<int>(config_.width_),
                                        static_cast<int>(config_.height_),
                                        window_flags);
@@ -125,7 +124,7 @@ void Window::Cleanup()
 {
     if (sdl_gl_context_)
     {
-        SDL_GL_DeleteContext(sdl_gl_context_);
+        SDL_GL_DestroyContext(sdl_gl_context_);
         sdl_gl_context_ = nullptr;
     }
 

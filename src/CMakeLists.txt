@@ -74,7 +74,9 @@ add_library(${PROJECT_NAME}
 
 ## Link Libraries ##
 target_link_libraries(${PROJECT_NAME} EnTT
-                                      assimp
-                                      ${OPENGL_gl_LIBRARY}
-                                      ${SDL2_LIBRARY}
-                                      ${SDL2_IMAGE_LIBRARIES})
+        assimp
+        SDL3-static
+        SDL3_image::SDL3_image
+        ${GLEW_LIBRARIES}
+        ${OPENGL_gl_LIBRARY}
+)

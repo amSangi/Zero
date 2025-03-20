@@ -1,7 +1,7 @@
 #include "engine/Engine.hpp"
 #include "core/Logger.hpp"
 #include "core/TransformSystem.hpp"
-#include <SDL_events.h>
+#include <SDL3/SDL_events.h>
 
 
 namespace zero
@@ -88,7 +88,7 @@ void Engine::TickEvents()
     SDL_Event event{};
     while (SDL_PollEvent(&event))
     {
-        if (event.type == SDL_QUIT)
+        if (event.type == SDL_EVENT_QUIT)
         {
             is_done_ = true;
         }

@@ -7,3 +7,9 @@
 [submodule "thirdparty/assimp"]
 	path = thirdparty/assimp
 	url = https://github.com/amSangi/assimp.git
+[submodule "thirdparty/SDL"]
+	path = thirdparty/SDL
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "thirdparty/SDL_image"]
+	path = thirdparty/SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git

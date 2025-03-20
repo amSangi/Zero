@@ -80,18 +80,6 @@ namespace zero::render
         [[nodiscard]] uint32 GetPitch() const;
 
         /**
-         * @brief Get the number of bits per pixel.
-         * @return the bits per pixel. 0 if not loaded.
-         */
-        [[nodiscard]] uint8 BitsPerPixel() const;
-
-        /**
-         * @brief Get the number of bytes per pixel.
-         * @return the bytes per pixel. 0 if not loaded.
-         */
-        [[nodiscard]] uint8 BytesPerPixel() const;
-
-        /**
          * @brief Get the pixel format.
          * @return the pixel format. PIXEL_FORMAT_UNDEFINED if not loaded.
          */

@@ -12,16 +12,15 @@ set(ZERO_TEST_OUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 ## Package Dependencies ##
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 find_package(OpenGL REQUIRED)
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-
+find_package(GLEW REQUIRED)
 
 ## Header Includes ##
 include_directories(include)
-include_directories(thirdparty/entt/src)
 include_directories(${GLEW_INCLUDE_DIRS})
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
+include_directories(thirdparty/entt/src)
+include_directories(thirdparty/SDL/include)
+include_directories(thirdparty/SDL_image/include)
+include_directories(thirdparty/SDL_image/include)
 
 
 ## Subdirectories ##
@@ -33,5 +32,5 @@ add_subdirectory(test)
 ## Create Zero EXE ##
 set(EXECUTABLE_OUTPUT_PATH ${ZERO_EXE_OUT_PATH})
 
-add_executable(${PROJECT_NAME} src/Main.cpp include/render/renderer/UniformManager.hpp)
+add_executable(${PROJECT_NAME} src/Main.cpp)
 target_link_libraries(${PROJECT_NAME} ZeroCore)

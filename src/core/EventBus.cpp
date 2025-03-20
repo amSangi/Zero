@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "core/EventBus.hpp"
-#include <SDL_events.h>
+#include <SDL3/SDL_events.h>
 
 namespace zero
 {
@@ -12,57 +12,57 @@ KeyCode SDLKeyCodeToZeroKeyCode(SDL_Keycode sdl_key_code)
         //////////////////////////////////////////////////
         ///// Alphabet Keys
         //////////////////////////////////////////////////
-        case SDLK_a:
+        case SDLK_A:
             return KeyCode::A;
-        case SDLK_b:
+        case SDLK_B:
             return KeyCode::B;
-        case SDLK_c:
+        case SDLK_C:
             return KeyCode::C;
-        case SDLK_d:
+        case SDLK_D:
             return KeyCode::D;
-        case SDLK_e:
+        case SDLK_E:
             return KeyCode::E;
-        case SDLK_f:
+        case SDLK_F:
             return KeyCode::F;
-        case SDLK_g:
+        case SDLK_G:
             return KeyCode::G;
-        case SDLK_h:
+        case SDLK_H:
             return KeyCode::H;
-        case SDLK_i:
+        case SDLK_I:
             return KeyCode::I;
-        case SDLK_j:
+        case SDLK_J:
             return KeyCode::J;
-        case SDLK_k:
+        case SDLK_K:
             return KeyCode::K;
-        case SDLK_l:
+        case SDLK_L:
             return KeyCode::L;
-        case SDLK_m:
+        case SDLK_M:
             return KeyCode::M;
-        case SDLK_n:
+        case SDLK_N:
             return KeyCode::N;
-        case SDLK_o:
+        case SDLK_O:
             return KeyCode::O;
-        case SDLK_p:
+        case SDLK_P:
             return KeyCode::P;
-        case SDLK_q:
+        case SDLK_Q:
             return KeyCode::Q;
-        case SDLK_r:
+        case SDLK_R:
             return KeyCode::R;
-        case SDLK_s:
+        case SDLK_S:
             return KeyCode::S;
-        case SDLK_t:
+        case SDLK_T:
             return KeyCode::T;
-        case SDLK_u:
+        case SDLK_U:
             return KeyCode::U;
-        case SDLK_v:
+        case SDLK_V:
             return KeyCode::V;
-        case SDLK_w:
+        case SDLK_W:
             return KeyCode::W;
-        case SDLK_x:
+        case SDLK_X:
             return KeyCode::X;
-        case SDLK_y:
+        case SDLK_Y:
             return KeyCode::Y;
-        case SDLK_z:
+        case SDLK_Z:
             return KeyCode::Z;
 
         //////////////////////////////////////////////////
@@ -118,7 +118,7 @@ KeyCode SDLKeyCodeToZeroKeyCode(SDL_Keycode sdl_key_code)
             return KeyCode::PLUS;
         case SDLK_COLON:
             return KeyCode::COLON;
-        case SDLK_QUOTEDBL:
+        case SDLK_DBLAPOSTROPHE:
             return KeyCode::DOUBLE_QUOTE;
         case SDLK_LESS:
             return KeyCode::LESS;
@@ -152,9 +152,9 @@ KeyCode SDLKeyCodeToZeroKeyCode(SDL_Keycode sdl_key_code)
             return KeyCode::BACKSLASH;
         case SDLK_SEMICOLON:
             return KeyCode::SEMI_COLON;
-        case SDLK_QUOTE:
+        case SDLK_APOSTROPHE:
             return KeyCode::SINGLE_QUOTE;
-        case SDLK_BACKQUOTE:
+        case SDLK_GRAVE:
             return KeyCode::BACK_QUOTE;
         case SDLK_COMMA:
             return KeyCode::COMMA;
@@ -271,24 +271,25 @@ void EventBus::Dispatch(const SDL_Event& sdl_event)
 {
 	switch (sdl_event.type)
 	{
-		case SDL_WINDOWEVENT:
-			DispatchWindowEvent(&sdl_event.window);
-			break;
-		case SDL_KEYDOWN:
-		case SDL_KEYUP:
+		case SDL_EVENT_KEY_DOWN:
+		case SDL_EVENT_KEY_UP:
 			DispatchKeyEvent(&sdl_event.key);
 			break;
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
 			DispatchMouseButtonEvent(&sdl_event.button);
 			break;
-		case SDL_MOUSEMOTION:
+		case SDL_EVENT_MOUSE_MOTION:
 			DispatchMouseMoveEvent(&sdl_event.motion);
 			break;
-		case SDL_MOUSEWHEEL:
+		case SDL_EVENT_MOUSE_WHEEL:
 			DispatchMouseWheelEvent(&sdl_event.wheel);
 			break;
 		default:
+            if (sdl_event.type >= SDL_EVENT_WINDOW_FIRST && sdl_event.type <= SDL_EVENT_WINDOW_LAST)
+            {
+                DispatchWindowEvent(&sdl_event.window);
+            }
 			break;
 	}
 }
@@ -298,46 +299,46 @@ void EventBus::DispatchWindowEvent(const SDL_WindowEvent* window_event)
     WindowEvent zero_window_event{};
     switch (window_event->type)
     {
-        case SDL_WINDOWEVENT_SHOWN:
+        case SDL_EVENT_WINDOW_SHOWN:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_SHOWN;
             break;
-        case SDL_WINDOWEVENT_HIDDEN:
+        case SDL_EVENT_WINDOW_HIDDEN:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_HIDDEN;
             break;
-        case SDL_WINDOWEVENT_EXPOSED:
+        case SDL_EVENT_WINDOW_EXPOSED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_EXPOSED;
             break;
-        case SDL_WINDOWEVENT_MOVED:
+        case SDL_EVENT_WINDOW_MOVED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_MOVED;
             break;
-        case SDL_WINDOWEVENT_RESIZED:
+        case SDL_EVENT_WINDOW_RESIZED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_RESIZED;
             break;
-        case SDL_WINDOWEVENT_SIZE_CHANGED:
+        case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_SIZE_CHANGED;
             break;
-        case SDL_WINDOWEVENT_MINIMIZED:
+        case SDL_EVENT_WINDOW_MINIMIZED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_MINIMIZED;
             break;
-        case SDL_WINDOWEVENT_MAXIMIZED:
+        case SDL_EVENT_WINDOW_MAXIMIZED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_MAXIMIZED;
             break;
-        case SDL_WINDOWEVENT_RESTORED:
+        case SDL_EVENT_WINDOW_RESTORED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_RESTORED;
             break;
-        case SDL_WINDOWEVENT_ENTER:
+        case SDL_EVENT_WINDOW_MOUSE_ENTER:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_MOUSE_ENTER;
             break;
-        case SDL_WINDOWEVENT_LEAVE:
+        case SDL_EVENT_WINDOW_MOUSE_LEAVE:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_MOUSE_LEAVE;
             break;
-        case SDL_WINDOWEVENT_FOCUS_GAINED:
+        case SDL_EVENT_WINDOW_FOCUS_GAINED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_KEYBOARD_FOCUS_GAINED;
             break;
-        case SDL_WINDOWEVENT_FOCUS_LOST:
+        case SDL_EVENT_WINDOW_FOCUS_LOST:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_KEYBOARD_FOCUS_LOST;
             break;
-        case SDL_WINDOWEVENT_CLOSE:
+        case SDL_EVENT_WINDOW_DESTROYED:
             zero_window_event.type_ = WindowEvent::Type::WINDOW_CLOSE;
             break;
         default:
@@ -355,20 +356,28 @@ void EventBus::DispatchWindowEvent(const SDL_WindowEvent* window_event)
 
 void EventBus::DispatchKeyEvent(const SDL_KeyboardEvent* keyboard_event)
 {
-    KeyCode key_code = SDLKeyCodeToZeroKeyCode(keyboard_event->keysym.sym);
-    if (keyboard_event->state == SDL_PRESSED)
+    KeyCode key_code = SDLKeyCodeToZeroKeyCode(keyboard_event->key);
+    switch (keyboard_event->type)
     {
-        for (const auto& event_handler : key_pressed_listeners_)
+        case SDL_EVENT_KEY_DOWN:
         {
-            event_handler->OnKeyPressed(key_code);
+            for (const auto& event_handler : key_pressed_listeners_)
+            {
+                event_handler->OnKeyPressed(key_code);
+            }
+            break;
         }
-    }
-    else
-    {
-        for (const auto& event_handler : key_released_listeners_)
+        case SDL_EVENT_KEY_UP:
         {
-            event_handler->OnKeyReleased(key_code);
+            for (const auto& event_handler : key_released_listeners_)
+            {
+                event_handler->OnKeyReleased(key_code);
+            }
+            break;
         }
+        default:
+            // Do nothing
+            break;
     }
 }
 
@@ -399,19 +408,27 @@ void EventBus::DispatchMouseButtonEvent(const SDL_MouseButtonEvent* mouse_button
     zero_mouse_button_event.x_ = mouse_button_event->x;
     zero_mouse_button_event.y_ = mouse_button_event->y;
     zero_mouse_button_event.click_count_ = mouse_button_event->clicks;
-    if (mouse_button_event->state == SDL_PRESSED)
+    switch (mouse_button_event->type)
     {
-        for (const auto& event_handler : mouse_button_pressed_listeners_)
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
         {
-            event_handler->OnMouseButtonPressed(zero_mouse_button_event);
+            for (const auto& event_handler : mouse_button_pressed_listeners_)
+            {
+                event_handler->OnMouseButtonPressed(zero_mouse_button_event);
+            }
+            break;
         }
-    }
-    else
-    {
-        for (const auto& event_handler : mouse_button_released_listeners_)
+        case SDL_EVENT_MOUSE_BUTTON_UP:
         {
-            event_handler->OnMouseButtonReleased(zero_mouse_button_event);
+            for (const auto& event_handler : mouse_button_released_listeners_)
+            {
+                event_handler->OnMouseButtonReleased(zero_mouse_button_event);
+            }
+            break;
         }
+        default:
+            // Do nothing
+            break;
     }
 }
 
