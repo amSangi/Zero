@@ -48,8 +48,8 @@ namespace zero::render
          * @brief The shadow map dimensions
          */
         ///@{
-        static constexpr uint32 kShadowMapWidth = 1024U;
-        static constexpr uint32 kShadowMapHeight = 1024U;
+        static constexpr uint32 kShadowMapWidth = 8192;
+        static constexpr uint32 kShadowMapHeight = 8192;
         ///@}
 
     }; // class Constants

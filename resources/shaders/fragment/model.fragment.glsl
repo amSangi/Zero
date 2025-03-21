@@ -137,12 +137,10 @@ out vec4 out_color;
 //////////////////////////////////////////////////
 float ComputeCascadeShadowFactor(uint cascade_index, vec4 shadow_coordinate)
 {
+    // Add bias to prevent self-shadowing
+    shadow_coordinate.z -= 0.001;
     float shadow_factor = textureProj(u_cascaded_shadow_map[cascade_index], shadow_coordinate);
-    if (shadow_factor == 0.0)
-    {
-        return 0.65;
-    }
-    return 1.0;
+    return shadow_factor == 0.0 ? 0.65 : 1.0;
 }
 
 float ComputeCascadedShadowMap()

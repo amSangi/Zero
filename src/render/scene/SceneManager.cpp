@@ -149,11 +149,21 @@ std::vector<Entity> SceneManager::GetRenderableEntities(const Camera& camera, co
 
 std::array<std::vector<Entity>, Constants::kShadowCascadeCount> SceneManager::GetShadowCastingEntities(const entt::registry& registry)
 {
+
 	std::array<std::vector<Entity>, Constants::kShadowCascadeCount> shadow_casting_renderables;
-	std::vector<math::Box> world_bounding_boxes = cascaded_shadow_map_->GetWorldBoundingBoxes();
+	const std::vector<math::Box> world_bounding_boxes = cascaded_shadow_map_->GetWorldBoundingBoxes();
+	const math::Vec3f light_direction = cascaded_shadow_map_->GetLightDirection();
 	for (uint32 cascade_index = 0; cascade_index < Constants::kShadowCascadeCount; ++cascade_index)
 	{
-		const math::Box& world_bounding_box = world_bounding_boxes[cascade_index];
+		// The amount the shadow map's bounding box is increased to avoid culling shadow casting entities
+		constexpr float bounding_box_expansion_factor = 2.0F;
+
+		math::Box world_bounding_box = world_bounding_boxes[cascade_index];
+
+		// Avoid culling shadow casting entities that are just outside the world bounding box of the cascaded shadow map
+		// by increasing the size of the box in the opposite direction of the light.
+		world_bounding_box.min_ -= light_direction * bounding_box_expansion_factor;
+
 		// Cull shadow casting renderables for the world bounding box
 		shadow_casting_renderables[cascade_index] = CullingManager::GetShadowCastingEntities(world_bounding_box, registry);
 	}

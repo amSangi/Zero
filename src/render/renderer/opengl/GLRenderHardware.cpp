@@ -97,7 +97,7 @@ void GLRenderHardware::Initialize()
                      0,                              // Border. Must be 0.
                      GL_DEPTH_COMPONENT,             // Format of the pixel data.
                      GL_FLOAT,                       // Data type of the pixel data.
-                     nullptr);                       // Pointer to the image data in memory.
+                     nullptr);                 // Pointer to the image data in memory.
 
         // Associate a separate frame buffer for each shadow map texture
         GLuint shadow_map_frame_buffer_id = 0;

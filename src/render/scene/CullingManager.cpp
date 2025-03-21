@@ -17,23 +17,13 @@ std::vector<Entity> CullingManager::GetRenderableEntities(const Camera& camera, 
 
 std::vector<Entity> CullingManager::GetShadowCastingEntities(const math::Box& box, const entt::registry& registry)
 {
-	// Allow for larger distance between bounding box and entity volume to avoid disappearing shadows
-	// when entity is not in the bounding box but the shadow is
-	constexpr float cull_border_distance = 40.0F;
-
-	OrthographicViewVolume culler{box.min_, box.max_};
-	culler.SetPadding(cull_border_distance);
+	const OrthographicViewVolume culler{box.min_, box.max_};
 	return CullEntities(&culler, registry);
 }
 
 std::vector<Entity> CullingManager::GetViewableEntities(const Camera& camera, const entt::registry& registry)
 {
-	// Allow for small margin of error between bounding volume and entity volume to allow
-	// for smoother disappearing entities
-	constexpr float cull_border_distance = 5.0F;
-
-	auto culler = ViewVolumeBuilder::create(camera);
-	culler->SetPadding(cull_border_distance);
+	const std::unique_ptr<IViewVolume> culler = ViewVolumeBuilder::create(camera);
 	return CullEntities(culler.get(), registry);
 }
 

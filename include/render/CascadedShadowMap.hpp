@@ -32,7 +32,7 @@ namespace zero::render
         ~CascadedShadowMap() = default;
 
         /**
-         * @brief Set the maximum far clip for shadows
+         * @brief Set the maximum far clip for shadows.
          *
          * Shadows beyond this z coordinate will not have shadows.
          * If this is not set, the camera far clip will be used
@@ -87,6 +87,12 @@ namespace zero::render
          */
         [[nodiscard]] std::vector<float> GetViewFarBounds() const;
 
+        /**
+         * @brief Get the direction of the directional light this Shadow Map is based on
+         * @return
+         */
+        [[nodiscard]] const math::Vec3f& GetLightDirection() const;
+
     private:
         /**
          * @brief Compute the far z boundary of each cascade
@@ -113,6 +119,7 @@ namespace zero::render
         std::vector<math::Box> world_bounding_boxes_;
         std::vector<float> cascade_splits_;
         std::vector<float> view_far_bounds_;
+        math::Vec3f light_direction_;
         float maximum_far_clip_;
 
     }; // class CascadedShadowMap

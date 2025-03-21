@@ -3,12 +3,12 @@
 namespace zero::render
 {
 
-GLSampler::GLSampler(GLuint sampler_id)
+GLSampler::GLSampler(const GLuint sampler_id)
 : id_(sampler_id)
 {
 }
 
-void GLSampler::SetWrappingS(Wrapping wrapping)
+void GLSampler::SetWrappingS(const Wrapping wrapping)
 {
     switch (wrapping)
     {
@@ -27,7 +27,7 @@ void GLSampler::SetWrappingS(Wrapping wrapping)
     }
 }
 
-void GLSampler::SetWrappingT(Wrapping wrapping)
+void GLSampler::SetWrappingT(const Wrapping wrapping)
 {
     switch (wrapping)
     {
@@ -46,7 +46,7 @@ void GLSampler::SetWrappingT(Wrapping wrapping)
     }
 }
 
-void GLSampler::SetWrappingR(Wrapping wrapping)
+void GLSampler::SetWrappingR(const Wrapping wrapping)
 {
     switch (wrapping)
     {
@@ -65,7 +65,7 @@ void GLSampler::SetWrappingR(Wrapping wrapping)
     }
 }
 
-void GLSampler::SetMinificationFilter(Filter filter)
+void GLSampler::SetMinificationFilter(const Filter filter)
 {
     switch (filter)
     {
@@ -90,7 +90,7 @@ void GLSampler::SetMinificationFilter(Filter filter)
     }
 }
 
-void GLSampler::SetMagnificationFilter(Filter filter)
+void GLSampler::SetMagnificationFilter(const Filter filter)
 {
     switch (filter)
     {

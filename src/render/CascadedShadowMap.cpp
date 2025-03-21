@@ -11,6 +11,7 @@ CascadedShadowMap::CascadedShadowMap(uint32 cascade_count)
 , world_bounding_boxes_(cascade_count_, math::Box::Unit())
 , cascade_splits_(cascade_count_, 0.0F)
 , view_far_bounds_(cascade_count_, 0.0F)
+, light_direction_(math::Vec3f::Zero())
 , maximum_far_clip_(std::numeric_limits<float>::max())
 {
 }
@@ -30,6 +31,7 @@ void CascadedShadowMap::Update(const Camera& camera, const DirectionalLight& dir
         return;
     }
     cached_camera_ = camera;
+    light_direction_ = directional_light.direction_;
     UpdateCascadeSplits(camera);
     UpdateMatrices(camera, directional_light);
     UpdateTextureMatrices();
@@ -59,7 +61,7 @@ void CascadedShadowMap::UpdateCascadeSplits(const Camera& camera)
 
         // Compute distance in light view coordinates (Looking down negative z axis)
         // The more negative the further away from the light
-        view_far_bounds_[i] = distance * -1.0F;
+        view_far_bounds_[i] = -distance;
     }
 }
 
@@ -222,6 +224,11 @@ std::vector<math::Box> CascadedShadowMap::GetWorldBoundingBoxes() const
 std::vector<float> CascadedShadowMap::GetViewFarBounds() const
 {
     return view_far_bounds_;
+}
+
+const math::Vec3f& CascadedShadowMap::GetLightDirection() const
+{
+    return light_direction_;
 }
 
 } // namespace zero::render

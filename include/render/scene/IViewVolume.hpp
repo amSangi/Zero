@@ -29,21 +29,21 @@ namespace zero::render
         /**
          * @brief Is the point outside the view volume?
          * @param point the point
-         * @return true if the point is outside the view volume. Otherwise false.
+         * @return true if the point is outside the view volume. Otherwise, false.
          */
         [[nodiscard]] virtual bool IsCulled(const math::Vec3f& point) const = 0;
 
         /**
-         * @brief Is the sphere outside of the view volume?
+         * @brief Is the sphere outside the view volume?
          * @param sphere the sphere
-         * @return true if the sphere is outside the view volume. Otherwise false.
+         * @return true if the sphere is outside the view volume. Otherwise, false.
          */
         [[nodiscard]] virtual bool IsCulled(const math::Sphere& sphere) const = 0;
 
         /**
          * @brief Is the box outside the view volume?
          * @param box the box
-         * @return true if the box is outside the view volume. Otherwise false.
+         * @return true if the box is outside the view volume. Otherwise, false.
          */
         [[nodiscard]] virtual bool IsCulled(const math::Box& box) const = 0;
 

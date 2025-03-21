@@ -41,11 +41,11 @@ void CascadedShadowMapRenderPass::Render(IRenderView* render_view, IRenderHardwa
     LOG_DEBUG(kTitle, "Rendering cascade index: " + std::to_string(cascade_index_));
 
     const std::vector<std::shared_ptr<IFrameBuffer>> shadow_map_frame_buffers = rhi->GetShadowMapFrameBuffers();
-    CascadedShadowMap cascaded_shadow_map = render_view->GetCascadedShadowMap();
+    const CascadedShadowMap cascaded_shadow_map = render_view->GetCascadedShadowMap();
     assert(shadow_map_frame_buffers.size() == cascaded_shadow_map.GetCascadeCount());
 
-    std::vector<math::Matrix4x4> light_view_matrices = cascaded_shadow_map.GetLightViewMatrices();
-    std::vector<math::Matrix4x4> light_projection_matrices = cascaded_shadow_map.GetProjectionMatrices();
+    const std::vector<math::Matrix4x4> light_view_matrices = cascaded_shadow_map.GetLightViewMatrices();
+    const std::vector<math::Matrix4x4> light_projection_matrices = cascaded_shadow_map.GetProjectionMatrices();
 
     rhi->BeginFrame(shadow_map_frame_buffers[cascade_index_]);
     rhi->SetViewport(0, 0, Constants::kShadowMapWidth, Constants::kShadowMapHeight);
@@ -53,7 +53,7 @@ void CascadedShadowMapRenderPass::Render(IRenderView* render_view, IRenderHardwa
     rhi->SetCullMode(IRenderHardware::CullMode::CULL_MODE_BACK);
     rhi->SetFillMode(IRenderHardware::FillMode::FILL_MODE_SOLID);
 
-    CameraData camera_data{light_projection_matrices[cascade_index_], light_view_matrices[cascade_index_], math::Vec3f::Zero()};
+    const CameraData camera_data{light_projection_matrices[cascade_index_], light_view_matrices[cascade_index_], math::Vec3f::Zero()};
     rhi->UpdateUniformData(camera_uniform_, &camera_data, sizeof(camera_data), 0);
     for (const std::unique_ptr<IDrawCall>& draw_call : draw_calls_)
     {
