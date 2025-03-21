@@ -22,7 +22,7 @@ namespace zero::render
          * Constructs an entity with Transform, Volume. Not all entities in the hierarchy will have Mesh and Material components.
          * If the model contains sub-children, they are created and added to each transform component.
          *
-         * @param registry the registry containing all of the entities and their components
+         * @param registry the registry containing all the entities and their components
          * @param model the Model to instantiate
          * @param parent_entity the parent of the entity that is instantiated
          * @return the root parent entity of the instantiated prototype. NullEntity if an error occurred.
@@ -34,7 +34,7 @@ namespace zero::render
          *
          * Constructs an entity with Transform, Volume, Material, and PrimitiveInstance components.
          *
-         * @param registry the registry containing all of the entities and their components
+         * @param registry the registry containing all the entities and their components
          * @param primitive the primitive instance data.
          * @return the entity associated with the new instantiated primitive.
          */
@@ -47,7 +47,7 @@ namespace zero::render
          * Otherwise, constructs an entity with Transform and a light component.
          * The light component can be either a DirectionalLight, PointLight, or SpotLight.
          *
-         * @param registry the registry containing all of the entities and their components
+         * @param registry the registry containing all the entities and their components
          * @param light the light component container
          * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
          * @return the light entity instance

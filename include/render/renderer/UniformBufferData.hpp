@@ -93,9 +93,9 @@ namespace zero::render
     struct alignas(16) PointLightData
     {
         PointLightData(const Transform& transform, const PointLight& light)
-        : position_(transform.position_.x_,
-                    transform.position_.y_,
-                    transform.position_.z_,
+        : position_(transform.GetPosition().x_,
+                    transform.GetPosition().y_,
+                    transform.GetPosition().z_,
                     0.0F)
         , color_(light.color_.x_, light.color_.y_, light.color_.z_, 1.0F)
         , ambient_intensity_(light.ambient_intensity_)
@@ -120,9 +120,9 @@ namespace zero::render
     struct alignas(16) SpotLightData
     {
         SpotLightData(const Transform& transform, const SpotLight& light)
-        : position_(transform.position_.x_,
-                    transform.position_.y_,
-                    transform.position_.z_,
+        : position_(transform.GetPosition().x_,
+                    transform.GetPosition().y_,
+                    transform.GetPosition().z_,
                     0.0F)
         , color_(light.color_.x_, light.color_.y_, light.color_.z_, 1.0F)
         , direction_(light.direction_.x_, light.direction_.y_, light.direction_.z_, 0.0F)

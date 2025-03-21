@@ -31,7 +31,7 @@ Transform::Transform(const math::Vec3f& position,
 {
 }
 
-Transform::Transform(Entity parent,
+Transform::Transform(const Entity parent,
                      const Transform& parent_transform,
                      const math::Vec3f& local_position,
                      const math::Vec3f& local_scale,
@@ -60,7 +60,7 @@ bool Transform::operator==(const Transform& other) const
     return (position_ == other.position_)
         && (local_position_ == other.local_position_)
         && (scale_ == other.scale_)
-        && (local_scale_ == other.scale_)
+        && (local_scale_ == other.local_scale_)
         && (orientation_ == other.orientation_)
         && (local_orientation_ == other.local_orientation_);
 }
@@ -89,6 +89,31 @@ math::Matrix4x4 Transform::GetLocalToParentMatrix() const
             .Scale(local_scale_)
             .Rotate(local_orientation_)
             .Translate(local_position_);
+}
+
+const math::Vec3f& Transform::GetPosition() const
+{
+    return position_;
+}
+
+const math::Vec3f& Transform::GetScale() const
+{
+    return scale_;
+}
+
+const math::Quaternion& Transform::GetOrientation() const
+{
+    return orientation_;
+}
+
+const Entity& Transform::GetParent() const
+{
+    return parent_;
+}
+
+const std::vector<Entity>& Transform::GetChildren() const
+{
+    return children_;
 }
 
 } // namespace zero

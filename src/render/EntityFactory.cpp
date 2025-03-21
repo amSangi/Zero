@@ -1,4 +1,7 @@
 #include "render/EntityFactory.hpp"
+
+#include <core/TransformSystem.hpp>
+
 #include "component/Material.hpp"
 #include "component/Mesh.hpp"
 #include "component/Transform.hpp"
@@ -34,7 +37,7 @@ Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::share
     else
     {
         // Instantiate each geometry and add it as a child
-        for (uint32 geometry_index: node->geometry_indices_)
+        for (const uint32 geometry_index: node->geometry_indices_)
         {
             const GeometryData& geometry_data = geometry_data_list[geometry_index];
 
@@ -43,21 +46,13 @@ Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::share
             Mesh& geometry_mesh = registry.emplace<Mesh>(geometry_entity);
             geometry_mesh.mesh_id_ = geometry_data.geometry_id_;
             registry.emplace<Volume>(geometry_entity, geometry_data.volume_);
-
-            Transform& geometry_entity_transform = registry.emplace<Transform>(geometry_entity);
-            Transform& entity_transform = registry.get<Transform>(entity);
-
-            entity_transform.children_.push_back(geometry_entity);
-            geometry_entity_transform.parent_ = entity;
+            TransformSystem::AddChild(registry, entity, geometry_entity);
         }
     }
 
     if (parent_entity != NullEntity)
     {
-        Transform& parent_transform = registry.get<Transform>(parent_entity);
-        Transform& entity_transform = registry.get<Transform>(entity);
-        parent_transform.children_.push_back(entity);
-        entity_transform.parent_ = parent_entity;
+        TransformSystem::AddChild(registry, parent_entity, entity);
     }
 
     return entity;
@@ -66,21 +61,19 @@ Entity EntityFactory::InstantiateNode(entt::registry& registry, const std::share
 Entity EntityFactory::InstantiatePrimitive(entt::registry& registry, uint32 mesh_id, const PrimitiveInstance& primitive)
 {
     // TODO: Refactor Primitive Instance
-    Entity entity = registry.create();
+    const Entity entity = registry.create();
     Transform transform{};
     Volume volume{};
+
     // Set transform/volume values
     switch (primitive.GetType())
     {
         case PrimitiveInstance::Type::BOX:
         {
-            Box box = primitive.GetBox();
-            math::Box math_box{math::Vec3f::Zero(), math::Vec3f(static_cast<float>(box.width_),
-                                                                static_cast<float>(box.height_),
-                                                                static_cast<float>(box.depth_))};
+            const Box box = primitive.GetBox();
+            const math::Box math_box{math::Vec3f::Zero(), math::Vec3f(static_cast<float>(box.width_), static_cast<float>(box.height_), static_cast<float>(box.depth_))};
             volume.bounding_volume_.center_ = math_box.Center();
             volume.bounding_volume_.radius_ = math_box.max_.Magnitude() * 0.5F;
-            transform.scale_ = math_box.max_;
             break;
         }
         case PrimitiveInstance::Type::CONE:
@@ -92,9 +85,9 @@ Entity EntityFactory::InstantiatePrimitive(entt::registry& registry, uint32 mesh
         }
         case PrimitiveInstance::Type::CYLINDER:
         {
-            Cylinder cylinder = primitive.GetCylinder();
-            float half_height = static_cast<float>(cylinder.height_) * 0.5F;
-            float largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
+            const Cylinder cylinder = primitive.GetCylinder();
+            const float half_height = static_cast<float>(cylinder.height_) * 0.5F;
+            const float largest_radius = math::Max(cylinder.bottom_radius_, cylinder.top_radius_);
             volume.bounding_volume_.radius_ = math::Sqrt(half_height * half_height + largest_radius * largest_radius);
             break;
         }

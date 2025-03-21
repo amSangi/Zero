@@ -79,7 +79,7 @@ namespace zero::render
          * @param primitive the primitive instance data.
          * @return the primitive entity instance.
          */
-        [[nodiscard]] Entity CreatePrimitiveInstance(const PrimitiveInstance& primitive);
+        [[nodiscard]] Entity CreatePrimitiveInstance(const PrimitiveInstance& primitive) const;
 
         /**
          * @brief Create a new light entity or attach a light component to an existing entity
@@ -91,7 +91,7 @@ namespace zero::render
          * @param entity the entity to attach the light to. Null Entity if a new entity should be created.
          * @return the light entity instance
          */
-        Entity CreateLightInstance(const Light& light, Entity entity);
+        Entity CreateLightInstance(const Light& light, Entity entity) const;
 
     private:
         /**
@@ -99,7 +99,7 @@ namespace zero::render
          */
         void LoadModels();
 
-        void GenerateDrawCalls(IRenderView* render_view);
+        void GenerateDrawCalls(IRenderView* render_view) const;
 
         /**
          * @brief Check whether there is an active camera in the scene

@@ -235,7 +235,7 @@ namespace zero::math
          * @param t The amount to slerp by with range [0, 1]
          * @return The spherically interpolated quaternion
          */
-        static Quaternion Slerp(const Quaternion& lhs, const Quaternion& rhs, float t);
+        static Quaternion Slerp(const Quaternion& start, const Quaternion& end, float t);
 
         /**
          * @brief Compute the dot product between lhs and rhs

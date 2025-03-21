@@ -26,7 +26,7 @@ namespace zero
         Volume(const math::Vec3f& position, float radius);
 
         /**
-         * @brief Construct a volume from a Axis-Aligned Bounding Box
+         * @brief Construct a volume from an Axis-Aligned Bounding Box
          * @param min the minimum point of the box
          * @param max the maximum point of the box
          */
@@ -43,6 +43,24 @@ namespace zero
          * @param transformation the transformation matrix to apply
          */
         void Transform(const math::Matrix4x4& transformation);
+
+        /**
+         * Translate the volume
+         * @param translation the translation to perform
+         */
+        void Translate(const math::Vec3f& translation);
+
+        /**
+         * Scale the volume
+         * @param scale the scale factor to apply to the bounding volume
+         */
+        void Scale(const math::Vec3f& scale);
+
+        /**
+         * Rotate the volume
+         * @param rotation the amount to rotate the volume by
+         */
+        void Rotate(const math::Quaternion& rotation);
 
         /**
          * @brief The bounding sphere of the entity

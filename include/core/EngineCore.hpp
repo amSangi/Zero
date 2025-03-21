@@ -24,19 +24,19 @@ namespace zero
          * @brief Get the event bus
          * @return the event bus
          */
-        inline EventBus& GetEventBus()              { return event_bus_; }
+        EventBus& GetEventBus()              { return event_bus_; }
 
         /**
          * @brief Get the game registry
          * @return the registry
          */
-        inline entt::registry& GetRegistry()        { return registry_; }
+        entt::registry& GetRegistry()        { return registry_; }
 
         /**
          * @brief Get the asset manager
          * @return the asset manager
          */
-        inline AssetManager& GetAssetManager()        { return asset_manager_; }
+        AssetManager& GetAssetManager()        { return asset_manager_; }
 
     private:
         /**

@@ -87,7 +87,7 @@ void RenderSystem::ShutDown()
     window_->Cleanup();
 }
 
-Entity RenderSystem::CreateModelInstance(const std::string& model_filename, Entity parent_entity)
+Entity RenderSystem::CreateModelInstance(const std::string& model_filename, const Entity parent_entity)
 {
     LOG_VERBOSE(kTitle, "Instantiating a new model");
     auto model_search = model_cache_.find(model_filename);
@@ -99,13 +99,13 @@ Entity RenderSystem::CreateModelInstance(const std::string& model_filename, Enti
     return EntityFactory::InstantiateModel(GetCore()->GetRegistry(), model_search->second, parent_entity);
 }
 
-Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive)
+Entity RenderSystem::CreatePrimitiveInstance(const PrimitiveInstance& primitive) const
 {
     LOG_VERBOSE(kTitle, "Instantiating a new primitive");
     return EntityFactory::InstantiatePrimitive(GetCore()->GetRegistry(), rendering_pipeline_->GetPrimitiveMeshId(rhi_.get(), primitive), primitive);
 }
 
-Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity)
+Entity RenderSystem::CreateLightInstance(const Light& light, Entity entity) const
 {
     LOG_VERBOSE(kTitle, "Instantiating a new light source");
     return EntityFactory::InstantiateLight(GetCore()->GetRegistry(), light, entity);
@@ -137,10 +137,10 @@ void RenderSystem::LoadModels()
     }
 }
 
-void RenderSystem::GenerateDrawCalls(IRenderView* render_view)
+void RenderSystem::GenerateDrawCalls(IRenderView* render_view) const
 {
     entt::registry& registry = GetCore()->GetRegistry();
-    auto drawable_view = registry.view<const Transform, const Material, const Mesh, const Volume>();
+    const auto drawable_view = registry.view<const Transform, const Material, const Mesh, const Volume>();
 
     // Generate SkyDome Draw Call
     rendering_pipeline_->GenerateSkyDomeDrawCall(rhi_.get(), render_view->GetCamera(), render_view->GetSkyDome());
@@ -149,20 +149,20 @@ void RenderSystem::GenerateDrawCalls(IRenderView* render_view)
 
     // Generate Draw Calls for Renderable entities
     const std::vector<std::shared_ptr<ITexture>> shadow_map_textures = rhi_->GetShadowMapTextures();
-    for (Entity renderable_entity: render_view->GetRenderableEntities())
+    for (const Entity renderable_entity: render_view->GetRenderableEntities())
     {
         const auto& [transform, material, mesh, _] = drawable_view.get(renderable_entity);
-        math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
+        const math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
         rendering_pipeline_->GenerateDrawCall(rhi_.get(), mesh, material, model_matrix, view_matrix);
     }
 
     // Generate Draw Calls for Shadow Casting entities for each cascade
     for (uint32 cascade_index = 0; cascade_index < Constants::kShadowCascadeCount; ++cascade_index)
     {
-        for (Entity shadow_casting_entity: render_view->GetShadowCastingEntities(cascade_index))
+        for (const Entity shadow_casting_entity: render_view->GetShadowCastingEntities(cascade_index))
         {
             const auto& [transform, material, mesh, _] = drawable_view.get(shadow_casting_entity);
-            math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
+            const math::Matrix4x4 model_matrix = transform.GetLocalToWorldMatrix();
             rendering_pipeline_->GenerateShadowDrawCall(rhi_.get(), cascade_index, mesh, material, model_matrix);
         }
     }
@@ -170,7 +170,7 @@ void RenderSystem::GenerateDrawCalls(IRenderView* render_view)
 
 bool RenderSystem::ContainsCamera() const
 {
-    auto camera_view = GetCore()->GetRegistry().view<const Camera>();
+    const auto camera_view = GetCore()->GetRegistry().view<const Camera>();
     return !camera_view.empty();
 }
 

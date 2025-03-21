@@ -43,6 +43,12 @@ namespace zero
                   const math::Vec3f& local_scale,
                   const math::Quaternion& local_orientation);
 
+        /**
+         * Create a Transform component from an affine transformation matrix
+         *
+         * @param transformation the transformation to base a Transform from
+         * @return a Transform component
+         */
         static Transform FromMatrix4x4(const math::Matrix4x4& transformation);
 
         /**
@@ -51,7 +57,7 @@ namespace zero
          * Does not check if parent/child relationships are equal.
          *
          * @param other the other transform
-         * @return True if the global and local components are equal. Otherwise false.
+         * @return True if the global and local components are equal. Otherwise, false.
          */
         bool operator==(const Transform& other) const;
 
@@ -61,7 +67,7 @@ namespace zero
          * Does not check if parent/child relationships are equal.
          *
          * @param other the other transform
-         * @return True if the transforms are not equal. Otherwise false.
+         * @return True if the transforms are not equal. Otherwise, false.
          */
         bool operator!=(const Transform& other) const;
 
@@ -84,9 +90,34 @@ namespace zero
         [[nodiscard]] math::Matrix4x4 GetLocalToParentMatrix() const;
 
         /**
-         * @brief The position in the world
+         * Get the global position
+         * @return the position relative to the world
          */
-        math::Vec3f position_;
+        [[nodiscard]] const math::Vec3f& GetPosition() const;
+
+        /**
+         * Get the global scale
+         * @return the scale relative to the world
+         */
+        [[nodiscard]] const math::Vec3f& GetScale() const;
+
+        /**
+         * Get the global orientation
+         * @return the orientation relative to the world
+         */
+        [[nodiscard]] const math::Quaternion& GetOrientation() const;
+
+        /**
+         * Get the parent entity
+         * @return the parent entity
+         */
+        [[nodiscard]] const Entity& GetParent() const;
+
+        /**
+         * Get the child entities of the transform
+         * @return the child entities
+         */
+        [[nodiscard]] const std::vector<Entity>& GetChildren() const;
 
         /**
          * @brief The position relative to the parent
@@ -94,24 +125,32 @@ namespace zero
         math::Vec3f local_position_;
 
         /**
-         * @brief The scale relative to the world
-         */
-        math::Vec3f scale_;
-
-        /**
          * @brief The scale relative to the parent transform
          */
         math::Vec3f local_scale_;
 
         /**
-         * @brief The orientation in the world
-         */
-        math::Quaternion orientation_;
-
-        /**
          * @brief The orientation relative to the parent transform
          */
         math::Quaternion local_orientation_;
+
+    private:
+        friend class TransformSystem;
+
+        /**
+         * @brief The position in the world
+         */
+        math::Vec3f position_;
+
+        /**
+         * @brief The scale relative to the world
+         */
+        math::Vec3f scale_;
+
+        /**
+         * @brief The orientation in the world
+         */
+        math::Quaternion orientation_;
 
         /**
          * @brief The parent entity

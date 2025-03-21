@@ -48,7 +48,6 @@ public:
     {
         auto& registry = GetCore()->GetRegistry();
         Camera& camera = registry.get<Camera>(camera_entity_);
-        Transform& transform = registry.get<Transform>(entity_to_move_);
         switch (key_code)
         {
             case KeyCode::A:
@@ -93,27 +92,27 @@ public:
                 break;
             case KeyCode::NUMBER_1:
                 // Move -x
-                transform.position_ += (-1.0F * horizontal_speed_);
+                TransformSystem::Translate(registry, entity_to_move_, -1.0F * horizontal_speed_);
                 break;
             case KeyCode::NUMBER_2:
                 // Move +x
-                transform.position_ += horizontal_speed_;
+                TransformSystem::Translate(registry, entity_to_move_, horizontal_speed_);
                 break;
             case KeyCode::NUMBER_3:
                 // Move +y
-                transform.position_ += vertical_speed_;
+                TransformSystem::Translate(registry, entity_to_move_, vertical_speed_);
                 break;
             case KeyCode::NUMBER_4:
                 // Move -y
-                transform.position_ += -1.0F * vertical_speed_;
+                TransformSystem::Translate(registry, entity_to_move_, -1.0F * vertical_speed_);
                 break;
             case KeyCode::NUMBER_5:
                 // Move -z
-                transform.position_ += -1.0F * forward_speed_;
+                TransformSystem::Translate(registry, entity_to_move_, -1.0F * forward_speed_);
                 break;
             case KeyCode::NUMBER_6:
                 // Move +z
-                transform.position_ += forward_speed_;
+                TransformSystem::Translate(registry, entity_to_move_, forward_speed_);
                 break;
             default:
                 break;
@@ -181,12 +180,10 @@ private:
         primitive_material.visible_ = true;
 
         // Incorporate parent-child hierarchy
-        Transform& root_transform = registry.get<Transform>(root_primitive_entity);
         Transform& child_transform = registry.get<Transform>(primitive_entity);
         child_transform.local_orientation_ = math::Quaternion::FromAngleAxis(math::Vec3f::Up(), math::Radian::FromDegree(90.0F));
         child_transform.local_position_ = math::Vec3f(0.0F, 1.5F, 0.0F);
-        root_transform.children_.push_back(primitive_entity);
-        child_transform.parent_ = root_primitive_entity;
+        TransformSystem::AddChild(registry, root_primitive_entity , primitive_entity);
 
         math::Matrix4x4 transformation = math::Matrix4x4::Identity()
                 .Translate(math::Vec3f(5.0F, 0.0F, 0.0F));
@@ -207,9 +204,13 @@ private:
         floor_material.SetShaders(floor_material_shaders);
         floor_material.diffuse_color_ = math::Vec3f(0.52F, 0.37F, 0.26F);
         floor_material.two_sided_ = true;
-        auto& floor_transform = registry.get<Transform>(floor_entity);
-        floor_transform.scale_ = math::Vec3f(10.0F);
-        floor_transform.position_ = math::Vec3f(-10.0F, -2.0F, 10.0F);
+        TransformSystem::UpdateTransform(
+            registry,
+            floor_entity,
+            math::Matrix4x4::Identity()
+                .Scale(math::Vec3f(10.0F))
+                .Translate(math::Vec3f(-10.0F, -2.0F, 10.0F))
+        );
     }
     void SetupLights()
     {
@@ -249,8 +250,13 @@ private:
             light_primitive_material.visible_ = true;
 
             auto& light_transform = registry.get<Transform>(spot_light_entity);
-            light_transform.scale_ = math::Vec3f(0.1F);
-            light_transform.position_ = math::Vec3f(2.0F, 5.0F, 0.0F);
+            TransformSystem::UpdateTransform(
+                registry,
+                spot_light_entity,
+                math::Matrix4x4::Identity()
+                    .Scale(math::Vec3f(0.1F))
+                    .Translate(math::Vec3f(2.0F, 5.0F, 0.0F))
+            );
             entity_to_move_ = spot_light_entity;
         }
     }
@@ -271,8 +277,7 @@ private:
             model_material.wireframe_enabled_ = false;
             model_material.visible_ = true;
             model_material.specular_exponent_ = 32.0F;
-            auto& transform = registry.get<Transform>(model_entity);
-            transform.position_ = math::Vec3f(0.0F, -2.0F, 0.0F);
+            TransformSystem::Translate(registry, model_entity, math::Vec3f(0.0F, -2.0F, 0.0F));
         }
     }
 

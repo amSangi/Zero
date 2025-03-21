@@ -25,7 +25,7 @@ namespace zero
 
         /**
          * @brief Create an Engine using the given configuration
-         * @param config the Engine configuration
+         * @param engine_config the Engine configuration data
          */
         explicit Engine(EngineConfig engine_config);
 
